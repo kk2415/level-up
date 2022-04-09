@@ -2,7 +2,9 @@ package com.together.community.domain.channel;
 
 import com.together.community.domain.category.CategoryChannel;
 import com.together.community.domain.exception.NoPlaceChnnel;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "channel")
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
 
     @Id

@@ -1,7 +1,9 @@
 package com.together.community.domain.channel;
 
 import com.together.community.domain.member.Member;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "channel_member")
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChannelMember {
 
     @Id @GeneratedValue
