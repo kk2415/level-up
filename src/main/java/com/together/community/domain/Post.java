@@ -58,4 +58,10 @@ public class Post {
 
         return post;
     }
+
+    //==비즈니스 로직==//
+    public void changePost(String title, String content) {
+        this.setTitle(title);
+        this.setContent(content);
+    }
 }

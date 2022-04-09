@@ -42,4 +42,20 @@ public class JpaPostRepository implements PostRepository {
         return em.createQuery("select p from Post p", Post.class)
                 .getResultList();
     }
+
+    @Override
+    public void delete(Long id) {
+        Post findMember = findById(id);
+        em.remove(findMember);
+    }
+
+    @Override
+    public List<Post> findBymemberId(Long memberId) {
+        String query = "select p from Post p join p.member m where m.id = :memberId "
+                + "order by p.dateCreated desc";
+
+        return em.createQuery(query, Post.class)
+                .setParameter("memberId", memberId)
+                .getResultList();
+    }
 }
