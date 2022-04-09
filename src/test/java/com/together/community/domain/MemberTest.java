@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -94,6 +95,7 @@ public class MemberTest {
     }
 
     @Test
+    @Commit
     public void commentTest() {
         Member member1 = new Member();
         member1.setLoginId("test0");
