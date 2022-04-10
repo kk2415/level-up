@@ -1,5 +1,6 @@
 package com.together.community.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.together.community.domain.Comment;
 import com.together.community.domain.Post;
 import com.together.community.domain.channel.ChannelMember;
@@ -38,6 +39,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 

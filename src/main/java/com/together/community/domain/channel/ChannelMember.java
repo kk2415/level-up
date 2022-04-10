@@ -1,5 +1,6 @@
 package com.together.community.domain.channel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.together.community.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,10 +19,12 @@ public class ChannelMember {
     @Column(name = "channel_member_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
