@@ -57,7 +57,7 @@ public class PostService {
     }
 
     public List<Post> findBymemberId(Long memberId) {
-        return postRepository.findBymemberId(memberId);
+        return postRepository.findByMemberId(memberId);
     }
 
 }
