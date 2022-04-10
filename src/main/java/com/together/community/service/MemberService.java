@@ -46,4 +46,11 @@ public class MemberService {
         return memberRepository.findById(memberId);
     }
 
+    /**
+     * 멤버 삭제
+     * */
+    public void deleteMember(Long memberId) {
+        memberRepository.delete(memberId);
+    }
+
 }
