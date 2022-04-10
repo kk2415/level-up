@@ -13,5 +13,6 @@ public interface PostRepository {
     public List<Post> findByWriter(String writer);
     public List<Post> findAll();
     public void delete(Long id);
+    public Long countAll();
 
 }

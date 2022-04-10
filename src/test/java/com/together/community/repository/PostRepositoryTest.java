@@ -65,6 +65,24 @@ public class PostRepositoryTest {
         Assertions.assertThat(post3).isNotIn(memberList);
     }
 
+    @Test
+    public void 게시글_전체_개수() {
+        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
+        Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        Post post1 = Post.createPost(member1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
+        Post post2 = Post.createPost(member1, "저녁 뭐 먹지?", "추천 받음");
+        Post post3 = Post.createPost(member2, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+
+        Long count = postRepository.countAll();
+        Assertions.assertThat(count).isEqualTo(3L);
+    }
+
     private Member getMember(String loginId, String birthday, String email, String name, Gender gender) {
         Member member1 = new Member();
         member1.setLoginId(loginId);

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -58,4 +59,11 @@ public class JpaPostRepository implements PostRepository {
                 .setParameter("memberId", memberId)
                 .getResultList();
     }
+
+    public Long countAll() {
+        String queryString = "select count(p.id) from Post p";
+
+        return em.createQuery(queryString, Long.class).getResultList().get(0);
+    }
+
 }
