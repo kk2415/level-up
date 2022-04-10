@@ -3,6 +3,7 @@ package com.together.community.domain.member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.together.community.domain.Comment;
 import com.together.community.domain.Post;
+import com.together.community.domain.channel.Channel;
 import com.together.community.domain.channel.ChannelMember;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,5 +53,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<ChannelMember> channelMembers = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private Channel channel;
 
 }

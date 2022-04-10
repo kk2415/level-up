@@ -28,12 +28,11 @@ public class ChannelTest {
         em.persist(member1);
         em.persist(member2);
 
-        Channel channel = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
         em.persist(channel);
     }
 
     @Test
-    @Commit
     public void 채널_멤버_추가() {
         Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
         Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
@@ -41,7 +40,7 @@ public class ChannelTest {
         em.persist(member1);
         em.persist(member2);
 
-        Channel channel = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
+        Channel channel = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모");
         em.persist(channel);
 
         ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);

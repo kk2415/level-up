@@ -27,22 +27,25 @@ class JpaChannelRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
+    @Commit
     void save() {
-        Channel channel = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
+        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
+        memberRepository.save(member1);
+
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
         channelRepository.save(channel);
         Channel findChannel = channelRepository.findById(channel.getId());
         Assertions.assertThat(findChannel).isEqualTo(channel);
     }
 
     @Test
-    @Commit
     void findByMemberId() {
         Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
         Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
+        Channel channel = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모");
         channelRepository.save(channel);
 
         ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);
@@ -60,13 +63,12 @@ class JpaChannelRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
         channelRepository.save(channel);
 
         channelRepository.delete(channel.getId());
         List<Channel> findChannels = channelRepository.findAll();
         Assertions.assertThat(findChannels.size()).isEqualTo(0);
-
     }
 
     private Member getMember(String loginId, String birthday, String email, String name, Gender gender) {

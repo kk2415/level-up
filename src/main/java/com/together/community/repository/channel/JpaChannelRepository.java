@@ -24,6 +24,15 @@ public class JpaChannelRepository implements ChannelRepository {
     }
 
     @Override
+    public List<Channel> findByName(String name) {
+        String query = "select ch from Channel ch where ch.name = :name";
+
+        return em.createQuery(query, Channel.class)
+                .setParameter("name", name)
+                .getResultList();
+    }
+
+    @Override
     public List<Channel> findByMemberId(Long memberId) {
         String query = "select ch from Channel ch " +
                 "inner join ch.channelMembers chm " +

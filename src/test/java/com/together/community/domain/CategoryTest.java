@@ -31,7 +31,7 @@ public class CategoryTest {
         em.persist(member1);
         em.persist(member2);
 
-        Channel channel = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
+        Channel channel = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모");
         em.persist(channel);
 
         ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);
@@ -55,8 +55,8 @@ public class CategoryTest {
         em.persist(member1);
         em.persist(member2);
 
-        Channel channel1 = Channel.createChannel("모두모두 모여라 요리왕", "김탁구", 20L, "요리 친목도모");
-        Channel channel2 = Channel.createChannel("내일은 축구 천재", "박지성", 20L, "축구 실력 향상 모임");
+        Channel channel1 = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        Channel channel2 = Channel.createChannel(member1,"내일은 축구 천재", 20L, "축구 실력 향상 모임");
         em.persist(channel1);
         em.persist(channel2);
 

@@ -8,6 +8,7 @@ public interface ChannelRepository {
     public void save(Channel channel);
     public Channel findById(Long id);
     public List<Channel> findByMemberId(Long memberId);
+    public List<Channel> findByName(String name);
     public List<Channel> findAll();
     public void delete(Long id);
 
