@@ -57,4 +57,9 @@ public class Comment {
         return comment;
     }
 
+    //==댓글 수정==//
+    public void changeComment(String content) {
+        this.setContent(content);
+    }
+
 }

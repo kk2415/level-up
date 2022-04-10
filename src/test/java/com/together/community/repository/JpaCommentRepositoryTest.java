@@ -1,9 +1,10 @@
-package com.together.community.repository.comment;
+package com.together.community.repository;
 
 import com.together.community.domain.Comment;
 import com.together.community.domain.Post;
 import com.together.community.domain.member.Gender;
 import com.together.community.domain.member.Member;
+import com.together.community.repository.comment.CommentRepository;
 import com.together.community.repository.member.MemberRepository;
 import com.together.community.repository.post.PostRepository;
 import org.assertj.core.api.Assertions;
