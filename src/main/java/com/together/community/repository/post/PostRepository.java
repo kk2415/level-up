@@ -8,7 +8,7 @@ public interface PostRepository {
 
     public void save(Post post);
     public Post findById(Long id);
-    public List<Post> findBymemberId(Long memberId);
+    public List<Post> findByMemberId(Long memberId);
     public List<Post> findByTitle(String title);
     public List<Post> findByWriter(String writer);
     public List<Post> findAll();

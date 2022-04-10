@@ -1,5 +1,6 @@
 package com.together.community.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.together.community.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,10 +33,12 @@ public class Post {
     @Column(name = "vote_count")
     private Long voteCount;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 

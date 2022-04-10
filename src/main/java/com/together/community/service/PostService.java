@@ -21,7 +21,7 @@ public class PostService {
     /**
      * 게시글 등록
      * */
-    public Long posting(Long memberId, String title, String content) {
+    public Long post(Long memberId, String title, String content) {
         Member member = memberRepository.findById(memberId);
         Post post = Post.createPost(member, title, content);
         postRepository.save(post);
@@ -56,8 +56,12 @@ public class PostService {
         return postRepository.findById(postId);
     }
 
-    public List<Post> findBymemberId(Long memberId) {
-        return postRepository.findBymemberId(memberId);
+    public List<Post> findByMemberId(Long memberId) {
+        return postRepository.findByMemberId(memberId);
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
     }
 
 }

@@ -2,10 +2,12 @@ package com.together.community.domain.channel;
 
 import com.together.community.domain.category.CategoryChannel;
 import com.together.community.domain.exception.NoPlaceChnnel;
+import com.together.community.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Columns;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -45,6 +47,10 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private List<CategoryChannel> categoryChannels = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    private Member member;
+
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.
      * 연관관계 메서드로 각 테이블(객체)에 컬럼(변수)를 매핑시켜줘야된다.
@@ -53,17 +59,23 @@ public class Channel {
      * 만약 이렇게 연관관계 메서드를 호출하지 않으면 컬럼에 값이 들어가지 않는다.
      * */
     //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.setChannel(this);
+    }
+
     public void setChannelMember(ChannelMember channelMember) {
         this.channelMembers.add(channelMember);
         channelMember.setChannel(this);
     }
 
     //==생성 메서드==//
-    public static Channel createChannel(String name, String managerName, Long limitNumber, String descript) {
+    public static Channel createChannel(Member member, String name, Long limitNumber, String descript) {
         Channel channel = new Channel();
 
+        channel.setMember(member);
         channel.setName(name);
-        channel.setManagerName(managerName);
+        channel.setManagerName(member.getName());
         channel.setLimitedMemberNumber(limitNumber);
         channel.setDescript(descript);
         channel.setDateCreated(LocalDateTime.now());

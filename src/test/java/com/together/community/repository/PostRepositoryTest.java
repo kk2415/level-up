@@ -61,7 +61,7 @@ public class PostRepositoryTest {
         postRepository.save(post2);
         postRepository.save(post3);
 
-        List<Post> memberList = postRepository.findBymemberId(member1.getId());
+        List<Post> memberList = postRepository.findByMemberId(member1.getId());
         Assertions.assertThat(post3).isNotIn(memberList);
     }
 

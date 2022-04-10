@@ -1,80 +1,74 @@
-package com.together.community.domain;
+package com.together.community.repository;
 
-import com.together.community.domain.category.Category;
-import com.together.community.domain.category.CategoryChannel;
 import com.together.community.domain.channel.Channel;
 import com.together.community.domain.channel.ChannelMember;
 import com.together.community.domain.member.Gender;
 import com.together.community.domain.member.Member;
+import com.together.community.repository.channel.ChannelRepository;
+import com.together.community.repository.member.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
-public class CategoryTest {
+class JpaChannelRepositoryTest {
 
     @Autowired
-    private EntityManager em;
+    private ChannelRepository channelRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
-    public void 카테고리_테스트() {
+    @Commit
+    void save() {
+        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
+        memberRepository.save(member1);
 
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        channelRepository.save(channel);
+        Channel findChannel = channelRepository.findById(channel.getId());
+        Assertions.assertThat(findChannel).isEqualTo(channel);
+    }
+
+    @Test
+    void findByMemberId() {
         Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
         Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
-
-        em.persist(member1);
-        em.persist(member2);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
 
         Channel channel = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모");
-        em.persist(channel);
+        channelRepository.save(channel);
 
         ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);
         ChannelMember channelMember2 = ChannelMember.createChannelMember(member2);
         channel.addMember(channelMember1, channelMember2);
 
-        CategoryChannel categoryChannel = CategoryChannel.createCategoryChannel(channel);
-
-        Category category1 = Category.createCategory("스포츠", categoryChannel);
-        em.persist(category1);
-
+        List<Channel> findChannels = channelRepository.findByMemberId(member1.getId());
+        Assertions.assertThat(findChannels.size()).isEqualTo(1);
     }
 
     @Test
-    @Commit
-    void 부모_자식_테스트() {
-
+    void delete() {
         Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
         Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
 
-        em.persist(member1);
-        em.persist(member2);
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        channelRepository.save(channel);
 
-        Channel channel1 = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모");
-        Channel channel2 = Channel.createChannel(member1,"내일은 축구 천재", 20L, "축구 실력 향상 모임");
-        em.persist(channel1);
-        em.persist(channel2);
-
-        ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);
-        ChannelMember channelMember2 = ChannelMember.createChannelMember(member2);
-        channel1.addMember(channelMember1, channelMember2);
-
-        CategoryChannel categoryChannel1 = CategoryChannel.createCategoryChannel(channel1);
-        CategoryChannel categoryChannel2 = CategoryChannel.createCategoryChannel(channel2);
-
-        Category category1 = Category.createCategory("스포츠", categoryChannel1);
-        Category category2 = Category.createCategory("요리", categoryChannel2);
-
-        category1.addChildCategory(category2);
-
-        em.persist(category1);
-        em.persist(category2);
-
+        channelRepository.delete(channel.getId());
+        List<Channel> findChannels = channelRepository.findAll();
+        Assertions.assertThat(findChannels.size()).isEqualTo(0);
     }
 
     private Member getMember(String loginId, String birthday, String email, String name, Gender gender) {

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -51,7 +50,7 @@ public class JpaPostRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findBymemberId(Long memberId) {
+    public List<Post> findByMemberId(Long memberId) {
         String query = "select p from Post p join p.member m where m.id = :memberId "
                 + "order by p.dateCreated desc";
 
