@@ -42,4 +42,11 @@ public class JpaMemberRepository implements MemberRepository {
                 .setParameter("loginId", loginId)
                 .getResultList();
     }
+
+    @Override
+    public void delete(Long id) {
+        Member findMember = findById(id);
+        em.remove(findMember);
+    }
+
 }
