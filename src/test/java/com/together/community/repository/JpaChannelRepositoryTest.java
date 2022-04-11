@@ -27,7 +27,6 @@ class JpaChannelRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    @Commit
     void save() {
         Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
         memberRepository.save(member1);

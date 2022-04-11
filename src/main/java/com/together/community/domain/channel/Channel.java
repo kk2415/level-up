@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Columns;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -95,6 +93,24 @@ public class Channel {
             channelMember.setChannel(this);
             memberCount++;
         }
+    }
+
+    public void addMember(List<ChannelMember> channelMembers) {
+        if (memberCount >= limitedMemberNumber ) {
+            throw new NoPlaceChnnel("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().add(channelMember);
+            channelMember.setChannel(this);
+            memberCount++;
+        }
+    }
+
+    public void changeChannel(String name, Long limitNumber, String descript) {
+        this.setName(name);
+        this.setLimitedMemberNumber(limitNumber);
+        this.setDescript(descript);
     }
 
 }
