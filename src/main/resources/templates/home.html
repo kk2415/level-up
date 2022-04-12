@@ -8,56 +8,15 @@
 <body>
 <div id="contents">
     <div id="channel">
-        <div class="channel_detail">
+        <div class="channel_detail" th:each="channel : ${channels}">
             <div class="channel_header">
-                <a>채널명</a>
+                <a th:text="${channel.name}"></a>
             </div>
             <div class="channel_content">
                 <div class="channel_member_count">
-                    <p>4/15</p>
+                    <p th:text="${channel.memberCount}"><span th:text="${channel.limitedMemberNumber}"></span></p>
                 </div>
-                <p>ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p>
-            </div>
-        </div>
-        <div class="channel_detail">
-            <div class="channel_header">
-                <a>채널명</a>
-            </div>
-            <div class="channel_content">
-                <div class="channel_member_count">
-                    <p>4/15</p>
-                </div>
-                <p>ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p>
-            </div>
-        </div>
-        <div class="channel_detail">
-            <div class="channel_header">
-                <a>채널명</a>
-            </div>
-            <div class="channel_content">
-                <div class="channel_member_count">
-                    <p>4/15</p>
-                </div>
-                <p>ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p>
-            </div>
-        </div>
-        <div class="channel_detail">
-            <div class="channel_header">
-                <a>채널명</a>
-            </div>
-            <div class="channel_content">
-                <div class="channel_member_count">
-                    <p>4/15</p>
-                </div>
-                <p>ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
-                    ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ</p>
+                <p th:text="${channel.descript}"></p>
             </div>
         </div>
     </div>

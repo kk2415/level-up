@@ -12,6 +12,7 @@
 .form-group {
     border: none;
     padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .fieldlabel {
@@ -19,6 +20,7 @@
     width:120px;
     text-align:right;
     padding-right:10px;
+    padding-bottom: 10px;
 }
 
 .btnfield {

@@ -4,8 +4,9 @@
     width: 98%;
 }
 
-#channel .channel_detail {
+.channel_detail {
     width: 30%;
+    height: 150px;
     padding: 10px;
     border-radius: 15px;
     margin-bottom: 12px;
@@ -19,6 +20,13 @@
 
 .channel_content {
     padding: 1px;
+    height: 80%;
+}
+
+.channel_content p {
+    width: 100%;
+    height: 100%;
+    clear: both;
 }
 
 .channel_member_count {
@@ -26,6 +34,5 @@
     height: auto;
     margin-top: 5px;
     text-align: center;
-    position: relative;
-    left: 74%;
+    float: right;
 }

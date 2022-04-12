@@ -97,6 +97,10 @@ public class ChannelService {
         return channelRepository.findAll();
     }
 
+    public List<Channel> findAll(int start, int end) {
+        return channelRepository.findAll(start, end);
+    }
+
     public List<Channel> findByMemberId(Long memberId) {
         return channelRepository.findByMemberId(memberId);
     }
