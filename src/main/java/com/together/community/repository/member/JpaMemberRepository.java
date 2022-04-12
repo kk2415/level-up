@@ -37,9 +37,9 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public List<Member> findByLoginId(String loginId) {
-        return em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
-                .setParameter("loginId", loginId)
+    public List<Member> findByEmailId(String emailId) {
+        return em.createQuery("select m from Member m where m.emailId = :emailId", Member.class)
+                .setParameter("emailId", emailId)
                 .getResultList();
     }
 

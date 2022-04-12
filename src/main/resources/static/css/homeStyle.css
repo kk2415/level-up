@@ -1,0 +1,31 @@
+#channel {
+    padding: 5px;
+    margin: 0 auto;
+    width: 98%;
+}
+
+#channel .channel_detail {
+    width: 30%;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+
+.channel_header {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.channel_content {
+    padding: 1px;
+}
+
+.channel_member_count {
+    width: 20%;
+    height: auto;
+    margin-top: 5px;
+    text-align: center;
+    position: relative;
+    left: 74%;
+}

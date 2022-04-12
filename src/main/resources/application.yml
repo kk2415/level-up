@@ -10,7 +10,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-#        show_sql:
+        show_sql:
         format_sql:
         default_batch_fetch_size: 100
     open-in-view: true

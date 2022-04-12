@@ -13,6 +13,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
 
+    final int HANGUL_UNICODE_START = 0xAC00;
+    final int HANGUL_UNICODE_END = 0xD7AF;
+
     private final MemberRepository memberRepository;
 
     /**
@@ -20,20 +23,29 @@ public class MemberService {
      * */
     @Transactional
     public Long join(Member member) {
-        validationDuplicateMember(member); //회원 검증
+        validationDuplicateMember(member); //중복 회원 검증
+        validationName(member.getName()); //회원 이름 검증(한글만 포함되어있는지)
         memberRepository.save(member);
         return member.getId();
     }
 
     private void validationDuplicateMember(Member member) {
         //이 로직은 동시성 문제가 있음. 동시에 같은 아이디가 접근해서 호출하면 통과될 수 있음. 차후에 개선
-        List<Member> findMembers = memberRepository.findByLoginId(member.getLoginId());
+        List<Member> findMembers = memberRepository.findByEmailId(member.getEmailId());
 
         if (findMembers.size() > 0) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
 
+    private void validationName(String name) {
+        for (int i = 0; i < name.length(); i++) {
+            char charAt = name.charAt(i);
+            if (charAt < HANGUL_UNICODE_START || charAt > HANGUL_UNICODE_END) {
+                throw new IllegalStateException("한글을 입력해주세요");
+            }
+        }
+    }
 
     /**
      * 멤버조회

@@ -5,7 +5,6 @@ import com.together.community.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 @Service
@@ -18,7 +17,7 @@ public class LoginService {
      * return NULL이면 로그인 실패
      * */
     public Member login(String loginId, String password) {
-        List<Member> findMembers = memberRepository.findByLoginId(loginId);
+        List<Member> findMembers = memberRepository.findByEmailId(loginId);
         if (findMembers.size() > 0) {
             return findMembers.get(0);
         }

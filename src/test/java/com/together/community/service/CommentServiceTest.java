@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -22,8 +20,10 @@ class CommentServiceTest {
 
     @Test
     void commenting() {
-        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
-        Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
         memberService.join(member1);
         memberService.join(member2);
 
@@ -46,8 +46,10 @@ class CommentServiceTest {
 
     @Test
     void updateComment() {
-        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
-        Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
         memberService.join(member1);
         memberService.join(member2);
 
@@ -67,8 +69,10 @@ class CommentServiceTest {
 
     @Test
     void deleteComment() {
-        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
-        Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
         memberService.join(member1);
         memberService.join(member2);
 
@@ -88,8 +92,10 @@ class CommentServiceTest {
 
     @Test
     void findByMemberId() {
-        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
-        Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
         memberService.join(member1);
         memberService.join(member2);
 
@@ -107,8 +113,10 @@ class CommentServiceTest {
 
     @Test
     void findByPostId() {
-        Member member1 = getMember("test0", "1997", "kkh2415@naver.com", "김경희", Gender.MAIL);
-        Member member2 = getMember("test1", "2002", "goodnight@naver.com", "박병로", Gender.MAIL);
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
         memberService.join(member1);
         memberService.join(member2);
 
@@ -122,19 +130,6 @@ class CommentServiceTest {
 
         List<Comment> commentList = commentService.findByPostId(postId1);
         Assertions.assertThat(commentList.size()).isEqualTo(1);
-    }
-
-    private Member getMember(String loginId, String birthday, String email, String name, Gender gender) {
-        Member member1 = new Member();
-        member1.setLoginId(loginId);
-        member1.setPassword("0000");
-        member1.setBirthday(birthday);
-        member1.setEmail(email);
-        member1.setDateCreated(LocalDateTime.now());
-        member1.setGender(gender);
-        member1.setPhone("010-2354-9960");
-        member1.setName(name);
-        return member1;
     }
 
 }
