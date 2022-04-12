@@ -51,6 +51,14 @@ public class JpaChannelRepository implements ChannelRepository {
     }
 
     @Override
+    public List<Channel> findAll(int start, int end) {
+        return em.createQuery("select ch from Channel ch", Channel.class)
+                .setFirstResult(start)
+                .setMaxResults(end)
+                .getResultList();
+    }
+
+    @Override
     public void delete(Long id) {
         Channel findChannl = findById(id);
         em.remove(findChannl);

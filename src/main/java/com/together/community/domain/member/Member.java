@@ -21,8 +21,11 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "login_id")
-    private String loginId;
+    @Column(name = "email_id")
+    private String emailId;
+
+    @Column(name = "email_domain")
+    private String emailDomain;
 
     private String password;
     private String name;
@@ -32,7 +35,6 @@ public class Member {
 
     private String birthday;
     private String phone;
-    private String email;
 
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
@@ -57,5 +59,21 @@ public class Member {
     @JsonIgnore
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Channel channel;
+
+    //==생성 메서드==//
+    public static Member createMember(String emailId, String emailDomain, String password, String name,
+                                      Gender gender, String birthday, String phone) {
+        Member member = new Member();
+        member.setEmailId(emailId);
+        member.setEmailDomain(emailDomain);
+        member.setPassword(password);
+        member.setName(name);
+        member.setGender(gender);
+        member.setBirthday(birthday);
+        member.setPhone(phone);
+        member.setAuthority(Authority.NORMAL);
+        member.setDateCreated(LocalDateTime.now());
+        return member;
+    }
 
 }

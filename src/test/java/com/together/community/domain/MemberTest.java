@@ -6,11 +6,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
@@ -21,25 +18,10 @@ public class MemberTest {
 
     @Test
     public void memberTest() {
-        Member member1 = new Member();
-        member1.setLoginId("test0");
-        member1.setPassword("0000");
-        member1.setBirthday("1997");
-        member1.setEmail("kkh2415@naver.com");
-        member1.setDateCreated(LocalDateTime.now());
-        member1.setGender(Gender.MAIL);
-        member1.setPhone("010-2354-9960");
-        member1.setName("김경희");
-
-        Member member2 = new Member();
-        member2.setLoginId("test1");
-        member2.setPassword("0000");
-        member2.setBirthday("2002");
-        member2.setEmail("goodnight@naver.com");
-        member2.setDateCreated(LocalDateTime.now());
-        member2.setGender(Gender.MAIL);
-        member2.setPhone("010-2354-9960");
-        member2.setName("박병로");
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
 
         em.persist(member1);
         em.persist(member2);
@@ -54,25 +36,10 @@ public class MemberTest {
 
     @Test
     public void postTest() {
-        Member member1 = new Member();
-        member1.setLoginId("test0");
-        member1.setPassword("0000");
-        member1.setBirthday("1997");
-        member1.setEmail("kkh2415@naver.com");
-        member1.setDateCreated(LocalDateTime.now());
-        member1.setGender(Gender.MAIL);
-        member1.setPhone("010-2354-9960");
-        member1.setName("김경희");
-
-        Member member2 = new Member();
-        member2.setLoginId("test1");
-        member2.setPassword("0000");
-        member2.setBirthday("2002");
-        member2.setEmail("goodnight@naver.com");
-        member2.setDateCreated(LocalDateTime.now());
-        member2.setGender(Gender.MAIL);
-        member2.setPhone("010-2354-9960");
-        member2.setName("박병로");
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
 
         em.persist(member1);
         em.persist(member2);
@@ -95,27 +62,11 @@ public class MemberTest {
     }
 
     @Test
-    @Commit
     public void commentTest() {
-        Member member1 = new Member();
-        member1.setLoginId("test0");
-        member1.setPassword("0000");
-        member1.setBirthday("1997");
-        member1.setEmail("kkh2415@naver.com");
-        member1.setDateCreated(LocalDateTime.now());
-        member1.setGender(Gender.MAIL);
-        member1.setPhone("010-2354-9960");
-        member1.setName("김경희");
-
-        Member member2 = new Member();
-        member2.setLoginId("test1");
-        member2.setPassword("0000");
-        member2.setBirthday("2002");
-        member2.setEmail("goodnight@naver.com");
-        member2.setDateCreated(LocalDateTime.now());
-        member2.setGender(Gender.MAIL);
-        member2.setPhone("010-2354-9960");
-        member2.setName("박병로");
+        Member member1 = Member.createMember("test0", "naver.com",
+                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+        Member member2 = Member.createMember("test1", "naver.com",
+                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
 
         em.persist(member1);
         em.persist(member2);

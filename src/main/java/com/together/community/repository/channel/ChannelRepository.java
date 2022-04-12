@@ -10,6 +10,7 @@ public interface ChannelRepository {
     public List<Channel> findByMemberId(Long memberId);
     public List<Channel> findByName(String name);
     public List<Channel> findAll();
+    public List<Channel> findAll(int start, int end);
     public void delete(Long id);
 
 }

@@ -1,7 +1,7 @@
 package com.together.community.domain.channel;
 
 import com.together.community.domain.category.CategoryChannel;
-import com.together.community.domain.exception.NoPlaceChnnel;
+import com.together.community.exception.NoPlaceChnnelException;
 import com.together.community.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -85,7 +85,7 @@ public class Channel {
     //==비즈니스 로직==//
     public void addMember(ChannelMember... channelMembers) {
         if (memberCount >= limitedMemberNumber ) {
-            throw new NoPlaceChnnel("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
         }
 
         for (ChannelMember channelMember : channelMembers) {
@@ -97,7 +97,7 @@ public class Channel {
 
     public void addMember(List<ChannelMember> channelMembers) {
         if (memberCount >= limitedMemberNumber ) {
-            throw new NoPlaceChnnel("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
         }
 
         for (ChannelMember channelMember : channelMembers) {

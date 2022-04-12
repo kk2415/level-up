@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html th:replace="~{base.html :: baseLayout (~{::title}, ~{::#contents}, ~{::link})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원가입</title>
+    <link href="/css/memberRegisterStyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="contents" id="contents">
+    <div id="title">
+        <h2>회원가입</h2>
+    </div>
+    <form class="form-horizontal" th:object="${member}" id="registerForm" action="/member/register" method="post">
+        <div class="form-group">
+            <label class="fieldlabel" th:for="emailId">이메일</label>
+            <input type="text" th:field="*{emailId}" placeholder="이메일을 입력해주세요" required>
+            <span>@</span>
+            <input list="domainList" th:field="*{emailDomain}" required>
+            <datalist id="domainList">
+                <option value="naver.com">
+                <option value="daum.net">
+                <option value="gmail.com">
+            </datalist>
+            <div class="error-message" th:errors="*{emailId}"></div>
+        </div>
+        <div class="form-group">
+            <label class="fieldlabel" th:for="password">패스워드</label>
+            <input type="password" th:field="*{password}" placeholder="패스워드를 입력해주세요" required>
+            <div class="error-message" th:errors="*{password}"></div>
+        </div>
+        <div class="form-group">
+            <label class="fieldlabel" th:for="name">이름</label>
+            <input type="text" th:field="*{name}" placeholder="이름를 입력해주세요" required>
+            <div class="error-message" th:errors="*{name}"></div>
+        </div>
+        <div class="form-group">
+            <label class="fieldlabel" th:for="birthday">생년월일</label>
+            <input type="text" minlength="6" maxlength="6" th:field="*{birthday}" placeholder="생년월일 6자리를 입력해주세요" required>
+            <div class="error-message" th:errors="*{birthday}"></div>
+        </div>
+        <div class="form-group">
+            <label class="fieldlabel" th:for="gender">성별</label>
+            <input type="radio" name="gender" th:value="${gender[0].MAIL}" checked>남자
+            <input type="radio" name="gender" th:value="${gender[0].FEMAIL}">여자
+        </div>
+        <div class="form-group">
+            <label class="fieldlabel" th:for="phone">핸드폰번호</label>
+            <input type="text" th:field="*{phone}" placeholder="000-0000-0000" required>
+            <div class="error-message" th:errors="*{phone}"></div>
+        </div>
+        <button class="btnfield" type="submit">
+            회원가입
+        </button>
+    </form>
+</div>
+</body>
+</html>

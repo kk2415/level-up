@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html th:replace="~{base.html :: baseLayout (~{::title}, ~{::#contents}, ~{::link})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>LevelUp</title>
+    <link href="/css/homeStyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="contents">
+    <div id="channel">
+        <div class="channel_detail" th:each="channel : ${channels}">
+            <div class="channel_header">
+                <a th:text="${channel.name}"></a>
+            </div>
+            <div class="channel_content">
+                <div class="channel_member_count">
+                    <p th:text="${channel.memberCount}"><span th:text="${channel.limitedMemberNumber}"></span></p>
+                </div>
+                <p th:text="${channel.descript}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
