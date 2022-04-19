@@ -31,15 +31,12 @@ spring:
     prefix: classpath:/static/
     suffix: .html
 
-  mvc:
-    view:
-      prefix:
-      suffix:
-#  spring.mvc.view.prefix=/WEB-INF/views/
-#spring.mvc.view.suffix=.jsp
-
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
 
+server:
+  servlet:
+    session:
+      tracking-modes: COOKIE
 
