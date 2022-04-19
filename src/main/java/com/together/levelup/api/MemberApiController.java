@@ -3,15 +3,18 @@ package com.together.levelup.api;
 import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.*;
+import com.together.levelup.service.LoginService;
 import com.together.levelup.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final LoginService loginService;
 
     @GetMapping("/api/members")
     public ResponseEntity findAllMembers() {
@@ -57,6 +61,16 @@ public class MemberApiController {
                 memberRequest.getGender(), memberRequest.getBirthday(), memberRequest.getPhone(), links);
 
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/member/login")
+    public void login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
+        System.out.println("loginForm.getEmail() : " + loginForm.getEmail());
+        System.out.println("loginForm.getPassword() : " + loginForm.getPassword());
+        Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword());
+        System.out.println("success@!!");
+        HttpSession session = request.getSession();
+        session.setAttribute(SesstionName.SESSION_NAME, member);
     }
 
     private String getNextUri(String path, Long memberId) {

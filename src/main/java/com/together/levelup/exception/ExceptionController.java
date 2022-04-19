@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.Formatter;
 import java.util.List;
 
 @Slf4j
@@ -20,12 +19,26 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
+
         exceptionResponse.setTimeStamp(LocalDateTime.now());
         exceptionResponse.setMessage(e.getMessage());
         exceptionResponse.setException(e.getClass().getName());
         exceptionResponse.setPath(request.getRequestURI());
 
         return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+
+        System.out.println(e.getMessage());
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(e.getClass().getName());
+        exceptionResponse.setPath(request.getRequestURI());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
