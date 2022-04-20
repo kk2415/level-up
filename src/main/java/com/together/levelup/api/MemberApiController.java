@@ -3,6 +3,7 @@ package com.together.levelup.api;
 import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.*;
+import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.service.LoginService;
 import com.together.levelup.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+//@RequestMapping("/api")
 public class MemberApiController {
 
     private final MemberService memberService;
@@ -65,12 +67,21 @@ public class MemberApiController {
 
     @PostMapping("/api/member/login")
     public void login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
-        System.out.println("loginForm.getEmail() : " + loginForm.getEmail());
-        System.out.println("loginForm.getPassword() : " + loginForm.getPassword());
         Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword());
-        System.out.println("success@!!");
         HttpSession session = request.getSession();
         session.setAttribute(SesstionName.SESSION_NAME, member);
+    }
+
+    @GetMapping("/api/member")
+    public MemberResponse myPage(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session == null) {
+            throw new MemberNotFoundException("해당하는 회원이 없습니다.");
+        }
+
+        Member member = (Member)session.getAttribute(SesstionName.SESSION_NAME);
+        return new MemberResponse(member.getEmail(), member.getName(),
+                member.getGender(), member.getBirthday(), member.getPhone());
     }
 
     private String getNextUri(String path, Long memberId) {

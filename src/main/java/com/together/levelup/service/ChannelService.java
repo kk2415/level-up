@@ -32,6 +32,16 @@ public class ChannelService {
         return channel.getId();
     }
 
+    @Transactional
+    public Long create(String email, String name, Long limitNumber, String descript) {
+        List<Member> members = memberRepository.findByEmail(email);
+        validationDuplicateChannel(name);
+
+        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript);
+        channelRepository.save(channel);
+        return channel.getId();
+    }
+
     private void validationDuplicateChannel(String name) {
         //이 로직은 동시성 문제가 있음. 동시에 같은 아이디가 접근해서 호출하면 통과될 수 있음. 차후에 개선
         List<Channel> findChannels = channelRepository.findByName(name);

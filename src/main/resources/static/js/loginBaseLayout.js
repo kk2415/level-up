@@ -1,4 +1,4 @@
-fetch('/base/loginNavigation.html')
+fetch('/html/base/loginNavigation.html')
     .then(function (response) {
         return response.text();
     })
@@ -6,7 +6,7 @@ fetch('/base/loginNavigation.html')
         document.querySelector("#mainNav").innerHTML = data;
     })
 
-fetch('/base/header.html')
+fetch('/html/base/header.html')
     .then(function (response) {
         return response.text();
     })
@@ -14,7 +14,7 @@ fetch('/base/header.html')
         document.querySelector(".masthead").innerHTML = data;
     })
 
-fetch('/base/footer.html')
+fetch('/html/base/footer.html')
     .then(function (response) {
         return response.text();
     })

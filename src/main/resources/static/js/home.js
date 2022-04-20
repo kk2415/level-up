@@ -1,11 +1,22 @@
-
-fetch('/api/channels')
-    .then(function (response) {
-        return response.json();
+$(function () {
+    $.ajax({
+        url: '/api/channels',
+        method: 'GET'
     })
-    .then(function (channels) {
-        createCards(channels);
-    });
+    .done(function (json) {
+        createCards(json);
+    })
+
+    // $('#createChannelButton').
+})
+
+// fetch('/api/channels')
+//     .then(function (response) {
+//         return response.json();
+//     })
+//     .then(function (channels) {
+//         createCards(channels);
+//     });
 
 function createCards(channels) {
     let count = channels.count;
