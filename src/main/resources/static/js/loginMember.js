@@ -8,10 +8,11 @@ let unmatchedLoginInfoMsg = "";
 setEventListenerOfInput();
 
 let form = document.getElementById('loginForm');
-// form.onsubmit = validation;
-// form.addEventListener('submit', requestPost);
 
 document.getElementById('loginButton').addEventListener('click', onLoginButton);
+document.getElementById('loginCancel').addEventListener('click', function () {
+    window.location.href = 'http://localhost:8080/';
+});
 
 function onLoginButton() {
     if (validation()) {

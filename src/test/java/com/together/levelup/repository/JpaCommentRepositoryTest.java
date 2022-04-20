@@ -30,9 +30,9 @@ class JpaCommentRepositoryTest {
     @Test
     void save() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
 
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -64,9 +64,9 @@ class JpaCommentRepositoryTest {
     @Test
     void findByMemberId() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
 
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -96,9 +96,9 @@ class JpaCommentRepositoryTest {
     @Test
     void findByPostId() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
 
         memberRepository.save(member1);
         memberRepository.save(member2);
@@ -125,9 +125,9 @@ class JpaCommentRepositoryTest {
     @Test
     void delete() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
 
         memberRepository.save(member1);
         memberRepository.save(member2);

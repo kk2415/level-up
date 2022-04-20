@@ -28,7 +28,7 @@ spring:
     #커넥션 리소스를 낭비하지 않는다.
 
   thymeleaf:
-    prefix: classpath:/static/
+    prefix: classpath:/templates/
     suffix: .html
 
 logging.level:

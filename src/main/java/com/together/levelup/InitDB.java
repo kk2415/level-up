@@ -31,11 +31,11 @@ public class InitDB {
 
         public void initDb() {
             Member manager1 = Member.createMember("test0", "000000", "테스트네임0",
-                    Gender.MAIL, "19970927", "010-2354-9960");
+                    Gender.MALE, "19970927", "010-2354-9960");
             Member manager2 = Member.createMember("test1", "000000", "테스트네임1",
-                    Gender.MAIL, "19970927", "010-2354-9960");
+                    Gender.MALE, "19970927", "010-2354-9960");
             Member member1 = Member.createMember("test2", "000000", "테스트네임2",
-                    Gender.MAIL, "19970927", "010-2354-9960");
+                    Gender.MALE, "19970927", "010-2354-9960");
             em.persist(manager1);
             em.persist(manager2);
             em.persist(member1);

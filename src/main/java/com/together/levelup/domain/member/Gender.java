@@ -3,7 +3,7 @@ package com.together.levelup.domain.member;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum Gender {
-    MAIL, FEMAIL;
+    MALE, FEMALE;
 
     @JsonCreator
     public static Gender matchingEnum(String val){
@@ -12,7 +12,7 @@ public enum Gender {
                 return gender;
             }
         }
-        return Gender.MAIL;
+        return Gender.MALE;
     }
 
 }

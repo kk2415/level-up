@@ -73,7 +73,6 @@ async function requestPost() {
         let promise = await response.json();
         await promise.then(function (data) {
             alert(JSON.stringify(data));
-            alert("성공");
         })
     }
 }

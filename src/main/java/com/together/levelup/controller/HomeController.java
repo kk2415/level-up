@@ -14,12 +14,12 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = SesstionName.SESSION_NAME, required = false) Member member) {
-
-        if (member == null) {
-            return "home/home";
-        }
-        return "home/loginHome";
-
+//        if (member == null) {
+//            return "html/home/home";
+//        }
+//
+//        return "html/home/loginHome";
+        return "html/home/home";
     }
 
 }

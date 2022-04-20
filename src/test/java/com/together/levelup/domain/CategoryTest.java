@@ -23,9 +23,9 @@ public class CategoryTest {
     @Test
     public void 카테고리_테스트() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
 
         em.persist(member1);
         em.persist(member2);
@@ -46,9 +46,9 @@ public class CategoryTest {
     @Test
     void 부모_자식_테스트() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MAIL, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMAIL, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
 
         em.persist(member1);
         em.persist(member2);
