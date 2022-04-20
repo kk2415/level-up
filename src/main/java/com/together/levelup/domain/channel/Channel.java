@@ -45,7 +45,7 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private List<CategoryChannel> categoryChannels = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Member member;
 
@@ -59,7 +59,7 @@ public class Channel {
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
-        member.setChannel(this);
+        member.getChannels().add(this);
     }
 
     public void setChannelMember(ChannelMember channelMember) {

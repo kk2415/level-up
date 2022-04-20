@@ -2,6 +2,7 @@ package com.together.levelup.service;
 
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.exception.DuplicateEmailException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class memberServiceTest {
 
         memberService.join(member1);
 
-        Assertions.assertThatThrownBy(() -> memberService.join(member2)).isInstanceOf(IllegalStateException.class);
+        Assertions.assertThatThrownBy(() -> memberService.join(member2)).isInstanceOf(DuplicateEmailException.class);
     }
 
 }
