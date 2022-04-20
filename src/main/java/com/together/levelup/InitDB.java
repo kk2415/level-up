@@ -30,19 +30,19 @@ public class InitDB {
         private final EntityManager em;
 
         public void initDb() {
-            Member manager1 = Member.createMember("test0", "000000", "테스트네임0",
+            Member manager1 = Member.createMember("test0@naver.com", "000000", "테스트네임0",
                     Gender.MALE, "19970927", "010-2354-9960");
-            Member manager2 = Member.createMember("test1", "000000", "테스트네임1",
+            Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
                     Gender.MALE, "19970927", "010-2354-9960");
-            Member member1 = Member.createMember("test2", "000000", "테스트네임2",
+            Member member1 = Member.createMember("test2@naver.com", "000000", "테스트네임2",
                     Gender.MALE, "19970927", "010-2354-9960");
             em.persist(manager1);
             em.persist(manager2);
             em.persist(member1);
 
-            Channel channel1 = Channel.createChannel(manager1, "축구를 잘하고싶은 사람들", 20L,
+            Channel channel1 = Channel.createChannel(manager1, "축구를 x잘하고싶은 사람들", 20L,
                     "안녕하세요!");
-            Channel channel2 = Channel.createChannel(manager2, "스프링 학습방", 20L,
+            Channel channel2 = Channel.createChannel(manager2, "스프링 x학습방", 20L,
                     "스프링 초보들 다 모여라!");
             em.persist(channel1);
             em.persist(channel2);

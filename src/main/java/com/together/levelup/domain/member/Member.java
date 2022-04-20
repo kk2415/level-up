@@ -51,8 +51,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<ChannelMember> channelMembers = new ArrayList<>();
 
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-    private Channel channel;
+    @OneToMany(mappedBy = "member")
+    private List<Channel> channels = new ArrayList<>();
 
     //==생성 메서드==//
     public static Member createMember(String email, String password, String name,
