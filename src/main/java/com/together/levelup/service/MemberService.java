@@ -3,6 +3,7 @@ package com.together.levelup.service;
 import com.together.levelup.dto.MemberJoinForm;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.exception.DuplicateEmailException;
+import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,14 @@ public class MemberService {
 
     public Member findOne(Long memberId) {
         return memberRepository.findById(memberId);
+    }
+
+    public Member findByEmail(String email) {
+        List<Member> members = memberRepository.findByEmail(email);
+        if (members.size() < 1) {
+            throw new MemberNotFoundException("가입된 이메일이 없습니다");
+        }
+        return members.get(0);
     }
 
     /**

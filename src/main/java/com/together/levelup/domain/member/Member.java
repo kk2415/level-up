@@ -32,6 +32,9 @@ public class Member {
     private String birthday;
     private String phone;
 
+    @Embedded
+    private UploadFile uploadFile;
+
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
 
@@ -56,7 +59,7 @@ public class Member {
 
     //==생성 메서드==//
     public static Member createMember(String email, String password, String name,
-                                      Gender gender, String birthday, String phone) {
+                                      Gender gender, String birthday, String phone, UploadFile uploadFile) {
         Member member = new Member();
         member.setEmail(email);
         member.setPassword(password);
@@ -66,6 +69,7 @@ public class Member {
         member.setPhone(phone);
         member.setAuthority(Authority.NORMAL);
         member.setDateCreated(LocalDateTime.now());
+        member.setUploadFile(uploadFile);
         return member;
     }
 

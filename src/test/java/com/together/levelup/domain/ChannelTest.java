@@ -20,9 +20,9 @@ public class ChannelTest {
     @Test
     public void 채널_등록_테스트() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
 
         em.persist(member1);
         em.persist(member2);
@@ -34,9 +34,9 @@ public class ChannelTest {
     @Test
     public void 채널_멤버_추가() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960",null );
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
 
         em.persist(member1);
         em.persist(member2);

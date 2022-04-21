@@ -30,6 +30,13 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+
+file:
+  dir: C:/Task/study/levelup/images/
 
 logging.level:
   org.hibernate.SQL: debug
@@ -40,3 +47,10 @@ server:
     session:
       tracking-modes: COOKIE
 
+#logging:
+#  level:
+#    org:
+#      apache:
+#        coyote:
+#          http11=debug:
+# 위 옵션은 http 요청 메시지를 확인할 수 있는 옵션
