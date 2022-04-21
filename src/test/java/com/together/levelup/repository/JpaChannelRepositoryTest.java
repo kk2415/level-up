@@ -26,7 +26,7 @@ class JpaChannelRepositoryTest {
     @Test
     void save() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         memberRepository.save(member1);
 
         Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
@@ -38,9 +38,9 @@ class JpaChannelRepositoryTest {
     @Test
     void findByMemberId() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberRepository.save(member1);
         memberRepository.save(member2);
 
@@ -58,9 +58,9 @@ class JpaChannelRepositoryTest {
     @Test
     void delete() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberRepository.save(member1);
         memberRepository.save(member2);
 

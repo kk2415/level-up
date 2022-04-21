@@ -7,13 +7,19 @@ import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.post.JpaPostRepository;
 import com.together.levelup.repository.post.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.persistence.EntityManager;
 
 @Configuration
-public class SpringConfig {
+public class SpringConfig implements WebMvcConfigurer {
+
+    @Value("${file.dir}")
+    private String fileDir;
 
     @Autowired
     private EntityManager em;
@@ -33,4 +39,8 @@ public class SpringConfig {
         return new JpaCommentRepository(em);
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(fileDir);
+    }
 }

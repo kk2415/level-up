@@ -21,9 +21,9 @@ class CommentServiceTest {
     @Test
     void commenting() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberService.join(member1);
         memberService.join(member2);
 
@@ -47,9 +47,9 @@ class CommentServiceTest {
     @Test
     void updateComment() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberService.join(member1);
         memberService.join(member2);
 
@@ -70,9 +70,9 @@ class CommentServiceTest {
     @Test
     void deleteComment() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699",null);
         memberService.join(member1);
         memberService.join(member2);
 
@@ -93,9 +93,9 @@ class CommentServiceTest {
     @Test
     void findByMemberId() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960",null );
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699",null );
         memberService.join(member1);
         memberService.join(member2);
 
@@ -114,9 +114,9 @@ class CommentServiceTest {
     @Test
     void findByPostId() {
         Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960");
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699");
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberService.join(member1);
         memberService.join(member2);
 

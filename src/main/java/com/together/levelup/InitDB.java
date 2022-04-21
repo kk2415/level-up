@@ -4,6 +4,7 @@ import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.member.UploadFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +32,11 @@ public class InitDB {
 
         public void initDb() {
             Member manager1 = Member.createMember("test0@naver.com", "000000", "테스트네임0",
-                    Gender.MALE, "19970927", "010-2354-9960");
+                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
             Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
-                    Gender.MALE, "19970927", "010-2354-9960");
+                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
             Member member1 = Member.createMember("test2@naver.com", "000000", "테스트네임2",
-                    Gender.MALE, "19970927", "010-2354-9960");
+                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
             em.persist(manager1);
             em.persist(manager2);
             em.persist(member1);

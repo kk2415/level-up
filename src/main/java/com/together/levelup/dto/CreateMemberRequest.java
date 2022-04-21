@@ -5,6 +5,7 @@ import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -48,19 +49,8 @@ public class CreateMemberRequest {
     @Pattern(regexp = "^0\\d{2,3}-\\d{3,4}-\\d{4}$", message = "유효한 형식이 아닙니다.")
     private String phone;
 
-    private Authority authority;
+    private MultipartFile multipartFile;
 
-    public Member toEntity() {
-        Member member = new Member();
-        member.setEmail(this.email);
-        member.setPassword(this.password);
-        member.setName(this.name);
-        member.setGender(this.gender);
-        member.setBirthday(this.birthday);
-        member.setPhone(this.phone);
-        member.setAuthority(Authority.NORMAL);
-        member.setDateCreated(LocalDateTime.now());
-        return member;
-    }
+    private Authority authority;
 
 }

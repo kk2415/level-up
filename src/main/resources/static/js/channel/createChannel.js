@@ -7,6 +7,9 @@ $(function () {
     let reg_description = /^[가-힣a-zA-Z0-9]{2,30}$/;
 
     $('#alert').css('display', 'none');
+    $('#cancel').click(function () {
+        window.location.href = 'http://localhost:8080/';
+    })
     setEventListenerOfInput();
 
     $('#submitButton').click(function () {
