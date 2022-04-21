@@ -3,8 +3,10 @@ package com.together.levelup.dto;
 import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.member.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EnumType;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@ToString
 public class CreateMemberRequest {
 
     @NotNull
@@ -49,7 +52,7 @@ public class CreateMemberRequest {
     @Pattern(regexp = "^0\\d{2,3}-\\d{3,4}-\\d{4}$", message = "유효한 형식이 아닙니다.")
     private String phone;
 
-    private MultipartFile multipartFile;
+    private UploadFile uploadFile;
 
     private Authority authority;
 
