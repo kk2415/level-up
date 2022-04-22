@@ -1,6 +1,7 @@
 package com.together.levelup.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,14 +34,16 @@ public class Post {
     @Column(name = "vote_count")
     private Long voteCount;
 
-    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
@@ -48,11 +51,30 @@ public class Post {
         member.getPosts().add(this);
     }
 
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+        channel.getPosts().add(this);
+    }
+
     //==생성 메서드==//
     public static Post createPost(Member member, String title, String content) {
         Post post = new Post();
 
         post.setMember(member);
+        post.setTitle(title);
+        post.setContent(content);
+        post.setDateCreated(LocalDateTime.now());
+        post.setVoteCount(0L);
+        post.setWriter(member.getName());
+
+        return post;
+    }
+
+    public static Post createPost(Member member, Channel channel, String title, String content) {
+        Post post = new Post();
+
+        post.setMember(member);
+        post.setChannel(channel);
         post.setTitle(title);
         post.setContent(content);
         post.setDateCreated(LocalDateTime.now());

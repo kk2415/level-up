@@ -25,8 +25,8 @@ class JpaChannelRepositoryTest {
 
     @Test
     void save() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
+        Member member1 = Member.createMember("test0", "0000", "김경희",
+                Gender.MALE, "970927", "010-2354-9960", null);
         memberRepository.save(member1);
 
         Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
