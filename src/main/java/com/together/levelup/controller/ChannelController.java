@@ -19,4 +19,9 @@ public class ChannelController {
         return "redirect:/";
     }
 
+    @GetMapping("/detail")
+    public String detail() {
+        return "html/channel/channelDetail";
+    }
+
 }

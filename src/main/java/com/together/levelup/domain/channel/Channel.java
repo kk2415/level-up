@@ -1,5 +1,6 @@
 package com.together.levelup.domain.channel;
 
+import com.together.levelup.domain.Post;
 import com.together.levelup.domain.category.CategoryChannel;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.exception.NoPlaceChnnelException;
@@ -52,6 +53,9 @@ public class Channel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Member member;
+
+    @OneToMany(mappedBy = "channel")
+    private List<Post> posts = new ArrayList<>();
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.

@@ -1,8 +1,10 @@
 package com.together.levelup.repository;
 
 import com.together.levelup.domain.Post;
+import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.post.PostRepository;
 import org.assertj.core.api.Assertions;
@@ -21,6 +23,9 @@ public class PostRepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ChannelRepository channelRepository;
 
     @Test
     public void 게시글_레포_테스트() {
@@ -56,9 +61,12 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Post post1 = Post.createPost(member1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
-        Post post2 = Post.createPost(member1, "저녁 뭐 먹지?", "추천 받음");
-        Post post3 = Post.createPost(member2, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        channelRepository.save(channel);
+
+        Post post1 = Post.createPost(member1, channel, "헬로 방가", "안녕하세요. 첫 게시글입니다");
+        Post post2 = Post.createPost(member1, channel, "저녁 뭐 먹지?", "추천 받음");
+        Post post3 = Post.createPost(member2, channel, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
         postRepository.save(post1);
         postRepository.save(post2);
         postRepository.save(post3);
