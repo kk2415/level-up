@@ -2,7 +2,6 @@ package com.together.levelup.api;
 
 import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
-import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.dto.*;

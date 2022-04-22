@@ -21,21 +21,30 @@ $(function () {
 function createCards(channels) {
     let count = channels.count;
     let data = channels.data;
-    let channelRow = document.querySelector("div[id=channelRow]");
-    let baseColunm = document.querySelector("div[id=channelRow] .col");
+
+    let channelRow = $('#channelRow');
+    let channelCol = $('#channelCol');
+    // let channelRow = document.querySelector("div[id=channelRow]");
+    // let baseColunm = document.querySelector("div[id=channelRow] .col");
 
     for (let i = 0; i < count; i++) {
-        let colunmNode = baseColunm.cloneNode(true);
+        let colunmNode = channelCol.clone();
 
         if (i == 0) {
-            colunmNode = baseColunm;
+            colunmNode = channelCol;
         }
-
         colunmNode.id = i;
-        colunmNode.querySelector(".card-title").innerHTML = data[i].name;
-        colunmNode.querySelector(".card-text").innerHTML = data[i].descript;
-        colunmNode.querySelector(".card-footer").innerHTML = data[i].memberCount + " / " + data[i].limitedMemberNumber;
 
-        channelRow.appendChild(colunmNode);
+        colunmNode.children().children('.card-body').children('.card-title').text(data[i].name)
+        colunmNode.children().children('.card-body').children('.card-text').text(data[i].description)
+        colunmNode.children().children('.card-footer').text(data[i].memberCount + " / " + data[i].limitedMemberNumber)
+
+        console.log('src', 'api/channel/' + data[i].id + '/thumbnail')
+
+        colunmNode.children()
+            .children('#thumbnail')
+            .attr('src', 'api/channel/' + data[i].id + '/thumbnail')
+
+        channelRow.append(colunmNode)
     }
 }
