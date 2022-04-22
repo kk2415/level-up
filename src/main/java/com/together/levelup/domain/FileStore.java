@@ -14,6 +14,10 @@ import java.util.UUID;
 @Component
 public class FileStore {
 
+    public final static String MEMBER_DEFAULT_IMAGE = "member/AFF947XXQ-5554WSDQ12.png";
+    public final static String CHANNEL_DEFAULT_IMAGE = "channel/rich-g5fba4398e_640.jpg";
+
+
     @Value("${file.dir}")
     private String fileDir;
 
@@ -51,6 +55,9 @@ public class FileStore {
 
         if (imageType == ImageType.MEMBER) {
             storeFileName = "member/" + createStoreFileName(uploadFilename);
+        }
+        else if (imageType == ImageType.CHANNEL) {
+            storeFileName = "channel/" + createStoreFileName(uploadFilename);
         }
         else {
             storeFileName = "post/" + createStoreFileName(uploadFilename);

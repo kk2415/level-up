@@ -1,6 +1,7 @@
 package com.together.levelup.domain.channel;
 
 import com.together.levelup.domain.category.CategoryChannel;
+import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.exception.NoPlaceChnnelException;
 import com.together.levelup.domain.member.Member;
 import lombok.AccessLevel;
@@ -39,6 +40,9 @@ public class Channel {
     @Column(name = "member_count")
     private Long memberCount;
 
+    @Embedded
+    private UploadFile uploadFile;
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers = new ArrayList<>();
 
@@ -68,6 +72,21 @@ public class Channel {
     }
 
     //==생성 메서드==//
+    public static Channel createChannel(Member member, String name, Long limitNumber, String descript, UploadFile uploadFile) {
+        Channel channel = new Channel();
+
+        channel.setMember(member);
+        channel.setName(name);
+        channel.setManagerName(member.getName());
+        channel.setLimitedMemberNumber(limitNumber);
+        channel.setDescript(descript);
+        channel.setDateCreated(LocalDateTime.now());
+        channel.setMemberCount(0L);
+        channel.setUploadFile(uploadFile);
+
+        return channel;
+    }
+
     public static Channel createChannel(Member member, String name, Long limitNumber, String descript) {
         Channel channel = new Channel();
 

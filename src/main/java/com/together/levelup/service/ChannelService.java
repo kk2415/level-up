@@ -3,6 +3,7 @@ package com.together.levelup.service;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +34,11 @@ public class ChannelService {
     }
 
     @Transactional
-    public Long create(String email, String name, Long limitNumber, String descript) {
+    public Long create(String email, String name, Long limitNumber, String descript, UploadFile uploadFile) {
         List<Member> members = memberRepository.findByEmail(email);
         validationDuplicateChannel(name);
 
-        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript);
+        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript, uploadFile);
         channelRepository.save(channel);
         return channel.getId();
     }
