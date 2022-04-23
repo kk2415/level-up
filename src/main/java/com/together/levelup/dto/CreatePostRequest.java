@@ -5,13 +5,13 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class PostRequest {
+public class CreatePostRequest {
+
+    @NotNull
+    private Long channelId;
 
     @NotNull
     private String title;
-
-    @NotNull
-    private String writer;
 
     @NotNull
     private String content;

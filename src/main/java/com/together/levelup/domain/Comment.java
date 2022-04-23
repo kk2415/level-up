@@ -1,6 +1,7 @@
 package com.together.levelup.domain;
 
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.post.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

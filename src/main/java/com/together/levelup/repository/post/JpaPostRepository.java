@@ -1,6 +1,7 @@
 package com.together.levelup.repository.post;
 
-import com.together.levelup.domain.Post;
+import com.together.levelup.domain.post.Post;
+import com.together.levelup.dto.PostSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -56,6 +57,51 @@ public class JpaPostRepository implements PostRepository {
 
         return em.createQuery(query, Post.class)
                 .setParameter("memberId", memberId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Post> findByChannelId(Long channelId) {
+        String query = "select p from Post p join p.channel c where c.id = :channelId";
+
+        return em.createQuery(query, Post.class)
+                .setParameter("channelId", channelId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Post> findByChannelId(Long channelId, int page) {
+        int firstPage = 1 + (page - 1) * 10; //1, 11, 21, 31
+        int lastPage = page * 10; //10, 20, 30, 40
+
+        String query = "select p from Post p join p.channel c where c.id = :channelId";
+
+        return em.createQuery(query, Post.class)
+                .setParameter("channelId", channelId)
+                .setFirstResult(firstPage)
+                .setMaxResults(lastPage)
+                .getResultList();
+    }
+
+    @Override
+    public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
+        int firstPage = (page - 1) * 10; //0, 10, 20, 30
+        int lastPage = page * 10 - 1; //9, 19, 29, 39
+
+        if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
+            return findByChannelId(channelId, page);
+        }
+
+        String sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.writer like CONCAT('%',:query,'%')";
+        if (postSearch.getField() == "title") {
+            sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.title like CONCAT('%',:query,'%')";
+        }
+
+        return em.createQuery(sqlQuery, Post.class)
+                .setParameter("channelId", channelId)
+                .setParameter("query", postSearch.getQuery())
+                .setFirstResult(firstPage)
+                .setMaxResults(lastPage)
                 .getResultList();
     }
 

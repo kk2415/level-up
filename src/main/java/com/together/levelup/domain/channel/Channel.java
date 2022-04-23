@@ -1,6 +1,6 @@
 package com.together.levelup.domain.channel;
 
-import com.together.levelup.domain.Post;
+import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.category.CategoryChannel;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.exception.NoPlaceChnnelException;

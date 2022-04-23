@@ -1,6 +1,7 @@
 package com.together.levelup.repository.post;
 
-import com.together.levelup.domain.Post;
+import com.together.levelup.domain.post.Post;
+import com.together.levelup.dto.PostSearch;
 
 import java.util.List;
 
@@ -8,10 +9,14 @@ public interface PostRepository {
 
     public void save(Post post);
     public Post findById(Long id);
+    public List<Post> findByChannelId(Long channelId);
+    public List<Post> findByChannelId(Long channelId, int page);
+    public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch);
     public List<Post> findByMemberId(Long memberId);
     public List<Post> findByTitle(String title);
     public List<Post> findByWriter(String writer);
     public List<Post> findAll();
+
     public void delete(Long id);
     public Long countAll();
 

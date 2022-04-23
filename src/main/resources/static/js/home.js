@@ -37,9 +37,8 @@ function createCards(channels) {
 
         colunmNode.children().children('.card-body').children('.card-title').text(data[i].name)
         colunmNode.children().children('.card-body').children('.card-text').text(data[i].description)
+        colunmNode.children().children('.card-body').children('#channelConnetion').attr('href', '/channel/detail/' + data[i].id)
         colunmNode.children().children('.card-footer').text(data[i].memberCount + " / " + data[i].limitedMemberNumber)
-
-        console.log('src', 'api/channel/' + data[i].id + '/thumbnail')
 
         colunmNode.children()
             .children('#thumbnail')

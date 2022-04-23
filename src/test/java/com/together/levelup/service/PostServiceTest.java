@@ -1,6 +1,6 @@
 package com.together.levelup.service;
 
-import com.together.levelup.domain.Post;
+import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.repository.post.PostRepository;
