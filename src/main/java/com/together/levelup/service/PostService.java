@@ -1,7 +1,11 @@
 package com.together.levelup.service;
 
-import com.together.levelup.domain.Post;
+import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.post.PostCategory;
+import com.together.levelup.dto.PostSearch;
+import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final ChannelRepository channelRepository;
 
     /**
      * 게시글 등록
@@ -24,6 +29,15 @@ public class PostService {
     public Long post(Long memberId, String title, String content) {
         Member member = memberRepository.findById(memberId);
         Post post = Post.createPost(member, title, content);
+        postRepository.save(post);
+        return post.getId();
+    }
+
+    public Long post(Long memberId, Long channelId, String title, String content, PostCategory postCategory) {
+        Member member = memberRepository.findById(memberId);
+        Channel channel = channelRepository.findById(channelId);
+
+        Post post = Post.createPost(member, channel, title, content, postCategory);
         postRepository.save(post);
         return post.getId();
     }
@@ -62,6 +76,14 @@ public class PostService {
 
     public List<Post> findAll() {
         return postRepository.findAll();
+    }
+
+    public List<Post> findByChannelId(Long channelId) {
+        return postRepository.findByChannelId(channelId);
+    }
+
+    public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
+        return postRepository.findByChannelId(channelId, page, postSearch);
     }
 
 }

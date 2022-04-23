@@ -1,6 +1,6 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.post;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.together.levelup.domain.Comment;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.member.Member;
 import lombok.AccessLevel;
@@ -33,6 +33,9 @@ public class Post {
 
     @Column(name = "vote_count")
     private Long voteCount;
+
+    @Enumerated(EnumType.STRING)
+    private PostCategory postCategory;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -71,6 +74,10 @@ public class Post {
     }
 
     public static Post createPost(Member member, Channel channel, String title, String content) {
+        return createPost(member, channel, title, content,PostCategory.INFO);
+    }
+
+    public static Post createPost(Member member, Channel channel, String title, String content, PostCategory postCategory) {
         Post post = new Post();
 
         post.setMember(member);
@@ -80,6 +87,7 @@ public class Post {
         post.setDateCreated(LocalDateTime.now());
         post.setVoteCount(0L);
         post.setWriter(member.getName());
+        post.setPostCategory(postCategory);
 
         return post;
     }

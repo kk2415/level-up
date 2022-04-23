@@ -20,7 +20,7 @@ public class InitDB {
 
     @PostConstruct
     public void init() {
-//        initService.initDb();
+        initService.initDb();
     }
 
     @Component

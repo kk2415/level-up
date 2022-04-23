@@ -19,9 +19,13 @@ public class ChannelController {
         return "redirect:/";
     }
 
-    @GetMapping("/detail")
+    @GetMapping("/detail/{channelId}")
     public String detail() {
         return "html/channel/channelDetail";
     }
 
+    @GetMapping("/{channelId}/posting")
+    public String posting() {
+        return "html/channel/createChannelPost";
+    }
 }

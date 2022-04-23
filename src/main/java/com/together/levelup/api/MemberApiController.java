@@ -151,7 +151,7 @@ public class MemberApiController {
     public void login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
         Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword());
         HttpSession session = request.getSession();
-        session.setAttribute(SesstionName.SESSION_NAME, member);
+        session.setAttribute(SessionName.SESSION_NAME, member);
     }
 
     @GetMapping("/api/member")
@@ -161,7 +161,7 @@ public class MemberApiController {
             throw new MemberNotFoundException("해당하는 회원이 없습니다.");
         }
 
-        Member member = (Member)session.getAttribute(SesstionName.SESSION_NAME);
+        Member member = (Member)session.getAttribute(SessionName.SESSION_NAME);
         if (member == null) {
             throw new MemberNotFoundException("해당하는 회원이 없습니다.");
         }

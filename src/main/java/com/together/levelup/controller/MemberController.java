@@ -1,7 +1,5 @@
 package com.together.levelup.controller;
 
-import com.together.levelup.api.SesstionName;
-import com.together.levelup.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

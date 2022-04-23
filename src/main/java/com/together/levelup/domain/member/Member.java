@@ -1,7 +1,7 @@
 package com.together.levelup.domain.member;
 
 import com.together.levelup.domain.Comment;
-import com.together.levelup.domain.Post;
+import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelMember;
 import lombok.Getter;
