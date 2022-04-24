@@ -62,7 +62,7 @@ public class JpaPostRepository implements PostRepository {
 
     @Override
     public List<Post> findByChannelId(Long channelId) {
-        String query = "select p from Post p join p.channel c where c.id = :channelId";
+        String query = "select p from Post p join p.channel c where c.id = :channelId order by p.dateCreated";
 
         return em.createQuery(query, Post.class)
                 .setParameter("channelId", channelId)
@@ -71,10 +71,10 @@ public class JpaPostRepository implements PostRepository {
 
     @Override
     public List<Post> findByChannelId(Long channelId, int page) {
-        int firstPage = 1 + (page - 1) * 10; //1, 11, 21, 31
-        int lastPage = page * 10; //10, 20, 30, 40
+        int firstPage = (page - 1) * 10; //0, 10, 20, 30
+        int lastPage = page * 10; //9, 19, 29, 39
 
-        String query = "select p from Post p join p.channel c where c.id = :channelId";
+        String query = "select p from Post p join p.channel c where c.id = :channelId order by p.dateCreated";
 
         return em.createQuery(query, Post.class)
                 .setParameter("channelId", channelId)
@@ -86,14 +86,14 @@ public class JpaPostRepository implements PostRepository {
     @Override
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
-        int lastPage = page * 10 - 1; //9, 19, 29, 39
+        int lastPage = page * 10; //9, 19, 29, 39
 
         if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
             return findByChannelId(channelId, page);
         }
 
         String sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.writer like CONCAT('%',:query,'%')";
-        if (postSearch.getField() == "title") {
+        if (postSearch.getField().equals("title")) {
             sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.title like CONCAT('%',:query,'%')";
         }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,27 +28,36 @@ public class PostApiController {
 
         List<PostResponse> postResponses = findPosts.stream()
                 .map(p -> new PostResponse(p.getTitle(), p.getWriter(), p.getContent(),
-                        p.getDateCreated(), p.getVoteCount(), p.getComments().size()))
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
+                        p.getVoteCount(), p.getComments().size()))
                 .collect(Collectors.toList());
 
         return new Result(postResponses, postResponses.size());
     }
 
     @GetMapping("/{channelId}/posts/{page}")
-    public Result findByChannelId(@PathVariable Long channelId, @PathVariable int page,
-                                  @RequestBody PostSearch postSearch) {
-        List<Post> findPosts = postService.findByChannelId(channelId, page, postSearch);
+    public Result listingChannelPosts(@PathVariable Long channelId, @PathVariable int page,
+                                  @RequestParam(required = false) String field, @RequestParam(required = false) String query) {
+//        System.out.println(field);
+//        System.out.println(query);
 
+        PostSearch postSearch = null;
+        if (field != null && query != null) {
+            postSearch = new PostSearch(field, query);
+        }
+
+        List<Post> findPosts = postService.findByChannelId(channelId, page, postSearch);
         List<PostResponse> postResponses = findPosts.stream()
                 .map(p -> new PostResponse(p.getTitle(), p.getWriter(), p.getContent(),
-                        p.getDateCreated(), p.getVoteCount(), p.getComments().size()))
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
+                        p.getVoteCount(), p.getComments().size()))
                 .collect(Collectors.toList());
 
         return new Result(postResponses, postResponses.size());
     }
 
     @PostMapping("/post")
-    public PostResponse posting(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request) {
+    public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
 
@@ -59,7 +69,10 @@ public class PostApiController {
                 postRequest.getContent(), postRequest.getCategory());
 
         Post findPost = postService.findOne(postId);
-        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getDateCreated(),
+
+        String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
+
+        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), dateTime,
                 findPost.getVoteCount(), findPost.getComments().size());
     }
 

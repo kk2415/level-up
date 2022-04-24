@@ -115,19 +115,19 @@ public class PostRepositoryTest {
 
         Post post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
         Post post2 = Post.createPost(member1, channel1, "저녁 뭐 먹지?", "추천 받음");
-        Post post3 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post4 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post5 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post6 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post7 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post8 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post9 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post10 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post11 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post12 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post13 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post14 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        Post post15 = Post.createPost(member2, channel1, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
+        Post post3 = Post.createPost(member1, channel1, "1", "천천히 생각해보니 인생이란...");
+        Post post4 = Post.createPost(member1, channel1, "2", "천천히 생각해보니 인생이란...");
+        Post post5 = Post.createPost(member1, channel1, "3", "천천히 생각해보니 인생이란...");
+        Post post6 = Post.createPost(member1, channel1, "4", "천천히 생각해보니 인생이란...");
+        Post post7 = Post.createPost(member1, channel1, "5", "천천히 생각해보니 인생이란...");
+        Post post8 = Post.createPost(member1, channel1, "6", "천천히 생각해보니 인생이란...");
+        Post post9 = Post.createPost(member2, channel1, "7", "천천히 생각해보니 인생이란...");
+        Post post10 = Post.createPost(member2, channel1, "8", "천천히 생각해보니 인생이란...");
+        Post post11 = Post.createPost(member2, channel1, "9", "천천히 생각해보니 인생이란...");
+        Post post12 = Post.createPost(member2, channel1, "10", "천천히 생각해보니 인생이란...");
+        Post post13 = Post.createPost(member2, channel1, "11", "천천히 생각해보니 인생이란...");
+        Post post14 = Post.createPost(member2, channel1, "12", "천천히 생각해보니 인생이란...");
+        Post post15 = Post.createPost(member2, channel1, "울랄라", "천천히 생각해보니 인생이란...");
 
         postRepository.save(post1);
         postRepository.save(post2);
@@ -148,8 +148,11 @@ public class PostRepositoryTest {
         List<Post> findPosts = postRepository.findByChannelId(channel1.getId(), 1, null);
         Assertions.assertThat(findPosts.size()).isEqualTo(10);
 
-        List<Post> findPosts2 = postRepository.findByChannelId(channel1.getId(), 1, new PostSearch("writer", "김경희"));
-        Assertions.assertThat(findPosts2.size()).isEqualTo(2);
+        List<Post> findPosts2 = postRepository.findByChannelId(channel1.getId(), 1, new PostSearch("writer", "이예지"));
+        Assertions.assertThat(findPosts2.size()).isEqualTo(7);
+
+        List<Post> findPosts3 = postRepository.findByChannelId(channel1.getId(), 1, new PostSearch("title", "헬로"));
+        Assertions.assertThat(findPosts3.size()).isEqualTo(1);
     }
 
     @Test

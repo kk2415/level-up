@@ -12,7 +12,7 @@ public class PostResponse {
     private String title;
     private String writer;
     private String content;
-    private LocalDateTime dateCreated;
+    private String dateCreated;
     private Long voteCount;
     private int commentCount;
 
