@@ -42,6 +42,14 @@ public class ChannelApiController {
         return new Result(responseList, responseList.size());
     }
 
+    @GetMapping("/channel/{channelId}")
+    public ChannelResponse channels(@PathVariable Long channelId) {
+        Channel findChannel = channelService.findOne(channelId);
+
+        return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
+                findChannel.getManagerName(), findChannel.getDescript(), findChannel.getMemberCount());
+    }
+
     @PostMapping("/channel")
     public ChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
         Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
