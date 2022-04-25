@@ -25,7 +25,7 @@ public class ChannelController {
                          @RequestParam(required = false) String field,
                          @RequestParam(required = false) String query) {
 
-        return "html/channel/channelDetail";
+        return "html/channel/detailChannel";
     }
 
     @GetMapping("/{channelId}/posting")

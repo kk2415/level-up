@@ -43,7 +43,7 @@ $(function () {
             dataType: 'json',
         })
         .done(function () {
-            $(location).attr('href', '/channel/detail/' + channelId)
+            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
         })
         .fail(function (error) {
             console.log(error)

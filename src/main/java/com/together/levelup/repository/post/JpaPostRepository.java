@@ -1,6 +1,9 @@
 package com.together.levelup.repository.post;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.together.levelup.domain.post.Post;
+import com.together.levelup.domain.post.QPost;
 import com.together.levelup.dto.PostSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -83,26 +86,53 @@ public class JpaPostRepository implements PostRepository {
                 .getResultList();
     }
 
+//    public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
+//        int firstPage = (page - 1) * 10; //0, 10, 20, 30
+//        int lastPage = page * 10; //9, 19, 29, 39
+//
+//        if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
+//            return findByChannelId(channelId, page);
+//        }
+//
+//        String sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.writer like CONCAT('%',:query,'%')";
+//        if (postSearch.getField().equals("title")) {
+//            sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.title like CONCAT('%',:query,'%')";
+//        }
+//
+//        return em.createQuery(sqlQuery, Post.class)
+//                .setParameter("channelId", channelId)
+//                .setParameter("query", postSearch.getQuery())
+//                .setFirstResult(firstPage)
+//                .setMaxResults(lastPage)
+//                .getResultList();
+//    }
+
     @Override
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
         int lastPage = page * 10; //9, 19, 29, 39
 
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        return queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .join(QPost.post.channel)
+                .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
+                .orderBy(QPost.post.dateCreated.desc())
+                .offset(firstPage)
+                .limit(lastPage)
+                .fetch();
+    }
+
+    private BooleanExpression equalQuery(PostSearch postSearch) {
         if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
-            return findByChannelId(channelId, page);
+            return null;
         }
 
-        String sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.writer like CONCAT('%',:query,'%')";
         if (postSearch.getField().equals("title")) {
-            sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.title like CONCAT('%',:query,'%')";
+            return QPost.post.title.contains(postSearch.getQuery());
         }
-
-        return em.createQuery(sqlQuery, Post.class)
-                .setParameter("channelId", channelId)
-                .setParameter("query", postSearch.getQuery())
-                .setFirstResult(firstPage)
-                .setMaxResults(lastPage)
-                .getResultList();
+        return QPost.post.writer.contains(postSearch.getQuery());
     }
 
     public Long countAll() {
