@@ -29,10 +29,19 @@ public class PostApiController {
         List<PostResponse> postResponses = findPosts.stream()
                 .map(p -> new PostResponse(p.getTitle(), p.getWriter(), p.getContent(),
                         DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
-                        p.getVoteCount(), p.getComments().size()))
+                        p.getVoteCount(), p.getViews(), p.getComments().size()))
                 .collect(Collectors.toList());
 
         return new Result(postResponses, postResponses.size());
+    }
+
+    @GetMapping("/post/{postId}")
+    public PostResponse readPost(@PathVariable Long postId) {
+        Post findPost = postService.readPost(postId);
+
+        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
     }
 
     @GetMapping("/{channelId}/posts/{page}")
@@ -48,9 +57,9 @@ public class PostApiController {
 
         List<Post> findPosts = postService.findByChannelId(channelId, page, postSearch);
         List<PostResponse> postResponses = findPosts.stream()
-                .map(p -> new PostResponse(p.getTitle(), p.getWriter(), p.getContent(),
+                .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getWriter(), p.getContent(),
                         DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
-                        p.getVoteCount(), p.getComments().size()))
+                        p.getVoteCount(), p.getViews(), p.getComments().size()))
                 .collect(Collectors.toList());
 
         return new Result(postResponses, postResponses.size());
@@ -73,7 +82,7 @@ public class PostApiController {
         String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
 
         return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), dateTime,
-                findPost.getVoteCount(), findPost.getComments().size());
+                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
     }
 
 }

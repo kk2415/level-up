@@ -48,6 +48,7 @@ $(function () {
 
     function showPosts() {
         let data = channelPosts.data
+        console.log(data)
         let count = channelPosts.count
         let post = $('#post');
 
@@ -61,9 +62,10 @@ $(function () {
             clonePost.id = idx
             clonePost.children('td').eq(0).text(data[idx].writer)
             clonePost.children('td').eq(1).children('a').text(data[idx].title + ' [' + data[idx].commentCount + ']')
-            clonePost.children('td').eq(1).children('a').attr('href', '/')
-            clonePost.children('td').eq(2).text(data[idx].dateCreated)
+            clonePost.children('td').eq(1).children('a').attr('href', '/channel/' + channelId + '/post/' + data[idx].id)
+            clonePost.children('td').eq(2).text(data[idx].views)
             clonePost.children('td').eq(3).text(data[idx].voteCount)
+            clonePost.children('td').eq(4).text(data[idx].dateCreated)
             $('#postTableBody').append(clonePost)
         }
     }

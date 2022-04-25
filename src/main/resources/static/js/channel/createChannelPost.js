@@ -15,10 +15,11 @@ $(function () {
                 alert.css('display', 'block')
                 alert.append('<p>카테고리를 입력해주세요</p>')
             }
-
-            post.category = category
-            post.channelId = channelId
-            uploadPost(post)
+            else {
+                post.category = category
+                post.channelId = channelId
+                uploadPost(post)
+            }
         })
 
         $('#cancelButton').click(function () {
@@ -43,7 +44,7 @@ $(function () {
             dataType: 'json',
         })
         .done(function () {
-            $(location).attr('href', '/channel/detail/' + channelId)
+            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
         })
         .fail(function (error) {
             console.log(error)

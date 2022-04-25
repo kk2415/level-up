@@ -70,16 +70,18 @@ public class PostService {
         return postRepository.findById(postId);
     }
 
+    public Post readPost(Long postId) {
+        Post findPost = postRepository.findById(postId);
+        findPost.addViews();
+        return  findPost;
+    }
+
     public List<Post> findByMemberId(Long memberId) {
         return postRepository.findByMemberId(memberId);
     }
 
     public List<Post> findAll() {
         return postRepository.findAll();
-    }
-
-    public List<Post> findByChannelId(Long channelId) {
-        return postRepository.findByChannelId(channelId);
     }
 
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {

@@ -6,7 +6,9 @@ import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.PostSearch;
 import com.together.levelup.repository.channel.ChannelRepository;
+import com.together.levelup.repository.channel.JpaChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
+import com.together.levelup.repository.post.JpaPostRepository;
 import com.together.levelup.repository.post.PostRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 @Transactional
@@ -27,6 +30,9 @@ public class PostRepositoryTest {
 
     @Autowired
     private ChannelRepository channelRepository;
+
+    @Autowired
+    private JpaPostRepository jpaPostRepository;
 
     @Test
     public void 게시글_레포_테스트() {
@@ -173,6 +179,72 @@ public class PostRepositoryTest {
 
         Long count = postRepository.countAll();
         Assertions.assertThat(count).isEqualTo(3L);
+    }
+
+    @Test
+    public void queryDsl테스트() throws InterruptedException {
+
+        Member member1 = Member.createMember("test0",
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
+        Member member2 = Member.createMember("test1",
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        channelRepository.save(channel1);
+
+        Post post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
+        TimeUnit.SECONDS.sleep(1);
+        Post post2 = Post.createPost(member1, channel1, "저녁 뭐 먹지?", "추천 받음");
+        TimeUnit.SECONDS.sleep(1);
+        Post post3 = Post.createPost(member1, channel1, "1", "천천히 생각해보니 인생이란...");
+        TimeUnit.SECONDS.sleep(1);
+        Post post4 = Post.createPost(member1, channel1, "2", "천천히 생각해보니 인생이란...");
+        TimeUnit.SECONDS.sleep(1);
+        Post post5 = Post.createPost(member1, channel1, "3", "천천히 생각해보니 인생이란...");
+        TimeUnit.SECONDS.sleep(1);
+        Post post6 = Post.createPost(member1, channel1, "4", "천천히 생각해보니 인생이란...");
+        TimeUnit.SECONDS.sleep(1);
+        Post post7 = Post.createPost(member1, channel1, "5", "천천히 생각해보니 인생이란...");
+        TimeUnit.SECONDS.sleep(1);
+
+//        Post post8 = Post.createPost(member1, channel1, "6", "천천히 생각해보니 인생이란...");
+//        Post post9 = Post.createPost(member2, channel1, "7", "천천히 생각해보니 인생이란...");
+//        Post post10 = Post.createPost(member2, channel1, "8", "천천히 생각해보니 인생이란...");
+//        Post post11 = Post.createPost(member2, channel1, "9", "천천히 생각해보니 인생이란...");
+//        Post post12 = Post.createPost(member2, channel1, "10", "천천히 생각해보니 인생이란...");
+//        Post post13 = Post.createPost(member2, channel1, "11", "천천히 생각해보니 인생이란...");
+//        Post post14 = Post.createPost(member2, channel1, "12", "천천히 생각해보니 인생이란...");
+//        Post post15 = Post.createPost(member2, channel1, "울랄라", "천천히 생각해보니 인생이란...");
+
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        postRepository.save(post4);
+        postRepository.save(post5);
+        postRepository.save(post6);
+        postRepository.save(post7);
+//        postRepository.save(post8);
+//        postRepository.save(post9);
+//        postRepository.save(post10);
+//        postRepository.save(post11);
+//        postRepository.save(post12);
+//        postRepository.save(post13);
+//        postRepository.save(post14);
+//        postRepository.save(post15);
+
+        List<Post> findPosts = jpaPostRepository.findByChannelId(channel1.getId(), 1, null);
+        Assertions.assertThat(findPosts.size()).isEqualTo(7);
+
+        List<Post> findPosts2 = jpaPostRepository.findByChannelId(channel1.getId(), 1, new PostSearch("writer", "김경희"));
+        for (Post post : findPosts2) {
+            System.out.println(post.getTitle());
+        }
+        Assertions.assertThat(findPosts2.size()).isEqualTo(7);
+
+        List<Post> findPosts3 = jpaPostRepository.findByChannelId(channel1.getId(), 1, new PostSearch("title", "헬로"));
+        Assertions.assertThat(findPosts3.size()).isEqualTo(1);
     }
 
 }
