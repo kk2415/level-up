@@ -13,11 +13,18 @@ public class JpaCommentRepository implements CommentRepository {
 
     private final EntityManager em;
 
+    /***
+     * 생성
+     */
     @Override
     public void save(Comment comment) {
         em.persist(comment);
     }
 
+
+    /***
+     * 조회
+     */
     @Override
     public Comment findById(Long id) {
         return em.find(Comment.class, id);
@@ -48,17 +55,19 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public void delete(Long id) {
-        Comment findComment = findById(id);
-        em.remove(findComment);
-
-    }
-
-    @Override
     public Long countAll() {
         String query = "select count(c.id) from Comment c";
 
         return em.createQuery(query, Long.class).getResultList().get(0);
+    }
+
+    /***
+     * 삭제
+     */
+    @Override
+    public void delete(Long id) {
+        Comment findComment = findById(id);
+        em.remove(findComment);
     }
 
 }

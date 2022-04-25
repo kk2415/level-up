@@ -26,6 +26,9 @@ public class Comment {
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
 
+    @Column(name = "vote_count")
+    private Long voteCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -54,6 +57,7 @@ public class Comment {
         comment.setWriter(member.getName());
         comment.setDateCreated(LocalDateTime.now());
         comment.setContent(content);
+        comment.setVoteCount(0L);
 
         return comment;
     }

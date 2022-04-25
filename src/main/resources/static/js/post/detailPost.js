@@ -2,10 +2,35 @@ $(function () {
     let postId = getPostId()
     let channelId = getChannelId()
     let post = {}
+    let comments = {}
 
     setPost()
+    setComments()
+
     showPost()
-    console.log(post)
+    showComments()
+
+    function setComments() {
+        $.ajax({
+            url: '/api/comment/' + postId,
+            method: "GET",
+            async: false,
+        })
+        .done(function (data) {
+            comments = data.data
+        })
+        .fail(function (error) {
+            console.log(error)
+        })
+    }
+
+    function showComments() {
+
+    }
+
+    function writeComment() {
+
+    }
 
     function getPostId() {
         let pathname = decodeURI($(location).attr('pathname'))
