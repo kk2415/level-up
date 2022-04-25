@@ -32,4 +32,9 @@ public class ChannelController {
     public String posting() {
         return "html/channel/createChannelPost";
     }
+
+    @GetMapping("/{channelId}/post/{postId}")
+    public String viewDetailPost() {
+        return "html/post/detailPost";
+    }
 }

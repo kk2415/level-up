@@ -15,10 +15,11 @@ $(function () {
                 alert.css('display', 'block')
                 alert.append('<p>카테고리를 입력해주세요</p>')
             }
-
-            post.category = category
-            post.channelId = channelId
-            uploadPost(post)
+            else {
+                post.category = category
+                post.channelId = channelId
+                uploadPost(post)
+            }
         })
 
         $('#cancelButton').click(function () {

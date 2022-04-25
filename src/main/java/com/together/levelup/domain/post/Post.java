@@ -34,6 +34,9 @@ public class Post {
     @Column(name = "vote_count")
     private Long voteCount;
 
+    @Column(name = "views")
+    private Long views;
+
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
 
@@ -69,6 +72,7 @@ public class Post {
         post.setDateCreated(LocalDateTime.now());
         post.setVoteCount(0L);
         post.setWriter(member.getName());
+        post.setViews(0L);
 
         return post;
     }
@@ -88,6 +92,7 @@ public class Post {
         post.setVoteCount(0L);
         post.setWriter(member.getName());
         post.setPostCategory(postCategory);
+        post.setViews(0L);
 
         return post;
     }
@@ -97,4 +102,9 @@ public class Post {
         this.setTitle(title);
         this.setContent(content);
     }
+
+    public void addViews() {
+        this.setViews(this.views + 1);
+    }
+
 }
