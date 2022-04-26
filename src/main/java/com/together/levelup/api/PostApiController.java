@@ -22,6 +22,32 @@ public class PostApiController {
 
     private final PostService postService;
 
+    /**
+     * 생성
+     * */
+    @PostMapping("/post")
+    public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
+
+        if (member == null) {
+            throw new MemberNotFoundException("가입된 회원만 글을 작성할 수 있습니다");
+        }
+
+        Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
+                postRequest.getContent(), postRequest.getCategory());
+
+        Post findPost = postService.findOne(postId);
+
+        String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
+
+        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), dateTime,
+                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+    }
+
+    /**
+     * 조회
+     * */
     @GetMapping("/posts")
     public Result findAllPost() {
         List<Post> findPosts = postService.findAll();
@@ -47,9 +73,6 @@ public class PostApiController {
     @GetMapping("/{channelId}/posts/{page}")
     public Result listingChannelPosts(@PathVariable Long channelId, @PathVariable int page,
                                   @RequestParam(required = false) String field, @RequestParam(required = false) String query) {
-//        System.out.println(field);
-//        System.out.println(query);
-
         PostSearch postSearch = null;
         if (field != null && query != null) {
             postSearch = new PostSearch(field, query);
@@ -65,24 +88,22 @@ public class PostApiController {
         return new Result(postResponses, postResponses.size());
     }
 
-    @PostMapping("/post")
-    public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
+    @GetMapping("/post/{postId}/nextPost")
+    public PostResponse findNextPost(@PathVariable Long postId) {
+        Post nextPage = postService.findNextPage(postId);
 
-        if (member == null) {
-            throw new MemberNotFoundException("가입된 회원만 글을 작성할 수 있습니다");
-        }
+        return new PostResponse(nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
+                nextPage.getVoteCount(), nextPage.getViews(), nextPage.getComments().size());
+    }
 
-        Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
-                postRequest.getContent(), postRequest.getCategory());
+    @GetMapping("/post/{postId}/prevPost")
+    public PostResponse findPrevPost(@PathVariable Long postId) {
+        Post prevPage = postService.findPrevPage(postId);
 
-        Post findPost = postService.findOne(postId);
-
-        String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
-
-        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), dateTime,
-                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+        return new PostResponse(prevPage.getTitle(), prevPage.getWriter(), prevPage.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
+                prevPage.getVoteCount(), prevPage.getViews(), prevPage.getComments().size());
     }
 
 }

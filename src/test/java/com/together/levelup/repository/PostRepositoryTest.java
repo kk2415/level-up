@@ -103,7 +103,7 @@ public class PostRepositoryTest {
         postRepository.save(post2);
         postRepository.save(post3);
 
-        List<Post> findPosts = postRepository.findByChannelId(channel1.getId());
+        List<Post> findPosts = postRepository.findByChannelId(channel1.getId(), 1, null);
         Assertions.assertThat(findPosts.size()).isEqualTo(2);
     }
 
@@ -245,6 +245,91 @@ public class PostRepositoryTest {
 
         List<Post> findPosts3 = jpaPostRepository.findByChannelId(channel1.getId(), 1, new PostSearch("title", "헬로"));
         Assertions.assertThat(findPosts3.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void next_page_test() throws InterruptedException {
+
+        Member member1 = Member.createMember("test0",
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
+        Member member2 = Member.createMember("test1",
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        channelRepository.save(channel1);
+
+        Post post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post2 = Post.createPost(member1, channel1, "저녁 뭐 먹지?", "추천 받음");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post3 = Post.createPost(member1, channel1, "1", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post4 = Post.createPost(member1, channel1, "2", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post5 = Post.createPost(member1, channel1, "3", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post6 = Post.createPost(member1, channel1, "4", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post7 = Post.createPost(member1, channel1, "5", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        postRepository.save(post4);
+        postRepository.save(post5);
+        postRepository.save(post6);
+        postRepository.save(post7);
+
+        Post findPost = postRepository.findNextPage(post4.getId());
+        Assertions.assertThat(findPost.getId()).isEqualTo(post5.getId());
+    }
+
+    @Test
+    public void prev_page_test() throws InterruptedException {
+
+        Member member1 = Member.createMember("test0",
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
+        Member member2 = Member.createMember("test1",
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        channelRepository.save(channel1);
+
+        Post post1 = Post.createPost(member1, channel1, "-1", "안녕하세요. 첫 게시글입니다");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post2 = Post.createPost(member1, channel1, "0", "추천 받음");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post3 = Post.createPost(member1, channel1, "1", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post4 = Post.createPost(member1, channel1, "2", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post5 = Post.createPost(member1, channel1, "3", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post6 = Post.createPost(member1, channel1, "4", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+        Post post7 = Post.createPost(member1, channel1, "5", "천천히 생각해보니 인생이란...");
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        postRepository.save(post4);
+        postRepository.save(post5);
+        postRepository.save(post6);
+        postRepository.save(post7);
+
+        List<Post> all = postRepository.findAll();
+        for (Post post : all) {
+            System.out.println("title : " + post.getTitle() + "    id : " + post.getId());
+        }
+
+        Post findPost = postRepository.findPrevPage(post4.getId());
+        Assertions.assertThat(findPost.getId()).isEqualTo(post3.getId());
     }
 
 }

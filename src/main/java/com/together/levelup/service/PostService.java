@@ -88,4 +88,12 @@ public class PostService {
         return postRepository.findByChannelId(channelId, page, postSearch);
     }
 
+    public Post findNextPage(Long id) {
+        return postRepository.findNextPage(id);
+    }
+
+    public Post findPrevPage(Long id) {
+        return postRepository.findPrevPage(id);
+    }
+
 }
