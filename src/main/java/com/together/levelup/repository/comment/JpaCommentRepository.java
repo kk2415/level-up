@@ -1,6 +1,7 @@
 package com.together.levelup.repository.comment;
 
 import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.QComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,11 +14,18 @@ public class JpaCommentRepository implements CommentRepository {
 
     private final EntityManager em;
 
+    /***
+     * 생성
+     */
     @Override
     public void save(Comment comment) {
         em.persist(comment);
     }
 
+
+    /***
+     * 조회
+     */
     @Override
     public Comment findById(Long id) {
         return em.find(Comment.class, id);
@@ -34,7 +42,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByPostId(Long postId) {
-        String query = "select c from Comment c inner join c.post p where p.id = :postId";
+        String query = "select c from Comment c inner join c.post p where p.id = :postId order by c.dateCreated";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("postId", postId)
@@ -48,17 +56,19 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public void delete(Long id) {
-        Comment findComment = findById(id);
-        em.remove(findComment);
-
-    }
-
-    @Override
     public Long countAll() {
         String query = "select count(c.id) from Comment c";
 
         return em.createQuery(query, Long.class).getResultList().get(0);
+    }
+
+    /***
+     * 삭제
+     */
+    @Override
+    public void delete(Long id) {
+        Comment findComment = findById(id);
+        em.remove(findComment);
     }
 
 }
