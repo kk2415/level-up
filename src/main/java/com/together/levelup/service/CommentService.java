@@ -8,11 +8,13 @@ import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
 
     private final MemberRepository memberRepository;

@@ -1,10 +1,12 @@
 package com.together.levelup.api;
 
 import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.CommentResponse;
 import com.together.levelup.dto.CreateCommentRequest;
 import com.together.levelup.dto.Result;
 import com.together.levelup.service.CommentService;
+import com.together.levelup.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +20,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class CommentApiController {
     private final CommentService commentService;
+    private final MemberService memberService;
 
     /***
      * 댓글 생성
      */
     @PostMapping("/comment")
     public CommentResponse create(@RequestBody @Validated CreateCommentRequest commentRequest) {
-        Long commentId = commentService.comment(commentRequest.getMemberId(), commentRequest.getChannelId(),
+        Member findMember = memberService.findByEmail(commentRequest.getMemberEmail());
+
+        Long commentId = commentService.comment(findMember.getId(), commentRequest.getPostId(),
                 commentRequest.getContent());
 
         Comment findComment = commentService.findOne(commentId);

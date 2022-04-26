@@ -1,6 +1,7 @@
 package com.together.levelup.repository.comment;
 
 import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.QComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -41,7 +42,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByPostId(Long postId) {
-        String query = "select c from Comment c inner join c.post p where p.id = :postId";
+        String query = "select c from Comment c inner join c.post p where p.id = :postId order by c.dateCreated";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("postId", postId)

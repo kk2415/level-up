@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 public class CreateCommentRequest {
 
     @NotNull
-    private Long memberId;
+    private String memberEmail;
 
     @NotNull
-    private Long channelId;
+    private Long postId;
 
     @NotNull
     private String content;
