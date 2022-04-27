@@ -30,11 +30,12 @@ public class ChannelController {
 
     @GetMapping("/{channelId}/posting")
     public String posting() {
-        return "html/channel/createChannelPost";
+        return "html/post/createPost";
     }
 
     @GetMapping("/{channelId}/post/{postId}")
     public String viewDetailPost() {
         return "html/post/detailPost";
     }
+
 }

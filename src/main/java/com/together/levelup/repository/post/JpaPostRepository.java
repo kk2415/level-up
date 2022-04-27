@@ -64,55 +64,33 @@ public class JpaPostRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findByChannelId(Long channelId) {
-        String query = "select p from Post p join p.channel c where c.id = :channelId order by p.dateCreated";
+    public Post findNextPage(Long id) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        return em.createQuery(query, Post.class)
-                .setParameter("channelId", channelId)
-                .getResultList();
+        return queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .where(QPost.post.id.gt(id))
+                .orderBy(QPost.post.id.asc())
+                .fetchFirst();
     }
 
     @Override
-    public List<Post> findByChannelId(Long channelId, int page) {
-        int firstPage = (page - 1) * 10; //0, 10, 20, 30
-        int lastPage = page * 10; //9, 19, 29, 39
+    public Post findPrevPage(Long id) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        String query = "select p from Post p join p.channel c where c.id = :channelId order by p.dateCreated";
-
-        return em.createQuery(query, Post.class)
-                .setParameter("channelId", channelId)
-                .setFirstResult(firstPage)
-                .setMaxResults(lastPage)
-                .getResultList();
+        return queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .where(QPost.post.id.lt(id))
+                .orderBy(QPost.post.id.desc())
+                .fetchFirst();
     }
-
-//    public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
-//        int firstPage = (page - 1) * 10; //0, 10, 20, 30
-//        int lastPage = page * 10; //9, 19, 29, 39
-//
-//        if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
-//            return findByChannelId(channelId, page);
-//        }
-//
-//        String sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.writer like CONCAT('%',:query,'%')";
-//        if (postSearch.getField().equals("title")) {
-//            sqlQuery = "select p from Post p join p.channel c where c.id = :channelId and p.title like CONCAT('%',:query,'%')";
-//        }
-//
-//        return em.createQuery(sqlQuery, Post.class)
-//                .setParameter("channelId", channelId)
-//                .setParameter("query", postSearch.getQuery())
-//                .setFirstResult(firstPage)
-//                .setMaxResults(lastPage)
-//                .getResultList();
-//    }
 
     @Override
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
         int lastPage = page * 10; //9, 19, 29, 39
-
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         return queryFactory.select(QPost.post)
                 .from(QPost.post)

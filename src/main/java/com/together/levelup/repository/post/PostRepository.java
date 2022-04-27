@@ -9,8 +9,10 @@ public interface PostRepository {
 
     public void save(Post post);
     public Post findById(Long id);
-    public List<Post> findByChannelId(Long channelId);
-    public List<Post> findByChannelId(Long channelId, int page);
+    public Post findNextPage(Long id);
+    public Post findPrevPage(Long id);
+//    public List<Post> findByChannelId(Long channelId);
+//    public List<Post> findByChannelId(Long channelId, int page);
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch);
     public List<Post> findByMemberId(Long memberId);
     public List<Post> findByTitle(String title);

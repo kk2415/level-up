@@ -73,8 +73,20 @@ public class ExceptionController {
         return new ResponseEntity(createExceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NotFoundImageException.class)
+    @ExceptionHandler(ImageNotFoundException.class)
     public ResponseEntity<ExceptionResponse> notFoundImageException(Exception e, HttpServletRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(e.getClass().getName());
+        exceptionResponse.setPath(request.getRequestURI());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> postNotFoundException(Exception e, HttpServletRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());

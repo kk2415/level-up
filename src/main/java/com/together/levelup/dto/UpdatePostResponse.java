@@ -1,22 +1,16 @@
 package com.together.levelup.dto;
+
 import com.together.levelup.domain.post.PostCategory;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-
 @Data
-public class PostRequest {
+@AllArgsConstructor
+public class UpdatePostResponse {
 
-    @NotNull
     private String title;
-
-    @NotNull
     private String writer;
-
-    @NotNull
     private String content;
-
-    @NotNull
     private PostCategory category;
 
 }

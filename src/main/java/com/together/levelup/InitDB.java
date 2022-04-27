@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class InitDB {
     private final InitService initService;
 
     @PostConstruct
-    public void init() {
+    public void init() throws InterruptedException {
         initService.initDb();
     }
 
@@ -33,7 +34,7 @@ public class InitDB {
 
         private final EntityManager em;
 
-        public void initDb() {
+        public void initDb() throws InterruptedException {
             Member manager1 = Member.createMember("test0@naver.com", "000000", "테스트네임0",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
             Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
@@ -59,19 +60,46 @@ public class InitDB {
 
 
             Post post1 = Post.createPost(member1, channel1, "안녕하세요1", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post2 = Post.createPost(member1, channel1, "안녕하세요2", "방갑습니다", PostCategory.INTRODUCE);
-            Post post3 = Post.createPost(member1, channel1, "안녕하세요3", "방갑습니다", PostCategory.INTRODUCE);
-            Post post4 = Post.createPost(member1, channel1, "안녕하세요4", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
+            Post post3 = Post.createPost(member1, channel1, "안녕하세요3", "방갑습니다", PostCategory.INTRODUCE);            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(100);
+
+            Post post4 = Post.createPost(member1, channel1, "안녕하세요4", "방갑습니다", PostCategory.INTRODUCE);            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post5 = Post.createPost(member1, channel1, "안녕하세요5", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post6 = Post.createPost(member1, channel1, "안녕하세요6", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post7 = Post.createPost(member1, channel1, "안녕하세요7", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post8 = Post.createPost(member1, channel1, "안녕하세요8", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post9 = Post.createPost(member1, channel1, "안녕하세요9", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post10 = Post.createPost(member1, channel1, "안녕하세요10", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post11 = Post.createPost(member1, channel1, "꿀팁대공개1", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post12 = Post.createPost(member1, channel1, "꿀팁대공개2", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post13 = Post.createPost(member1, channel1, "꿀팁대공개3", "방갑습니다", PostCategory.INTRODUCE);
+            TimeUnit.MILLISECONDS.sleep(100);
+
             Post post14 = Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE);
+
             em.persist(post1);
             em.persist(post2);
             em.persist(post3);

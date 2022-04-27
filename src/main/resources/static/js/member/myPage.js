@@ -57,7 +57,7 @@ $(function () {
         console.log(inputFile[0].files[0])
         $.ajax({
             url: '/api/member/' + member.email + '/image',
-            method: 'PUT',
+            method: 'PATCH',
             data: formData,
             enctype: 'multipart/form-data',
             processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음
