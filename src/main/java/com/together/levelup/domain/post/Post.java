@@ -98,9 +98,10 @@ public class Post {
     }
 
     //==비즈니스 로직==//
-    public void changePost(String title, String content) {
+    public void changePost(String title, String content, PostCategory category) {
         this.setTitle(title);
         this.setContent(content);
+        this.setPostCategory(category);
     }
 
     public void addViews() {

@@ -3,10 +3,9 @@ package com.together.levelup.api;
 import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
 import com.together.levelup.domain.channel.Channel;
-import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.dto.*;
-import com.together.levelup.exception.NotFoundImageException;
+import com.together.levelup.exception.ImageNotFoundException;
 import com.together.levelup.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -77,7 +76,7 @@ public class ChannelApiController {
         Channel findChannel = channelService.findOne(id);
 
         if (findChannel.getUploadFile() == null) {
-            throw new NotFoundImageException("썸네일 사진을 찾을 수 없습니다");
+            throw new ImageNotFoundException("썸네일 사진을 찾을 수 없습니다");
         }
 
         UploadFile uploadFile = findChannel.getUploadFile();

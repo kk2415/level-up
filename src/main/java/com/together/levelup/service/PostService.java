@@ -5,6 +5,7 @@ import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.PostCategory;
 import com.together.levelup.dto.PostSearch;
+import com.together.levelup.exception.PostNotFoundException;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.post.PostRepository;
@@ -45,15 +46,28 @@ public class PostService {
     /**
      * 게시글 수정
      * */
-    public void updatePost(Long postId, String title, String content) {
+    public void updatePost(Long postId, Long memberId, String title, String content, PostCategory category) {
         /**
          * @Transactional에 의해서 commit이 진행됨
          * 커밋이 딱 되면 jpa가 플러쉬를 날린다.
          * 그러면 엔티티 중에서 변경감지가 일어난 애를 다 찾는다.
          * 그러면 UPDATE 쿼리를 바뀐 엔티티에 맞게 DB에 알아서 날려준다
          * */
-        Post post = postRepository.findById(postId);
-        post.changePost(title, content);
+        List<Post> findPosts = postRepository.findByMemberId(memberId);
+        if (findPosts == null) {
+            throw new PostNotFoundException("작성한 게시글이 없습니다");
+        }
+
+        Post post = findPosts.stream()
+                .filter(p -> p.getId().equals(postId))
+                .findAny()
+                .orElse(null);
+
+        if (post == null) {
+            throw new PostNotFoundException("작성한 게시글이 없습니다");
+        }
+
+        post.changePost(title, content, category);
     }
 
     /**

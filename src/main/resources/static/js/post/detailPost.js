@@ -1,6 +1,7 @@
 $(function () {
     let postId = getPostId()
     let channelId = getChannelId()
+    let memberEmail = getMemberEmail()
     let backupComment = $('#comment');
 
     let post = {}
@@ -13,7 +14,55 @@ $(function () {
     setComments()
 
     showPost()
+    showModifyAndDeleteButton()
+
     showComments()
+
+
+
+
+
+    function getMemberEmail() {
+        let email
+
+        $.ajax({
+            url: '/api/member',
+            method: "GET",
+            async: false,
+        })
+        .done(function (data) {
+            email = data.email
+        })
+        .fail(function (error) {
+            email = null
+        })
+
+        return email
+    }
+
+    function isMyPost() {
+        let bool = false
+
+        $.ajax({
+            url: '/api/post/' + postId + '/check-member?email=' + memberEmail,
+            method: "GET",
+            async: false,
+        })
+        .done(function () {
+            bool = true
+        })
+        .fail(function (error) {
+            console.log(error)
+        })
+        return bool;
+    }
+
+    function isLoginMember() {
+        if (memberEmail == null) {
+            return false
+        }
+        return true
+    }
 
     function setComments() {
         $.ajax({
@@ -74,24 +123,6 @@ $(function () {
         }
     }
 
-    function getMemberEmail() {
-        let memberEmail
-
-        $.ajax({
-            url: '/api/member',
-            method: 'GET',
-            async: false,
-        })
-        .done(function (data) {
-            memberEmail = data.email
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
-
-        return memberEmail
-    }
-
     function getPostId() {
         let pathname = decodeURI($(location).attr('pathname'))
         return pathname.substr(pathname.lastIndexOf('/') + 1)
@@ -107,7 +138,7 @@ $(function () {
 
     function setPost() {
         $.ajax({
-            url: '/api/post/' + postId,
+            url: '/api/post/' + postId + '?view=true',
             method: "GET",
             async: false,
         })
@@ -129,6 +160,13 @@ $(function () {
         $('#content').text(post.content)
     }
 
+    function showModifyAndDeleteButton() {
+        if (isLoginMember() && isMyPost()) {
+            $('#modifyButton').css('display', 'inline-block')
+            $('#deleteButton').css('display', 'inline-block')
+        }
+    }
+
     function removeComments() {
         $('.comment').remove()
     }
@@ -141,5 +179,69 @@ $(function () {
             $('#commentFrame').append(backupComment)
             showComments()
         })
+
+        $('#allPostButton').click(function () {
+           $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+        })
+
+        $('#prevPostButton').click(function () {
+            $.ajax({
+                url: '/api/post/' + postId + '/prevPost',
+                method: "GET",
+                async: false,
+            })
+            .done(function (data) {
+                let prevPostId = data.id
+
+                $(location).attr('href', '/channel/' + channelId +  '/post/' + prevPostId)
+            })
+            .fail(function (error) {
+                console.log(error)
+                alert("이전 페이지가 없습니다.")
+            })
+        })
+
+        $('#nextPostButton').click(function () {
+            $.ajax({
+                url: '/api/post/' + postId + '/nextPost',
+                method: "GET",
+                async: false,
+            })
+            .done(function (data) {
+                let nextPostId = data.id
+
+                $(location).attr('href', '/channel/' + channelId +  '/post/' + nextPostId)
+            })
+            .fail(function (error) {
+                console.log(error)
+                alert("다음 페이지가 없습니다.")
+            })
+        })
+
+        $('#modifyButton').click(function () {
+            $(location).attr('href', '/post/edit/' + postId + '?email=' + memberEmail)
+
+            // let post = {}
+            // post.memberEmail = memberEmail
+            // post.title = 1
+            // post.writer = 1
+            // post.content = 1
+            // post.category = 1
+            //
+            //
+            // $.ajax({
+            //     url: '/api/post',
+            //     method: "PATCH",
+            //     data: ,
+            //     contentType: 'application/json',
+            //     dataType: 'json',
+            //     async: false,
+            // })
+            // .done(function (data) {
+            // })
+            // .fail(function (error) {
+            // })
+        })
+
     }
 })

@@ -3,6 +3,7 @@ package com.together.levelup.service;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.post.PostCategory;
 import com.together.levelup.repository.post.PostRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -59,9 +60,10 @@ class PostServiceTest {
         Post findPost1 = postService.findOne(postId1);
         Post findPost2 = postService.findOne(postId2);
 
-        postService.updatePost(postId1, "수정1", "수정 내용1");
+        postService.updatePost(postId1, member1.getId(), "수정1", "수정 내용1", PostCategory.INFO);
         Assertions.assertThat(findPost1.getTitle()).isEqualTo("수정1");
         Assertions.assertThat(findPost1.getContent()).isEqualTo("수정 내용1");
+        Assertions.assertThat(findPost1.getPostCategory()).isEqualTo(PostCategory.INFO);
     }
 
     @Test
