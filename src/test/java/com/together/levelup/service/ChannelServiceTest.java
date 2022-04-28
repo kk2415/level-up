@@ -1,8 +1,11 @@
 package com.together.levelup.service;
 
+import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.member.UploadFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ class ChannelServiceTest {
                 "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         memberService.join(manager);
 
-        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임");
+        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         Channel findChannel = channelService.findOne(channelId);
 
         Assertions.assertThat(findChannel.getName()).isEqualTo("맨유팬 모임");
@@ -42,8 +45,8 @@ class ChannelServiceTest {
         memberService.join(manager1);
         memberService.join(manager2);
 
-        Long channelId = channelService.create(manager1.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임");
-        Assertions.assertThatThrownBy(() -> channelService.create(manager2.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임"))
+        Long channelId = channelService.create(manager1.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        Assertions.assertThatThrownBy(() -> channelService.create(manager2.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE)))
                 .isInstanceOf(IllegalStateException.class);
     }
 
@@ -60,7 +63,7 @@ class ChannelServiceTest {
         memberService.join(member2);
         memberService.join(manager);
 
-        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임");
+        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelService.addMember(channelId, member1.getId(), member2.getId());
         Assertions.assertThat(channelService.findOne(channelId).getMemberCount()).isEqualTo(2);
     }
@@ -71,9 +74,9 @@ class ChannelServiceTest {
                 "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         memberService.join(manager);
 
-        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임");
+        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         Channel findChannel = channelService.findOne(channelId);
-        channelService.update(channelId, "맨유팬 모여라", findChannel.getLimitedMemberNumber(), findChannel.getDescript());
+        channelService.update(channelId, "맨유팬 모여라", findChannel.getLimitedMemberNumber(), findChannel.getDescription());
         Assertions.assertThat(findChannel.getName()).isEqualTo("맨유팬 모여라");
     }
 
@@ -83,7 +86,7 @@ class ChannelServiceTest {
                 "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         memberService.join(manager);
 
-        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임");
+        Long channelId = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelService.deleteChannel(channelId);
         List<Channel> findChannels = channelService.findAll();
         Assertions.assertThat(findChannels.size()).isEqualTo(0);
@@ -102,8 +105,8 @@ class ChannelServiceTest {
         memberService.join(member2);
         memberService.join(manager);
 
-        Long channelId1 = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임");
-        Long channelId2 = channelService.create(manager.getId(), "리버풀팬 모임", 30L, "리버풀을 사랑하는 사람들의 모임");
+        Long channelId1 = channelService.create(manager.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        Long channelId2 = channelService.create(manager.getId(), "리버풀팬 모임", 30L, "리버풀을 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelService.addMember(channelId1, member1.getId(), member2.getId());
         channelService.addMember(channelId2, member1.getId());
 

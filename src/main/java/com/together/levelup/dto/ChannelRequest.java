@@ -1,4 +1,6 @@
 package com.together.levelup.dto;
+
+import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.UploadFile;
 import lombok.Data;
 
@@ -22,6 +24,10 @@ public class ChannelRequest {
     @NotNull
     private String description;
 
-    UploadFile uploadFile;
+    @NotNull
+    private ChannelCategory category;
+
+    @NotNull
+    private UploadFile uploadFile;
 
 }

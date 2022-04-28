@@ -1,7 +1,6 @@
 package com.together.levelup.domain.channel;
 
 import com.together.levelup.domain.post.Post;
-import com.together.levelup.domain.category.CategoryChannel;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.exception.NoPlaceChnnelException;
 import com.together.levelup.domain.member.Member;
@@ -36,10 +35,13 @@ public class Channel {
     @Column(name = "manager_name")
     private String managerName;
 
-    private String descript;
+    private String description;
 
     @Column(name = "member_count")
     private Long memberCount;
+
+    @Enumerated(EnumType.STRING)
+    private ChannelCategory category;
 
     @Embedded
     private UploadFile uploadFile;
@@ -48,14 +50,14 @@ public class Channel {
     private List<ChannelMember> channelMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel")
-    private List<CategoryChannel> categoryChannels = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Member member;
 
-    @OneToMany(mappedBy = "channel")
-    private List<Post> posts = new ArrayList<>();
+//    @OneToMany(mappedBy = "channel")
+//    private List<CategoryChannel> categoryChannels = new ArrayList<>();
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.
@@ -76,31 +78,18 @@ public class Channel {
     }
 
     //==생성 메서드==//
-    public static Channel createChannel(Member member, String name, Long limitNumber, String descript, UploadFile uploadFile) {
+    public static Channel createChannel(Member member, String name, Long limitNumber, String description, ChannelCategory category, UploadFile uploadFile) {
         Channel channel = new Channel();
 
         channel.setMember(member);
         channel.setName(name);
         channel.setManagerName(member.getName());
         channel.setLimitedMemberNumber(limitNumber);
-        channel.setDescript(descript);
+        channel.setDescription(description);
         channel.setDateCreated(LocalDateTime.now());
         channel.setMemberCount(0L);
+        channel.setCategory(category);
         channel.setUploadFile(uploadFile);
-
-        return channel;
-    }
-
-    public static Channel createChannel(Member member, String name, Long limitNumber, String descript) {
-        Channel channel = new Channel();
-
-        channel.setMember(member);
-        channel.setName(name);
-        channel.setManagerName(member.getName());
-        channel.setLimitedMemberNumber(limitNumber);
-        channel.setDescript(descript);
-        channel.setDateCreated(LocalDateTime.now());
-        channel.setMemberCount(0L);
 
         return channel;
     }
@@ -133,7 +122,7 @@ public class Channel {
     public void changeChannel(String name, Long limitNumber, String descript) {
         this.setName(name);
         this.setLimitedMemberNumber(limitNumber);
-        this.setDescript(descript);
+        this.setDescription(descript);
     }
 
 }

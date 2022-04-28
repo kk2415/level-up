@@ -68,21 +68,24 @@
                     <div class="form-floating mb-3">
                         <input class="form-control" id="name" type="text" placeholder="Enter channel name..."
                                maxlength="15" data-sb-validations="required" />
-                        <label for="name">채널명</label>
+                        <label for="name">프로젝트 이름</label>
                         <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
                     </div>
+
                     <div class="form-floating mb-3">
                         <input class="form-control" id="limitedMemberNumber" type="text" placeholder="Enter channel limited number..."
                                maxlength="3" data-sb-validations="required" />
-                        <label for="limitedMemberNumber">회원 제한 수</label>
+                        <label for="limitedMemberNumber">프로젝트 인원</label>
                         <div class="invalid-feedback" data-sb-feedback="limitedMemberNumber:required">An email is required.</div>
                     </div>
                     <div class="form-floating mb-3">
                         <input class="form-control" id="description" type="text" placeholder="Enter channel description..."
                                maxlength="30" data-sb-validations="required" />
-                        <label for="description">채널 소개</label>
+                        <label for="description">프로젝트 소개</label>
                         <div class="invalid-feedback" data-sb-feedback="description:required">An password is required.</div>
                     </div>
+
+                    <br>
 
                     <div>
                         <label for="file" class="form-label">썸네일 사진 선택</label>
@@ -116,7 +119,7 @@
 
 <script src="/js/navigation.js"></script>
 
-<script src="/js/channel/createChannel.js"></script>
+<script src="/js/channel/createProjectChannel.js"></script>
 
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

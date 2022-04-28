@@ -1,46 +1,38 @@
 $(function () {
-    let channel = {
-    };
-
     let reg_name = /^[가-힣a-zA-Z0-9\s]{2,15}$/;
     let reg_limitedMemberNumber = /^[0-9]{1,3}$/;
     let reg_description = /^[가-힣a-zA-Z0-9\s]{2,30}$/;
+    let channel = {}
 
-    $('#alert').css('display', 'none');
-    $('#cancel').click(function () {
-        window.location.href = 'http://localhost:8080/';
-    })
+    hideAlertMessageBox();
+
     setEventListenerOfInput();
+    setButtonEventHandler()
 
-    $('#submitButton').click(function () {
-        $('#alert').children('p').remove();
 
-        if (validation()) {
-            uploadImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
-            loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
-            console.log(channel);
 
-            $.ajax({
-                url: '/api/channel',
-                method: "POST",
-                data: JSON.stringify(channel),
-                dataType: 'json',
-                contentType: 'application/json',
-                async: false,
-            })
-            .done(function () {
-                console.log("채널 등록 성공")
-                window.location.href = 'http://localhost:8080/';
-            })
-            .fail(error => {
-                console.log("채널 등록 실패")
-                console.log(error.status)
-            })
-        }
-        else {
-            $('#alert').css('display', 'block');
-        }
-    })
+
+    function setButtonEventHandler() {
+        $('#submitButton').click(function () {
+            $('#alert').children('p').remove();
+
+            if (validation()) {
+                uploadImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
+                loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
+                channel.category = "STUDY"
+                console.log(channel);
+
+                createChannel();
+            }
+            else {
+                showAlertMessageBox();
+            }
+        })
+
+        $('#cancel').click(function () {
+            window.location.href = 'http://localhost:8080/';
+        })
+    }
 
     function validation() {
         let bool = true;
@@ -58,6 +50,25 @@ $(function () {
             bool = false;
         }
         return bool;
+    }
+
+    function createChannel() {
+        $.ajax({
+            url: '/api/channel',
+            method: "POST",
+            data: JSON.stringify(channel),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+        })
+            .done(function () {
+                console.log("채널 등록 성공")
+                window.location.href = 'http://localhost:8080/';
+            })
+            .fail(error => {
+                console.log("채널 등록 실패")
+                console.log(error.status)
+            })
     }
 
     function setEventListenerOfInput() {
@@ -119,6 +130,14 @@ $(function () {
             console.log("이미지 업로드 실패")
             console.log(error)
         })
+    }
+
+    function hideAlertMessageBox() {
+        $('#alert').css('display', 'none');
+    }
+
+    function showAlertMessageBox() {
+        $('#alert').css('display', 'block');
     }
 
 })
