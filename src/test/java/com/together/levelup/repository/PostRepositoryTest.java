@@ -1,5 +1,8 @@
 package com.together.levelup.repository;
 
+import com.together.levelup.domain.FileStore;
+import com.together.levelup.domain.channel.ChannelCategory;
+import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.member.Gender;
@@ -68,7 +71,7 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel);
 
         Post post1 = Post.createPost(member1, channel, "헬로 방가", "안녕하세요. 첫 게시글입니다");
@@ -91,8 +94,8 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
-        Channel channel2 = Channel.createChannel(member2, "철학토크", 20L, "철학쓰");
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        Channel channel2 = Channel.createChannel(member2, "철학토크", 20L, "철학쓰", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel1);
         channelRepository.save(channel2);
 
@@ -116,7 +119,7 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel1);
 
         Post post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
@@ -162,26 +165,6 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void 게시글_전체_개수() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699",null );
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-
-        Post post1 = Post.createPost(member1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
-        Post post2 = Post.createPost(member1, "저녁 뭐 먹지?", "추천 받음");
-        Post post3 = Post.createPost(member2, "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
-        postRepository.save(post1);
-        postRepository.save(post2);
-        postRepository.save(post3);
-
-        Long count = postRepository.countAll();
-        Assertions.assertThat(count).isEqualTo(3L);
-    }
-
-    @Test
     public void queryDsl테스트() throws InterruptedException {
 
         Member member1 = Member.createMember("test0",
@@ -191,7 +174,7 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel1);
 
         Post post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
@@ -257,7 +240,7 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel1);
 
         Post post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
@@ -297,7 +280,7 @@ public class PostRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모");
+        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel1);
 
         Post post1 = Post.createPost(member1, channel1, "-1", "안녕하세요. 첫 게시글입니다");

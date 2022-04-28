@@ -83,9 +83,8 @@ class PostServiceTest {
         Post findPost2 = postService.findOne(postId2);
 
         postService.deletePost(postId1);
-        Long count = postRepository.countAll();
-        Assertions.assertThat(count).isEqualTo(1L);
-
+        int count = postService.findAll().size();
+        Assertions.assertThat(count).isEqualTo(1);
     }
 
 }
