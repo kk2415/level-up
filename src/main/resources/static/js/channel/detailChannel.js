@@ -47,8 +47,8 @@ $(function () {
     }
 
     function showPosts() {
-        let data = channelPosts.data
-        console.log(data)
+        let posts = channelPosts.data
+        console.log(posts)
         let count = channelPosts.count
         let post = $('#post');
 
@@ -60,12 +60,13 @@ $(function () {
             }
 
             clonePost.id = idx
-            clonePost.children('td').eq(0).text(data[idx].writer)
-            clonePost.children('td').eq(1).children('a').text(data[idx].title + ' [' + data[idx].commentCount + ']')
-            clonePost.children('td').eq(1).children('a').attr('href', '/channel/' + channelId + '/post/' + data[idx].id)
-            clonePost.children('td').eq(2).text(data[idx].views)
-            clonePost.children('td').eq(3).text(data[idx].voteCount)
-            clonePost.children('td').eq(4).text(data[idx].dateCreated)
+            clonePost.children('td').eq(0).text(posts[idx].writer)
+            clonePost.children('td').eq(1).children('a').text(posts[idx].title + ' [' + posts[idx].commentCount + ']')
+            // clonePost.children('td').eq(1).children('a').attr('href', '/channel/' + channelId + '/post/' + posts[idx].id)
+            clonePost.children('td').eq(1).children('a').attr('href', '/post/detail/' + posts[idx].id + '?channel=' + channelId)
+            clonePost.children('td').eq(2).text(posts[idx].views)
+            clonePost.children('td').eq(3).text(posts[idx].voteCount)
+            clonePost.children('td').eq(4).text(posts[idx].dateCreated)
             $('#postTableBody').append(clonePost)
         }
     }
@@ -173,7 +174,7 @@ $(function () {
 
     function setEventHandler() {
         $('#postingButton').click(function () {
-            $(location).attr('href', '/channel/' + channelId + '/posting')
+            $(location).attr('href', '/post/create?channel=' + channelId)
         })
 
         $('#backButton').click(function () {

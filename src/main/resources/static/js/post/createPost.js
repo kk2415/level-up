@@ -3,7 +3,9 @@ $(function () {
     let channelId = getChannelId();
     let alert = $('#alert');
 
-    alert.css('display', 'none')
+    console.log(channelId)
+
+    hideAlertMessageBox();
     setEventHandler();
 
     function setEventHandler() {
@@ -52,8 +54,11 @@ $(function () {
     }
 
     function getChannelId() {
-        let pathname = $(location).attr('pathname')
-        // console.log(pathname)
-        return pathname.charAt((pathname.substr(1).indexOf('/') + 1) + 1)
+        let search = decodeURI($(location).attr('search'))
+        return search.substr(search.indexOf('=') + 1)
+    }
+
+    function hideAlertMessageBox() {
+        alert.css('display', 'none')
     }
 })

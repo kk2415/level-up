@@ -6,72 +6,32 @@ $(function () {
     let reg_birthday = /^[0-9]{6}$/;
 
     let member = {}
-
-    $('#alert').css('display', 'none')
-    setEventListenerOfInput()
+    member.gender = 'FEMALE'
 
     let formData = new FormData();
     formData.set('gender', 'FEMALE');
-    member.gender = 'FEMALE'
 
-    $('#submitButton').click(function () {
-        $('#alert').children('p').remove();
+    hiadAlertMessageBox();
 
-        if (validation()) {
-            let data = uploadImage();
+    setEventListenerOfInput()
+    setRegisterButtonHandler();
 
-            console.log(data);
-            console.log(typeof data);
-            console.log(member);
 
-            $.ajax({
-                url: '/api/member',
-                method: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify(member),
-                async: false,
-            })
-            .done(function () {
-                console.log("성공")
-                window.location.href = 'http://localhost:8080/'
-            })
-            .fail(function (error) {
-                console.log("전송 실패")
-                console.log(error)
-            })
-        }
-        else {
-            console.log("유효성 검증 실패")
-            $('#alert').css('display', 'block')
-        }
-    })
 
-    function validation() {
-        let bool = true;
+    function setRegisterButtonHandler() {
+        $('#submitButton').click(function () {
+            removeAlertMassageBox();
 
-        if (!reg_email.test($('#email').val()) || $('#email').val() == null) {
-            $('#alert').append('<p>[이매일] : 유효한 이메일 형식이 아닙니다.</p>')
-            bool = false;
-        }
-        if (!reg_name.test($('#name').val()) || $('#name').val() == null) {
-            $('#alert').append('<p>[이름] : 이름은 2자리 이상 15이하, 한글만 입력하세요</p>')
-            bool = false;
-        }
-        if (!reg_phone.test($('#phone').val()) || $('#phone').val() == null) {
-            $('#alert').append('<p>[휴대폰번호] : 유효한 형식이 아닙니다.</p>')
-            bool = false;
-        }
-        if (!reg_password.test($('#password').val()) || $('#password').val() == null) {
-            $('#alert').append('<p>[패스워드] : 비밀번호는 6자리이상, 영문자/숫자만 및 하이푼(_-)만 입력하세요</p>')
-            bool = false;
-        }
-        if (!reg_birthday.test($('#birthday').val()) || $('#birthday').val() == null) {
-            $('#alert').append('<p>[생년월일] : 생년월일은 6자리 이상 입력해주세요</p>')
-            bool = false;
-        }
+            if (validation()) {
+                let uploadedFile = uploadImage();
+                member.uploadFile = uploadedFile
 
-        return bool;
+                registerMember(member);
+            } else {
+                console.log("유효성 검증 실패")
+                $('#alert').css('display', 'block')
+            }
+        })
     }
 
     function setEventListenerOfInput() {
@@ -105,11 +65,32 @@ $(function () {
         })
     }
 
-    function uploadImage() {
-        let file = new FormData();
-        file.append('file', $('#formFileLg')[0].files[0]);
+    function registerMember(member) {
+        $.ajax({
+            url: '/api/member',
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(member),
+            async: false,
+        })
+        .done(function () {
+            console.log("성공")
+            window.location.href = 'http://localhost:8080/'
+        })
+        .fail(function (error) {
+            console.log("전송 실패")
+            console.log(error)
+        })
+    }
 
-        return $.ajax({
+    function uploadImage() {
+        let uploadImage = {}
+        let file = new FormData()
+
+        file.append('file', $('#file')[0].files[0])
+
+        $.ajax({
             url: '/api/member/image',
             method: 'POST',
             data: file,
@@ -118,21 +99,54 @@ $(function () {
             cache: false,
             enctype: 'multipart/form-data',
             async: false,
-
         })
         .done(function (data) {
             console.log("이미지 업로드 성공")
             console.log(data)
-            let uploadimage = {
-            };
-            uploadimage.storeFileName = data.storeFileName
-            uploadimage.uploadFileName = data.uploadFileName
-            member.uploadFile = uploadimage;
-            return uploadimage;
+
+            uploadImage.storeFileName = data.storeFileName
+            uploadImage.uploadFileName = data.uploadFileName
         })
         .fail(function (error) {
             console.log(error)
         })
+
+        return uploadImage
+    }
+
+    function validation() {
+        let bool = true;
+
+        if (!reg_email.test($('#email').val()) || $('#email').val() == null) {
+            $('#alert').append('<p>[이매일] : 유효한 이메일 형식이 아닙니다.</p>')
+            bool = false;
+        }
+        if (!reg_name.test($('#name').val()) || $('#name').val() == null) {
+            $('#alert').append('<p>[이름] : 이름은 2자리 이상 15이하, 한글만 입력하세요</p>')
+            bool = false;
+        }
+        if (!reg_phone.test($('#phone').val()) || $('#phone').val() == null) {
+            $('#alert').append('<p>[휴대폰번호] : 유효한 형식이 아닙니다.</p>')
+            bool = false;
+        }
+        if (!reg_password.test($('#password').val()) || $('#password').val() == null) {
+            $('#alert').append('<p>[패스워드] : 비밀번호는 6자리이상, 영문자/숫자만 및 하이푼(_-)만 입력하세요</p>')
+            bool = false;
+        }
+        if (!reg_birthday.test($('#birthday').val()) || $('#birthday').val() == null) {
+            $('#alert').append('<p>[생년월일] : 생년월일은 6자리 이상 입력해주세요</p>')
+            bool = false;
+        }
+
+        return bool;
+    }
+
+    function hiadAlertMessageBox() {
+        $('#alert').css('display', 'none')
+    }
+
+    function removeAlertMassageBox() {
+        $('#alert').children('p').remove();
     }
 
 })

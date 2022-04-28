@@ -129,11 +129,8 @@ $(function () {
     }
 
     function getChannelId() {
-        let pathname = decodeURI($(location).attr('pathname'))
-        let firstIdx = pathname.indexOf('/', 2) + 1
-        let lastIdx = pathname.indexOf('/', firstIdx)
-
-        return pathname.substring(firstIdx, lastIdx)
+        let search = decodeURI($(location).attr('search'))
+        return search.substr(search.indexOf('=') + 1)
     }
 
     function setPost() {
@@ -143,6 +140,7 @@ $(function () {
             async: false,
         })
         .done(function (data) {
+            console.log(data)
             post = data
         })
         .fail(function (error) {
@@ -193,7 +191,7 @@ $(function () {
             .done(function (data) {
                 let prevPostId = data.id
 
-                $(location).attr('href', '/channel/' + channelId +  '/post/' + prevPostId)
+                $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
             })
             .fail(function (error) {
                 console.log(error)
@@ -210,7 +208,7 @@ $(function () {
             .done(function (data) {
                 let nextPostId = data.id
 
-                $(location).attr('href', '/channel/' + channelId +  '/post/' + nextPostId)
+                $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
             })
             .fail(function (error) {
                 console.log(error)
@@ -219,28 +217,7 @@ $(function () {
         })
 
         $('#modifyButton').click(function () {
-            $(location).attr('href', '/post/edit/' + postId + '?email=' + memberEmail)
-
-            // let post = {}
-            // post.memberEmail = memberEmail
-            // post.title = 1
-            // post.writer = 1
-            // post.content = 1
-            // post.category = 1
-            //
-            //
-            // $.ajax({
-            //     url: '/api/post',
-            //     method: "PATCH",
-            //     data: ,
-            //     contentType: 'application/json',
-            //     dataType: 'json',
-            //     async: false,
-            // })
-            // .done(function (data) {
-            // })
-            // .fail(function (error) {
-            // })
+            $(location).attr('href', '/post/edit/' + postId + '?email=' + memberEmail + '&channel=' + channelId)
         })
 
     }

@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/post")
 public class PostController {
 
-    @GetMapping("/edit/{postId}")
-    public String updatePost(@RequestParam String email) {
-        return "html/post/updatePost";
+    @GetMapping("/create")
+    public String createPost(@RequestParam Long channel) {
+        return "html/post/createPost";
     }
 
-//    @GetMapping("/{postId}")
-//    public String deletePost(@RequestParam String email) {
-//        return "html/post/detailPost";
-//    }
+    @GetMapping("/detail/{postId}")
+    public String detailPost(@RequestParam Long channel) {
+        return "html/post/detailPost";
+    }
+
+    @GetMapping("/edit/{postId}")
+    public String updatePost(@RequestParam String email, @RequestParam(required = false) Long channel) {
+        return "html/post/updatePost";
+    }
 
 }

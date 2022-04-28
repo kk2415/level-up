@@ -140,16 +140,16 @@ public class PostApiController {
      * 수정
      * */
     @PatchMapping("/post/{postId}")
-    public PostResponse updatePost(@PathVariable Long postId, UpdatePostRequest postRequest) {
+    public UpdatePostResponse updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest postRequest) {
+        System.out.println(postRequest.getMemberEmail());
+
         Member findMember = memberService.findByEmail(postRequest.getMemberEmail());
         postService.updatePost(postId, findMember.getId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
 
         Post findPost = postService.findOne(postId);
 
-        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
-                findPost.getVoteCount(), findPost.getVoteCount(), findPost.getComments().size());
+        return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }
 //
 //    /**
