@@ -24,10 +24,10 @@ public class CategoryChannel {
     private Channel channel;
 
     //==연관관계 메서드==//
-    void setChannel(Channel channel) {
-        this.channel = channel;
-        channel.getCategoryChannels().add(this);
-    }
+//    void setChannel(Channel channel) {
+//        this.channel = channel;
+//        channel.getCategoryChannels().add(this);
+//    }
 
     //==생성 메서드==//
     public static CategoryChannel createCategoryChannel(Channel channel) {

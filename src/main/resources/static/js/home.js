@@ -8,30 +8,40 @@ $(function () {
     })
 })
 
+$('#createStudyButton').click(function () {
+    $(location).attr('href', '/channel/study/create')
+})
+
 function createCards(channels) {
     let count = channels.count;
     let data = channels.data;
 
-    let channelRow = $('#channelRow');
-    let channelCol = $('#channelCol');
+    let channelRow = $('.swiper-wrapper');
+    let channelCol = $('#origin-slide');
 
     for (let i = 0; i < count; i++) {
         let colunmNode = channelCol.clone();
+        colunmNode.attr('id', 'studySlider' + i)
 
-        if (i == 0) {
-            colunmNode = channelCol;
-        }
-        colunmNode.id = i;
+        let title = colunmNode.children().children()
+            .children('.col-md-8')
+            .children('.card-body')
+            .children('.card-title');
+        let description = colunmNode.children().children()
+            .children('.col-md-8')
+            .children('.card-body')
+            .children('.card-text')
+        let footer = colunmNode.children().children().children('.col-md-8').children('.card-footer')
+        let thumbnail = colunmNode.children().children().children('.col-md-4').children()
 
-        colunmNode.children().children('.card-body').children('.card-title').text(data[i].name)
-        colunmNode.children().children('.card-body').children('.card-text').text(data[i].description)
-        colunmNode.children().children('.card-body').children('#channelConnetion').attr('href', '/channel/detail/' + data[i].id + '?page=' + '1')
-        colunmNode.children().children('.card-footer').text(data[i].memberCount + " / " + data[i].limitedMemberNumber)
+        title.children('a').text(data[i].name)
+        title.children('a').attr('href', '/channel/detail/' + data[i].id + '?page=1')
 
-        colunmNode.children()
-            .children('#thumbnail')
-            .attr('src', 'api/channel/' + data[i].id + '/thumbnail')
+        description.text(data[i].description)
+        footer.children('.text-muted').text(data[i].memberCount + " / " + data[i].limitedMemberNumber)
+        thumbnail.attr('src', 'api/channel/' + data[i].id + '/thumbnail')
 
         channelRow.append(colunmNode)
     }
+    $('#origin-slide').css('display', 'none')
 }

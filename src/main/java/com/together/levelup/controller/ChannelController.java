@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/channel")
 public class ChannelController {
 
-    @GetMapping("/create")
+    @GetMapping("/project/create")
+    public String createProject() {
+        return "html/channel/createProjectChannel";
+    }
+
+    @GetMapping("/study/create")
     public String createGet() {
-        return "html/channel/createChannel";
+        return "html/channel/createStudyChannel";
     }
 
     @PostMapping("/create")

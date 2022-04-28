@@ -1,6 +1,7 @@
 package com.together.levelup.service;
 
 import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.member.UploadFile;
@@ -25,20 +26,21 @@ public class ChannelService {
      * 채널 추가
      * */
     @Transactional
-    public Long create(Long memberId, String name, Long limitNumber, String descript) {
-        Member findMember = memberRepository.findById(memberId);
+    public Long create(Long memberId, String name, Long limitNumber, String descript, ChannelCategory category, UploadFile uploadFile) {
+        Member member = memberRepository.findById(memberId);
+
         validationDuplicateChannel(name);
-        Channel channel = Channel.createChannel(findMember, name, limitNumber, descript);
+        Channel channel = Channel.createChannel(member, name, limitNumber, descript, category, uploadFile);
         channelRepository.save(channel);
         return channel.getId();
     }
 
     @Transactional
-    public Long create(String email, String name, Long limitNumber, String descript, UploadFile uploadFile) {
+    public Long create(String email, String name, Long limitNumber, String descript, ChannelCategory category, UploadFile uploadFile) {
         List<Member> members = memberRepository.findByEmail(email);
         validationDuplicateChannel(name);
 
-        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript, uploadFile);
+        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript, category, uploadFile);
         channelRepository.save(channel);
         return channel.getId();
     }

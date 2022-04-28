@@ -3,6 +3,7 @@ package com.together.levelup.api;
 import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
 import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.dto.*;
 import com.together.levelup.exception.ImageNotFoundException;
@@ -29,30 +30,13 @@ public class ChannelApiController {
     private final ChannelService channelService;
     private final FileStore fileStore;
 
-    @GetMapping("/channels")
-    public Result channels() {
-        List<Channel> channels = channelService.findAll();
-
-        List<ChannelResponse> responseList = channels.stream().map(c -> new ChannelResponse(c.getId(),
-                                                    c.getName(), c.getLimitedMemberNumber(), c.getManagerName(),
-                                                    c.getDescript(), c.getMemberCount()))
-                                                .collect(Collectors.toList());
-
-        return new Result(responseList, responseList.size());
-    }
-
-    @GetMapping("/channel/{channelId}")
-    public ChannelResponse channels(@PathVariable Long channelId) {
-        Channel findChannel = channelService.findOne(channelId);
-
-        return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getDescript(), findChannel.getMemberCount());
-    }
-
+    /**
+     * 생성
+     * */
     @PostMapping("/channel")
     public ChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
         Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
-                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(), channelRequest.getUploadFile());
+                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(), channelRequest.getCategory(), channelRequest.getUploadFile());
 
         return new ChannelResponse(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(), channelRequest.getManagerName(), channelRequest.getDescription(), 0L);
     }
@@ -69,6 +53,30 @@ public class ChannelApiController {
         }
 
         return new ResponseEntity(uploadFile, HttpStatus.OK);
+    }
+
+
+    /**
+     * 조회
+     * */
+    @GetMapping("/channels")
+    public Result channels() {
+        List<Channel> channels = channelService.findAll();
+
+        List<ChannelResponse> responseList = channels.stream().map(c -> new ChannelResponse(c.getId(),
+                                                    c.getName(), c.getLimitedMemberNumber(), c.getManagerName(),
+                                                    c.getDescription(), c.getMemberCount()))
+                                                .collect(Collectors.toList());
+
+        return new Result(responseList, responseList.size());
+    }
+
+    @GetMapping("/channel/{channelId}")
+    public ChannelResponse channel(@PathVariable Long channelId) {
+        Channel findChannel = channelService.findOne(channelId);
+
+        return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
+                findChannel.getManagerName(), findChannel.getDescription(), findChannel.getMemberCount());
     }
 
     @GetMapping(path = "/channel/{id}/thumbnail", produces = "image/jpeg")

@@ -1,7 +1,9 @@
 package com.together.levelup;
 
 import com.together.levelup.domain.FileStore;
+import com.together.levelup.domain.category.CategoryChannel;
 import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
@@ -45,12 +47,21 @@ public class InitDB {
             em.persist(manager2);
             em.persist(member1);
 
-            Channel channel1 = Channel.createChannel(manager1, "축구를 x잘하고싶은 사람들", 20L,
-                    "안녕하세요!", new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
-            Channel channel2 = Channel.createChannel(manager2, "스프링 x학습방", 20L,
-                    "스프링 초보들 다 모여라!", new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
+            Channel channel1 = Channel.createChannel(manager1, "리액트 기초", 20L,
+                    "리액트에 대한 전반적인 개념을 공부하는 스터디", ChannelCategory.STUDY, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
+            Channel channel2 = Channel.createChannel(manager2, "스프링 기본개념", 20L,
+                    "스프링 초보들 다 모여라!", ChannelCategory.STUDY, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
+            Channel channel3 = Channel.createChannel(manager2, "HTTP 완전 정복", 20L,
+                    "HTTP 완전 정복 가이드 책을 따라 읽는 스터디", ChannelCategory.STUDY, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
+            Channel channel4 = Channel.createChannel(manager2, "데이터베이스 기본반", 20L,
+                    "데이터베이스 기초에 대한 스터디", ChannelCategory.STUDY, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
+            Channel channel5 = Channel.createChannel(manager2, "자바 코테 스터디", 20L,
+                    "자바 코테 준비 스터디입니다", ChannelCategory.STUDY, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE));
             em.persist(channel1);
             em.persist(channel2);
+            em.persist(channel3);
+            em.persist(channel4);
+            em.persist(channel5);
 
             ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);
             ChannelMember channelMember2 = ChannelMember.createChannelMember(member1);
