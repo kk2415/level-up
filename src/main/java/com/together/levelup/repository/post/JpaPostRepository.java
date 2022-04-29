@@ -17,11 +17,18 @@ public class JpaPostRepository implements PostRepository {
 
     private final EntityManager em;
 
+    /**
+     * 생성
+     * */
     @Override
     public void save(Post post) {
         em.persist(post);
     }
 
+
+    /**
+     * 조회
+     * */
     @Override
     public Post findById(Long id) {
         return em.find(Post.class, id);
@@ -45,12 +52,6 @@ public class JpaPostRepository implements PostRepository {
     public List<Post> findAll() {
         return em.createQuery("select p from Post p", Post.class)
                 .getResultList();
-    }
-
-    @Override
-    public void delete(Long id) {
-        Post findMember = findById(id);
-        em.remove(findMember);
     }
 
     @Override
@@ -86,11 +87,26 @@ public class JpaPostRepository implements PostRepository {
     }
 
     @Override
+    public List<Post> findByChannelId(Long channelId, PostSearch postSearch) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        return queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .join(QPost.post.channel)
+                .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
+                .orderBy(QPost.post.dateCreated.desc())
+                .fetch();
+    }
+
+    @Override
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
-        int lastPage = page * 10; //9, 19, 29, 39
+        int lastPage = page * 10; //10, 20, 29, 39
+
+        System.out.println("firstPage : " + firstPage);
+        System.out.println("lastPage : " + lastPage);
 
         return queryFactory.select(QPost.post)
                 .from(QPost.post)
@@ -98,7 +114,7 @@ public class JpaPostRepository implements PostRepository {
                 .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
                 .orderBy(QPost.post.dateCreated.desc())
                 .offset(firstPage)
-                .limit(lastPage)
+                .limit(10)
                 .fetch();
     }
 
@@ -113,10 +129,14 @@ public class JpaPostRepository implements PostRepository {
         return QPost.post.writer.contains(postSearch.getQuery());
     }
 
-    public Long countAll() {
-        String queryString = "select count(p.id) from Post p";
 
-        return em.createQuery(queryString, Long.class).getResultList().get(0);
+    /**
+     * 삭제
+     * */
+    @Override
+    public void delete(Long id) {
+        Post findMember = findById(id);
+        em.remove(findMember);
     }
 
 }

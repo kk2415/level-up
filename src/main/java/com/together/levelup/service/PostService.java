@@ -98,6 +98,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public List<Post> findByChannelId(Long channelId, PostSearch postSearch) {
+        return postRepository.findByChannelId(channelId, postSearch);
+    }
+
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
         return postRepository.findByChannelId(channelId, page, postSearch);
     }

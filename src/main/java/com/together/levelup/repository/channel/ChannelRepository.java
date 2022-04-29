@@ -1,6 +1,8 @@
 package com.together.levelup.repository.channel;
 
 import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.channel.ChannelCategory;
+
 import java.util.List;
 
 public interface ChannelRepository {
@@ -9,6 +11,7 @@ public interface ChannelRepository {
     public Channel findById(Long id);
     public List<Channel> findByMemberId(Long memberId);
     public List<Channel> findByName(String name);
+    public List<Channel> findByCategory(ChannelCategory category);
     public List<Channel> findAll();
     public List<Channel> findAll(int start, int end);
     public void delete(Long id);

@@ -118,4 +118,8 @@ public class ChannelService {
         return channelRepository.findByMemberId(memberId);
     }
 
+    public List<Channel> findByCategory(ChannelCategory category) {
+        return channelRepository.findByCategory(category);
+    }
+
 }

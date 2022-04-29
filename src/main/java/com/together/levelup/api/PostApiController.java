@@ -67,6 +67,19 @@ public class PostApiController {
         return new Result(postResponses, postResponses.size());
     }
 
+    @GetMapping("/{channelId}/search/posts-size")
+    public int findAllPostWithQuery(@PathVariable Long channelId,
+                                       @RequestParam(required = false) String field,
+                                       @RequestParam(required = false) String query) {
+        PostSearch postSearch = null;
+        if (field != null && query != null) {
+            postSearch = new PostSearch(field, query);
+        }
+        List<Post> findPosts = postService.findByChannelId(channelId, postSearch);
+
+        return findPosts.size();
+    }
+
     @GetMapping("/post/{postId}")
     public PostResponse readPost(@PathVariable Long postId,
                                  @RequestParam(required = false, defaultValue = "false") String view) {
@@ -85,6 +98,7 @@ public class PostApiController {
     @GetMapping("/{channelId}/posts/{page}")
     public Result listingChannelPosts(@PathVariable Long channelId, @PathVariable int page,
                                   @RequestParam(required = false) String field, @RequestParam(required = false) String query) {
+
         PostSearch postSearch = null;
         if (field != null && query != null) {
             postSearch = new PostSearch(field, query);
