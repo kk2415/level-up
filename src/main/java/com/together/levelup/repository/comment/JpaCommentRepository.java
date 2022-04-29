@@ -1,7 +1,6 @@
 package com.together.levelup.repository.comment;
 
 import com.together.levelup.domain.Comment;
-import com.together.levelup.domain.QComment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

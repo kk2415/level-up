@@ -2,7 +2,6 @@ package com.together.levelup.api;
 
 import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
-import com.together.levelup.domain.category.CategoryChannel;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.UploadFile;
@@ -36,8 +35,9 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public ChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
+        System.out.println(channelRequest.getDescription());
         Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
-                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(), channelRequest.getCategory(), channelRequest.getUploadFile());
+                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(), "", channelRequest.getCategory(), channelRequest.getUploadFile());
 
         return new ChannelResponse(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(), channelRequest.getManagerName(), channelRequest.getDescription(), 0L);
     }
@@ -96,11 +96,11 @@ public class ChannelApiController {
     public Resource findMemberProfile(@PathVariable Long id) throws MalformedURLException {
         Channel findChannel = channelService.findOne(id);
 
-        if (findChannel.getUploadFile() == null) {
+        if (findChannel.getThumbnailImage() == null) {
             throw new ImageNotFoundException("썸네일 사진을 찾을 수 없습니다");
         }
 
-        UploadFile uploadFile = findChannel.getUploadFile();
+        UploadFile uploadFile = findChannel.getThumbnailImage();
         String fullPath = fileStore.getFullPath(uploadFile.getStoreFileName());
 
         /*

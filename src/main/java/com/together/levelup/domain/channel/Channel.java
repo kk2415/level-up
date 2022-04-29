@@ -37,6 +37,9 @@ public class Channel {
 
     private String description;
 
+    @Column(name = "thumbnail_description")
+    private String thumbnailDescription;
+
     @Column(name = "member_count")
     private Long memberCount;
 
@@ -44,7 +47,7 @@ public class Channel {
     private ChannelCategory category;
 
     @Embedded
-    private UploadFile uploadFile;
+    private UploadFile thumbnailImage;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers = new ArrayList<>();
@@ -78,7 +81,7 @@ public class Channel {
     }
 
     //==생성 메서드==//
-    public static Channel createChannel(Member member, String name, Long limitNumber, String description, ChannelCategory category, UploadFile uploadFile) {
+    public static Channel createChannel(Member member, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
         Channel channel = new Channel();
 
         channel.setMember(member);
@@ -86,10 +89,11 @@ public class Channel {
         channel.setManagerName(member.getName());
         channel.setLimitedMemberNumber(limitNumber);
         channel.setDescription(description);
+        channel.setThumbnailDescription(thumbnailDescription);
         channel.setDateCreated(LocalDateTime.now());
         channel.setMemberCount(0L);
         channel.setCategory(category);
-        channel.setUploadFile(uploadFile);
+        channel.setThumbnailImage(thumbnailImage);
 
         return channel;
     }

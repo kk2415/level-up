@@ -4,6 +4,7 @@ import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.Post;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,13 +18,19 @@ public class MemberTest {
     @Autowired
     private EntityManager em;
 
+    private Member member1;
+    private Member member2;
+
+    @BeforeEach
+    public void before() {
+        member1 = Member.createMember("test0",
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
+        member2 = Member.createMember("test1",
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
+    }
+
     @Test
     public void memberTest() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
-
         em.persist(member1);
         em.persist(member2);
 
@@ -32,16 +39,10 @@ public class MemberTest {
 
         Assertions.assertThat(member1).isEqualTo(findMember1);
         Assertions.assertThat(member2).isEqualTo(findMember2);
-
     }
 
     @Test
     public void postTest() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
-
         em.persist(member1);
         em.persist(member2);
 
@@ -64,11 +65,6 @@ public class MemberTest {
 
     @Test
     public void commentTest() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
-
         em.persist(member1);
         em.persist(member2);
 

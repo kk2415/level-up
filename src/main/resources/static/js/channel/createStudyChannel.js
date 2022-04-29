@@ -1,8 +1,9 @@
 $(function () {
     let reg_name = /^[가-힣a-zA-Z0-9\s]{2,15}$/;
     let reg_limitedMemberNumber = /^[0-9]{1,3}$/;
-    let reg_description = /^[가-힣a-zA-Z0-9\s]{2,30}$/;
     let channel = {}
+
+    configSummernote()
 
     hideAlertMessageBox();
 
@@ -10,12 +11,11 @@ $(function () {
     setButtonEventHandler()
 
 
-
-
     function setButtonEventHandler() {
         $('#submitButton').click(function () {
             $('#alert').children('p').remove();
 
+            setChannel();
             if (validation()) {
                 uploadImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
                 loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
@@ -43,10 +43,6 @@ $(function () {
         }
         if (!reg_limitedMemberNumber.test(channel.limitedMemberNumber) || channel.limitedMemberNumber == null) {
             $('#alert').append('<p>[회원제한수] : 숫자만 입력가능하며 일의자리수부터 백의자리수까지 입력 가능합니다.</p>')
-            bool = false;
-        }
-        if (!reg_description.test(channel.description) || channel.description == null) {
-            $('#alert').append('<p>[채널 설명] : 2자리 이상 30이하 자리수만 입력 가능합니다.</p>')
             bool = false;
         }
         return bool;
@@ -130,6 +126,18 @@ $(function () {
             console.log("이미지 업로드 실패")
             console.log(error)
         })
+    }
+
+    function setChannel() {
+        channel.name = $('#name').val()
+        channel.limitedMemberNumber = $('#limitedMemberNumber').val()
+        channel.description = $('#description').val()
+    }
+
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#description').summernote();
+        });
     }
 
     function hideAlertMessageBox() {
