@@ -10,6 +10,7 @@ import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,13 +27,30 @@ class JpaChannelRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    private Member member1;
+    private Member member2;
+    private Channel channel;
+    private Channel channel1;
+    private Channel channel2;
+    private Channel channel3;
+
+    @BeforeEach
+    public void before() {
+        member1 = Member.createMember("test0",
+                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
+        member2 = Member.createMember("test1",
+                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
+        channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+
+        channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        channel2 = Channel.createChannel(member2, "스프링 프로젝트1", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        channel3 = Channel.createChannel(member2, "스프링 프로젝트2", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+    }
+
     @Test
     void save() {
-        Member member1 = Member.createMember("test0", "0000", "김경희",
-                Gender.MALE, "970927", "010-2354-9960", null);
         memberRepository.save(member1);
 
-        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel);
         Channel findChannel = channelRepository.findById(channel.getId());
         Assertions.assertThat(findChannel).isEqualTo(channel);
@@ -40,14 +58,9 @@ class JpaChannelRepositoryTest {
 
     @Test
     void findByMemberId() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel = Channel.createChannel(member1,"모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel);
 
         ChannelMember channelMember1 = ChannelMember.createChannelMember(member1);
@@ -60,14 +73,9 @@ class JpaChannelRepositoryTest {
 
     @Test
     void delete() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
         channelRepository.save(channel);
 
         channelRepository.delete(channel.getId());
@@ -77,16 +85,8 @@ class JpaChannelRepositoryTest {
 
     @Test
     void 카테고리별_조회_테스트() {
-        Member member1 = Member.createMember("test0",
-                "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
-        Member member2 = Member.createMember("test1",
-                "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
         memberRepository.save(member1);
         memberRepository.save(member2);
-
-        Channel channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        Channel channel2 = Channel.createChannel(member2, "스프링 프로젝트1", 20L, "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        Channel channel3 = Channel.createChannel(member2, "스프링 프로젝트2", 20L, "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
 
         channelRepository.save(channel1);
         channelRepository.save(channel2);

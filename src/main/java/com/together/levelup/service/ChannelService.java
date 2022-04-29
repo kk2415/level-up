@@ -26,21 +26,21 @@ public class ChannelService {
      * 채널 추가
      * */
     @Transactional
-    public Long create(Long memberId, String name, Long limitNumber, String descript, ChannelCategory category, UploadFile uploadFile) {
+    public Long create(Long memberId, String name, Long limitNumber, String descript, String thumbnailDescript, ChannelCategory category, UploadFile uploadFile) {
         Member member = memberRepository.findById(memberId);
 
         validationDuplicateChannel(name);
-        Channel channel = Channel.createChannel(member, name, limitNumber, descript, category, uploadFile);
+        Channel channel = Channel.createChannel(member, name, limitNumber, descript, thumbnailDescript, category, uploadFile);
         channelRepository.save(channel);
         return channel.getId();
     }
 
     @Transactional
-    public Long create(String email, String name, Long limitNumber, String descript, ChannelCategory category, UploadFile uploadFile) {
+    public Long create(String email, String name, Long limitNumber, String descript, String thumbnailDescript, ChannelCategory category, UploadFile uploadFile) {
         List<Member> members = memberRepository.findByEmail(email);
         validationDuplicateChannel(name);
 
-        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript, category, uploadFile);
+        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript, thumbnailDescript, category, uploadFile);
         channelRepository.save(channel);
         return channel.getId();
     }
