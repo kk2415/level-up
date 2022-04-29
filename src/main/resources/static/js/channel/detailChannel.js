@@ -80,7 +80,6 @@ $(function () {
             clonePost.id = idx
             clonePost.children('td').eq(0).text(posts[idx].writer)
             clonePost.children('td').eq(1).children('a').text(posts[idx].title + ' [' + posts[idx].commentCount + ']')
-            // clonePost.children('td').eq(1).children('a').attr('href', '/channel/' + channelId + '/post/' + posts[idx].id)
             clonePost.children('td').eq(1).children('a').attr('href', '/post/detail/' + posts[idx].id + '?channel=' + channelId)
             clonePost.children('td').eq(2).text(posts[idx].views)
             clonePost.children('td').eq(3).text(posts[idx].voteCount)
