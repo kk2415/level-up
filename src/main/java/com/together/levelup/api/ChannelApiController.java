@@ -2,6 +2,7 @@ package com.together.levelup.api;
 
 import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
+import com.together.levelup.domain.category.CategoryChannel;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.UploadFile;
@@ -77,6 +78,18 @@ public class ChannelApiController {
 
         return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
                 findChannel.getManagerName(), findChannel.getDescription(), findChannel.getMemberCount());
+    }
+
+    @GetMapping("/channels/{category}")
+    public Result findByCategory(@PathVariable ChannelCategory category) {
+        List<Channel> findChannels = channelService.findByCategory(category);
+
+        List<ChannelResponse> responseList = findChannels.stream().map(c -> new ChannelResponse(c.getId(),
+                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(),
+                        c.getDescription(), c.getMemberCount()))
+                .collect(Collectors.toList());
+
+        return new Result(responseList, responseList.size());
     }
 
     @GetMapping(path = "/channel/{id}/thumbnail", produces = "image/jpeg")

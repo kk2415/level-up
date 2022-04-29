@@ -1,16 +1,17 @@
 $(function () {
-    let channelId = getChannelId()
-    let currentPage = getCurrentPage()
-    let channelName
-
     const pagerLength = 5
     const postNumOnScreen = 10
 
+    let channelId = getChannelId()
+    let currentPage = getCurrentPage()
+    let channelName
     let post = $('#post');
     let channelPosts = {}
     let postSearch = {}
 
     setPostSearch()
+    let allPostsCount = getPostsCount()
+
     setChannelName()
     $('#channelName').text(channelName)
     $('#currentPage').text(currentPage)
@@ -20,21 +21,39 @@ $(function () {
     let postsCount = channelPosts.count
 
     showPosts()
-    console.log(channelPosts)
-
     setPager()
 
-    function setChannelPosts(channelId, page, postSearch) {
-        console.log((postSearch))
+    function getPostsCount() {
+        let postsCount
 
+        let url = '/api/' + channelId + '/search/posts-size?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
+
+        if (postSearch.field === "") {
+            url = '/api/' + channelId + '/search/posts-size'
+        }
+
+        $.ajax({
+            url: encodeURI(url),
+            method: 'GET',
+            async: false,
+        })
+        .done(function (data) {
+            postsCount = data
+        })
+        .fail(function (error) {
+            console.log(error)
+        })
+
+        return postsCount
+    }
+
+    function setChannelPosts(channelId, page, postSearch) {
         let url = '/api/' + channelId + '/posts/' + page + '?' +
             'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
         if (postSearch.field === "") {
             url = '/api/' + channelId + '/posts/' + page
         }
-
-        console.log('loadPost url : ' + url)
 
         $.ajax({
             url: encodeURI(url),
@@ -48,7 +67,6 @@ $(function () {
 
     function showPosts() {
         let posts = channelPosts.data
-        console.log(posts)
         let count = channelPosts.count
         let post = $('#post');
 
@@ -82,15 +100,18 @@ $(function () {
         })
     }
 
-    // http://localhost:8080/channel/detail/4?page=1&field=writer&query=%ED%85%8C%EC%8A%A4%ED%8A%B8
-    // http://localhost:8080/channel/detail/4?page=2field=writer&query=%ED%85%8C%EC%8A%A4%ED%8A%B8
-
     function setPager() {
         let page = $('#page');
-        let startNum = currentPage - (currentPage - 1) % pagerLength
-        let lastNum = Math.floor(postsCount / postNumOnScreen) + 1
+        let endPageNum = Math.floor(allPostsCount / postNumOnScreen) + 1
 
-        for (let idx = 0; idx < lastNum; idx++) {
+        let startNum = currentPage - (currentPage - 1) % pagerLength
+        let loopCount = pagerLength
+
+        if ((endPageNum - currentPage) < pagerLength) {
+            loopCount = endPageNum - currentPage
+        }
+
+        for (let idx = 0; idx < loopCount; idx++) {
             let clonePage = page.clone()
             let url = '/channel/detail/' + channelId + '?page=' + (idx + startNum) + '&field='
                 + postSearch.field + '&' + 'query=' + postSearch.querys
@@ -109,10 +130,6 @@ $(function () {
 
                 showPosts()
             })
-
-            // clonePage.children('a').attr('href', url)
-            // let url = '/channel/detail/' + channelId + '?page=' + currentPage + '&' +
-            //     'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
             page.before(clonePage)
         }
@@ -140,7 +157,6 @@ $(function () {
 
     function setPostSearch() {
         let queryString = decodeURI($(location).attr('search'))
-        console.log(queryString)
 
         if (!queryString.includes("field", 0) || !queryString.includes("query", 0)) {
             postSearch.field = ""
@@ -152,22 +168,12 @@ $(function () {
             let firstIndex = queryStringOfPostSearch.indexOf("=") + 1;
             let endIndex = queryStringOfPostSearch.indexOf("&");
 
-            // console.log(queryStringOfPostSearch)
-            // console.log(firstIndex)
-            // console.log(endIndex)
-            // console.log(queryStringOfPostSearch.substring(firstIndex, endIndex))
-
             postSearch.field = queryStringOfPostSearch.substring(firstIndex, endIndex)
         }
 
         if (queryString.includes("query", 0)) {
             let queryStringOfPostSearch = queryString.substr(queryString.search("query"));
             let firstIndex = queryStringOfPostSearch.indexOf("=") + 1
-
-            // console.log(queryStringOfPostSearch)
-            // console.log(firstIndex)
-            // console.log(queryStringOfPostSearch.substr(firstIndex))
-
             postSearch.querys = queryStringOfPostSearch.substr(firstIndex)
         }
     }
@@ -183,8 +189,8 @@ $(function () {
 
         $('#next').click(function () {
             let startNum = currentPage - (currentPage - 1) % pagerLength
-            let lastNum = Math.floor(channelPosts.count / postNumOnScreen) + 1
-            let nextPage = startNum + 5
+            let lastNum = Math.floor(allPostsCount / postNumOnScreen) + 1
+            let nextPage = startNum + pagerLength
 
 
             let url = '/channel/detail/' + channelId + '?page=' + nextPage + '&field='
@@ -204,7 +210,7 @@ $(function () {
 
         $('#previous').click(function () {
             let startNum = currentPage - (currentPage - 1) % pagerLength
-            let previousPage = startNum - 5
+            let previousPage = startNum - pagerLength
 
             let url = '/channel/detail/' + channelId + '?page=' + previousPage + '&field='
                 + postSearch.field + '&' + 'query=' + postSearch.querys
@@ -227,7 +233,6 @@ $(function () {
             if (event.keyCode == 13) {
                 event.preventDefault()
 
-                console.log("hello")
                 postSearch.field = $('#navbarDropdown').val()
                 postSearch.querys = $('#search').val()
 
@@ -238,7 +243,6 @@ $(function () {
                     url = '/channel/detail/' + channelId + '?page=' + 1
                 }
 
-                console.log(url)
                 $(location).attr('href', url)
             }
         })

@@ -87,11 +87,26 @@ public class JpaPostRepository implements PostRepository {
     }
 
     @Override
+    public List<Post> findByChannelId(Long channelId, PostSearch postSearch) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        return queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .join(QPost.post.channel)
+                .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
+                .orderBy(QPost.post.dateCreated.desc())
+                .fetch();
+    }
+
+    @Override
     public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
-        int lastPage = page * 10; //9, 19, 29, 39
+        int lastPage = page * 10; //10, 20, 29, 39
+
+        System.out.println("firstPage : " + firstPage);
+        System.out.println("lastPage : " + lastPage);
 
         return queryFactory.select(QPost.post)
                 .from(QPost.post)
@@ -99,7 +114,7 @@ public class JpaPostRepository implements PostRepository {
                 .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
                 .orderBy(QPost.post.dateCreated.desc())
                 .offset(firstPage)
-                .limit(lastPage)
+                .limit(10)
                 .fetch();
     }
 
