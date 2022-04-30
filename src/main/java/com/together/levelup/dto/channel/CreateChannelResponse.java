@@ -1,4 +1,4 @@
-package com.together.levelup.dto;
+package com.together.levelup.dto.channel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,13 +6,11 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ChannelResponse {
+public class CreateChannelResponse {
 
-    private Long id;
     private String name;
     private Long limitedMemberNumber;
     private String managerName;
     private String description;
-    private Long memberCount;
 
 }

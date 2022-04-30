@@ -6,6 +6,9 @@ import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.dto.*;
+import com.together.levelup.dto.channel.ChannelRequest;
+import com.together.levelup.dto.channel.ChannelResponse;
+import com.together.levelup.dto.channel.CreateChannelResponse;
 import com.together.levelup.exception.ImageNotFoundException;
 import com.together.levelup.service.ChannelService;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +37,15 @@ public class ChannelApiController {
      * 생성
      * */
     @PostMapping("/channel")
-    public ChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
-        System.out.println(channelRequest.getDescription());
+    public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
         Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
-                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(), "", channelRequest.getCategory(), channelRequest.getUploadFile());
+                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(),
+                channelRequest.getThumbnailDescription(),
+                channelRequest.getCategory(), channelRequest.getThumbnailImage());
 
-        return new ChannelResponse(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(), channelRequest.getManagerName(), channelRequest.getDescription(), 0L);
+        Channel findChannel = channelService.findOne(channelId);
+        return new CreateChannelResponse(findChannel.getName(), findChannel.getLimitedMemberNumber(),
+                findChannel.getManagerName(), findChannel.getDescription());
     }
 
     @PostMapping("/channel/thumbnail")
@@ -47,10 +53,10 @@ public class ChannelApiController {
         UploadFile uploadFile;
 
         if (file == null || file.isEmpty()) {
-            uploadFile = new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_IMAGE);
+            uploadFile = new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE);
         }
         else {
-            uploadFile = fileStore.storeFile(ImageType.CHANNEL, file);
+            uploadFile = fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
         }
 
         return new ResponseEntity(uploadFile, HttpStatus.OK);
@@ -65,9 +71,8 @@ public class ChannelApiController {
         List<Channel> channels = channelService.findAll();
 
         List<ChannelResponse> responseList = channels.stream().map(c -> new ChannelResponse(c.getId(),
-                                                    c.getName(), c.getLimitedMemberNumber(), c.getManagerName(),
-                                                    c.getDescription(), c.getMemberCount()))
-                                                .collect(Collectors.toList());
+                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getDescription(),
+                        c.getThumbnailDescription(), c.getMemberCount())).collect(Collectors.toList());
 
         return new Result(responseList, responseList.size());
     }
@@ -77,7 +82,8 @@ public class ChannelApiController {
         Channel findChannel = channelService.findOne(channelId);
 
         return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getDescription(), findChannel.getMemberCount());
+                findChannel.getManagerName(), findChannel.getDescription(),
+                findChannel.getThumbnailDescription(), findChannel.getMemberCount());
     }
 
     @GetMapping("/channels/{category}")
@@ -86,7 +92,7 @@ public class ChannelApiController {
 
         List<ChannelResponse> responseList = findChannels.stream().map(c -> new ChannelResponse(c.getId(),
                         c.getName(), c.getLimitedMemberNumber(), c.getManagerName(),
-                        c.getDescription(), c.getMemberCount()))
+                        c.getDescription(), c.getThumbnailDescription(), c.getMemberCount()))
                 .collect(Collectors.toList());
 
         return new Result(responseList, responseList.size());

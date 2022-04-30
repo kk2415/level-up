@@ -74,35 +74,37 @@
                         <input class="form-control" id="name" type="text" placeholder="Enter channel name..."
                                maxlength="15" data-sb-validations="required" />
                         <label for="name">스터디 이름</label>
-                        <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+                        <div class="invalid-feedback" data-sb-feedback="name:required"></div>
                     </div>
 
                     <div class="form-floating mb-3">
                         <input class="form-control" id="limitedMemberNumber" type="text" placeholder="Enter channel limited number..."
                                maxlength="3" data-sb-validations="required" />
                         <label for="limitedMemberNumber">스터디 회원 제한 수</label>
-                        <div class="invalid-feedback" data-sb-feedback="limitedMemberNumber:required">An email is required.</div>
+                        <div class="invalid-feedback" data-sb-feedback="limitedMemberNumber:required"></div>
                     </div>
                     <div class="form-floating mb-3">
-                        <label for="description">스터디 소개</label>
+                        <label for="description">스터디 설명</label>
                         <br><br><br>
                         <div>
                             <textarea id="description">
                             </textarea>
                         </div>
-<!--                        <div class="invalid-feedback" data-sb-feedback="description:required">An password is required.</div>-->
-                        <!--                        <input class="form-control" id="description" type="text" placeholder="Enter channel description..."-->
-                        <!--                               maxlength="30" data-sb-validations="required" />-->
                     </div>
-
+                    <br><hr>
+                    <div class="form-floating mb-3">
+                        <input class="form-control" id="thumbnailDescription" type="text" placeholder="짤막한 스터디 소개글 작성해주세요!"
+                               maxlength="15"/>
+                        <label for="thumbnailDescription">스터디 썸네일 인사말</label>
+                        <div class="invalid-feedback" data-sb-feedback="thumbnailDescription:required"></div>
+                    </div>
                     <br>
-
                     <div>
                         <label for="file" class="form-label">썸네일 사진 선택</label>
                         <input class="form-control form-control-lg" id="file" type="file">
                     </div>
 
-                    <br>
+                    <br><br><br><br><br>
 
                     <div class="row">
                         <div class="col">

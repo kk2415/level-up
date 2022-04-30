@@ -3,6 +3,7 @@ package com.together.levelup.api;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.dto.*;
+import com.together.levelup.dto.post.*;
 import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.exception.PostNotFoundException;
 import com.together.levelup.service.MemberService;

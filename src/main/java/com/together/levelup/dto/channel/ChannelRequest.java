@@ -1,4 +1,4 @@
-package com.together.levelup.dto;
+package com.together.levelup.dto.channel;
 
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.UploadFile;
@@ -28,6 +28,9 @@ public class ChannelRequest {
     private ChannelCategory category;
 
     @NotNull
-    private UploadFile uploadFile;
+    private String thumbnailDescription;
+
+    @NotNull
+    private UploadFile thumbnailImage;
 
 }

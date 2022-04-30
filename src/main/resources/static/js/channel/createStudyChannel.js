@@ -1,13 +1,12 @@
 $(function () {
+    thumbnailDescription
     let reg_name = /^[가-힣a-zA-Z0-9\s]{2,15}$/;
+    let reg_thumbnailDescription = /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]{1,15}$/;
     let reg_limitedMemberNumber = /^[0-9]{1,3}$/;
     let channel = {}
 
     configSummernote()
-
     hideAlertMessageBox();
-
-    setEventListenerOfInput();
     setButtonEventHandler()
 
 
@@ -15,9 +14,10 @@ $(function () {
         $('#submitButton').click(function () {
             $('#alert').children('p').remove();
 
-            setChannel();
+            setChannelObject();
+
             if (validation()) {
-                uploadImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
+                uploadThumbnailImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
                 loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
                 channel.category = "STUDY"
                 console.log(channel);
@@ -45,6 +45,11 @@ $(function () {
             $('#alert').append('<p>[회원제한수] : 숫자만 입력가능하며 일의자리수부터 백의자리수까지 입력 가능합니다.</p>')
             bool = false;
         }
+        if (!reg_thumbnailDescription.test(channel.thumbnailDescription) || channel.thumbnailDescription == null) {
+            $('#alert').append('<p>[썸네일 인사말] : 썸네일 인사말은 1자리 이상 15자리 이하 자리수만 입력 가능합니다.</p>')
+            bool = false;
+        }
+
         return bool;
     }
 
@@ -63,22 +68,8 @@ $(function () {
             })
             .fail(error => {
                 console.log("채널 등록 실패")
-                console.log(error.status)
+                console.log(error)
             })
-    }
-
-    function setEventListenerOfInput() {
-        $('#name').change(event => {
-            channel.name = event.target.value;
-        });
-
-        $('#limitedMemberNumber').change(event => {
-            channel.limitedMemberNumber = event.target.value;
-        });
-
-        $('#description').change(event => {
-            channel.description = event.target.value;
-        });
     }
 
     function loadMemberInfo() {
@@ -97,7 +88,7 @@ $(function () {
         })
     }
 
-    function uploadImage() {
+    function uploadThumbnailImage() {
         let file = new FormData();
         file.append('file', $('#file')[0].files[0]);
 
@@ -120,7 +111,7 @@ $(function () {
             uploadimage.storeFileName = data.storeFileName
             uploadimage.uploadFileName = data.uploadFileName
 
-            channel.uploadFile = uploadimage;
+            channel.thumbnailImage = uploadimage;
         })
         .fail(function (error) {
             console.log("이미지 업로드 실패")
@@ -128,10 +119,11 @@ $(function () {
         })
     }
 
-    function setChannel() {
+    function setChannelObject() {
         channel.name = $('#name').val()
         channel.limitedMemberNumber = $('#limitedMemberNumber').val()
         channel.description = $('#description').val()
+        channel.thumbnailDescription = $('#thumbnailDescription').val()
     }
 
     function configSummernote() {

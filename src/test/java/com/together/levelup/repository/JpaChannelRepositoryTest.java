@@ -40,11 +40,11 @@ class JpaChannelRepositoryTest {
                 "0000", "김경희", Gender.MALE, "970927", "010-2354-9960", null);
         member2 = Member.createMember("test1",
                 "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
-        channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        channel = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
 
-        channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        channel2 = Channel.createChannel(member2, "스프링 프로젝트1", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        channel3 = Channel.createChannel(member2, "스프링 프로젝트2", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+        channel2 = Channel.createChannel(member2, "스프링 프로젝트1", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+        channel3 = Channel.createChannel(member2, "스프링 프로젝트2", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
     }
 
     @Test

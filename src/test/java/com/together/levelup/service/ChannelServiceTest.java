@@ -56,19 +56,19 @@ class ChannelServiceTest {
 
         channelId = channelService.create(manager.getId(), "맨유팬1 모임", 30L,
                 "맨유를 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY,
-                new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+                new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
         channelId1 = channelService.create(manager1.getId(), "맨유팬2 모임", 30L,
                 "맨유를 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY,
-                new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+                new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
         channelId2 = channelService.create(manager2.getId(), "리버풀팬3 모임", 30L,
                 "리버풀을 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY,
-                new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+                new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
     }
 
     @Test
     public void 채널명_중복_테스트() {
-        Long channelId = channelService.create(manager1.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        Assertions.assertThatThrownBy(() -> channelService.create(manager2.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE)))
+        Long channelId = channelService.create(manager1.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+        Assertions.assertThatThrownBy(() -> channelService.create(manager2.getId(), "맨유팬 모임", 30L, "맨유를 사랑하는 사람들의 모임", "맨유를 사랑하는 사람들의 모임", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE)))
                 .isInstanceOf(IllegalStateException.class);
     }
 
