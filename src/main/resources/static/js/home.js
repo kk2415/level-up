@@ -1,33 +1,17 @@
+import httpRequest from '/js/module/ajax.js';
+
 $(function () {
+    let request = new httpRequest()
+
     loadStudyChannels()
     loadProjectChannels()
 
     function loadStudyChannels() {
-        $.ajax({
-            url: '/api/channels/' + 'STUDY',
-            method: 'GET',
-            async: false,
-        })
-        .done(function (json) {
-            createStudyChannels(json);
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
+        request.getRequest('/api/channels/' + 'STUDY', createStudyChannels)
     }
 
     function loadProjectChannels() {
-        $.ajax({
-            url: '/api/channels/' + 'PROJECT',
-            method: 'GET',
-            async: false,
-        })
-        .done(function (json) {
-            createProjectChannels(json);
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
+        request.getRequest('/api/channels/' + 'PROJECT', createProjectChannels)
     }
 })
 
