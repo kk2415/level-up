@@ -4,7 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.post.QPost;
-import com.together.levelup.dto.PostSearch;
+import com.together.levelup.dto.post.PostSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

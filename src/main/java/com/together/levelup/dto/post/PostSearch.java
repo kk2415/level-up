@@ -1,4 +1,4 @@
-package com.together.levelup.dto;
+package com.together.levelup.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

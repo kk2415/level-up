@@ -2,8 +2,8 @@ package com.together.levelup.api;
 
 import com.together.levelup.domain.Comment;
 import com.together.levelup.domain.member.Member;
-import com.together.levelup.dto.CommentResponse;
-import com.together.levelup.dto.CreateCommentRequest;
+import com.together.levelup.dto.comment.CommentResponse;
+import com.together.levelup.dto.comment.CreateCommentRequest;
 import com.together.levelup.dto.Result;
 import com.together.levelup.service.CommentService;
 import com.together.levelup.service.MemberService;

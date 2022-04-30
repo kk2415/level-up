@@ -1,4 +1,4 @@
-package com.together.levelup.dto;
+package com.together.levelup.dto.member;
 
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.UploadFile;

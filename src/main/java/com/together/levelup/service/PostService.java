@@ -4,7 +4,7 @@ import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.PostCategory;
-import com.together.levelup.dto.PostSearch;
+import com.together.levelup.dto.post.PostSearch;
 import com.together.levelup.exception.PostNotFoundException;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;

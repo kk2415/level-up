@@ -38,6 +38,7 @@ public class Post {
     private Long views;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "post_category")
     private PostCategory postCategory;
 
     @ManyToOne(fetch = LAZY)

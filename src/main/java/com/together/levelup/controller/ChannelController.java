@@ -16,13 +16,13 @@ public class ChannelController {
     }
 
     @GetMapping("/study/create")
-    public String createGet() {
+    public String createStudy() {
         return "html/channel/createStudyChannel";
     }
 
-    @PostMapping("/create")
-    public String createPost() {
-        return "redirect:/";
+    @GetMapping("/study/edit/{channelId}")
+    public String editStudy() {
+        return "html/channel/updateStudyChannel";
     }
 
     @GetMapping("/detail/{channelId}")
@@ -31,6 +31,16 @@ public class ChannelController {
                          @RequestParam(required = false) String query) {
 
         return "html/channel/detailChannel";
+    }
+
+    @GetMapping("/detail-description/{channelId}")
+    public String detailDescription() {
+        return "html/channel/detailChannelDescription";
+    }
+
+    @PostMapping("/create")
+    public String createPost() {
+        return "redirect:/";
     }
 
 }

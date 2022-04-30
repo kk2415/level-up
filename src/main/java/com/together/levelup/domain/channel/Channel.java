@@ -1,5 +1,6 @@
 package com.together.levelup.domain.channel;
 
+import com.together.levelup.domain.file.ChannelDescriptionFile;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.exception.NoPlaceChnnelException;
@@ -37,14 +38,14 @@ public class Channel {
 
     private String description;
 
-    @Column(name = "thumbnail_description")
-    private String thumbnailDescription;
-
     @Column(name = "member_count")
     private Long memberCount;
 
     @Enumerated(EnumType.STRING)
     private ChannelCategory category;
+
+    @Column(name = "thumbnail_description")
+    private String thumbnailDescription;
 
     @Embedded
     private UploadFile thumbnailImage;
@@ -59,8 +60,8 @@ public class Channel {
     @JoinColumn(name = "manager_id")
     private Member member;
 
-//    @OneToMany(mappedBy = "channel")
-//    private List<CategoryChannel> categoryChannels = new ArrayList<>();
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    private List<ChannelDescriptionFile> channelDescriptionFiles = new ArrayList<>();
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.
@@ -80,13 +81,18 @@ public class Channel {
         channelMember.setChannel(this);
     }
 
+    public void setChannelDescriptionFile(ChannelDescriptionFile channelDescriptionFiles) {
+        this.channelDescriptionFiles.add(channelDescriptionFiles);
+        channelDescriptionFiles.setChannel(this);
+    }
+
     //==생성 메서드==//
     public static Channel createChannel(Member member, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
         Channel channel = new Channel();
 
         channel.setMember(member);
         channel.setName(name);
-        channel.setManagerName(member.getName());
+        channel.setManagerName(member.getEmail());
         channel.setLimitedMemberNumber(limitNumber);
         channel.setDescription(description);
         channel.setThumbnailDescription(thumbnailDescription);
@@ -123,10 +129,31 @@ public class Channel {
         }
     }
 
-    public void changeChannel(String name, Long limitNumber, String descript) {
+    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         this.setName(name);
         this.setLimitedMemberNumber(limitNumber);
-        this.setDescription(descript);
+        this.setDescription(description);
+        this.setThumbnailDescription(thumbnailDescription);
+        this.setThumbnailImage(thumbnailImage);
+    }
+
+    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
+        this.setName(name);
+        this.setLimitedMemberNumber(limitNumber);
+        this.setDescription(description);
+        this.setThumbnailDescription(thumbnailDescription);
+        this.setThumbnailImage(thumbnailImage);
+        this.setCategory(category);
+    }
+
+    public void addDescriptionFile(ChannelDescriptionFile channelDescriptionFile) {
+        this.setChannelDescriptionFile(channelDescriptionFile);
+    }
+
+    public void addDescriptionFile(List<ChannelDescriptionFile> channelDescriptionFile) {
+        for (ChannelDescriptionFile descriptionFile : channelDescriptionFile) {
+            this.setChannelDescriptionFile(descriptionFile);
+        }
     }
 
 }

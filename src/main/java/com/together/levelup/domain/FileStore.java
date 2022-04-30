@@ -14,8 +14,8 @@ import java.util.UUID;
 @Component
 public class FileStore {
 
-    public final static String MEMBER_DEFAULT_IMAGE = "member/AFF947XXQ-5554WSDQ12.png";
-    public final static String CHANNEL_DEFAULT_IMAGE = "channel/rich-g5fba4398e_640.jpg";
+    public final static String MEMBER_DEFAULT_IMAGE = "/images/member/AFF947XXQ-5554WSDQ12.png";
+    public final static String CHANNEL_DEFAULT_THUMBNAIL_IMAGE = "/images/channel/thumbnail/rich-g5fba4398e_640.jpg";
 
 
     @Value("${file.dir}")
@@ -25,7 +25,7 @@ public class FileStore {
             return fileDir + filename;
     }
 
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+    public List<UploadFile> storeFiles(ImageType imageType, List<MultipartFile> multipartFiles) throws IOException {
         ArrayList<UploadFile> uploadFiles = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles) {
@@ -54,13 +54,16 @@ public class FileStore {
         String storeFileName;
 
         if (imageType == ImageType.MEMBER) {
-            storeFileName = "member/" + createStoreFileName(uploadFilename);
+            storeFileName = "/images/member/" + createStoreFileName(uploadFilename);
         }
         else if (imageType == ImageType.CHANNEL) {
-            storeFileName = "channel/" + createStoreFileName(uploadFilename);
+            storeFileName = "/images/channel/description/" + createStoreFileName(uploadFilename);
+        }
+        else if (imageType == ImageType.CHANNEL_THUMBNAIL) {
+            storeFileName = "/images/channel/thumbnail/" + createStoreFileName(uploadFilename);
         }
         else {
-            storeFileName = "post/" + createStoreFileName(uploadFilename);
+            storeFileName = "/images/post/" + createStoreFileName(uploadFilename);
         }
         return storeFileName;
     }

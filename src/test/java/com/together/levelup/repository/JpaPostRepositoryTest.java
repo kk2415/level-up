@@ -7,7 +7,7 @@ import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
-import com.together.levelup.dto.PostSearch;
+import com.together.levelup.dto.post.PostSearch;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.post.JpaPostRepository;
@@ -67,10 +67,10 @@ public class JpaPostRepositoryTest {
         member2 = Member.createMember("test1",
                 "0000", "이예지", Gender.FEMALE, "020509", "010-5874-3699", null);
 
-        channel0 = Channel.createChannel(member1, "우당탕탕 스프링 개발기", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        channel2 = Channel.createChannel(member2, "스프링 프로젝트1", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
-        channel3 = Channel.createChannel(member2, "스프링 프로젝트2", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+        channel0 = Channel.createChannel(member1, "우당탕탕 스프링 개발기", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+        channel1 = Channel.createChannel(member1, "모두모두 모여라 요리왕", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.STUDY, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+        channel2 = Channel.createChannel(member2, "스프링 프로젝트1", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+        channel3 = Channel.createChannel(member2, "스프링 프로젝트2", 20L, "요리 친목도모", "요리 친목도모", ChannelCategory.PROJECT, new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
 
         post1 = Post.createPost(member1, channel1, "헬로 방가", "안녕하세요. 첫 게시글입니다");
         post2 = Post.createPost(member1, channel1, "0", "추천 받음");

@@ -1,7 +1,7 @@
 package com.together.levelup.repository.post;
 
 import com.together.levelup.domain.post.Post;
-import com.together.levelup.dto.PostSearch;
+import com.together.levelup.dto.post.PostSearch;
 
 import java.util.List;
 

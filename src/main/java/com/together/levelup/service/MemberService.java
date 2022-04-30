@@ -1,6 +1,6 @@
 package com.together.levelup.service;
 
-import com.together.levelup.dto.MemberJoinForm;
+import com.together.levelup.dto.member.MemberJoinForm;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.exception.DuplicateEmailException;
 import com.together.levelup.exception.MemberNotFoundException;

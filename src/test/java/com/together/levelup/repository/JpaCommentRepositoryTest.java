@@ -58,7 +58,7 @@ class JpaCommentRepositoryTest {
 
         channel1 = Channel.createChannel(member1, "우당탕탕 스프링 개발기", 20L, "요리 친목도모",
                 "요리 친목도모", ChannelCategory.STUDY,
-                new UploadFile("default", FileStore.CHANNEL_DEFAULT_IMAGE));
+                new UploadFile("default", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
 
         post1 = Post.createPost(member1, channel1, "0", "안녕하세요. 첫 게시글입니다");
         post2 = Post.createPost(member1, channel1, "1", "추천 받음");
