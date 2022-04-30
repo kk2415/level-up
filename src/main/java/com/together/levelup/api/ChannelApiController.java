@@ -4,13 +4,13 @@ import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
+import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.member.UploadFile;
 import com.together.levelup.dto.*;
-import com.together.levelup.dto.channel.ChannelRequest;
-import com.together.levelup.dto.channel.ChannelResponse;
-import com.together.levelup.dto.channel.CreateChannelResponse;
+import com.together.levelup.dto.channel.*;
 import com.together.levelup.exception.ImageNotFoundException;
 import com.together.levelup.service.ChannelService;
+import com.together.levelup.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class ChannelApiController {
 
     private final ChannelService channelService;
+    private final MemberService memberService;
     private final FileStore fileStore;
 
     /**
@@ -38,14 +40,39 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
+//        ArrayList<ChannelDescriptionFile> descriptionFiles = new ArrayList<>();
+
         Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
                 channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(),
                 channelRequest.getThumbnailDescription(),
                 channelRequest.getCategory(), channelRequest.getThumbnailImage());
 
         Channel findChannel = channelService.findOne(channelId);
+
+//        for (UploadFile file : uploadFiles) {
+//            ChannelDescriptionFile descriptionFile = ChannelDescriptionFile.createChannelDescriptionFile(file);
+//            descriptionFiles.add(descriptionFile);
+//        }
+//
+//        Channel findChannel = channelService.findOne(channelId);
+//        findChannel.addDescriptionFile(descriptionFiles);
+
+
         return new CreateChannelResponse(findChannel.getName(), findChannel.getLimitedMemberNumber(),
                 findChannel.getManagerName(), findChannel.getDescription());
+    }
+
+    @PostMapping("/channel/descriptionFiles")
+    public ResponseEntity storeDescriptionFiles(MultipartFile files) throws IOException {
+        if (files == null || files.isEmpty()) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        UploadFile uploadFiles = fileStore.storeFile(ImageType.CHANNEL, files);
+        ChannelFileResponse channelFileResponse = new ChannelFileResponse(uploadFiles.getStoreFileName(),
+                uploadFiles);
+
+        return new ResponseEntity(channelFileResponse, HttpStatus.OK);
     }
 
     @PostMapping("/channel/thumbnail")
@@ -86,6 +113,16 @@ public class ChannelApiController {
                 findChannel.getThumbnailDescription(), findChannel.getMemberCount());
     }
 
+    @GetMapping("/detail-description/{channelId}")
+    public ChannelDescriptionResponse channelDescription(@PathVariable Long channelId) {
+        Channel findChannel = channelService.findOne(channelId);
+
+        return new ChannelDescriptionResponse(findChannel.getName(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findChannel.getDateCreated()),
+                findChannel.getManagerName(), findChannel.getMemberCount(), findChannel.getLimitedMemberNumber(),
+                findChannel.getCategory());
+    }
+
     @GetMapping("/channels/{category}")
     public Result findByCategory(@PathVariable ChannelCategory category) {
         List<Channel> findChannels = channelService.findByCategory(category);
@@ -116,6 +153,22 @@ public class ChannelApiController {
          * Resource를 리턴할 때 ResourceHttpMessageConverter가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
          * */
         return new UrlResource("file:" + fullPath);
+    }
+
+
+    /**
+     * 수정
+     * */
+    @PatchMapping("/channel/{channelId}")
+    public ResponseEntity updateDetailDescription(@PathVariable Long channelId, @RequestBody @Validated UpdateChannelRequest channelRequest) {
+        channelService.update(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
+                channelRequest.getDescription(), channelRequest.getThumbnailDescription(), channelRequest.getThumbnailImage());
+
+        Channel findChannel = channelService.findOne(channelId);
+        return new ResponseEntity(new UpdateChannelResponse(findChannel.getName(),
+                findChannel.getLimitedMemberNumber(), findChannel.getDescription(),
+                findChannel.getThumbnailDescription(), findChannel.getThumbnailImage()),
+                HttpStatus.OK);
     }
 
 }

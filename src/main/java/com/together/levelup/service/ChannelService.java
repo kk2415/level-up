@@ -86,9 +86,15 @@ public class ChannelService {
      * 채널 수정
      * */
     @Transactional
-    public void update(Long channelId, String name, Long limitNumber, String descript) {
+    public void update(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId);
-        channel.changeChannel(name, limitNumber, descript);
+        channel.changeChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
+    }
+
+    @Transactional
+    public void update(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
+        Channel channel = channelRepository.findById(channelId);
+        channel.changeChannel(name, limitNumber, description, thumbnailDescription, category, thumbnailImage);
     }
 
     /**

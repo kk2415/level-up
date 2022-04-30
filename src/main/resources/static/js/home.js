@@ -93,7 +93,7 @@ function createStudyChannels(data) {
         let thumbnail = colunmNode.children().children().children('.col-md-4').children()
 
         title.children('a').text(channels[i].name)
-        title.children('a').attr('href', '/channel/detail/' + channels[i].id + '?page=1')
+        title.children('a').attr('href', '/channel/detail-description/' + channels[i].id)
 
         thumbNailDescription.text(channels[i].thumbnailDescription)
         footer.children('.text-muted').text(channels[i].memberCount + " / " + channels[i].limitedMemberNumber)

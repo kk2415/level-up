@@ -1,28 +1,29 @@
 $(function () {
-    thumbnailDescription
-    let reg_name = /^[가-힣a-zA-Z0-9\s]{2,15}$/;
+    let reg_name = /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]{2,15}$/;
     let reg_thumbnailDescription = /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s]{1,15}$/;
     let reg_limitedMemberNumber = /^[0-9]{1,3}$/;
+
+    let channelId = getChannelId()
     let channel = {}
 
     configSummernote()
-    hideAlertMessageBox();
+    hideAlertMessageBox()
     setButtonEventHandler()
 
+    setChannel()
+    showChannel()
 
     function setButtonEventHandler() {
-        $('#submitButton').click(function () {
+        $('#updateButton').click(function () {
             $('#alert').children('p').remove();
 
             setChannelObject();
 
             if (validation()) {
                 uploadThumbnailImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
-                loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
-                channel.category = "STUDY"
                 console.log(channel);
 
-                createChannel();
+                updateChannel();
             }
             else {
                 showAlertMessageBox();
@@ -30,8 +31,29 @@ $(function () {
         })
 
         $('#cancel').click(function () {
-            window.location.href = 'http://localhost:8080/';
+            $(location).attr('href', '/channel/detail-description/' + channelId)
         })
+    }
+
+    function setChannel() {
+        $.ajax({
+            url: '/api/detail-description/' + channelId,
+            method: 'GET',
+            async: false,
+        })
+        .done(function (data) {
+            channel = data
+        })
+        .fail(function (error) {
+            console.log(error)
+        })
+    }
+
+    function showChannel() {
+        $('#name').val(channel.name)
+        $('#limitedMemberNumber').val(channel.limitedMemberNumber)
+        $('#description').val(channel.description)
+        $('#thumbnailDescription').val(channel.thumbnailDescription)
     }
 
     function validation() {
@@ -53,23 +75,23 @@ $(function () {
         return bool;
     }
 
-    function createChannel() {
+    function updateChannel() {
         $.ajax({
-            url: '/api/channel',
-            method: "POST",
+            url: '/api/channel/' + channelId,
+            method: "PATCH",
             data: JSON.stringify(channel),
             dataType: 'json',
             contentType: 'application/json',
             async: false,
         })
-            .done(function () {
-                console.log("채널 등록 성공")
-                window.location.href = 'http://localhost:8080/';
-            })
-            .fail(error => {
-                console.log("채널 등록 실패")
-                console.log(error)
-            })
+        .done(function () {
+            console.log("채널 등록 성공")
+            $(location).attr('href', '/channel/detail-description/' + channelId)
+        })
+        .fail(error => {
+            console.log("채널 등록 실패")
+            console.log(error)
+        })
     }
 
     function loadMemberInfo() {
@@ -104,7 +126,6 @@ $(function () {
         })
         .done(function (data) {
             console.log("이미지 업로드 성공")
-            console.log(data)
             let uploadimage = {
             };
 
@@ -170,6 +191,11 @@ $(function () {
                 }
             })
         })
+    }
+
+    function getChannelId() {
+        let pathname = decodeURI($(location).attr('pathname'))
+        return pathname.substr(pathname.lastIndexOf('/') + 1)
     }
 
     function hideAlertMessageBox() {

@@ -41,6 +41,7 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(fileDir);
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:///C:/Task/study/levelup/images/");
     }
 }

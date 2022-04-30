@@ -92,7 +92,7 @@ public class Channel {
 
         channel.setMember(member);
         channel.setName(name);
-        channel.setManagerName(member.getName());
+        channel.setManagerName(member.getEmail());
         channel.setLimitedMemberNumber(limitNumber);
         channel.setDescription(description);
         channel.setThumbnailDescription(thumbnailDescription);
@@ -129,14 +129,31 @@ public class Channel {
         }
     }
 
-    public void changeChannel(String name, Long limitNumber, String descript) {
+    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         this.setName(name);
         this.setLimitedMemberNumber(limitNumber);
-        this.setDescription(descript);
+        this.setDescription(description);
+        this.setThumbnailDescription(thumbnailDescription);
+        this.setThumbnailImage(thumbnailImage);
+    }
+
+    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
+        this.setName(name);
+        this.setLimitedMemberNumber(limitNumber);
+        this.setDescription(description);
+        this.setThumbnailDescription(thumbnailDescription);
+        this.setThumbnailImage(thumbnailImage);
+        this.setCategory(category);
     }
 
     public void addDescriptionFile(ChannelDescriptionFile channelDescriptionFile) {
         this.setChannelDescriptionFile(channelDescriptionFile);
+    }
+
+    public void addDescriptionFile(List<ChannelDescriptionFile> channelDescriptionFile) {
+        for (ChannelDescriptionFile descriptionFile : channelDescriptionFile) {
+            this.setChannelDescriptionFile(descriptionFile);
+        }
     }
 
 }
