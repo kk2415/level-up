@@ -1,5 +1,8 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
-    const FILE_DIR = 'C:/Task/study/levelup/images/';
+    let request = new httpRequest()
+
     let member = {}
     let modifyButton = $('#modifyButton');
     let updateButton = $('#updateButton');
@@ -24,50 +27,39 @@ $(function () {
     })
 
     $('#backButton').click(function () {
-        window.location.href = 'http://localhost:8080/';
+        $(location).attr('href', '/')
     })
 
     function renderMemberInfo() {
-        $.ajax({
-            url: '/api/member',
-            method: 'GET',
-            dataType: 'json',
-            async: false,
-        })
-        .done(function (json) {
-            member.email = json.email;
+        let result = request.getRequest('/api/member');
 
-            $('#email').val(json.email);
-            $('#name').val(json.name);
-            $('#birthday').val(json.birthday);
-            $('#phone').val(json.phone);
-            if (json.gender.toString() == 'MALE') {
+        if ('status' in result && result.status !== 200) {
+            alert("로그인이 필요합니다")
+            $(location).attr('href', '/')
+        }
+        else {
+            console.log(result)
+            member.email = result.email;
+
+            $('#email').val(result.email);
+            $('#name').val(result.name);
+            $('#birthday').val(result.birthday);
+            $('#phone').val(result.phone);
+            if (result.gender.toString() == 'MALE') {
                 $('#gender').val('남성');
             } else {
                 $('#gender').val('여성');
             }
-            $('#profile').attr('src', '/api/member/' + json.email + '/image')
-        })
+            $('#profile').attr('src', result.uploadFile.storeFileName)
+        }
     }
 
     function updateMemberImage() {
         let formData = new FormData();
         formData.append('file', inputFile[0].files[0])
 
-        console.log(inputFile[0].files[0])
-        $.ajax({
-            url: '/api/member/' + member.email + '/image',
-            method: 'PATCH',
-            data: formData,
-            enctype: 'multipart/form-data',
-            processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음
-            contentType: false, // - contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
-            async: false,
-        })
-        .fail(function (error) {
-            console.log("파일 업데이트 실패")
-            console.log(error)
-        })
+        request.patchMultipartRequest('/api/member/' + member.email + '/image', formData)
     }
+
 })
 

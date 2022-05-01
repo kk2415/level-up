@@ -1,4 +1,8 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
+    let request = new httpRequest()
+
     const pagerLength = 5
     const postNumOnScreen = 10
 
@@ -32,18 +36,7 @@ $(function () {
             url = '/api/' + channelId + '/search/posts-size'
         }
 
-        $.ajax({
-            url: encodeURI(url),
-            method: 'GET',
-            async: false,
-        })
-        .done(function (data) {
-            postsCount = data
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
-
+        postsCount = request.getRequest(url)
         return postsCount
     }
 
@@ -55,14 +48,7 @@ $(function () {
             url = '/api/' + channelId + '/posts/' + page
         }
 
-        $.ajax({
-            url: encodeURI(url),
-            method: 'GET',
-            async: false,
-        })
-        .done(function (data) {
-            channelPosts = data
-        })
+        channelPosts = request.getRequest(url)
     }
 
     function showPosts() {
@@ -89,14 +75,9 @@ $(function () {
     }
 
     function setChannelName() {
-        $.ajax({
-            url: '/api/channel/' + channelId,
-            method: 'GET',
-            async: false,
-        })
-        .done(function (data) {
-            channelName = data.name
-        })
+        let result = request.getRequest('/api/channel/' + channelId);
+
+        channelName = result.name
     }
 
     function setPager() {

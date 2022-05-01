@@ -1,4 +1,7 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
+    let request = new httpRequest()
     let postId = getPostId()
     let channelId = getChannelId()
     let memberEmail = getMemberEmail()
@@ -19,25 +22,10 @@ $(function () {
     showComments()
 
 
-
-
-
     function getMemberEmail() {
-        let email
+        let member = request.getRequest('/api/member');
 
-        $.ajax({
-            url: '/api/member',
-            method: "GET",
-            async: false,
-        })
-        .done(function (data) {
-            email = data.email
-        })
-        .fail(function (error) {
-            email = null
-        })
-
-        return email
+        return member.email
     }
 
     function isMyPost() {
@@ -65,17 +53,7 @@ $(function () {
     }
 
     function setComments() {
-        $.ajax({
-            url: '/api/comment/' + postId,
-            method: "GET",
-            async: false,
-        })
-        .done(function (data) {
-            comments = data
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
+        comments = request.getRequest('/api/comment/' + postId)
     }
 
     function showComments() {
@@ -104,19 +82,8 @@ $(function () {
 
         console.log(comment)
         if (comment.memberEmail !== undefined) {
-            $.ajax({
-                url: '/api/comment',
-                method: "POST",
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify(comment),
-                async: false,
-            })
-            .done(function (data) {
-            })
-            .fail(function (error) {
-                console.log(error)
-            })
+
+            request.postRequest('/api/comment', comment)
         }
         else {
             alert("댓글을 작성하려면 로그인을 해야합니다.")
@@ -134,18 +101,7 @@ $(function () {
     }
 
     function setPost() {
-        $.ajax({
-            url: '/api/post/' + postId + '?view=true',
-            method: "GET",
-            async: false,
-        })
-        .done(function (data) {
-            console.log(data)
-            post = data
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
+        post = request.getRequest('/api/post/' + postId + '?view=true')
     }
 
     function showPost() {
@@ -183,37 +139,56 @@ $(function () {
         })
 
         $('#prevPostButton').click(function () {
-            $.ajax({
-                url: '/api/post/' + postId + '/prevPost',
-                method: "GET",
-                async: false,
-            })
-            .done(function (data) {
-                let prevPostId = data.id
 
-                $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
-            })
-            .fail(function (error) {
-                console.log(error)
+            let result = request.getRequest('/api/post/' + postId + '/prevPost');
+
+            if ('status' in result && result.status !== 200) {
                 alert("이전 페이지가 없습니다.")
-            })
+            }
+            else {
+                let prevPostId = result.id
+                $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
+            }
+
+            // $.ajax({
+            //     url: '/api/post/' + postId + '/prevPost',
+            //     method: "GET",
+            //     async: false,
+            // })
+            // .done(function (data) {
+            //     let prevPostId = data.id
+            //     $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
+            // })
+            // .fail(function (error) {
+            //     console.log(error)
+            //     alert("이전 페이지가 없습니다.")
+            // })
         })
 
         $('#nextPostButton').click(function () {
-            $.ajax({
-                url: '/api/post/' + postId + '/nextPost',
-                method: "GET",
-                async: false,
-            })
-            .done(function (data) {
-                let nextPostId = data.id
+            let result = request.getRequest('/api/post/' + postId + '/nextPost');
 
-                $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
-            })
-            .fail(function (error) {
-                console.log(error)
+            if ('status' in result && result.status !== 200) {
                 alert("다음 페이지가 없습니다.")
-            })
+            }
+            else {
+                let nextPostId = result.id
+                $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
+            }
+
+            // $.ajax({
+            //     url: '/api/post/' + postId + '/nextPost',
+            //     method: "GET",
+            //     async: false,
+            // })
+            // .done(function (data) {
+            //     let nextPostId = data.id
+            //     $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
+            // })
+            // .fail(function (error) {
+            //     console.log(error)
+            //     alert("다음 페이지가 없습니다.")
+            // })
         })
 
         $('#modifyButton').click(function () {

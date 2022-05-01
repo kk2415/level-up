@@ -1,4 +1,7 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
+    let request = new httpRequest()
     let memberEmail = getMemberEmail()
     let channelId = getChannelId()
     let channelDescription = {}
@@ -20,36 +23,13 @@ $(function () {
     }
 
     function setChannelDescription() {
-        $.ajax({
-            url: '/api/detail-description/' + channelId,
-            method: 'GET',
-            async: false,
-        })
-        .done(function (data) {
-            console.log(data)
-            channelDescription = data
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
+        channelDescription = request.getRequest('/api/detail-description/' + channelId)
     }
 
     function getMemberEmail() {
-        let email
+        let member = request.getRequest('/api/member');
 
-        $.ajax({
-            url: '/api/member',
-            method: "GET",
-            async: false,
-        })
-        .done(function (data) {
-            email = data.email
-        })
-        .fail(function (error) {
-            email = null
-        })
-
-        return email
+        return member.email
     }
 
     function isLoginMember() {
@@ -91,7 +71,7 @@ $(function () {
                 $(location).attr('href', '/channel/study/edit/' + channelId)
             }
             else {
-                // $(location).attr('href', '/channel/project/edit')
+                // $(location).attr('href', '/channel/project/edit/' + channelId)
             }
         })
 

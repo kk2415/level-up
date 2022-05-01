@@ -1,4 +1,4 @@
-import httpRequest from '/js/module/ajax.js';
+import httpRequest from '/js/module/httpRequest.js';
 
 $(function () {
     let request = new httpRequest()
@@ -17,6 +17,10 @@ $(function () {
 
 $('#createStudyButton').click(function () {
     $(location).attr('href', '/channel/study/create')
+})
+
+$('#createProjectButton').click(function () {
+    $(location).attr('href', '/channel/project/create')
 })
 
 function createProjectChannels(data) {
