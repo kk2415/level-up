@@ -59,11 +59,15 @@ $(function () {
     }
 
     function setEventHandler() {
-        $('#toAllStudyChannelButton').click(function () {
-            $(location).attr('href', '/')
+        $('#registerStudyButton').click(function () {
         })
 
-        $('#registerStudyButton').click(function () {
+        $('#enterStudyButton').click(function () {
+            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+        })
+
+        $('#toAllStudyChannelButton').click(function () {
+            $(location).attr('href', '/')
         })
 
         $('#modifyButton').click(function () {
@@ -71,7 +75,7 @@ $(function () {
                 $(location).attr('href', '/channel/study/edit/' + channelId)
             }
             else {
-                // $(location).attr('href', '/channel/project/edit/' + channelId)
+                $(location).attr('href', '/channel/project/edit/' + channelId)
             }
         })
 

@@ -39,7 +39,7 @@ function createProjectChannels(data) {
             .children('.col-md-8')
             .children('.card-body')
             .children('.card-title');
-        let description = colunmNode.children().children()
+        let thumbnailDescription = colunmNode.children().children()
             .children('.col-md-8')
             .children('.card-body')
             .children('.card-text')
@@ -47,9 +47,9 @@ function createProjectChannels(data) {
         let thumbnail = colunmNode.children().children().children('.col-md-4').children()
 
         title.children('a').text(channels[i].name)
-        title.children('a').attr('href', '/channel/detail/' + channels[i].id + '?page=1')
+        title.children('a').attr('href', '/channel/detail-description/' + channels[i].id)
 
-        description.text(channels[i].description)
+        thumbnailDescription.text(channels[i].thumbnailDescription)
         footer.children('.text-muted').text(channels[i].memberCount + " / " + channels[i].limitedMemberNumber)
         thumbnail.attr('src', 'api/channel/' + channels[i].id + '/thumbnail')
 
