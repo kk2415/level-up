@@ -1,4 +1,7 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
+    let request = new httpRequest()
     let post = {}
     let channelId = getChannelId();
     let alert = $('#alert');
@@ -38,18 +41,8 @@ $(function () {
     }
 
     function uploadPost(data) {
-        $.ajax({
-            url: '/api/post',
-            method: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json',
-        })
-        .done(function () {
+        request.postRequest('/api/post', data, () => {
             $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-        })
-        .fail(function (error) {
-            console.log(error)
         })
     }
 

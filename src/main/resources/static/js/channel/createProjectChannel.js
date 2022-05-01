@@ -1,22 +1,21 @@
+import httpRequest from "/js/module/httpRequest.js";
+import {createChannelValidation as validation} from '/js/module/validation.js';
+
 $(function () {
-    let reg_name = /^[가-힣a-zA-Z0-9\s]{2,15}$/;
-    let reg_limitedMemberNumber = /^[0-9]{1,3}$/;
-    let reg_description = /^[가-힣a-zA-Z0-9\s]{2,30}$/;
+    let request = new httpRequest()
     let channel = {}
 
     hideAlertMessageBox();
-
-    setEventListenerOfInput();
+    configSummernote()
     setButtonEventHandler()
-
-
 
 
     function setButtonEventHandler() {
         $('#submitButton').click(function () {
             $('#alert').children('p').remove();
 
-            if (validation()) {
+            setChannelObject()
+            if (validate()) {
                 uploadImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
                 loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
                 channel.category = "PROJECT"
@@ -34,102 +33,64 @@ $(function () {
         })
     }
 
-    function validation() {
+    function validate() {
         let bool = true;
 
-        if (!reg_name.test(channel.name) || channel.name == null) {
+        if (!validation.name.test(channel.name) || channel.name == null) {
             $('#alert').append('<p>[프로젝트 이름] : 이름은 2자리 이상 15이하 자리수만 입력 가능합니다.</p>')
             bool = false;
         }
-        if (!reg_limitedMemberNumber.test(channel.limitedMemberNumber) || channel.limitedMemberNumber == null) {
+        if (!validation.limitedMemberNumber.test(channel.limitedMemberNumber) || channel.limitedMemberNumber == null) {
             $('#alert').append('<p>[프로젝트 인원] : 숫자만 입력가능하며 일의자리수부터 백의자리수까지 입력 가능합니다.</p>')
             bool = false;
         }
-        if (!reg_description.test(channel.description) || channel.description == null) {
-            $('#alert').append('<p>[프로젝트 설명] : 2자리 이상 30이하 자리수만 입력 가능합니다.</p>')
+        if (!validation.thumbnailDescription.test(channel.thumbnailDescription) || channel.thumbnailDescription == null) {
+            $('#alert').append('<p>[프로젝트 썸네일 인사말] : 1자리 이상 20이하 자리수만 입력 가능합니다.</p>')
             bool = false;
         }
         return bool;
     }
 
     function createProjectChannel() {
-        $.ajax({
-            url: '/api/channel',
-            method: "POST",
-            data: JSON.stringify(channel),
-            dataType: 'json',
-            contentType: 'application/json',
-            async: false,
+        request.postRequest('/api/channel', channel, (response) => {
+            console.log("채널 등록 성공")
+            $(location).attr('href', '/')
         })
-        .done(function () {
-            console.log("프로젝트 등록 성공")
-            window.location.href = 'http://localhost:8080/';
-        })
-        .fail(error => {
-            console.log("프로젝트 등록 실패")
-            console.log(error.status)
-        })
+
+        console.log("채널 등록 실패")
     }
 
-    function setEventListenerOfInput() {
-        $('#name').change(event => {
-            channel.name = event.target.value;
-        });
-
-        $('#limitedMemberNumber').change(event => {
-            channel.limitedMemberNumber = event.target.value;
-        });
-
-        $('#description').change(event => {
-            channel.description = event.target.value;
-        });
+    function setChannelObject() {
+        channel.name = $('#name').val()
+        channel.limitedMemberNumber = $('#limitedMemberNumber').val()
+        channel.description = $('#description').val()
+        channel.thumbnailDescription = $('#thumbnailDescription').val()
     }
 
     function loadMemberInfo() {
-        $.ajax({
-            url: '/api/member',
-            method: "GET",
-            async: false,
-        })
-        .done(function (data) {
-            channel.memberEmail = data.email;
-            channel.managerName = data.name;
-        })
-        .fail(error => {
+        let result = request.getRequest('/api/member');
+
+        if ('status' in result && result.status !== 200) {
             console.log('회원 로드 실패')
-            console.log(error)
-        })
+            console.log(result)
+        }
+        else {
+            channel.memberEmail = result.email;
+            channel.managerName = result.name;
+        }
     }
 
     function uploadImage() {
         let file = new FormData();
         file.append('file', $('#file')[0].files[0]);
 
-        $.ajax({
-            url: '/api/channel/thumbnail',
-            method: 'POST',
-            data: file,
-            processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음
-            contentType: false, // - contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
-            cache: false,
-            enctype: 'multipart/form-data',
-            async: false,
-        })
-        .done(function (data) {
-            console.log("이미지 업로드 성공")
-            console.log(data)
-            let uploadimage = {
-            };
+        let result = request.postMultipartRequest('/api/channel/thumbnail', file);
 
-            uploadimage.storeFileName = data.storeFileName
-            uploadimage.uploadFileName = data.uploadFileName
+        let uploadimage = {}
+        uploadimage.storeFileName = result.storeFileName
+        uploadimage.uploadFileName = result.uploadFileName
 
-            channel.uploadFile = uploadimage;
-        })
-        .fail(function (error) {
-            console.log("이미지 업로드 실패")
-            console.log(error)
-        })
+        channel.thumbnailImage = uploadimage;
     }
 
     function hideAlertMessageBox() {
@@ -138,6 +99,39 @@ $(function () {
 
     function showAlertMessageBox() {
         $('#alert').css('display', 'block');
+    }
+
+    function uploadFile(files, editor) {
+        let form = new FormData();
+        form.append("files", files);
+
+        request.postMultipartRequest('/api/channel/descriptionFiles', form, (data) => {
+            $(editor).summernote('insertImage', data.fullPath)
+        })
+    }
+
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#description').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(files) {
+                        uploadFile(files[0], this);
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
     }
 
 })

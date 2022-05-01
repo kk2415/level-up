@@ -37,11 +37,11 @@ public class InitDB {
 
         public void initDb() throws InterruptedException {
             Member manager1 = Member.createMember("test0@naver.com", "000000", "테스트네임0",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
+                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
             Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
+                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
             Member member1 = Member.createMember("test2@naver.com", "000000", "테스트네임2",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "member/99D279435B3D788602.jfif"));
+                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
             em.persist(manager1);
             em.persist(manager2);
             em.persist(member1);

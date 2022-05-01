@@ -1,4 +1,7 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
+    let request = new httpRequest()
     let memberEmail = getMemberEmail()
     let channelId = getChannelId()
     let channelDescription = {}
@@ -20,36 +23,13 @@ $(function () {
     }
 
     function setChannelDescription() {
-        $.ajax({
-            url: '/api/detail-description/' + channelId,
-            method: 'GET',
-            async: false,
-        })
-        .done(function (data) {
-            console.log(data)
-            channelDescription = data
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
+        channelDescription = request.getRequest('/api/detail-description/' + channelId)
     }
 
     function getMemberEmail() {
-        let email
+        let member = request.getRequest('/api/member');
 
-        $.ajax({
-            url: '/api/member',
-            method: "GET",
-            async: false,
-        })
-        .done(function (data) {
-            email = data.email
-        })
-        .fail(function (error) {
-            email = null
-        })
-
-        return email
+        return member.email
     }
 
     function isLoginMember() {
@@ -79,11 +59,15 @@ $(function () {
     }
 
     function setEventHandler() {
-        $('#toAllStudyChannelButton').click(function () {
-            $(location).attr('href', '/')
+        $('#registerStudyButton').click(function () {
         })
 
-        $('#registerStudyButton').click(function () {
+        $('#enterStudyButton').click(function () {
+            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+        })
+
+        $('#toAllStudyChannelButton').click(function () {
+            $(location).attr('href', '/')
         })
 
         $('#modifyButton').click(function () {
@@ -91,11 +75,15 @@ $(function () {
                 $(location).attr('href', '/channel/study/edit/' + channelId)
             }
             else {
-                // $(location).attr('href', '/channel/project/edit')
+                $(location).attr('href', '/channel/project/edit/' + channelId)
             }
         })
 
         $('#deleteButton').click(function () {
+            request.deleteRequest('/api/channel/' + channelId, () => {
+                alert("삭제되었습니다.")
+                $(location).attr('href', '/')
+            });
         })
     }
 })

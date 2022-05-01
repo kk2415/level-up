@@ -25,6 +25,11 @@ public class ChannelController {
         return "html/channel/updateStudyChannel";
     }
 
+    @GetMapping("/project/edit/{channelId}")
+    public String editProejct() {
+        return "html/channel/updateProjectChannel";
+    }
+
     @GetMapping("/detail/{channelId}")
     public String detail(@RequestParam(required = false, defaultValue = "1") Long page,
                          @RequestParam(required = false) String field,

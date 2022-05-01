@@ -43,9 +43,6 @@ public class MemberApiController {
     private final LoginService loginService;
     private final FileStore fileStore;
 
-    private final static String MEMBER_DEFAULT_IMAGE = "member/AFF947XXQ-5554WSDQ12.png";
-
-
     /**
      * 생성
      * */
@@ -84,7 +81,7 @@ public class MemberApiController {
         UploadFile uploadFile;
 
         if (file == null || file.isEmpty()) {
-            uploadFile = new UploadFile("default.png", MEMBER_DEFAULT_IMAGE);
+            uploadFile = new UploadFile("default.png", fileStore.MEMBER_DEFAULT_IMAGE);
         }
         else {
             uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
@@ -97,10 +94,13 @@ public class MemberApiController {
      * 로그인
      * */
     @PostMapping("/member/login")
-    public void login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
+    public ResponseEntity login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
         Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword());
         HttpSession session = request.getSession();
         session.setAttribute(SessionName.SESSION_NAME, member);
+
+        return new ResponseEntity(new MemberResponse(member.getEmail(), member.getName(), member.getGender(),
+                member.getBirthday(), member.getPhone(), member.getUploadFile()), HttpStatus.OK);
     }
 
     /**
@@ -185,7 +185,7 @@ public class MemberApiController {
     private void deleteProfilImage(Member findMember) {
         String storeFileName = findMember.getUploadFile().getStoreFileName();
 
-        if (storeFileName != MEMBER_DEFAULT_IMAGE) {
+        if (storeFileName != fileStore.MEMBER_DEFAULT_IMAGE) {
             File imageFile = new File(fileStore.getFullPath(storeFileName));
             if (imageFile.exists()) {
                 imageFile.delete();

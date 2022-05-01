@@ -1,76 +1,86 @@
-let loginForm = {
-};
+import httpRequest from "/js/module/httpRequest.js";
+import {loginMemberValidation as validation} from '/js/module/validation.js';
 
-let alertForm = document.getElementById('alert2');
-alertForm.style.display = "none";
-let unmatchedLoginInfoMsg = "";
+$(function () {
+    let request = new httpRequest()
+    let loginForm = {}
 
-setEventListenerOfInput();
+    hiadAlertMessageBox()
+    setLoginInfoEventHandler()
+    setButtonEventHandler()
 
-let form = document.getElementById('loginForm');
+    function setButtonEventHandler() {
+        $('#loginButton').click(function () {
+            onLoginButton()
+        })
 
-document.getElementById('loginButton').addEventListener('click', onLoginButton);
-document.getElementById('loginCancel').addEventListener('click', function () {
-    window.location.href = 'http://localhost:8080/';
-});
-
-function onLoginButton() {
-    if (validation()) {
-        requestPost();
+        $('#loginCancel').click(function () {
+            $(location).attr('href', '/')
+        })
     }
-}
 
-function validation() {
-    let bool = true;
+    function onLoginButton() {
+        removeAlertMassageBox()
 
-    if (!form.email.value) {
-        bool = false;
-        alertForm.style.marginTop = "10px"
-        alertForm.style.display = "block";
-        alertForm.innerText = "아이디를 입력하세요";
-        form.email.focus();
+        if (validate()) {
+            requestPost();
+        }
+        else {
+            showAlertMessageBox()
+        }
     }
-    else if (!form.password.value) {
-        bool = false;
-        alertForm.style.marginTop = "10px"
-        alertForm.style.display = "block";
-        alertForm.innerText = "비밀번호를 입력하세요";
-        form.password.focus();
+
+    function validate() {
+        let bool = true
+
+        if (!validation.email.test($('#email').val()) || $('#email').val() == null) {
+            $('#alert').append('<p>[이매일] : 유효한 이메일 형식이 아닙니다.</p>')
+            bool = false
+        }
+        if (!validation.password.test($('#password').val()) || $('#password').val() == null) {
+            $('#alert').append('<p>[패스워드] : 비밀번호는 8자리이상 24이하, 영문자/숫자만 및 특수문자만 입력하세요</p>')
+            bool = false
+        }
+
+        return bool;
     }
-    return bool;
-}
 
-async function requestPost() {
-    const response = await fetch('/api/member/login', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(loginForm)
-    })
+    function requestPost() {
+        let result = request.postRequest('/api/member/login', loginForm, () => {
+            $(location).attr('href', '/')
+        })
 
-    if (response.ok) {
-        window.location.href='http://localhost:8080/';
+        if ('status' in result && result.status !== 200) {
+            removeAlertMassageBox()
+
+            $('#alert').append('<p>이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.</p>')
+            if ($('#alert').css('display') === 'none') {
+                showAlertMessageBox()
+            }
+        }
     }
-    else {
-        alertForm.style.marginTop = "10px"
-        alertForm.style.display = "block";
-        alertForm.innerText = "이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.";
+
+    function setLoginInfoEventHandler() {
+        $('#email').change(function (event) {
+            loginForm.email = event.target.value
+        })
+
+        $('#password').change(function (event) {
+            loginForm.password = event.target.value
+        })
     }
-}
+
+    function hiadAlertMessageBox() {
+        $('#alert').css('display', 'none')
+    }
+
+    function showAlertMessageBox() {
+        $('#alert').css('display', 'block')
+    }
+
+    function removeAlertMassageBox() {
+        $('#alert').children('p').remove();
+    }
+})
 
 
-// 데이터 전송, 페이지 전환 방지
-function handleSubmit(event) {
-    event.preventDefault()
-}
-
-function setEventListenerOfInput() {
-    document.getElementById('email').addEventListener('change', event => {
-        loginForm.email = event.target.value;
-    })
-
-    document.getElementById('password').addEventListener('change', event => {
-        loginForm.password = event.target.value;
-    })
-}
