@@ -170,4 +170,14 @@ public class ChannelApiController {
                 HttpStatus.OK);
     }
 
+
+    /**
+     * 생성
+     * */
+    @DeleteMapping("/channel/{channelId}")
+    public ResponseEntity deleteChannel(@PathVariable Long channelId) {
+        channelService.deleteChannel(channelId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }

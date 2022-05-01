@@ -123,4 +123,25 @@ export default class httpRequest {
         return result
     }
 
+    deleteRequest(url, callback) {
+        let result = {}
+
+        $.ajax({
+            url: url,
+            method: "DELETE",
+            async: false,
+        })
+            .done(function (response) {
+                if (callback !== undefined) {
+                    callback(response)
+                }
+                result = response
+            })
+            .fail(function (error) {
+                console.log(error)
+                result = error
+            })
+        return result
+    }
+
 }

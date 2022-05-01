@@ -76,6 +76,10 @@ $(function () {
         })
 
         $('#deleteButton').click(function () {
+            request.deleteRequest('/api/channel/' + channelId, () => {
+                alert("삭제되었습니다.")
+                $(location).attr('href', '/')
+            });
         })
     }
 })
