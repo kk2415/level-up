@@ -60,7 +60,7 @@ public class Notice {
     }
 
     //==비즈니스 로직==//
-    public void changeNotice(String title, String content) {
+    public void change(String title, String content) {
         this.setTitle(title);
         this.setContent(content);
     }

@@ -60,7 +60,7 @@ public class ChannelNotice {
     }
 
     //==비즈니스 로직==//
-    public void changeChannelNotice(String title, String content) {
+    public void change(String title, String content) {
         this.setTitle(title);
         this.setContent(content);
     }

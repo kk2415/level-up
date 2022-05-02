@@ -29,7 +29,7 @@ public class CommentApiController {
     public CommentResponse create(@RequestBody @Validated CreateCommentRequest commentRequest) {
         Member findMember = memberService.findByEmail(commentRequest.getMemberEmail());
 
-        Long commentId = commentService.comment(findMember.getId(), commentRequest.getPostId(),
+        Long commentId = commentService.create(findMember.getId(), commentRequest.getPostId(),
                 commentRequest.getContent());
 
         Comment findComment = commentService.findOne(commentId);

@@ -44,9 +44,9 @@ class CommentServiceTest {
         postId2 = postService.post(member1.getId(), "저녁 뭐 먹지?", "추천");
         postId3 = postService.post(member2.getId(), "인생에 대한 고찰", "천천히 생각해보니 인생이란...");
 
-        commentId1 = commentService.comment(member2.getId(), postId1, "방가방가!");
-        commentId2 = commentService.comment(member2.getId(), postId2, "불고기 추천함!");
-        commentId3 = commentService.comment(member1.getId(), postId3, "오호...");
+        commentId1 = commentService.create(member2.getId(), postId1, "방가방가!");
+        commentId2 = commentService.create(member2.getId(), postId2, "불고기 추천함!");
+        commentId3 = commentService.create(member1.getId(), postId3, "오호...");
     }
 
     @Test
