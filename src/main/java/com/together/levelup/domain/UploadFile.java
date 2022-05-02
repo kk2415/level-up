@@ -1,4 +1,4 @@
-package com.together.levelup.domain.member;
+package com.together.levelup.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;

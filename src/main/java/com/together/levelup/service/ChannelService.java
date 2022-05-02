@@ -4,7 +4,7 @@ import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Member;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;

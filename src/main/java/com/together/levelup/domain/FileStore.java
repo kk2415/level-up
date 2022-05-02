@@ -1,6 +1,5 @@
 package com.together.levelup.domain;
 
-import com.together.levelup.domain.member.UploadFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;

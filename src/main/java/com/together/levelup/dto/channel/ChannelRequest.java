@@ -1,10 +1,11 @@
 package com.together.levelup.dto.channel;
 
 import com.together.levelup.domain.channel.ChannelCategory;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class ChannelRequest {
@@ -32,5 +33,8 @@ public class ChannelRequest {
 
     @NotNull
     private UploadFile thumbnailImage;
+
+    @NotNull
+    private List<UploadFile> uploadFiles;
 
 }

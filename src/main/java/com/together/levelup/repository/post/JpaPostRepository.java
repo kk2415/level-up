@@ -56,7 +56,7 @@ public class JpaPostRepository implements PostRepository {
 
     @Override
     public List<Post> findByMemberId(Long memberId) {
-        String query = "select p from Post p join p.member m where m.id = :memberId "
+        String query = "select p from Post p join fetch p.member m where m.id = :memberId "
                 + "order by p.dateCreated desc";
 
         return em.createQuery(query, Post.class)
@@ -104,9 +104,6 @@ public class JpaPostRepository implements PostRepository {
 
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
         int lastPage = page * 10; //10, 20, 29, 39
-
-        System.out.println("firstPage : " + firstPage);
-        System.out.println("lastPage : " + lastPage);
 
         return queryFactory.select(QPost.post)
                 .from(QPost.post)

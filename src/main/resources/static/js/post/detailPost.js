@@ -31,6 +31,8 @@ $(function () {
     function isMyPost() {
         let bool = false
 
+        console.log(memberEmail)
+
         $.ajax({
             url: '/api/post/' + postId + '/check-member?email=' + memberEmail,
             method: "GET",
@@ -149,20 +151,6 @@ $(function () {
                 let prevPostId = result.id
                 $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
             }
-
-            // $.ajax({
-            //     url: '/api/post/' + postId + '/prevPost',
-            //     method: "GET",
-            //     async: false,
-            // })
-            // .done(function (data) {
-            //     let prevPostId = data.id
-            //     $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
-            // })
-            // .fail(function (error) {
-            //     console.log(error)
-            //     alert("이전 페이지가 없습니다.")
-            // })
         })
 
         $('#nextPostButton').click(function () {
@@ -175,24 +163,17 @@ $(function () {
                 let nextPostId = result.id
                 $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
             }
-
-            // $.ajax({
-            //     url: '/api/post/' + postId + '/nextPost',
-            //     method: "GET",
-            //     async: false,
-            // })
-            // .done(function (data) {
-            //     let nextPostId = data.id
-            //     $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
-            // })
-            // .fail(function (error) {
-            //     console.log(error)
-            //     alert("다음 페이지가 없습니다.")
-            // })
         })
 
         $('#modifyButton').click(function () {
             $(location).attr('href', '/post/edit/' + postId + '?email=' + memberEmail + '&channel=' + channelId)
+        })
+
+        $('#deleteButton').click(function () {
+            request.deleteRequest('/api/post/' + postId, () => {
+                alert('삭제되었습니다.')
+                $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+            })
         })
 
     }

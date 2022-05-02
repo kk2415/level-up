@@ -24,7 +24,7 @@ public class CommentService {
     /**
      * 댓글 작성
      * */
-    public Long comment(Long memeberId, Long postId, String content) {
+    public Long create(Long memeberId, Long postId, String content) {
         Member findMember = memberRepository.findById(memeberId);
         Post findPost = postRepository.findById(postId);
 

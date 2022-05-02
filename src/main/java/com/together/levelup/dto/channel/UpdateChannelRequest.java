@@ -1,7 +1,6 @@
 package com.together.levelup.dto.channel;
 
-import com.together.levelup.domain.channel.ChannelCategory;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

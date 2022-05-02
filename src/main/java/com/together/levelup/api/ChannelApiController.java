@@ -4,11 +4,12 @@ import com.together.levelup.domain.FileStore;
 import com.together.levelup.domain.ImageType;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import com.together.levelup.dto.*;
 import com.together.levelup.dto.channel.*;
 import com.together.levelup.exception.ImageNotFoundException;
 import com.together.levelup.service.ChannelService;
+import com.together.levelup.service.FileService;
 import com.together.levelup.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -32,6 +33,7 @@ public class ChannelApiController {
 
     private final ChannelService channelService;
     private final MemberService memberService;
+    private final FileService fileService;
     private final FileStore fileStore;
 
     /**
@@ -39,8 +41,6 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
-//        ArrayList<ChannelDescriptionFile> descriptionFiles = new ArrayList<>();
-
         Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
                 channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(),
                 channelRequest.getThumbnailDescription(),
@@ -48,14 +48,9 @@ public class ChannelApiController {
 
         Channel findChannel = channelService.findOne(channelId);
 
-//        for (UploadFile file : uploadFiles) {
-//            ChannelDescriptionFile descriptionFile = ChannelDescriptionFile.createChannelDescriptionFile(file);
-//            descriptionFiles.add(descriptionFile);
-//        }
-//
-//        Channel findChannel = channelService.findOne(channelId);
-//        findChannel.addDescriptionFile(descriptionFiles);
-
+        for (UploadFile uploadFile : channelRequest.getUploadFiles()) {
+            fileService.create(findChannel, uploadFile);
+        }
 
         return new CreateChannelResponse(findChannel.getName(), findChannel.getLimitedMemberNumber(),
                 findChannel.getManagerName(), findChannel.getDescription());

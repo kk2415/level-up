@@ -1,6 +1,8 @@
 package com.together.levelup.domain;
 
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.notice.ChannelNotice;
+import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.post.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,6 +38,18 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_notice_id")
+    private ChannelNotice channelNotice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "qna_id")
+    private Qna qna;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
