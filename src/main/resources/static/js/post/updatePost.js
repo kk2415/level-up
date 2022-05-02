@@ -1,10 +1,16 @@
+import httpRequest from "/js/module/httpRequest.js";
+
 $(function () {
+    let request = new httpRequest()
+
     let postId = getPostId()
     let channelId = getChannelId()
     let memberEmail = getMemberEmail()
     let post = {}
     let requestPost = {}
     console.log(channelId)
+
+    configSummernote()
 
     setPost()
     setPostContents()
@@ -20,15 +26,35 @@ $(function () {
             requestPost.title = $('#title').val()
             requestPost.content = $('#content').val()
             requestPost.category = $('#category').val();
+            requestPost.uploadFiles = getUploadFiles(requestPost.content)
 
             updatePost(requestPost)
-
-
         })
 
         $('#cancelButton').click(function () {
             $(location).attr('href', '/channel/detail/' + channelId)
         })
+    }
+
+    function getUploadFiles(htmlCode) {
+        let uploadFiles = []
+        let offset = 0
+
+        while (htmlCode.indexOf('img src', offset) !== -1) {
+            let uploadFile = {}
+
+            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
+            let firstIdx = imgTagStr.indexOf('"') + 1
+            let lastIdx = imgTagStr.indexOf('"', firstIdx)
+
+            uploadFile.storeFileName = imgTagStr.substring(firstIdx, lastIdx)
+            uploadFile.uploadFileName = 'image'
+
+            uploadFiles.push(uploadFile)
+
+            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
+        }
+        return uploadFiles;
     }
 
     function hideAlertMessageBox() {
@@ -54,7 +80,7 @@ $(function () {
 
     function setPostContents() {
         $('#title').val(post.title)
-        $('#content').val(post.content)
+        $('#content').html(post.content)
         $("#category").val(post.category).attr("selected", "selected");
     }
 
@@ -93,4 +119,41 @@ $(function () {
             console.log(error)
         })
     }
+
+    function uploadFile(file, editor) {
+        let form = new FormData()
+        form.append("file", file)
+
+        request.postMultipartRequest('/api/post/files', form, (data) => {
+            $(editor).summernote('insertImage', data)
+        })
+    }
+
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#content').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(files) {
+
+                        for (let i = 0; i < files.length; i++) {
+                            uploadFile(files[i], this);
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
 })

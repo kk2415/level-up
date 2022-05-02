@@ -1,11 +1,15 @@
 package com.together.levelup.api;
 
+import com.together.levelup.domain.FileStore;
+import com.together.levelup.domain.ImageType;
+import com.together.levelup.domain.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.dto.*;
 import com.together.levelup.dto.post.*;
 import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.exception.PostNotFoundException;
+import com.together.levelup.service.FileService;
 import com.together.levelup.service.MemberService;
 import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +33,8 @@ public class PostApiController {
 
     private final PostService postService;
     private final MemberService memberService;
+    private final FileStore fileStore;
+    private final FileService fileService;
 
     /**
      * 생성
@@ -43,14 +51,28 @@ public class PostApiController {
 
         Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
-
         Post findPost = postService.findOne(postId);
 
-        String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
+        for (UploadFile uploadFile : postRequest.getUploadFiles()) {
+            fileService.create(findPost, uploadFile);
+        }
 
+        String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
         return new PostResponse(findPost.getTitle(), findPost.getWriter(),
                 findPost.getContent(), findPost.getPostCategory(), dateTime,
                 findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+    }
+
+    @PostMapping("/post/files")
+    public ResponseEntity storeFiles(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return new ResponseEntity("파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        UploadFile uploadFiles = fileStore.storeFile(ImageType.POST, file);
+
+        String storeFileName = uploadFiles.getStoreFileName();
+        return new ResponseEntity(storeFileName, HttpStatus.OK);
     }
 
     /**
@@ -164,13 +186,16 @@ public class PostApiController {
      * */
     @PatchMapping("/post/{postId}")
     public UpdatePostResponse updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest postRequest) {
-        System.out.println(postRequest.getMemberEmail());
-
         Member findMember = memberService.findByEmail(postRequest.getMemberEmail());
+
         postService.updatePost(postId, findMember.getId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
-
         Post findPost = postService.findOne(postId);
+
+        fileService.deleteByPostId(findPost.getId());
+        for (UploadFile uploadFile : postRequest.getUploadFiles()) {
+            fileService.create(findPost, uploadFile);
+        }
 
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }

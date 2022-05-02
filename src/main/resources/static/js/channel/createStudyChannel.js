@@ -20,7 +20,7 @@ $(function () {
                 uploadThumbnailImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
                 loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
                 channel.category = "STUDY"
-                channel.uploadFiles = getUploadFiles();
+                channel.uploadFiles = getUploadFiles(channel.description);
                 console.log(channel);
 
                 createChannel();
@@ -87,14 +87,14 @@ $(function () {
         }
     }
 
-    function getUploadFiles() {
+    function getUploadFiles(htmlCode) {
         let uploadFiles = []
         let offset = 0
 
-        while (channel.description.indexOf('img src', offset) !== -1) {
+        while (htmlCode.indexOf('img src', offset) !== -1) {
             let uploadFile = {}
 
-            let imgTagStr = channel.description.substr(channel.description.indexOf('img src', offset))
+            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
             let firstIdx = imgTagStr.indexOf('"') + 1
             let lastIdx = imgTagStr.indexOf('"', firstIdx)
 
@@ -103,7 +103,7 @@ $(function () {
 
             uploadFiles.push(uploadFile)
 
-            offset = channel.description.indexOf('img src', offset) + 'img src'.length
+            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
 
             // console.log(firstIdx)
             // console.log(lastIdx)

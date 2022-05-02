@@ -113,7 +113,7 @@ $(function () {
         $('#views').text(post.views)
         $('#voteCount').text(post.voteCount)
         $('#commentCount').text(post.commentCount)
-        $('#content').text(post.content)
+        $('#content').html(post.content)
     }
 
     function showModifyAndDeleteButton() {
