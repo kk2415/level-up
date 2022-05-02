@@ -1,6 +1,6 @@
 package com.together.levelup.domain.channel;
 
-import com.together.levelup.domain.file.ChannelDescriptionFile;
+import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.UploadFile;
@@ -37,6 +37,7 @@ public class Channel {
     @Column(name = "manager_name")
     private String managerName;
 
+    @Lob
     private String description;
 
     @Column(name = "member_count")
@@ -61,8 +62,11 @@ public class Channel {
     @JoinColumn(name = "manager_id")
     private Member member;
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
-    private List<ChannelDescriptionFile> channelDescriptionFiles = new ArrayList<>();
+    @OneToMany(mappedBy = "channel")
+    private List<File> files = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+//    private List<ChannelDescriptionFile> channelDescriptionFiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "channel")
     private List<ChannelNotice> channelNotices = new ArrayList<>();
@@ -85,10 +89,10 @@ public class Channel {
         channelMember.setChannel(this);
     }
 
-    public void setChannelDescriptionFile(ChannelDescriptionFile channelDescriptionFiles) {
-        this.channelDescriptionFiles.add(channelDescriptionFiles);
-        channelDescriptionFiles.setChannel(this);
-    }
+//    public void setChannelDescriptionFile(ChannelDescriptionFile channelDescriptionFiles) {
+//        this.channelDescriptionFiles.add(channelDescriptionFiles);
+//        channelDescriptionFiles.setChannel(this);
+//    }
 
     //==생성 메서드==//
     public static Channel createChannel(Member member, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
@@ -150,14 +154,14 @@ public class Channel {
         this.setCategory(category);
     }
 
-    public void addDescriptionFile(ChannelDescriptionFile channelDescriptionFile) {
-        this.setChannelDescriptionFile(channelDescriptionFile);
-    }
-
-    public void addDescriptionFile(List<ChannelDescriptionFile> channelDescriptionFile) {
-        for (ChannelDescriptionFile descriptionFile : channelDescriptionFile) {
-            this.setChannelDescriptionFile(descriptionFile);
-        }
-    }
+//    public void addDescriptionFile(ChannelDescriptionFile channelDescriptionFile) {
+//        this.setChannelDescriptionFile(channelDescriptionFile);
+//    }
+//
+//    public void addDescriptionFile(List<ChannelDescriptionFile> channelDescriptionFile) {
+//        for (ChannelDescriptionFile descriptionFile : channelDescriptionFile) {
+//            this.setChannelDescriptionFile(descriptionFile);
+//        }
+//    }
 
 }

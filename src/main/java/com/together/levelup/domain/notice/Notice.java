@@ -1,6 +1,7 @@
 package com.together.levelup.domain.notice;
 
 import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,8 @@ public class Notice {
 
     private String title;
     private String writer;
+
+    @Lob
     private String content;
 
     @Column(name = "date_created")
@@ -38,6 +41,8 @@ public class Notice {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "notice")
+    private List<File> files = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

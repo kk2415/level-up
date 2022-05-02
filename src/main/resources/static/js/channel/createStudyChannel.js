@@ -4,6 +4,7 @@ import {createChannelValidation as validation} from '/js/module/validation.js';
 $(function () {
     let request = new httpRequest()
     let channel = {}
+    let isAttachedFile = false
 
     configSummernote()
     hideAlertMessageBox();
@@ -15,11 +16,11 @@ $(function () {
             $('#alert').children('p').remove();
 
             setChannelObject();
-
             if (validate()) {
                 uploadThumbnailImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
                 loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
                 channel.category = "STUDY"
+                channel.uploadFiles = getUploadFiles();
                 console.log(channel);
 
                 createChannel();
@@ -32,6 +33,13 @@ $(function () {
         $('#cancel').click(function () {
             $(location).attr('href', '/')
         })
+    }
+
+    function setChannelObject() {
+        channel.name = $('#name').val()
+        channel.limitedMemberNumber = $('#limitedMemberNumber').val()
+        channel.description = $('#description').val()
+        channel.thumbnailDescription = $('#thumbnailDescription').val()
     }
 
     function validate() {
@@ -53,13 +61,17 @@ $(function () {
         return bool;
     }
 
-    function createChannel() {
-        request.postRequest('/api/channel', channel, (response) => {
-            console.log("채널 등록 성공")
-            $(location).attr('href', '/')
-        })
+    function uploadThumbnailImage() {
+        let file = new FormData();
+        file.append('file', $('#file')[0].files[0]);
 
-        console.log("채널 등록 실패")
+        let result = request.postMultipartRequest('/api/channel/thumbnail', file);
+
+        let uploadimage = {}
+        uploadimage.storeFileName = result.storeFileName
+        uploadimage.uploadFileName = result.uploadFileName
+
+        channel.thumbnailImage = uploadimage;
     }
 
     function loadMemberInfo() {
@@ -75,27 +87,43 @@ $(function () {
         }
     }
 
-    function uploadThumbnailImage() {
-        let file = new FormData();
-        file.append('file', $('#file')[0].files[0]);
+    function getUploadFiles() {
+        let uploadFiles = []
+        let offset = 0
 
-        let result = request.postMultipartRequest('/api/channel/thumbnail', file);
+        while (channel.description.indexOf('img src', offset) !== -1) {
+            let uploadFile = {}
 
-        let uploadimage = {}
-        uploadimage.storeFileName = result.storeFileName
-        uploadimage.uploadFileName = result.uploadFileName
+            let imgTagStr = channel.description.substr(channel.description.indexOf('img src', offset))
+            let firstIdx = imgTagStr.indexOf('"') + 1
+            let lastIdx = imgTagStr.indexOf('"', firstIdx)
 
-        channel.thumbnailImage = uploadimage;
+            uploadFile.storeFileName = imgTagStr.substring(firstIdx, lastIdx)
+            uploadFile.uploadFileName = 'image'
+
+            uploadFiles.push(uploadFile)
+
+            offset = channel.description.indexOf('img src', offset) + 'img src'.length
+
+            // console.log(firstIdx)
+            // console.log(lastIdx)
+            // console.log(imgTagStr.substring(firstIdx, lastIdx))
+        }
+        return uploadFiles;
     }
 
-    function setChannelObject() {
-        channel.name = $('#name').val()
-        channel.limitedMemberNumber = $('#limitedMemberNumber').val()
-        channel.description = $('#description').val()
-        channel.thumbnailDescription = $('#thumbnailDescription').val()
+    function createChannel() {
+        request.postRequest('/api/channel', channel, (response) => {
+            console.log("채널 등록 성공")
+            $(location).attr('href', '/')
+        })
+
+        console.log("채널 등록 실패")
     }
 
     function uploadFile(files, editor) {
+        isAttachedFile = true
+
         let form = new FormData();
         form.append("files", files);
 
@@ -112,7 +140,9 @@ $(function () {
                 maxHeight: null,
                 callbacks: {
                     onImageUpload : function(files) {
-                        uploadFile(files[0], this);
+                        for (let i = 0; i < files.length; i++) {
+                            uploadFile(files[i], this);
+                        }
                     },
                     onPaste: function (e) {
                         let clipboardData = e.originalEvent.clipboardData;

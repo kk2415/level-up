@@ -1,5 +1,6 @@
 package com.together.levelup.domain;
 
+import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,9 @@ public class Qna {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "qna")
+    private List<File> files = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

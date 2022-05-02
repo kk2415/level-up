@@ -2,6 +2,7 @@ package com.together.levelup.domain.post;
 
 import com.together.levelup.domain.Comment;
 import com.together.levelup.domain.channel.Channel;
+import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,6 +27,8 @@ public class Post {
 
     private String title;
     private String writer;
+
+    @Lob
     private String content;
 
     @Column(name = "date_created")
@@ -51,6 +54,9 @@ public class Post {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
+
+    @OneToMany(mappedBy = "post")
+    private List<File> files = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
