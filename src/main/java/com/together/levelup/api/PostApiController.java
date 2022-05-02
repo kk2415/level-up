@@ -10,6 +10,7 @@ import com.together.levelup.service.MemberService;
 import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -140,9 +141,16 @@ public class PostApiController {
     @GetMapping("/post/{postId}/check-member")
     public PostResponse findPostByMemberId(@PathVariable Long postId, @RequestParam String email) {
         Member findMember = memberService.findByEmail(email);
-        Post findPost = postService.findByMemberId(findMember.getId()).get(0);
+        Post findPost = postService.findOne(postId);
+        List<Post> findPosts = postService.findByMemberId(findMember.getId());
 
-        if (findPost == null || !findPost.getId().equals(postId)) {
+        if (findPosts == null) {
+            throw new PostNotFoundException("게시글의 대한 권한이 없습니다");
+        }
+
+        long count = findPosts.stream().map(p -> p.getId().equals(postId)).count();
+
+        if (count <= 0) {
             throw new PostNotFoundException("게시글의 대한 권한이 없습니다");
         }
 
@@ -166,12 +174,15 @@ public class PostApiController {
 
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }
-//
-//    /**
-//     * 삭제
-//     * */
-//    @DeleteMapping("/post/{postId}")
-//    public PostResponse deletePost() {
-//    }
+
+    /**
+     * 삭제
+     * */
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
 }

@@ -1,7 +1,7 @@
 package com.together.levelup.domain.file;
 
 import com.together.levelup.domain.channel.Channel;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,8 +1,9 @@
 package com.together.levelup.domain.channel;
 
 import com.together.levelup.domain.file.ChannelDescriptionFile;
+import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.post.Post;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import com.together.levelup.exception.NoPlaceChnnelException;
 import com.together.levelup.domain.member.Member;
 import lombok.AccessLevel;
@@ -62,6 +63,9 @@ public class Channel {
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelDescriptionFile> channelDescriptionFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "channel")
+    private List<ChannelNotice> channelNotices = new ArrayList<>();
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.

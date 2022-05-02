@@ -2,12 +2,10 @@ package com.together.levelup.dto.member;
 
 import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Gender;
-import com.together.levelup.domain.member.Member;
-import com.together.levelup.domain.member.UploadFile;
+import com.together.levelup.domain.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,7 +13,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor

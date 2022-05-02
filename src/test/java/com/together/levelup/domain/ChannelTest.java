@@ -5,7 +5,6 @@ import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
-import com.together.levelup.domain.member.UploadFile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
