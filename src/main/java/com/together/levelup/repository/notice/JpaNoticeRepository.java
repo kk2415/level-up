@@ -2,10 +2,8 @@ package com.together.levelup.repository.notice;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.together.levelup.domain.QQna;
 import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.notice.QNotice;
-import com.together.levelup.domain.post.QPost;
 import com.together.levelup.dto.post.PostSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
