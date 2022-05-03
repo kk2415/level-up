@@ -11,6 +11,7 @@ public interface ChannelNoticeRepository {
     public void saveAll(List<ChannelNotice> channelNotices);
 
     public ChannelNotice findById(Long id);
+    public List<ChannelNotice> findByChannelId(Long channelId);
     public List<ChannelNotice> findByChannelId(Long channelId, int page);
     public List<ChannelNotice> findByMemberId(Long memberId);
     public List<ChannelNotice> findAll();

@@ -1,21 +1,28 @@
 package com.together.levelup.api;
 
+import com.together.levelup.domain.FileStore;
+import com.together.levelup.domain.ImageType;
+import com.together.levelup.domain.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
-import com.together.levelup.dto.ChannelNoticeRequest;
-import com.together.levelup.dto.ChannelNoticeResponse;
-import com.together.levelup.dto.DeleteChannelNoticeRequest;
+import com.together.levelup.dto.notice_channel.ChannelNoticeRequest;
+import com.together.levelup.dto.notice_channel.ChannelNoticeResponse;
+import com.together.levelup.dto.notice_channel.DeleteChannelNoticeRequest;
 import com.together.levelup.dto.Result;
+import com.together.levelup.dto.notice_channel.PagingChannelNoticeResponse;
 import com.together.levelup.service.ChannelNoticeService;
 import com.together.levelup.service.ChannelService;
+import com.together.levelup.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +34,8 @@ public class ChannelNoticeApiController {
 
     private final ChannelNoticeService channelNoticeService;
     private final ChannelService channelService;
+    private final FileStore fileStore;
+    private final FileService fileService;
 
     /**
      * 생성
@@ -37,19 +46,40 @@ public class ChannelNoticeApiController {
                                  HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
-        if (session.getAttribute(SessionName.SESSION_NAME) != null) {
+        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
             Member manager = channelService.findOne(channel).getMember();
             Member requestMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
 
             if (requestMember.getId().equals(manager.getId())) {
-                channelNoticeService.create(channel, noticeRequest.getTitle(), noticeRequest.getWriter(),
+                Long id = channelNoticeService.create(channel, noticeRequest.getTitle(), manager.getName(),
                         noticeRequest.getContent());
 
-                return new ResponseEntity("채널 공지사항이 생성되었습니다.", HttpStatus.CREATED);
+                ChannelNotice channelNotice = channelNoticeService.findById(id);
+
+                for (UploadFile uploadFile : noticeRequest.getUploadFiles()) {
+                    fileService.create(noticeRequest, uploadFile);
+                }
+
+                return new ResponseEntity(new ChannelNoticeResponse(channelNotice.getId(), channelNotice.getTitle(),
+                        channelNotice.getWriter(), channelNotice.getContent(), channelNotice.getViews(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getDateCreated())
+                , channelNotice.getComments().size()), HttpStatus.OK);
             }
         }
 
         return new ResponseEntity("로그인이 안되어있거나 매니저가 아닙니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/channel-notice/files")
+    public ResponseEntity storeFiles(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return new ResponseEntity("파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        UploadFile uploadFiles = fileStore.storeFile(ImageType.CHANNEL_NOTICE, file);
+
+        String storeFileName = uploadFiles.getStoreFileName();
+        return new ResponseEntity(storeFileName, HttpStatus.OK);
     }
 
 
@@ -62,17 +92,20 @@ public class ChannelNoticeApiController {
 
         return new ChannelNoticeResponse(id, findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()));
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
+                findNotice.getComments().size());
     }
 
     @GetMapping("/channel-notices")
     public Result findAll(@RequestParam Long channel,
                           @RequestParam int page) {
         List<ChannelNotice> findNotices = channelNoticeService.findByChannelId(channel, page);
+        int noticeCount = channelNoticeService.findByChannelId(channel).size();
 
-        List<ChannelNoticeResponse> noticeResponses = findNotices.stream()
-                .map(n -> new ChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated())))
+        List<PagingChannelNoticeResponse> noticeResponses = findNotices.stream()
+                .map(n -> new PagingChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()), n.getComments().size(),
+                        noticeCount))
                 .collect(Collectors.toList());
 
         return new Result(noticeResponses, noticeResponses.size());
@@ -84,7 +117,7 @@ public class ChannelNoticeApiController {
 
         return new ChannelNoticeResponse(id, nextPage.getTitle(),
                 nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()));
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()), nextPage.getComments().size());
     }
 
     @GetMapping("/channel-notices/{id}/prevPost")
@@ -93,7 +126,7 @@ public class ChannelNoticeApiController {
 
         return new ChannelNoticeResponse(id, prevPage.getTitle(),
                 prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()));
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()), prevPage.getComments().size());
     }
 
 

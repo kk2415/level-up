@@ -52,6 +52,7 @@ public class FileStore {
     private String getStoreFileName(ImageType imageType, String uploadFilename) {
         String storeFileName;
 
+        // 반드시 나중에 리팩토링...
         if (imageType == ImageType.MEMBER) {
             storeFileName = "/images/member/" + createStoreFileName(uploadFilename);
         }
@@ -60,6 +61,15 @@ public class FileStore {
         }
         else if (imageType == ImageType.CHANNEL_THUMBNAIL) {
             storeFileName = "/images/channel/thumbnail/" + createStoreFileName(uploadFilename);
+        }
+        else if (imageType == ImageType.CHANNEL_NOTICE) {
+            storeFileName = "/images/channel_notice/" + createStoreFileName(uploadFilename);
+        }
+        else if (imageType == ImageType.NOTICE) {
+            storeFileName = "/images/notice/" + createStoreFileName(uploadFilename);
+        }
+        else if (imageType == ImageType.QNA) {
+            storeFileName = "/images/qna/" + createStoreFileName(uploadFilename);
         }
         else {
             storeFileName = "/images/post/" + createStoreFileName(uploadFilename);
