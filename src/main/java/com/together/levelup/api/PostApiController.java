@@ -120,8 +120,10 @@ public class PostApiController {
     }
 
     @GetMapping("/{channelId}/posts/{page}")
-    public Result listingChannelPosts(@PathVariable Long channelId, @PathVariable int page,
-                                  @RequestParam(required = false) String field, @RequestParam(required = false) String query) {
+    public Result listingChannelPosts(@PathVariable Long channelId,
+                                      @PathVariable int page,
+                                      @RequestParam(required = false) String field,
+                                      @RequestParam(required = false) String query) {
 
         PostSearch postSearch = null;
         if (field != null && query != null) {

@@ -26,20 +26,14 @@ public class ChannelNoticeService {
      * 생성
      * */
     @Transactional
-    public Long create(Long channelId, Long memberId, String title, String writer, String content) {
+    public Long create(Long channelId, String title, String writer, String content) {
         Channel findChannel = channelRepository.findById(channelId);
-        Member findMember = memberRepository.findById(memberId);
-
-        if (!findChannel.getManagerName().equals(findMember.getEmail())) {
-            throw new MemberNotFoundException("매니저만 공지사항을 작성할 수 있습니다.");
-        }
 
         ChannelNotice channelNotice = ChannelNotice.createChannelNotice(findChannel, title, writer, content);
         channelNoticeRepository.save(channelNotice);
 
         return channelNotice.getId();
     }
-
 
     /**
      * 조회
@@ -85,6 +79,11 @@ public class ChannelNoticeService {
     @Transactional
     public void delete(Long id) {
         channelNoticeRepository.delete(id);
+    }
+
+    @Transactional
+    public void deleteAll(List<Long> ids) {
+        channelNoticeRepository.deleteAll(ids);
     }
 
 }

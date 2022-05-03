@@ -1,14 +1,21 @@
 package com.together.levelup.controller;
 
+import com.together.levelup.api.SessionName;
+import com.together.levelup.domain.member.Member;
+import com.together.levelup.service.ChannelService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/channel")
 public class ChannelController {
+
+    private final ChannelService channelService;
 
     @GetMapping("/project/create")
     public String createProject() {
@@ -31,9 +38,23 @@ public class ChannelController {
     }
 
     @GetMapping("/detail/{channelId}")
-    public String detail(@RequestParam(required = false, defaultValue = "1") Long page,
+    public String detail(@PathVariable Long channelId,
+                         @RequestParam(required = false, defaultValue = "1") Long page,
                          @RequestParam(required = false) String field,
-                         @RequestParam(required = false) String query) {
+                         @RequestParam(required = false) String query,
+                         HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute(SessionName.SESSION_NAME) == null) {
+            return "html/channel/detailChannel";
+        }
+
+        Member manager = channelService.findOne(channelId).getMember();
+
+        Member findMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
+        if (findMember.getId().equals(manager.getId())) {
+            return "html/channel/managerDetailChannel";
+        }
 
         return "html/channel/detailChannel";
     }
