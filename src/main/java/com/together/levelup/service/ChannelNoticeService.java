@@ -48,6 +48,10 @@ public class ChannelNoticeService {
         return findNotice;
     }
 
+    public List<ChannelNotice> findByChannelId(Long channelId) {
+        return channelNoticeRepository.findByChannelId(channelId);
+    }
+
     public List<ChannelNotice> findByChannelId(Long channelId, int page) {
         return channelNoticeRepository.findByChannelId(channelId, page);
     }

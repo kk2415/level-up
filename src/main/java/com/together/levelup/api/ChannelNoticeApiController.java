@@ -5,10 +5,11 @@ import com.together.levelup.domain.ImageType;
 import com.together.levelup.domain.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
-import com.together.levelup.dto.ChannelNoticeRequest;
-import com.together.levelup.dto.ChannelNoticeResponse;
-import com.together.levelup.dto.DeleteChannelNoticeRequest;
+import com.together.levelup.dto.notice_channel.ChannelNoticeRequest;
+import com.together.levelup.dto.notice_channel.ChannelNoticeResponse;
+import com.together.levelup.dto.notice_channel.DeleteChannelNoticeRequest;
 import com.together.levelup.dto.Result;
+import com.together.levelup.dto.notice_channel.PagingChannelNoticeResponse;
 import com.together.levelup.service.ChannelNoticeService;
 import com.together.levelup.service.ChannelService;
 import com.together.levelup.service.FileService;
@@ -99,10 +100,12 @@ public class ChannelNoticeApiController {
     public Result findAll(@RequestParam Long channel,
                           @RequestParam int page) {
         List<ChannelNotice> findNotices = channelNoticeService.findByChannelId(channel, page);
+        int noticeCount = channelNoticeService.findByChannelId(channel).size();
 
-        List<ChannelNoticeResponse> noticeResponses = findNotices.stream()
-                .map(n -> new ChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()), n.getComments().size()))
+        List<PagingChannelNoticeResponse> noticeResponses = findNotices.stream()
+                .map(n -> new PagingChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()), n.getComments().size(),
+                        noticeCount))
                 .collect(Collectors.toList());
 
         return new Result(noticeResponses, noticeResponses.size());

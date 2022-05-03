@@ -39,11 +39,20 @@ public class JpaChannelNoticeRepository implements ChannelNoticeRepository {
     }
 
     @Override
+    public List<ChannelNotice> findByChannelId(Long channelId) {
+        String query = "select cn from ChannelNotice cn join fetch cn.channel c where c.id = :channelId order by cn.dateCreated desc";
+
+        return em.createQuery(query, ChannelNotice.class)
+                .setParameter("channelId", channelId)
+                .getResultList();
+    }
+
+    @Override
     public List<ChannelNotice> findByChannelId(Long channelId, int page) {
         int firstPage = (page - 1) * 5; //0, 5, 10, 15
         int lastPage = page * 5; //5, 10, 15, 20
 
-        String query = "select cn from ChannelNotice cn join fetch cn.channel c where c.id = :channelId";
+        String query = "select cn from ChannelNotice cn join fetch cn.channel c where c.id = :channelId order by cn.dateCreated desc";
 
         return em.createQuery(query, ChannelNotice.class)
                 .setParameter("channelId", channelId)

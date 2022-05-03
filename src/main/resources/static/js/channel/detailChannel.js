@@ -7,13 +7,18 @@ $(function () {
 
     const pagerLength = 5
     const postNumOnScreen = 10
+    const noticeNumOnScreen = 5
+
+    let backUpPost = $('#post');
+    let backUpChannelNotice = $('#channelNotice');
 
     let channelId = getChannelId()
     let currentPage = getCurrentPage()
-    let channelName
-    let post = $('#post');
     let channelPosts = {}
     let postSearch = {}
+    let allNoticeCount = 0
+    let curNoticePage = 1
+    let channelName = ''
 
     setPostSearch()
     let allPostsCount = getPostsCount()
@@ -23,10 +28,10 @@ $(function () {
     $('#currentPage').text(currentPage)
 
     setEventHandler()
+    setNoticeEventHandler()
     setChannelPosts(channelId, currentPage, postSearch)
-    let postsCount = channelPosts.count
 
-    showChannelNotice()
+    showChannelNotice(1)
     showPosts()
     setPager()
 
@@ -77,10 +82,14 @@ $(function () {
         }
     }
 
-    function showChannelNotice() {
-        let result = channelNotice.loadChannelNoticeList(channelId, 1);
+    function showChannelNotice(page) {
+        let result = channelNotice.loadChannelNoticeList(channelId, page);
         let channelNoticeList = result.data
         let count = result.count
+
+        if (count > 0) {
+            allNoticeCount = channelNoticeList[0].allNoticeCount
+        }
 
         let noticeTableRow = $('#channelNotice');
         for (let idx = 0; idx < count; idx++) {
@@ -133,7 +142,7 @@ $(function () {
                 setChannelPosts(channelId, idx + startNum, postSearch)
 
                 removePosts()
-                $('#postTableBody').append(post)
+                $('#postTableBody').append(backUpPost)
 
                 showPosts()
             })
@@ -145,7 +154,11 @@ $(function () {
     }
 
     function removePosts() {
-        $('tbody').children('tr').remove()
+        $('#postTableBody').children('tr').remove()
+    }
+
+    function removeChannelNotice() {
+        $('#channelNoticeTableBody').children('tr').remove()
     }
 
     function getChannelId() {
@@ -266,6 +279,43 @@ $(function () {
             }
 
             $(location).attr('href', url)
+        })
+    }
+
+    function setNoticeEventHandler() {
+        $('#createNotice').click(function () {
+            $(location).attr('href', '/channel-notice/create?channel=' + channelId)
+        })
+
+        $('#nextNoticeList').click(function () {
+            if (curNoticePage - 1 <= 0) {
+                alert("이전 페이지가 없습니다.")
+            }
+            else {
+                removeChannelNotice()
+                $('#channelNoticeTable').append(backUpChannelNotice)
+
+                curNoticePage -= 1
+                console.log(curNoticePage)
+                showChannelNotice(curNoticePage)
+            }
+        })
+
+        $('#prevNoticeList').click(function () {
+            let lastNum = Math.floor(allNoticeCount / noticeNumOnScreen) + 1
+            console.log(allNoticeCount)
+
+            if (curNoticePage + 1 > lastNum) {
+                alert("다음 페이지가 없습니다.")
+            }
+            else {
+                removeChannelNotice()
+                $('#channelNoticeTable').append(backUpChannelNotice)
+
+                curNoticePage += 1
+                console.log(curNoticePage)
+                showChannelNotice(curNoticePage)
+            }
         })
     }
 

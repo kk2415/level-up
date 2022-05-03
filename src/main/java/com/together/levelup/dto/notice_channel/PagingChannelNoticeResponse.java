@@ -1,11 +1,11 @@
-package com.together.levelup.dto;
+package com.together.levelup.dto.notice_channel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ChannelNoticeResponse {
+public class PagingChannelNoticeResponse {
 
     private Long id;
     private String title;
@@ -14,5 +14,6 @@ public class ChannelNoticeResponse {
     private Long views;
     private String dateCreated;
     private int commentCount;
+    private int allNoticeCount;
 
 }
