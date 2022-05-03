@@ -23,6 +23,12 @@ public class JpaChannelNoticeRepository implements ChannelNoticeRepository {
         em.persist(channelNotice);
     }
 
+    @Override
+    public void saveAll(List<ChannelNotice> channelNotices) {
+        for (ChannelNotice channelNotice : channelNotices) {
+            em.persist(channelNotice);
+        }
+    }
 
     /**
      * 조회
@@ -93,4 +99,11 @@ public class JpaChannelNoticeRepository implements ChannelNoticeRepository {
         em.remove(findChannelNotice);
     }
 
+    @Override
+    public void deleteAll(List<Long> ids) {
+        for (Long id : ids) {
+            ChannelNotice findChannelNotice = findById(id);
+            em.remove(findChannelNotice);
+        }
+    }
 }

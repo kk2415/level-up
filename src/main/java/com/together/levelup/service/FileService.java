@@ -61,4 +61,12 @@ public class FileService {
         fileRepository.delete(id);
     }
 
+    public void deleteByPostId(Long postId) {
+        List<File> findPostFiles = fileRepository.findByPostId(postId);
+
+        for (File findPostFile : findPostFiles) {
+            fileRepository.delete(findPostFile.getId());
+        }
+    }
+
 }

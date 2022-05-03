@@ -8,6 +8,7 @@ $(function () {
 
     console.log(channelId)
 
+    configSummernote()
     hideAlertMessageBox();
     setEventHandler();
 
@@ -21,8 +22,11 @@ $(function () {
                 alert.append('<p>카테고리를 입력해주세요</p>')
             }
             else {
+                setPost()
+                post.uploadFiles = getUploadFiles(post.content)
                 post.category = category
-                post.channelId = channelId
+
+                console.log(post)
                 uploadPost(post)
             }
         })
@@ -30,14 +34,33 @@ $(function () {
         $('#cancelButton').click(function () {
             window.history.back()
         })
+    }
 
-        $('#title').change(function () {
-            post.title = $('#title').val()
-        })
+    function getUploadFiles(htmlCode) {
+        let uploadFiles = []
+        let offset = 0
 
-        $('#content').change(function () {
-            post.content = $('#content').val()
-        })
+        while (htmlCode.indexOf('img src', offset) !== -1) {
+            let uploadFile = {}
+
+            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
+            let firstIdx = imgTagStr.indexOf('"') + 1
+            let lastIdx = imgTagStr.indexOf('"', firstIdx)
+
+            uploadFile.storeFileName = imgTagStr.substring(firstIdx, lastIdx)
+            uploadFile.uploadFileName = 'image'
+
+            uploadFiles.push(uploadFile)
+
+            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
+        }
+        return uploadFiles;
+    }
+
+    function setPost() {
+        post.title = $('#title').val()
+        post.content = $('#content').val()
+        post.channelId = channelId
     }
 
     function uploadPost(data) {
@@ -53,5 +76,41 @@ $(function () {
 
     function hideAlertMessageBox() {
         alert.css('display', 'none')
+    }
+
+    function uploadFile(file, editor) {
+        let form = new FormData()
+        form.append("file", file)
+
+        request.postMultipartRequest('/api/post/files', form, (data) => {
+            $(editor).summernote('insertImage', data)
+        })
+    }
+
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#content').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(files) {
+
+                        for (let i = 0; i < files.length; i++) {
+                            uploadFile(files[i], this);
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
     }
 })

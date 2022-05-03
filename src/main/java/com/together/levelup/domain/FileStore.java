@@ -64,6 +64,7 @@ public class FileStore {
         else {
             storeFileName = "/images/post/" + createStoreFileName(uploadFilename);
         }
+
         return storeFileName;
     }
 
