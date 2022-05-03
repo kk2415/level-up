@@ -45,7 +45,7 @@ public class ChannelController {
                          HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
-        if (session.getAttribute(SessionName.SESSION_NAME) == null) {
+        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
             return "html/channel/detailChannel";
         }
 
@@ -53,7 +53,7 @@ public class ChannelController {
 
         Member findMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
         if (findMember.getId().equals(manager.getId())) {
-            return "html/channel/managerDetailChannel";
+            return "html/channel/manager/detailChannel";
         }
 
         return "html/channel/detailChannel";

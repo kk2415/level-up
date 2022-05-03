@@ -13,5 +13,6 @@ public class ChannelNoticeResponse {
     private String content;
     private Long views;
     private String dateCreated;
+    private int commentCount;
 
 }

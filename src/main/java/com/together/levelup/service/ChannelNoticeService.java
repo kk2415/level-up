@@ -39,7 +39,13 @@ public class ChannelNoticeService {
      * 조회
      * */
     public ChannelNotice findById(Long id) {
-        return channelNoticeRepository.findById(id);
+        ChannelNotice findNotice = channelNoticeRepository.findById(id);
+
+        if (findNotice == null) {
+            throw new IllegalArgumentException("해당하는 공지사항이 없습니다");
+        }
+
+        return findNotice;
     }
 
     public List<ChannelNotice> findByChannelId(Long channelId, int page) {

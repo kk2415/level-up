@@ -1,7 +1,9 @@
 import httpRequest from "/js/module/httpRequest.js";
+import ChannelNotice from "/js/module/channelNotice.js";
 
 $(function () {
     let request = new httpRequest()
+    let channelNotice = new ChannelNotice()
 
     const pagerLength = 5
     const postNumOnScreen = 10
@@ -24,6 +26,7 @@ $(function () {
     setChannelPosts(channelId, currentPage, postSearch)
     let postsCount = channelPosts.count
 
+    showChannelNotice()
     showPosts()
     setPager()
 
@@ -71,6 +74,30 @@ $(function () {
             clonePost.children('td').eq(3).text(posts[idx].voteCount)
             clonePost.children('td').eq(4).text(posts[idx].dateCreated)
             $('#postTableBody').append(clonePost)
+        }
+    }
+
+    function showChannelNotice() {
+        let result = channelNotice.loadChannelNoticeList(channelId, 1);
+        let channelNoticeList = result.data
+        let count = result.count
+
+        let noticeTableRow = $('#channelNotice');
+        for (let idx = 0; idx < count; idx++) {
+            let cloneTableRow = noticeTableRow.clone()
+
+            if (idx === 0) {
+                cloneTableRow = noticeTableRow
+            }
+
+            cloneTableRow.id = idx
+            cloneTableRow.children('td').eq(0).text(channelNoticeList[idx].id)
+            cloneTableRow.children('td').eq(1).children('a').text(channelNoticeList[idx].title + ' [' + channelNoticeList[idx].commentCount + ']')
+            cloneTableRow.children('td').eq(1).children('a').attr('href', '/')
+            cloneTableRow.children('td').eq(2).text(channelNoticeList[idx].writer)
+            cloneTableRow.children('td').eq(3).text(channelNoticeList[idx].views)
+            cloneTableRow.children('td').eq(4).text(channelNoticeList[idx].dateCreated)
+            $('#channelNoticeTable').append(cloneTableRow)
         }
     }
 

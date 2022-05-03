@@ -1,8 +1,10 @@
 package com.together.levelup.dto;
 
+import com.together.levelup.domain.UploadFile;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class ChannelNoticeRequest {
@@ -11,9 +13,8 @@ public class ChannelNoticeRequest {
     private String title;
 
     @NotNull
-    private String writer;
-
-    @NotNull
     private String content;
+
+    private List<UploadFile> uploadFiles;
 
 }
