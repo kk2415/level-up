@@ -1,5 +1,6 @@
 package com.together.levelup.dto.comment;
 
+import com.together.levelup.domain.ArticleIdentity;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -11,9 +12,12 @@ public class CreateCommentRequest {
     private String memberEmail;
 
     @NotNull
-    private Long postId;
+    private Long articleId;
 
     @NotNull
     private String content;
+
+    @NotNull
+    private ArticleIdentity identity;
 
 }

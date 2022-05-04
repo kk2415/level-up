@@ -32,7 +32,6 @@ public class ExceptionController {
     public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
-        System.out.println(e.getMessage());
         exceptionResponse.setTimeStamp(LocalDateTime.now());
         exceptionResponse.setMessage(e.getMessage());
         exceptionResponse.setException(e.getClass().getName());
@@ -61,7 +60,6 @@ public class ExceptionController {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 
         for (FieldError fieldError : fieldErrors) {
-            System.out.println(fieldError.getDefaultMessage());
             createExceptionResponse.message.put(
                     fieldError.getField(),
                     fieldError.getDefaultMessage());

@@ -71,8 +71,8 @@ class PostServiceTest {
         Long postId1 = postService.post(member1.getId(), "제목1", "내용1");
         Long postId2 = postService.post(member2.getId(), "제목2", "내용2");
 
-        Post findPost1 = postService.findOne(postId1);
-        Post findPost2 = postService.findOne(postId2);
+        Post findPost1 = postService.findById(postId1);
+        Post findPost2 = postService.findById(postId2);
 
         Assertions.assertThat(findPost1.getTitle()).isEqualTo("제목1");
         Assertions.assertThat(findPost2.getTitle()).isEqualTo("제목2");
@@ -86,8 +86,8 @@ class PostServiceTest {
         Long postId1 = postService.post(member1.getId(), "제목1", "내용1");
         Long postId2 = postService.post(member2.getId(), "제목2", "내용2");
 
-        Post findPost1 = postService.findOne(postId1);
-        Post findPost2 = postService.findOne(postId2);
+        Post findPost1 = postService.findById(postId1);
+        Post findPost2 = postService.findById(postId2);
 
         postService.updatePost(postId1, member1.getId(), "수정1", "수정 내용1", PostCategory.INFO);
         Assertions.assertThat(findPost1.getTitle()).isEqualTo("수정1");
@@ -103,8 +103,8 @@ class PostServiceTest {
         Long postId1 = postService.post(member1.getId(), "제목1", "내용1");
         Long postId2 = postService.post(member2.getId(), "제목2", "내용2");
 
-        Post findPost1 = postService.findOne(postId1);
-        Post findPost2 = postService.findOne(postId2);
+        Post findPost1 = postService.findById(postId1);
+        Post findPost2 = postService.findById(postId2);
 
         postService.deletePost(postId1);
         int count = postService.findAll().size();

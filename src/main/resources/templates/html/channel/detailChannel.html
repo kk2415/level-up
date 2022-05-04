@@ -76,6 +76,14 @@
                     </tbody>
                 </table>
             </div>
+            <div th:if="${isManager == true}" class="col">
+                <div class="d-grid gap-2 d-md-block float-end">
+                    <button class="btn btn-primary btn-lg" type="button" id="deleteNoticeAll">일괄삭제</button>
+                    <button class="btn btn-primary btn-lg" type="button" id="createNotice">글쓰기</button>
+                </div>
+                <br><br><br><br><br><br>
+            </div>
+
             <div class="col">
                 <div class="d-grid gap-2 d-md-block float-end">
                     <button class="btn btn-primary btn-lg" type="button" id="nextNoticeList"><</button>
@@ -169,8 +177,6 @@
 <div class="copyright py-4 text-center text-white">
     <div class="container"><small>Copyright &copy; Your Website 2022</small></div>
 </div>
-
-<script src="/js/navigation.js"></script>
 
 <script type="module" src="/js/channel/detailChannel.js"></script>
 

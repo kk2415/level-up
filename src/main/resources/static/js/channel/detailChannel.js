@@ -102,7 +102,7 @@ $(function () {
             cloneTableRow.id = idx
             cloneTableRow.children('td').eq(0).text(channelNoticeList[idx].id)
             cloneTableRow.children('td').eq(1).children('a').text(channelNoticeList[idx].title + ' [' + channelNoticeList[idx].commentCount + ']')
-            cloneTableRow.children('td').eq(1).children('a').attr('href', '/')
+            cloneTableRow.children('td').eq(1).children('a').attr('href', '/channel-notice/detail/' + channelNoticeList[idx].id + '?channel=' + channelId)
             cloneTableRow.children('td').eq(2).text(channelNoticeList[idx].writer)
             cloneTableRow.children('td').eq(3).text(channelNoticeList[idx].views)
             cloneTableRow.children('td').eq(4).text(channelNoticeList[idx].dateCreated)

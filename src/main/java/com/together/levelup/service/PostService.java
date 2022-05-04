@@ -80,7 +80,7 @@ public class PostService {
     /**
      * 게시글 조회
      * */
-    public Post findOne(Long postId) {
+    public Post findById(Long postId) {
         return postRepository.findById(postId);
     }
 

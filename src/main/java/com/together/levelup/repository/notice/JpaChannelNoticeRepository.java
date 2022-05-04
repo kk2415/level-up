@@ -94,7 +94,7 @@ public class JpaChannelNoticeRepository implements ChannelNoticeRepository {
         return queryFactory.select(QChannelNotice.channelNotice)
                 .from(QChannelNotice.channelNotice)
                 .where(QChannelNotice.channelNotice.id.lt(id))
-                .orderBy(QChannelNotice.channelNotice.id.asc())
+                .orderBy(QChannelNotice.channelNotice.id.desc())
                 .fetchFirst();
     }
 

@@ -87,8 +87,13 @@ public class ChannelNoticeApiController {
      * 조회
      * */
     @GetMapping("/channel-notice/{id}")
-    public ChannelNoticeResponse findbyId(@PathVariable Long id) {
+    public ChannelNoticeResponse findbyId(@PathVariable Long id,
+                                          @RequestParam(required = false, defaultValue = "false") String view) {
         ChannelNotice findNotice = channelNoticeService.findById(id);
+
+        if (view.equals("true")) {
+            channelNoticeService.addViews(findNotice);
+        }
 
         return new ChannelNoticeResponse(id, findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(),
@@ -111,20 +116,20 @@ public class ChannelNoticeApiController {
         return new Result(noticeResponses, noticeResponses.size());
     }
 
-    @GetMapping("/channel-notices/{id}/nextPost")
+    @GetMapping("/channel-notice/{id}/nextPost")
     public ChannelNoticeResponse findNextPost(@PathVariable Long id) {
         ChannelNotice nextPage = channelNoticeService.findNextPage(id);
 
-        return new ChannelNoticeResponse(id, nextPage.getTitle(),
+        return new ChannelNoticeResponse(nextPage.getId(), nextPage.getTitle(),
                 nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()), nextPage.getComments().size());
     }
 
-    @GetMapping("/channel-notices/{id}/prevPost")
+    @GetMapping("/channel-notice/{id}/prevPost")
     public ChannelNoticeResponse findPrevPost(@PathVariable Long id) {
         ChannelNotice prevPage = channelNoticeService.findPrevPage(id);
 
-        return new ChannelNoticeResponse(id, prevPage.getTitle(),
+        return new ChannelNoticeResponse(prevPage.getId(), prevPage.getTitle(),
                 prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()), prevPage.getComments().size());
     }
@@ -147,7 +152,7 @@ public class ChannelNoticeApiController {
             if (requestMember.getId().equals(manager.getId())) {
                 channelNoticeService.upadte(id, noticeRequest.getTitle(), noticeRequest.getContent());
 
-                return new ResponseEntity("채널 공지사항이 수정되었습니다.", HttpStatus.CREATED);
+                return new ResponseEntity(new Result("채널 공지사항이 수정되었습니다.", 0), HttpStatus.CREATED);
             }
         }
 
@@ -171,7 +176,7 @@ public class ChannelNoticeApiController {
             if (requestMember.getId().equals(manager.getId())) {
                 channelNoticeService.deleteAll(noticeRequest.getIds());
 
-                return new ResponseEntity("채널 공지사항이 삭제되었습니다.", HttpStatus.CREATED);
+                return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
             }
         }
 
