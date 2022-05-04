@@ -1,5 +1,5 @@
 package com.together.levelup.dto.post;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.post.PostCategory;
 import lombok.Data;
 

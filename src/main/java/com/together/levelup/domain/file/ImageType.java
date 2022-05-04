@@ -1,4 +1,4 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.file;
 
 public enum ImageType {
 

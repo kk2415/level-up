@@ -1,5 +1,6 @@
 package com.together.levelup.domain.post;
 
+import com.together.levelup.domain.vote.Vote;
 import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.file.File;
@@ -44,6 +45,9 @@ public class Post {
     @Column(name = "post_category")
     private PostCategory postCategory;
 
+
+//    private List<Member> votedMember = new ArrayList<>();
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -57,6 +61,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<File> files = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<Vote> votes;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

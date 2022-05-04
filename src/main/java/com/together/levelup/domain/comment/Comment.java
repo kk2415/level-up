@@ -1,6 +1,6 @@
 package com.together.levelup.domain.comment;
 
-import com.together.levelup.domain.Qna;
+import com.together.levelup.domain.qna.Qna;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.notice.Notice;

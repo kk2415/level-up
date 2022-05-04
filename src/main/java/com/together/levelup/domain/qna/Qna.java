@@ -1,5 +1,6 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.qna;
 
+import com.together.levelup.domain.vote.Vote;
 import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
@@ -43,6 +44,9 @@ public class Qna {
 
     @OneToMany(mappedBy = "qna")
     private List<File> files = new ArrayList<>();
+
+    @OneToMany(mappedBy = "qna")
+    private List<Vote> votes;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

@@ -112,6 +112,7 @@ $(function () {
         $('#dateCreated').text(post.dateCreated)
         $('#views').text(post.views)
         $('#voteCount').text(post.voteCount)
+        $('#voteCount2').text(post.voteCount)
         $('#commentCount').text(post.commentCount)
         $('#content').html(post.content)
     }
@@ -177,7 +178,9 @@ $(function () {
         })
 
         $('#vote').click(function () {
-            request.getRequest('/api/post/' + postId + '/vote-count')
+            request.getRequest('/api/post/' + postId + '/vote-count', function () {
+                $('#voteCount2').text(post.voteCount + 1)
+            })
         })
 
     }
