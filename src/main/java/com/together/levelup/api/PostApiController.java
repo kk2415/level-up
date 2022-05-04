@@ -51,7 +51,7 @@ public class PostApiController {
 
         Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
-        Post findPost = postService.findOne(postId);
+        Post findPost = postService.findById(postId);
 
         for (UploadFile uploadFile : postRequest.getUploadFiles()) {
             fileService.create(findPost, uploadFile);
@@ -109,7 +109,7 @@ public class PostApiController {
                                  @RequestParam(required = false, defaultValue = "false") String view) {
         Post findPost;
 
-        findPost = postService.findOne(postId);
+        findPost = postService.findById(postId);
         if (view.equals("true")) {
             findPost = postService.readPost(postId);
         }
@@ -165,7 +165,7 @@ public class PostApiController {
     @GetMapping("/post/{postId}/check-member")
     public PostResponse findPostByMemberId(@PathVariable Long postId, @RequestParam String email) {
         Member findMember = memberService.findByEmail(email);
-        Post findPost = postService.findOne(postId);
+        Post findPost = postService.findById(postId);
         List<Post> findPosts = postService.findByMemberId(findMember.getId());
 
         if (findPosts == null) {
@@ -192,7 +192,7 @@ public class PostApiController {
 
         postService.updatePost(postId, findMember.getId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
-        Post findPost = postService.findOne(postId);
+        Post findPost = postService.findById(postId);
 
         fileService.deleteByPostId(findPost.getId());
         for (UploadFile uploadFile : postRequest.getUploadFiles()) {

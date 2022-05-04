@@ -49,6 +49,33 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
+    public List<Comment> findByNoticeId(Long noticeId) {
+        String query = "select c from Comment c inner join c.notice n where n.id = :noticeId order by c.dateCreated";
+
+        return em.createQuery(query, Comment.class)
+                .setParameter("noticeId", noticeId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Comment> findByChannelNoticeId(Long channelNoticeId) {
+        String query = "select c from Comment c inner join c.channelNotice cn where cn.id = :channelNoticeId order by c.dateCreated";
+
+        return em.createQuery(query, Comment.class)
+                .setParameter("channelNoticeId", channelNoticeId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Comment> findByQnaId(Long qnaId) {
+        String query = "select c from Comment c inner join c.qna q where q.id = :qnaId order by c.dateCreated";
+
+        return em.createQuery(query, Comment.class)
+                .setParameter("qnaId", qnaId)
+                .getResultList();
+    }
+
+    @Override
     public List<Comment> findAll() {
         return em.createQuery("select c from Comment c", Comment.class)
                 .getResultList();

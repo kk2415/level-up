@@ -2,22 +2,24 @@ import httpRequest from "/js/module/httpRequest.js";
 
 $(function () {
     let request = new httpRequest()
-    let postId = getPostId()
-    let channelId = getChannelId()
-    let memberEmail = getMemberEmail()
-    let backupComment = $('#comment');
 
-    let post = {}
+    let channelNoticeId = getChannelNoticeId()
+    let channelId = getChannelId()
+
+    let channelNoticeResponse = getChannelNoticeResponse()
+    let comments = getComments()
+
+    let memberEmail = getMemberEmail()
+
+    let backupComment = $('#comment');
     let comment = {}
-    let comments = {}
+
+    $('#allCommentCount').text(channelNoticeResponse.commentCount)
 
     setEventHandler()
 
-    setPost()
-    setPostComments()
-
-    showPost()
-    showModifyAndDeleteButton()
+    showChannelNotice()
+    // showModifyAndDeleteButton()
 
     showComments()
 
@@ -34,7 +36,7 @@ $(function () {
         console.log(memberEmail)
 
         $.ajax({
-            url: '/api/post/' + postId + '/check-member?email=' + memberEmail,
+            url: '/api/post/' + channelNoticeId + '/check-member?email=' + memberEmail,
             method: "GET",
             async: false,
         })
@@ -54,11 +56,12 @@ $(function () {
         return true
     }
 
-    function setPostComments() {
-        comments = request.getRequest('/api/comment/' + postId + '?identity=POST')
+    function getComments() {
+        return request.getRequest('/api/comment/' + channelNoticeId + '?identity=CHANNEL_NOTICE')
     }
 
     function showComments() {
+
         let count = comments.count
         let comment = comments.data
 
@@ -79,12 +82,13 @@ $(function () {
 
     function writeComment() {
         comment.memberEmail = getMemberEmail()
-        comment.articleId = postId
+        comment.articleId = channelNoticeId
         comment.content = $('#contentOfWritingComment').val()
-        comment.identity = 'POST'
+        comment.identity = 'CHANNEL_NOTICE'
 
         console.log(comment)
         if (comment.memberEmail !== undefined) {
+
             request.postRequest('/api/comment', comment)
         }
         else {
@@ -92,7 +96,7 @@ $(function () {
         }
     }
 
-    function getPostId() {
+    function getChannelNoticeId() {
         let pathname = decodeURI($(location).attr('pathname'))
         return pathname.substr(pathname.lastIndexOf('/') + 1)
     }
@@ -102,18 +106,18 @@ $(function () {
         return search.substr(search.indexOf('=') + 1)
     }
 
-    function setPost() {
-        post = request.getRequest('/api/post/' + postId + '?view=true')
+    function getChannelNoticeResponse() {
+        return request.getRequest('/api/channel-notice/' + channelNoticeId + '?view=true')
     }
 
-    function showPost() {
-        $('#writer').text(post.writer)
-        $('#title').text(post.title)
-        $('#dateCreated').text(post.dateCreated)
-        $('#views').text(post.views)
-        $('#voteCount').text(post.voteCount)
-        $('#commentCount').text(post.commentCount)
-        $('#content').html(post.content)
+    function showChannelNotice() {
+        $('#writer').text(channelNoticeResponse.writer)
+        $('#title').text(channelNoticeResponse.title)
+        $('#dateCreated').text(channelNoticeResponse.dateCreated)
+        $('#views').text(channelNoticeResponse.views)
+        $('#voteCount').text(channelNoticeResponse.voteCount)
+        $('#commentCount').text(channelNoticeResponse.commentCount)
+        $('#content').html(channelNoticeResponse.content)
     }
 
     function showModifyAndDeleteButton() {
@@ -130,7 +134,7 @@ $(function () {
     function setEventHandler() {
         $('#commentingButton').click(function () {
             writeComment()
-            setPostComments()
+            comments = getComments()
             removeComments()
             $('#commentFrame').append(backupComment)
             showComments()
@@ -142,35 +146,35 @@ $(function () {
 
         $('#prevPostButton').click(function () {
 
-            let result = request.getRequest('/api/post/' + postId + '/prevPost');
+            let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/prevPost');
 
             if ('status' in result && result.status !== 200) {
                 alert("이전 페이지가 없습니다.")
             }
             else {
                 let prevPostId = result.id
-                $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
+                $(location).attr('href', '/channel-notice/detail/' + prevPostId + '?channel=' + channelId)
             }
         })
 
         $('#nextPostButton').click(function () {
-            let result = request.getRequest('/api/post/' + postId + '/nextPost');
+            let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/nextPost');
 
             if ('status' in result && result.status !== 200) {
                 alert("다음 페이지가 없습니다.")
             }
             else {
                 let nextPostId = result.id
-                $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
+                $(location).attr('href', '/channel-notice/detail/' + nextPostId + '?channel=' + channelId)
             }
         })
 
         $('#modifyButton').click(function () {
-            $(location).attr('href', '/post/edit/' + postId + '?email=' + memberEmail + '&channel=' + channelId)
+            // $(location).attr('href', '/channel-notice/edit/' + channelNoticeId + '?email=' + memberEmail + '&channel=' + channelId)
         })
 
         $('#deleteButton').click(function () {
-            request.deleteRequest('/api/post/' + postId, () => {
+            request.deleteRequest('/api/channel-notice/' + channelNoticeId, () => {
                 alert('삭제되었습니다.')
                 $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
             })

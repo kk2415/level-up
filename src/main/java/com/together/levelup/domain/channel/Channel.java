@@ -100,7 +100,8 @@ public class Channel {
 
         channel.setMember(member);
         channel.setName(name);
-        channel.setManagerName(member.getEmail());
+        channel.setManagerName(member.getName());
+//        channel.setManagerName(member.getEmail());
         channel.setLimitedMemberNumber(limitNumber);
         channel.setDescription(description);
         channel.setThumbnailDescription(thumbnailDescription);

@@ -1,9 +1,7 @@
 package com.together.levelup.service;
 
 import com.together.levelup.domain.channel.Channel;
-import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
-import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import com.together.levelup.repository.notice.ChannelNoticeRepository;
@@ -34,6 +32,7 @@ public class ChannelNoticeService {
 
         return channelNotice.getId();
     }
+
 
     /**
      * 조회
@@ -82,6 +81,10 @@ public class ChannelNoticeService {
         findNotice.change(title, content);
     }
 
+    @Transactional
+    public void addViews(ChannelNotice notice) {
+        notice.addViews();
+    }
 
     /**
      * 삭제

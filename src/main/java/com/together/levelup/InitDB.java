@@ -7,6 +7,7 @@ import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.post.PostCategory;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,7 @@ public class InitDB {
                     "자바 코테 준비 스터디입니다", "데이터베이스 기초에 대한 스터디", ChannelCategory.STUDY, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
             Channel channel6 = Channel.createChannel(manager2, "스프링 기반 프로젝트", 20L,
                     "스프링 기반 프로젝트입니다", "데이터베이스 기초에 대한 스터디", ChannelCategory.PROJECT, new UploadFile("default.png", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE));
+
             em.persist(channel1);
             em.persist(channel2);
             em.persist(channel3);
@@ -99,18 +101,6 @@ public class InitDB {
             Post post9 = Post.createPost(member1, channel1, "안녕하세요9", "방갑습니다", PostCategory.INTRODUCE);
             TimeUnit.MILLISECONDS.sleep(100);
 
-            Post post10 = Post.createPost(member1, channel1, "안녕하세요10", "방갑습니다", PostCategory.INTRODUCE);
-            TimeUnit.MILLISECONDS.sleep(100);
-
-            Post post11 = Post.createPost(member1, channel1, "꿀팁대공개1", "방갑습니다", PostCategory.INTRODUCE);
-            TimeUnit.MILLISECONDS.sleep(100);
-
-            Post post12 = Post.createPost(member1, channel1, "꿀팁대공개2", "방갑습니다", PostCategory.INTRODUCE);
-            TimeUnit.MILLISECONDS.sleep(100);
-
-            Post post13 = Post.createPost(member1, channel1, "꿀팁대공개3", "방갑습니다", PostCategory.INTRODUCE);
-            TimeUnit.MILLISECONDS.sleep(100);
-
             em.persist(post1);
             em.persist(post2);
             em.persist(post3);
@@ -120,74 +110,31 @@ public class InitDB {
             em.persist(post7);
             em.persist(post8);
             em.persist(post9);
-            em.persist(post10);
-            em.persist(post11);
-            em.persist(post12);
-            em.persist(post13);
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개5", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개6", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개7", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개8", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개9", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개10", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개11", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개12", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개13", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개14", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개15", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개16", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개17", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개18", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개19", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개20", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개21", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개22", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개23", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개24", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개25", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개26", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개27", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개28", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개29", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개30", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개31", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개32", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개33", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개34", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개35", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개36", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개37", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개38", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개39", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개40", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개41", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개42", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개43", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개44", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개45", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개46", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개47", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개48", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개49", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개50", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개51", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개52", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
-            em.persist(Post.createPost(member1, channel1, "꿀팁대공개4", "방갑습니다", PostCategory.INTRODUCE));
+
+
+            ChannelNotice channelNotice1 = ChannelNotice.createChannelNotice(channel1, "11", channel1.getManagerName(), "11");
+            TimeUnit.MILLISECONDS.sleep(100);
+            ChannelNotice channelNotice2 = ChannelNotice.createChannelNotice(channel1, "22", channel1.getManagerName(), "11");
+            TimeUnit.MILLISECONDS.sleep(100);
+            ChannelNotice channelNotice3 = ChannelNotice.createChannelNotice(channel1, "33", channel1.getManagerName(), "11");
+            TimeUnit.MILLISECONDS.sleep(100);
+            ChannelNotice channelNotice4 = ChannelNotice.createChannelNotice(channel1, "44", channel1.getManagerName(), "11");
+            TimeUnit.MILLISECONDS.sleep(100);
+            ChannelNotice channelNotice5 = ChannelNotice.createChannelNotice(channel1, "55", channel1.getManagerName(), "11");
+            TimeUnit.MILLISECONDS.sleep(100);
+            ChannelNotice channelNotice6 = ChannelNotice.createChannelNotice(channel1, "66", channel1.getManagerName(), "11");
+
+            em.persist(channelNotice1);
+            em.persist(channelNotice2);
+            em.persist(channelNotice3);
+            em.persist(channelNotice4);
+            em.persist(channelNotice5);
+            em.persist(channelNotice6);
         }
     }
 }

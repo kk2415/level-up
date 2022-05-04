@@ -62,18 +62,49 @@ public class Comment {
         post.getComments().add(this);
     }
 
+    public void setNotice(Notice notice) {
+        this.notice = notice;
+        notice.getComments().add(this);
+    }
+
+    public void setPost(ChannelNotice channelNotice) {
+        this.channelNotice = channelNotice;
+        channelNotice.getComments().add(this);
+    }
+
+    public void setPost(Qna qna) {
+        this.qna = qna;
+        qna.getComments().add(this);
+    }
+
     //==생성 메서드==//
-    public static Comment createComment(Member member, Post post, String content) {
+    public static Comment createComment(Member member, Object article, String content) {
         Comment comment = new Comment();
 
         comment.setMember(member);
-        comment.setPost(post);
         comment.setWriter(member.getName());
         comment.setDateCreated(LocalDateTime.now());
         comment.setContent(content);
         comment.setVoteCount(0L);
 
+        setArticle(article, comment);
+
         return comment;
+    }
+
+    private static void setArticle(Object object, Comment comment) {
+        if (object instanceof Post) {
+            comment.setPost((Post) object);
+        }
+        else if (object instanceof Notice) {
+            comment.setNotice((Notice) object);
+        }
+        else if (object instanceof ChannelNotice) {
+            comment.setChannelNotice((ChannelNotice) object);
+        }
+        else if (object instanceof Qna) {
+            comment.setQna((Qna) object);
+        }
     }
 
     //==댓글 수정==//

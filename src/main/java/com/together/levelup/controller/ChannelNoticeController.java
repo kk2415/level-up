@@ -23,15 +23,16 @@ public class ChannelNoticeController {
     /**
      * 조회
      * */
-    @GetMapping("/find")
-    public String find() {
-        return "";
+    @GetMapping("/detail/{id}")
+    public String find(@PathVariable Long id,
+                       @RequestParam Long channel) {
+        return "html/channel_notice/detailChannelNotice";
     }
 
     /**
      * 수정
      * */
-    @GetMapping("/update")
+    @GetMapping("/edit")
     public String update() {
         return "";
     }

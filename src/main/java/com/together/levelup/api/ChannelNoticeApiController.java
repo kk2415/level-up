@@ -87,8 +87,13 @@ public class ChannelNoticeApiController {
      * 조회
      * */
     @GetMapping("/channel-notice/{id}")
-    public ChannelNoticeResponse findbyId(@PathVariable Long id) {
+    public ChannelNoticeResponse findbyId(@PathVariable Long id,
+                                          @RequestParam(required = false, defaultValue = "false") String view) {
         ChannelNotice findNotice = channelNoticeService.findById(id);
+
+        if (view.equals("true")) {
+            channelNoticeService.addViews(findNotice);
+        }
 
         return new ChannelNoticeResponse(id, findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(),
@@ -111,7 +116,7 @@ public class ChannelNoticeApiController {
         return new Result(noticeResponses, noticeResponses.size());
     }
 
-    @GetMapping("/channel-notices/{id}/nextPost")
+    @GetMapping("/channel-notice/{id}/nextPost")
     public ChannelNoticeResponse findNextPost(@PathVariable Long id) {
         ChannelNotice nextPage = channelNoticeService.findNextPage(id);
 
@@ -120,7 +125,7 @@ public class ChannelNoticeApiController {
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()), nextPage.getComments().size());
     }
 
-    @GetMapping("/channel-notices/{id}/prevPost")
+    @GetMapping("/channel-notice/{id}/prevPost")
     public ChannelNoticeResponse findPrevPost(@PathVariable Long id) {
         ChannelNotice prevPage = channelNoticeService.findPrevPage(id);
 
