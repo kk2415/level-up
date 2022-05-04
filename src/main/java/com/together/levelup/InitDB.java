@@ -115,6 +115,7 @@ public class InitDB {
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개7", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개8", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개9", "방갑습니다", PostCategory.INTRODUCE));
+            em.persist(Post.createPost(member1, channel1, "꿀팁대공개10", "방갑습니다", PostCategory.INTRODUCE));
 
 
             ChannelNotice channelNotice1 = ChannelNotice.createChannelNotice(channel1, "11", channel1.getManagerName(), "11");

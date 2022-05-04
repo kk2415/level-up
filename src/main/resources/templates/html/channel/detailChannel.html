@@ -32,12 +32,13 @@
 <nav th:replace="html/base/navigation.html :: navigation" class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
 </nav>
 
-<!-- Masthead-->
-<header th:replace="html/base/header.html :: commonHeader" class="masthead bg-primary text-white text-center">
-</header>
+<!--&lt;!&ndash; Masthead&ndash;&gt;-->
+<!--<header th:replace="html/base/header.html :: commonHeader" class="masthead bg-primary text-white text-center">-->
+<!--</header>-->
 
 <!-- Contact Section-->
 <section class="page-section" id="contact">
+    <br><br><br><br><br><br><br><br>
     <div class="container" style="width: 70%">
         <!-- Contact Section Heading-->
         <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0" id="channelName">채널 명</h2>
@@ -92,37 +93,11 @@
             </div>
         </div>
         <hr>
-        <br><br><br><br><br>
-
-        <h3>게시글</h3>
-        <div class="row">
-            <div class="col-lg-6 col-sm-12 text-lg-start text-center">
-                <button type="button" style="display: none"></button>
-            </div>
-            <div class="col-lg-6 col-sm-12 text-lg-end text-center">
-                <nav class="navbar navbar-expand-lg navbar-light float-end">
-                    <div class="container-fluid">
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav d-flex">
-                                <li class="nav-item dropdown">
-                                    <select name="field" class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <option value="title">제목</option>
-                                        <option value="writer">작성자</option>
-                                    </select>
-                                </li>
-                            </ul>
-                            <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search" value="">
-                                <button class="btn btn-outline-success" type="button" id="searchButton">Search</button>
-                            </form>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
+        <br><br><br>
 
         <!-- Contact Section Form-->
         <table id="postTable" class="table table-hover">
+            <caption class="caption-top fs-3 fw-bold">게시글</caption>
             <thead>
             <tr class="table-active">
                 <th scope="col">글쓴이</th>
@@ -145,7 +120,38 @@
             </tbody>
         </table>
 
-        <div><span class="text-orange text-strong" id="currentPage"></span> / 1 pages</div>
+        <div>
+            <span class="text-orange text-strong" id="currentPage"></span>
+            /
+            <span class="text-orange text-strong" id="lastPage"></span>
+            pages
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 text-lg-start text-center">
+            </div>
+            <div class="col-lg-6 col-sm-12 text-lg-end text-center">
+                <nav class="navbar navbar-expand-lg navbar-light float-end">
+                    <div class="container-fluid">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav d-flex">
+                                <li class="nav-item dropdown">
+                                    <select name="field" class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <option value="title">제목</option>
+                                        <option value="writer">작성자</option>
+                                    </select>
+                                </li>
+                            </ul>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search" value="">
+                                <button class="btn btn-outline-success" type="button" id="searchButton">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
 
         <br><br><br><br>
 

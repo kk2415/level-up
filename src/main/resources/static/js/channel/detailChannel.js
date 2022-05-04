@@ -26,6 +26,8 @@ $(function () {
     setChannelName()
     $('#channelName').text(channelName)
     $('#currentPage').text(currentPage)
+    let lastNum = Math.floor(allPostsCount / postNumOnScreen) + 1
+    $('#lastPage').text(lastNum)
 
     setEventHandler()
     setNoticeEventHandler()
@@ -121,13 +123,13 @@ $(function () {
         let endPageNum = Math.floor(allPostsCount / postNumOnScreen) + 1
 
         let startNum = currentPage - (currentPage - 1) % pagerLength
-        let loopCount = pagerLength
 
-        if ((endPageNum - currentPage) < pagerLength) {
-            loopCount = endPageNum - currentPage
-        }
+        // let loopCount = pagerLength
+        // if ((endPageNum - currentPage) < pagerLength) {
+        //     loopCount = endPageNum - currentPage
+        // }
 
-        for (let idx = 0; idx < loopCount; idx++) {
+        for (let idx = 0; idx < endPageNum; idx++) {
             let clonePage = page.clone()
             let url = '/channel/detail/' + channelId + '?page=' + (idx + startNum) + '&field='
                 + postSearch.field + '&' + 'query=' + postSearch.querys
@@ -145,6 +147,7 @@ $(function () {
                 $('#postTableBody').append(backUpPost)
 
                 showPosts()
+                $('#currentPage').text(idx + startNum)
             })
 
             page.before(clonePage)
