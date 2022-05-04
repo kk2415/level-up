@@ -1,13 +1,11 @@
 package com.together.levelup.api;
 
-import com.together.levelup.domain.ArticleIdentity;
-import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.comment.ArticleIdentity;
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.comment.CommentResponse;
 import com.together.levelup.dto.comment.CreateCommentRequest;
 import com.together.levelup.dto.Result;
-import com.together.levelup.repository.notice.NoticeRepository;
-import com.together.levelup.repository.qna.QnaRepository;
 import com.together.levelup.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;

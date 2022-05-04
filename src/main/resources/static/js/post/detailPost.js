@@ -176,5 +176,9 @@ $(function () {
             })
         })
 
+        $('#vote').click(function () {
+            request.getRequest('/api/post/' + postId + '/vote-count')
+        })
+
     }
 })

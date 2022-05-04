@@ -1,7 +1,6 @@
 package com.together.levelup.repository.comment;
 
-import com.together.levelup.domain.Comment;
-import com.together.levelup.domain.file.File;
+import com.together.levelup.domain.comment.Comment;
 
 import java.util.List;
 

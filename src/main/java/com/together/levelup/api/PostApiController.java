@@ -107,11 +107,10 @@ public class PostApiController {
     @GetMapping("/post/{postId}")
     public PostResponse readPost(@PathVariable Long postId,
                                  @RequestParam(required = false, defaultValue = "false") String view) {
-        Post findPost;
+        Post findPost = postService.findById(postId);
 
-        findPost = postService.findById(postId);
         if (view.equals("true")) {
-            findPost = postService.readPost(postId);
+            postService.addViews(findPost);
         }
 
         return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory(),
@@ -200,6 +199,13 @@ public class PostApiController {
         }
 
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
+    }
+
+    @GetMapping("/post/{postId}/vote-count")
+    public ResponseEntity addVoteCount(@PathVariable Long postId) {
+        Post findPost = postService.findById(postId);
+        postService.addVoteCount(findPost);
+        return new ResponseEntity(new Result("추천수가 1 증가하였습니다.", 0), HttpStatus.OK);
     }
 
     /**

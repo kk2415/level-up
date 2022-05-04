@@ -1,5 +1,6 @@
 package com.together.levelup.domain;
 
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
 import lombok.Getter;
@@ -73,6 +74,10 @@ public class Qna {
 
     public void addViews() {
         this.setViews(this.views + 1);
+    }
+
+    public void addVoteCount() {
+        this.setVoteCount(this.voteCount + 1);
     }
 
 }

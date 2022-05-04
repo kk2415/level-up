@@ -1,4 +1,4 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.comment;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

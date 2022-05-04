@@ -1,6 +1,6 @@
 package com.together.levelup.dto.comment;
 
-import com.together.levelup.domain.ArticleIdentity;
+import com.together.levelup.domain.comment.ArticleIdentity;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

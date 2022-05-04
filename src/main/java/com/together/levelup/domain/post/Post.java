@@ -1,6 +1,6 @@
 package com.together.levelup.domain.post;
 
-import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
@@ -113,6 +113,10 @@ public class Post {
 
     public void addViews() {
         this.setViews(this.views + 1);
+    }
+
+    public void addVoteCount() {
+        this.setVoteCount(this.voteCount + 1);
     }
 
 }

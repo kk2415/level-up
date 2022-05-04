@@ -43,6 +43,7 @@ public class PostService {
         return post.getId();
     }
 
+
     /**
      * 게시글 수정
      * */
@@ -70,12 +71,22 @@ public class PostService {
         post.changePost(title, content, category);
     }
 
+    public void addVoteCount(Post findPost) {
+        findPost.addVoteCount();
+    }
+
+    public void addViews(Post findPost) {
+        findPost.addViews();
+    }
+
+
     /**
      * 게시글 삭제
      * */
     public void deletePost(Long postId) {
         postRepository.delete(postId);
     }
+
 
     /**
      * 게시글 조회

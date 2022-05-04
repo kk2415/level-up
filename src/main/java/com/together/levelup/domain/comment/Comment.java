@@ -1,5 +1,6 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.comment;
 
+import com.together.levelup.domain.Qna;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.notice.Notice;
@@ -107,9 +108,13 @@ public class Comment {
         }
     }
 
-    //==댓글 수정==//
+    //==비즈니스 로직==//
     public void changeComment(String content) {
         this.setContent(content);
+    }
+
+    public void addVoteCount() {
+        this.setVoteCount(this.voteCount + 1);
     }
 
 }

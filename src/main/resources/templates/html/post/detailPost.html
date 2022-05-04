@@ -48,7 +48,7 @@
 <!-- Contact Section-->
 <section class="page-section" id="contact">
         <div class="container" style="width: 50%">
-            <div class="row row-cols-1">
+            <div class="row">
                 <div class="col border-bottom">
                     <p id="writer" class="h6">작성자</p>
                     <h1 id="title" class="display-3">h1. Bootstrap heading</h1>
@@ -78,13 +78,23 @@
                         </span>
                     </p>
                 </div>
-                <div class="col">
+
+                <div class="w-100"></div>
+
+                <div class="col-lg-11">
                     <br><br>
                     <h1 class="display-6">
                         <p id="content">내용</p>
                     </h1>
                     <br><br><br><br>
                 </div>
+
+                <div class="col">
+                    <button id="vote" class="btn-lg btn btn-primary" type="button">추천</button>
+                </div>
+
+                <div class="w-100"></div>
+
                 <div class="d-grid gap-2 d-md-block float-end">
                     <button class="btn btn-primary btn-lg" type="button" id="modifyButton" style="display: none">수정</button>
                     <button class="btn btn-primary btn-lg" type="button" id="deleteButton" style="display: none">삭제</button>
