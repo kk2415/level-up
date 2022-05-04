@@ -79,9 +79,9 @@
                     </h1>
                     <br><br><br><br>
                 </div>
-                <div class="d-grid gap-2 d-md-block float-end">
-                    <button class="btn btn-primary btn-lg" type="button" id="modifyButton" style="display: none">수정</button>
-                    <button class="btn btn-primary btn-lg" type="button" id="deleteButton" style="display: none">삭제</button>
+                <div th:if="${isManager == true}" class="d-grid gap-2 d-md-block float-end">
+                    <button class="btn btn-primary btn-lg" type="button" id="modifyButton">수정</button>
+                    <button class="btn btn-primary btn-lg" type="button" id="deleteButton">삭제</button>
                 </div>
             </div>
 
@@ -119,8 +119,8 @@
             <div>
                 <button class="btn btn-primary btn-lg float-start" type="button" id="allPostButton">목록으로</button>
                 <div class="d-grid gap-2 d-md-block float-end">
-                    <button class="btn btn-primary btn-lg" type="button" id="prevPostButton">이전글</button>
                     <button class="btn btn-primary btn-lg" type="button" id="nextPostButton">다음글</button>
+                    <button class="btn btn-primary btn-lg" type="button" id="prevPostButton">이전글</button>
                 </div>
             </div>
 
@@ -135,8 +135,6 @@
 <div class="copyright py-4 text-center text-white">
     <div class="container"><small>Copyright &copy; Your Website 2022</small></div>
 </div>
-
-<script src="/js/navigation.js"></script>
 
 <script type="module" src="/js/channel_notice/detailChannelNotice.js"></script>
 

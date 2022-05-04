@@ -19,7 +19,6 @@ $(function () {
     setEventHandler()
 
     showChannelNotice()
-    // showModifyAndDeleteButton()
 
     showComments()
 
@@ -144,6 +143,18 @@ $(function () {
            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
         })
 
+        $('#nextPostButton').click(function () {
+            let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/nextPost');
+
+            if ('status' in result && result.status !== 200) {
+                alert("다음 페이지가 없습니다.")
+            }
+            else {
+                let nextPostId = result.id
+                $(location).attr('href', '/channel-notice/detail/' + nextPostId + '?channel=' + channelId)
+            }
+        })
+
         $('#prevPostButton').click(function () {
 
             let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/prevPost');
@@ -157,27 +168,20 @@ $(function () {
             }
         })
 
-        $('#nextPostButton').click(function () {
-            let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/nextPost');
-
-            if ('status' in result && result.status !== 200) {
-                alert("다음 페이지가 없습니다.")
-            }
-            else {
-                let nextPostId = result.id
-                $(location).attr('href', '/channel-notice/detail/' + nextPostId + '?channel=' + channelId)
-            }
-        })
-
         $('#modifyButton').click(function () {
             // $(location).attr('href', '/channel-notice/edit/' + channelNoticeId + '?email=' + memberEmail + '&channel=' + channelId)
         })
 
         $('#deleteButton').click(function () {
-            request.deleteRequest('/api/channel-notice/' + channelNoticeId, () => {
+            let requestBody = {
+                ids : [],
+            }
+            requestBody.ids.push(channelNoticeId)
+
+            request.deleteRequest('/api/channel-notice?channel=' + channelId, () => {
                 alert('삭제되었습니다.')
                 $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-            })
+            }, requestBody)
         })
 
     }

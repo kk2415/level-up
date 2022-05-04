@@ -5,6 +5,7 @@ import com.together.levelup.domain.member.Member;
 import com.together.levelup.service.ChannelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +43,9 @@ public class ChannelController {
                          @RequestParam(required = false, defaultValue = "1") Long page,
                          @RequestParam(required = false) String field,
                          @RequestParam(required = false) String query,
-                         HttpServletRequest request) {
+                         HttpServletRequest request,
+                         Model model) {
+        model.addAttribute("isManager", false);
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
@@ -50,10 +53,10 @@ public class ChannelController {
         }
 
         Member manager = channelService.findOne(channelId).getMember();
-
         Member findMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
+
         if (findMember.getId().equals(manager.getId())) {
-            return "html/channel/manager/detailChannel";
+            model.addAttribute("isManager", true);
         }
 
         return "html/channel/detailChannel";

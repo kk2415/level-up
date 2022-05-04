@@ -123,12 +123,15 @@ export default class httpRequest {
         return result
     }
 
-    deleteRequest(url, callback) {
+    deleteRequest(url, callback, requestData) {
         let result = {}
 
         $.ajax({
             url: url,
             method: "DELETE",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData),
             async: false,
         })
             .done(function (response) {
