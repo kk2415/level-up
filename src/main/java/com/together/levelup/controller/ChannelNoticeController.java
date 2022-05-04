@@ -57,9 +57,10 @@ public class ChannelNoticeController {
     /**
      * 수정
      * */
-    @GetMapping("/edit")
-    public String update() {
-        return "";
+    @GetMapping("/edit/{id}")
+    public String update(@PathVariable Long id,
+                         @RequestParam Long channel) {
+        return "html/channel_notice/updateChannelNotice";
     }
 
 }

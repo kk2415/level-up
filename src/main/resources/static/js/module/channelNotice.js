@@ -14,4 +14,11 @@ export default class ChannelNotice {
         })
     }
 
+    updateChannelNotice(data, channelNoticeId ,channelId) {
+        request.patchRequest('/api/channel-notice/' + channelNoticeId + '?channel=' + channelId , data,
+            (data) => {
+            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+        })
+    }
+
 }

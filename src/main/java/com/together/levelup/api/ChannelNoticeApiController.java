@@ -152,7 +152,7 @@ public class ChannelNoticeApiController {
             if (requestMember.getId().equals(manager.getId())) {
                 channelNoticeService.upadte(id, noticeRequest.getTitle(), noticeRequest.getContent());
 
-                return new ResponseEntity("채널 공지사항이 수정되었습니다.", HttpStatus.CREATED);
+                return new ResponseEntity(new Result("채널 공지사항이 수정되었습니다.", 0), HttpStatus.CREATED);
             }
         }
 

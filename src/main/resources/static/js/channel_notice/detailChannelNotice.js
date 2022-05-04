@@ -169,7 +169,7 @@ $(function () {
         })
 
         $('#modifyButton').click(function () {
-            // $(location).attr('href', '/channel-notice/edit/' + channelNoticeId + '?email=' + memberEmail + '&channel=' + channelId)
+            $(location).attr('href', '/channel-notice/edit/' + channelNoticeId + '?channel=' + channelId)
         })
 
         $('#deleteButton').click(function () {
