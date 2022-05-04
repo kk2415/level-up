@@ -45,9 +45,6 @@ public class Post {
     @Column(name = "post_category")
     private PostCategory postCategory;
 
-
-//    private List<Member> votedMember = new ArrayList<>();
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -63,7 +60,7 @@ public class Post {
     private List<File> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
-    private List<Vote> votes;
+    private List<Vote> votes = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

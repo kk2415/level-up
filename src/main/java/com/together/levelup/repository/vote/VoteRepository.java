@@ -11,6 +11,9 @@ public interface VoteRepository {
     public Vote findById(Long id);
     public List<Vote> findByPostAndMember(Long psotId, Long memberId);
     public List<Vote> findByQnaAndMember(Long qnaId, Long memberId);
+    public List<Vote> findByCommentAndMember(Long commentId, Long memberId);
+    public List<Vote> findByPostId(Long postId);
+    public List<Vote> findByQnaId(Long qnaId);
     public List<Vote> findAll();
     public void delete(Long id);
 

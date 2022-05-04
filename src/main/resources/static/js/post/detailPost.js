@@ -31,8 +31,6 @@ $(function () {
     function isMyPost() {
         let bool = false
 
-        console.log(memberEmail)
-
         $.ajax({
             url: '/api/post/' + postId + '/check-member?email=' + memberEmail,
             method: "GET",
@@ -71,6 +69,19 @@ $(function () {
             cloneComment.children('#commentWriter').text(comment[idx].writer)
             cloneComment.children('#commentDate').text(comment[idx].dateCreated)
             cloneComment.children('#commentContent').text(comment[idx].content)
+            cloneComment.children('#commentVote').children('#commentVoteCount').text(comment[idx].voteCount)
+
+            cloneComment.children('#commentVote').children('button').click(function () {
+                let voteRequest = {
+                    'articleId' : comment[idx].id,
+                    'identity' : 'COMMENT',
+                }
+
+                request.postRequest('/api/vote', voteRequest, function () {
+                    cloneComment.children('#commentVote').children('#commentVoteCount').text(comment[idx].voteCount + 1)
+                })
+            })
+
             $('#comment').after(cloneComment)
         }
 
@@ -178,7 +189,12 @@ $(function () {
         })
 
         $('#vote').click(function () {
-            request.getRequest('/api/post/' + postId + '/vote-count', function () {
+            let voteRequest = {
+                'articleId' : postId,
+                'identity' : 'POST',
+            }
+
+            request.postRequest('/api/vote', voteRequest, function () {
                 $('#voteCount2').text(post.voteCount + 1)
             })
         })

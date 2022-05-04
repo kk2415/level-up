@@ -39,7 +39,7 @@ public class CommentApiController {
                 commentRequest.getArticleId(), commentRequest.getContent());
 
         Comment findComment = commentService.findOne(commentId);
-        return new CommentResponse(findComment.getWriter(), findComment.getContent(),
+        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
                 findComment.getVoteCount());
     }
@@ -52,8 +52,8 @@ public class CommentApiController {
                                @RequestParam ArticleIdentity identity) {
         List<Comment> findComments = identifyArticle(identity, articleId);
 
-        List<CommentResponse> comments = findComments.stream().map(c -> new CommentResponse(c.getWriter(), c.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
+        List<CommentResponse> comments = findComments.stream().map(c -> new CommentResponse(c.getId() ,c.getWriter(),
+                c.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
                 c.getVoteCount())).collect(Collectors.toList());
 
         return new Result(comments, comments.size());

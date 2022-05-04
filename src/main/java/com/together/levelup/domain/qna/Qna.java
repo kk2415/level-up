@@ -46,7 +46,7 @@ public class Qna {
     private List<File> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "qna")
-    private List<Vote> votes;
+    private List<Vote> votes = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

@@ -202,26 +202,26 @@ public class PostApiController {
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }
 
-    @GetMapping("/post/{postId}/vote-count")
-    @Transactional
-    public ResponseEntity addVoteCount(@PathVariable Long postId,
-                                       HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-
-        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
-            throw new MemberNotFoundException("가입된 회원만 추천 기능을 사용할 수 있습니다.");
-        }
-        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
-
-        Post findPost = postService.findById(postId);
-
-        if (false) {
-            throw new IllegalArgumentException("이미 추천한 회원입니다.");
-        }
-
-        postService.addVoteCount(findPost);
-        return new ResponseEntity(new Result("추천수가 1 증가하였습니다.", 0), HttpStatus.OK);
-    }
+//    @GetMapping("/post/{postId}/vote-count")
+//    @Transactional
+//    public ResponseEntity addVoteCount(@PathVariable Long postId,
+//                                       HttpServletRequest request) {
+//        HttpSession session = request.getSession(false);
+//
+//        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
+//            throw new MemberNotFoundException("가입된 회원만 추천 기능을 사용할 수 있습니다.");
+//        }
+//        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
+//
+//        Post findPost = postService.findById(postId);
+//
+//        if (false) {
+//            throw new IllegalArgumentException("이미 추천한 회원입니다.");
+//        }
+//
+//        postService.addVoteCount(findPost);
+//        return new ResponseEntity(new Result("추천수가 1 증가하였습니다.", 0), HttpStatus.OK);
+//    }
 
     /**
      * 삭제

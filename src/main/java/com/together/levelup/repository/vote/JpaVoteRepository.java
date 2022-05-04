@@ -57,6 +57,37 @@ public class JpaVoteRepository implements VoteRepository {
     }
 
     @Override
+    public List<Vote> findByCommentAndMember(Long commentId, Long memberId) {
+        String query = "select v from Vote v " +
+                "join fetch v.comment c " +
+                "join fetch v.member m " +
+                "where c.id = :commentId and m.id = :memberId";
+
+        return em.createQuery(query, Vote.class)
+                .setParameter("commentId", commentId)
+                .setParameter("memberId", memberId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Vote> findByPostId(Long postId) {
+        String query = "select v from Vote v join fetch v.post p where p.id = :postId";
+
+        return em.createQuery(query, Vote.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Vote> findByQnaId(Long qnaId) {
+        String query = "select v from Vote v join fetch v.qna q where q.id = :qnaId";
+
+        return em.createQuery(query, Vote.class)
+                .setParameter("qnaId", qnaId)
+                .getResultList();
+    }
+
+    @Override
     public List<Vote> findAll() {
         return em.createQuery("select v from Vote v", Vote.class)
                 .getResultList();
