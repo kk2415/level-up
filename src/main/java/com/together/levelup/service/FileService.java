@@ -1,6 +1,6 @@
 package com.together.levelup.service;
 
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.file.File;
 import com.together.levelup.repository.file.FileRepository;
 import lombok.RequiredArgsConstructor;

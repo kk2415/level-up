@@ -1,7 +1,6 @@
 package com.together.levelup.domain.file;
 
-import com.together.levelup.domain.Qna;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.qna.Qna;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.notice.Notice;

@@ -1,10 +1,10 @@
 package com.together.levelup.api;
 
-import com.together.levelup.domain.FileStore;
-import com.together.levelup.domain.ImageType;
+import com.together.levelup.domain.file.FileStore;
+import com.together.levelup.domain.file.ImageType;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.dto.*;
 import com.together.levelup.dto.channel.*;
 import com.together.levelup.exception.ImageNotFoundException;

@@ -1,8 +1,8 @@
 package com.together.levelup.api;
 
-import com.together.levelup.domain.FileStore;
-import com.together.levelup.domain.ImageType;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.FileStore;
+import com.together.levelup.domain.file.ImageType;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.dto.*;
@@ -15,6 +15,7 @@ import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -107,11 +108,10 @@ public class PostApiController {
     @GetMapping("/post/{postId}")
     public PostResponse readPost(@PathVariable Long postId,
                                  @RequestParam(required = false, defaultValue = "false") String view) {
-        Post findPost;
+        Post findPost = postService.findById(postId);
 
-        findPost = postService.findById(postId);
         if (view.equals("true")) {
-            findPost = postService.readPost(postId);
+            postService.addViews(findPost);
         }
 
         return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory(),
@@ -201,6 +201,27 @@ public class PostApiController {
 
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }
+
+//    @GetMapping("/post/{postId}/vote-count")
+//    @Transactional
+//    public ResponseEntity addVoteCount(@PathVariable Long postId,
+//                                       HttpServletRequest request) {
+//        HttpSession session = request.getSession(false);
+//
+//        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
+//            throw new MemberNotFoundException("가입된 회원만 추천 기능을 사용할 수 있습니다.");
+//        }
+//        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
+//
+//        Post findPost = postService.findById(postId);
+//
+//        if (false) {
+//            throw new IllegalArgumentException("이미 추천한 회원입니다.");
+//        }
+//
+//        postService.addVoteCount(findPost);
+//        return new ResponseEntity(new Result("추천수가 1 증가하였습니다.", 0), HttpStatus.OK);
+//    }
 
     /**
      * 삭제

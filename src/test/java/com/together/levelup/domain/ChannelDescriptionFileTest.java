@@ -2,6 +2,8 @@ package com.together.levelup.domain;
 
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
+import com.together.levelup.domain.file.FileStore;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import org.assertj.core.api.Assertions;

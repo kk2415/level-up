@@ -1,9 +1,11 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.comment;
 
+import com.together.levelup.domain.qna.Qna;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.post.Post;
+import com.together.levelup.domain.vote.Vote;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -50,6 +54,9 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "qna_id")
     private Qna qna;
+
+    @OneToMany(mappedBy = "comment")
+    private List<Vote> votes = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
@@ -107,9 +114,13 @@ public class Comment {
         }
     }
 
-    //==댓글 수정==//
+    //==비즈니스 로직==//
     public void changeComment(String content) {
         this.setContent(content);
+    }
+
+    public void addVoteCount() {
+        this.setVoteCount(this.voteCount + 1);
     }
 
 }

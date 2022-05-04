@@ -1,10 +1,10 @@
 package com.together.levelup.service;
 
-import com.together.levelup.domain.Comment;
-import com.together.levelup.domain.FileStore;
+import com.together.levelup.domain.comment.Comment;
+import com.together.levelup.domain.file.FileStore;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;

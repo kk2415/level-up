@@ -1,8 +1,9 @@
 package com.together.levelup.domain.member;
 
-import com.together.levelup.domain.Comment;
-import com.together.levelup.domain.Qna;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.vote.Vote;
+import com.together.levelup.domain.comment.Comment;
+import com.together.levelup.domain.qna.Qna;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.channel.Channel;
@@ -65,6 +66,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Qna> qna = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Vote> votes;
 
     //==생성 메서드==//
     public static Member createMember(String email, String password, String name,

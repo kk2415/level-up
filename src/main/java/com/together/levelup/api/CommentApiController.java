@@ -1,13 +1,11 @@
 package com.together.levelup.api;
 
-import com.together.levelup.domain.ArticleIdentity;
-import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.comment.ArticleIdentity;
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.comment.CommentResponse;
 import com.together.levelup.dto.comment.CreateCommentRequest;
 import com.together.levelup.dto.Result;
-import com.together.levelup.repository.notice.NoticeRepository;
-import com.together.levelup.repository.qna.QnaRepository;
 import com.together.levelup.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +39,7 @@ public class CommentApiController {
                 commentRequest.getArticleId(), commentRequest.getContent());
 
         Comment findComment = commentService.findOne(commentId);
-        return new CommentResponse(findComment.getWriter(), findComment.getContent(),
+        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
                 findComment.getVoteCount());
     }
@@ -54,8 +52,8 @@ public class CommentApiController {
                                @RequestParam ArticleIdentity identity) {
         List<Comment> findComments = identifyArticle(identity, articleId);
 
-        List<CommentResponse> comments = findComments.stream().map(c -> new CommentResponse(c.getWriter(), c.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
+        List<CommentResponse> comments = findComments.stream().map(c -> new CommentResponse(c.getId() ,c.getWriter(),
+                c.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
                 c.getVoteCount())).collect(Collectors.toList());
 
         return new Result(comments, comments.size());

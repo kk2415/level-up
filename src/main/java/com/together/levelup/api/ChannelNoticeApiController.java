@@ -1,8 +1,8 @@
 package com.together.levelup.api;
 
-import com.together.levelup.domain.FileStore;
-import com.together.levelup.domain.ImageType;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.FileStore;
+import com.together.levelup.domain.file.ImageType;
+import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.ChannelNotice;
 import com.together.levelup.dto.notice_channel.ChannelNoticeRequest;

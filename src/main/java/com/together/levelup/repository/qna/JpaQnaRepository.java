@@ -2,8 +2,8 @@ package com.together.levelup.repository.qna;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.together.levelup.domain.QQna;
-import com.together.levelup.domain.Qna;
+import com.together.levelup.domain.qna.QQna;
+import com.together.levelup.domain.qna.Qna;
 import com.together.levelup.dto.post.PostSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

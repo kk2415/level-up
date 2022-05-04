@@ -1,6 +1,6 @@
 package com.together.levelup.dto.notice_channel;
 
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.UploadFile;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

@@ -1,6 +1,6 @@
 package com.together.levelup.repository.qna;
 
-import com.together.levelup.domain.Qna;
+import com.together.levelup.domain.qna.Qna;
 import com.together.levelup.dto.post.PostSearch;
 
 import java.util.List;

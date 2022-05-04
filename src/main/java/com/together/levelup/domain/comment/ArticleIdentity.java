@@ -1,10 +1,10 @@
-package com.together.levelup.domain;
+package com.together.levelup.domain.comment;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum ArticleIdentity {
 
-    CHANNEL, POST, NOTICE, CHANNEL_NOTICE, QNA;
+    CHANNEL, POST, NOTICE, CHANNEL_NOTICE, QNA, COMMENT;
 
     @JsonCreator
     public static ArticleIdentity enumMatching(String enumName) {

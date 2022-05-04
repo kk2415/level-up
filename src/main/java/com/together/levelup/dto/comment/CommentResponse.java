@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class CommentResponse {
 
+    private Long id;
     private String writer;
     private String content;
     private String dateCreated;

@@ -1,6 +1,6 @@
 package com.together.levelup.domain.notice;
 
-import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
 import lombok.Getter;

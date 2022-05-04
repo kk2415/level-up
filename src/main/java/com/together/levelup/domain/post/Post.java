@@ -1,6 +1,7 @@
 package com.together.levelup.domain.post;
 
-import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.vote.Vote;
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.file.File;
 import com.together.levelup.domain.member.Member;
@@ -58,6 +59,9 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post")
+    private List<Vote> votes = new ArrayList<>();
+
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
@@ -113,6 +117,10 @@ public class Post {
 
     public void addViews() {
         this.setViews(this.views + 1);
+    }
+
+    public void addVoteCount() {
+        this.setVoteCount(this.voteCount + 1);
     }
 
 }

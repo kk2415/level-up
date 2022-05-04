@@ -1,6 +1,6 @@
 package com.together.levelup.service;
 
-import com.together.levelup.domain.Comment;
+import com.together.levelup.domain.comment.Comment;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import org.assertj.core.api.Assertions;

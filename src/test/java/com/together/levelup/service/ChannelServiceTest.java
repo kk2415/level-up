@@ -1,11 +1,11 @@
 package com.together.levelup.service;
 
-import com.together.levelup.domain.FileStore;
+import com.together.levelup.domain.file.FileStore;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
-import com.together.levelup.domain.UploadFile;
+import com.together.levelup.domain.file.UploadFile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
