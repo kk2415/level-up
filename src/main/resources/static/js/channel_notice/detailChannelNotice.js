@@ -9,57 +9,29 @@ $(function () {
     let channelNoticeResponse = getChannelNoticeResponse()
     let comments = getComments()
 
-    let memberEmail = getMemberEmail()
-
     let backupComment = $('#comment');
     let comment = {}
 
-    $('#allCommentCount').text(channelNoticeResponse.commentCount)
-
     setEventHandler()
 
-    showChannelNotice()
+    showChannelNotice(channelNoticeResponse)
+    showComments(comments)
 
-    showComments()
+
+
 
 
     function getMemberEmail() {
         let member = request.getRequest('/api/member');
 
-        return member.email
-    }
-
-    function isMyPost() {
-        let bool = false
-
-        console.log(memberEmail)
-
-        $.ajax({
-            url: '/api/post/' + channelNoticeId + '/check-member?email=' + memberEmail,
-            method: "GET",
-            async: false,
-        })
-        .done(function () {
-            bool = true
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
-        return bool;
-    }
-
-    function isLoginMember() {
-        if (memberEmail == null) {
-            return false
-        }
-        return true
+        return member == null ? null : member.email
     }
 
     function getComments() {
         return request.getRequest('/api/comment/' + channelNoticeId + '?identity=CHANNEL_NOTICE')
     }
 
-    function showComments() {
+    function showComments(comments) {
 
         let count = comments.count
         let comment = comments.data
@@ -79,14 +51,14 @@ $(function () {
         $('#comment').css('display', 'none')
     }
 
-    function writeComment() {
+    function createComment() {
         comment.memberEmail = getMemberEmail()
         comment.articleId = channelNoticeId
         comment.content = $('#contentOfWritingComment').val()
         comment.identity = 'CHANNEL_NOTICE'
 
         console.log(comment)
-        if (comment.memberEmail !== undefined) {
+        if (comment.memberEmail !== null) {
 
             request.postRequest('/api/comment', comment)
         }
@@ -109,34 +81,29 @@ $(function () {
         return request.getRequest('/api/channel-notice/' + channelNoticeId + '?view=true')
     }
 
-    function showChannelNotice() {
+    function showChannelNotice(channelNoticeResponse) {
         $('#writer').text(channelNoticeResponse.writer)
         $('#title').text(channelNoticeResponse.title)
         $('#dateCreated').text(channelNoticeResponse.dateCreated)
         $('#views').text(channelNoticeResponse.views)
         $('#voteCount').text(channelNoticeResponse.voteCount)
         $('#commentCount').text(channelNoticeResponse.commentCount)
+        $('#allCommentCount').text(channelNoticeResponse.commentCount)
         $('#content').html(channelNoticeResponse.content)
-    }
-
-    function showModifyAndDeleteButton() {
-        if (isLoginMember() && isMyPost()) {
-            $('#modifyButton').css('display', 'inline-block')
-            $('#deleteButton').css('display', 'inline-block')
-        }
     }
 
     function removeComments() {
         $('.comment').remove()
+        $('#contentOfWritingComment').val('')
     }
 
     function setEventHandler() {
         $('#commentingButton').click(function () {
-            writeComment()
+            createComment()
             comments = getComments()
             removeComments()
             $('#commentFrame').append(backupComment)
-            showComments()
+            showComments(comments)
         })
 
         $('#allPostButton').click(function () {
@@ -146,12 +113,12 @@ $(function () {
         $('#nextPostButton').click(function () {
             let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/nextPost');
 
-            if ('status' in result && result.status !== 200) {
-                alert("다음 페이지가 없습니다.")
-            }
-            else {
+            if (result != null) {
                 let nextPostId = result.id
                 $(location).attr('href', '/channel-notice/detail/' + nextPostId + '?channel=' + channelId)
+            }
+            else {
+                alert("다음 페이지가 없습니다.")
             }
         })
 
@@ -159,12 +126,12 @@ $(function () {
 
             let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/prevPost');
 
-            if ('status' in result && result.status !== 200) {
-                alert("이전 페이지가 없습니다.")
-            }
-            else {
+            if (result != null) {
                 let prevPostId = result.id
                 $(location).attr('href', '/channel-notice/detail/' + prevPostId + '?channel=' + channelId)
+            }
+            else {
+                alert("이전 페이지가 없습니다.")
             }
         })
 

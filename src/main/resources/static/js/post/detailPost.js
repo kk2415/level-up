@@ -2,30 +2,27 @@ import httpRequest from "/js/module/httpRequest.js";
 
 $(function () {
     let request = new httpRequest()
+    let backupComment = $('#comment');
+
     let postId = getPostId()
     let channelId = getChannelId()
     let memberEmail = getMemberEmail()
-    let backupComment = $('#comment');
 
-    let post = {}
+    let post = getPost()
+    let comments = getComments()
     let comment = {}
-    let comments = {}
 
     setEventHandler()
-
-    setPost()
-    setPostComments()
-
-    showPost()
     showModifyAndDeleteButton()
 
-    showComments()
+    showPost(post)
+    showComments(comments)
 
 
     function getMemberEmail() {
         let member = request.getRequest('/api/member');
 
-        return member.email
+        return member == null ? null : member.email
     }
 
     function isMyPost() {
@@ -52,11 +49,11 @@ $(function () {
         return true
     }
 
-    function setPostComments() {
-        comments = request.getRequest('/api/comment/' + postId + '?identity=POST')
+    function getComments() {
+        return request.getRequest('/api/comment/' + postId + '?identity=POST')
     }
 
-    function showComments() {
+    function showComments(comments) {
         let count = comments.count
         let comment = comments.data
 
@@ -88,14 +85,14 @@ $(function () {
         $('#comment').css('display', 'none')
     }
 
-    function writeComment() {
+    function createComment() {
         comment.memberEmail = getMemberEmail()
         comment.articleId = postId
         comment.content = $('#contentOfWritingComment').val()
         comment.identity = 'POST'
 
         console.log(comment)
-        if (comment.memberEmail !== undefined) {
+        if (comment.memberEmail !== null) {
             request.postRequest('/api/comment', comment)
         }
         else {
@@ -113,11 +110,11 @@ $(function () {
         return search.substr(search.indexOf('=') + 1)
     }
 
-    function setPost() {
-        post = request.getRequest('/api/post/' + postId + '?view=true')
+    function getPost() {
+        return request.getRequest('/api/post/' + postId + '?view=true')
     }
 
-    function showPost() {
+    function showPost(post) {
         $('#writer').text(post.writer)
         $('#title').text(post.title)
         $('#dateCreated').text(post.dateCreated)
@@ -125,6 +122,7 @@ $(function () {
         $('#voteCount').text(post.voteCount)
         $('#voteCount2').text(post.voteCount)
         $('#commentCount').text(post.commentCount)
+        $('#commentCount2').text(post.commentCount)
         $('#content').html(post.content)
     }
 
@@ -137,15 +135,17 @@ $(function () {
 
     function removeComments() {
         $('.comment').remove()
+        $('#contentOfWritingComment').val('')
     }
 
     function setEventHandler() {
         $('#commentingButton').click(function () {
-            writeComment()
-            setPostComments()
+            createComment()
+            comments = getComments()
+
             removeComments()
             $('#commentFrame').append(backupComment)
-            showComments()
+            showComments(comments)
         })
 
         $('#allPostButton').click(function () {
@@ -156,24 +156,24 @@ $(function () {
 
             let result = request.getRequest('/api/post/' + postId + '/prevPost');
 
-            if ('status' in result && result.status !== 200) {
-                alert("이전 페이지가 없습니다.")
-            }
-            else {
+            if (result != null) {
                 let prevPostId = result.id
                 $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
+            }
+            else {
+                alert("이전 페이지가 없습니다.")
             }
         })
 
         $('#nextPostButton').click(function () {
             let result = request.getRequest('/api/post/' + postId + '/nextPost');
 
-            if ('status' in result && result.status !== 200) {
-                alert("다음 페이지가 없습니다.")
-            }
-            else {
+            if (result != null) {
                 let nextPostId = result.id
                 $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
+            }
+            else {
+                alert("다음 페이지가 없습니다.")
             }
         })
 

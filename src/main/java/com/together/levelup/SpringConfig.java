@@ -1,5 +1,6 @@
 package com.together.levelup;
 
+import com.together.levelup.intercepter.LoginCheckIntercepter;
 import com.together.levelup.repository.comment.CommentRepository;
 import com.together.levelup.repository.comment.JpaCommentRepository;
 import com.together.levelup.repository.member.JpaMemberRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -44,4 +46,13 @@ public class SpringConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:///C:/Task/study/levelup/images/");
     }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginCheckIntercepter())
+                .order(1)
+                .addPathPatterns("/member/logout", "/member/myPage",
+                        "/post/edit/{postId}", "/post/create");
+    }
+
 }

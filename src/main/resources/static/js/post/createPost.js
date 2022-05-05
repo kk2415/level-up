@@ -4,7 +4,7 @@ $(function () {
     let request = new httpRequest()
     let post = {}
     let channelId = getChannelId();
-    let alert = $('#alert');
+    let alertMessageBox = $('#alert');
 
     console.log(channelId)
 
@@ -14,12 +14,12 @@ $(function () {
 
     function setEventHandler() {
         $('#postingButton').click(function () {
-            alert.children('p').remove()
+            alertMessageBox.children('p').remove()
             let category = $('#category').val();
 
             if (category === 'NONE') {
-                alert.css('display', 'block')
-                alert.append('<p>카테고리를 입력해주세요</p>')
+                alertMessageBox.css('display', 'block')
+                alertMessageBox.append('<p>카테고리를 입력해주세요</p>')
             }
             else {
                 setPost()
@@ -64,9 +64,13 @@ $(function () {
     }
 
     function uploadPost(data) {
-        request.postRequest('/api/post', data, () => {
+        let result = request.postRequest('/api/post', data, () => {
             $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
         })
+
+        if (result == null) {
+            alert('가입된 회원만 글을 작성할 수 있습니다.')
+        }
     }
 
     function getChannelId() {
@@ -75,7 +79,7 @@ $(function () {
     }
 
     function hideAlertMessageBox() {
-        alert.css('display', 'none')
+        alertMessageBox.css('display', 'none')
     }
 
     function uploadFile(file, editor) {

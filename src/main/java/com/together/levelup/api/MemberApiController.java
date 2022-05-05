@@ -147,15 +147,11 @@ public class MemberApiController {
     @GetMapping("/member")
     public MemberResponse confirmLogin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) {
+        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
             throw new MemberNotFoundException("해당하는 회원이 없습니다.");
         }
 
         Member member = (Member)session.getAttribute(SessionName.SESSION_NAME);
-        if (member == null) {
-            throw new MemberNotFoundException("해당하는 회원이 없습니다.");
-        }
-
         return new MemberResponse(member.getEmail(), member.getName(),
                 member.getGender(), member.getBirthday(), member.getPhone(), member.getUploadFile());
     }

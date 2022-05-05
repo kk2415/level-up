@@ -16,7 +16,7 @@ export default class httpRequest {
         })
         .fail(function (error) {
             console.log(error)
-            result = error
+            result = null
         })
         return result
     }
@@ -40,7 +40,7 @@ export default class httpRequest {
         })
         .fail(function (error) {
             console.log(error)
-            result = error
+            result = null
         })
         return result
     }
@@ -64,7 +64,7 @@ export default class httpRequest {
             })
             .fail(function (error) {
                 console.log(error)
-                result = error
+                result = null
             })
         return result
     }
@@ -90,7 +90,7 @@ export default class httpRequest {
         })
         .fail(function (error) {
             console.log(error)
-            result = error
+            result = null
         })
 
         return result
@@ -117,7 +117,7 @@ export default class httpRequest {
         })
         .fail(function (error) {
             console.log(error)
-            result = error
+            result = null
         })
 
         return result
@@ -142,7 +142,7 @@ export default class httpRequest {
             })
             .fail(function (error) {
                 console.log(error)
-                result = error
+                result = null
             })
         return result
     }

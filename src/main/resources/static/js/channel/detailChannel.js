@@ -13,44 +13,42 @@ $(function () {
     let backUpChannelNotice = $('#channelNotice');
 
     let channelId = getChannelId()
+    let channelName = getChannelName(channelId)
     let currentPage = getCurrentPage()
-    let channelPosts = {}
-    let postSearch = {}
+    let postSearch = getPostSearch()
+    let allPostsCount = getPostsCount(postSearch)
+
+    let lastPagerNum = getLastPagerNum()
+    let channelPosts = getChannelPosts(channelId, currentPage, postSearch)
+
     let allNoticeCount = 0
     let curNoticePage = 1
-    let channelName = ''
 
-    setPostSearch()
-    let allPostsCount = getPostsCount()
+    console.log(channelPosts)
 
-    setChannelName()
     $('#channelName').text(channelName)
     $('#currentPage').text(currentPage)
-    let lastNum = Math.floor(allPostsCount / postNumOnScreen) + 1
-    $('#lastPage').text(lastNum)
+    $('#lastPage').text(lastPagerNum)
 
     setEventHandler()
     setNoticeEventHandler()
-    setChannelPosts(channelId, currentPage, postSearch)
 
     showChannelNotice(1)
-    showPosts()
-    setPager()
+    showPosts(channelPosts)
+    showPager(lastPagerNum, postSearch)
 
-    function getPostsCount() {
-        let postsCount
-
+    function getPostsCount(postSearch) {
+        let postsCount = 0
         let url = '/api/' + channelId + '/search/posts-size?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
         if (postSearch.field === "") {
             url = '/api/' + channelId + '/search/posts-size'
         }
 
-        postsCount = request.getRequest(url)
-        return postsCount
+        return request.getRequest(url)
     }
 
-    function setChannelPosts(channelId, page, postSearch) {
+    function getChannelPosts(channelId, page, postSearch) {
         let url = '/api/' + channelId + '/posts/' + page + '?' +
             'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
@@ -58,10 +56,10 @@ $(function () {
             url = '/api/' + channelId + '/posts/' + page
         }
 
-        channelPosts = request.getRequest(url)
+        return request.getRequest(url)
     }
 
-    function showPosts() {
+    function showPosts(channelPosts) {
         let posts = channelPosts.data
         let count = channelPosts.count
         let post = $('#post');
@@ -112,24 +110,17 @@ $(function () {
         }
     }
 
-    function setChannelName() {
+    function getChannelName(channelId) {
         let result = request.getRequest('/api/channel/' + channelId);
 
-        channelName = result.name
+        return result.name
     }
 
-    function setPager() {
+    function showPager(lastPagerNum, postSearch) {
         let page = $('#page');
-        let endPageNum = Math.floor(allPostsCount / postNumOnScreen) + 1
-
         let startNum = currentPage - (currentPage - 1) % pagerLength
 
-        // let loopCount = pagerLength
-        // if ((endPageNum - currentPage) < pagerLength) {
-        //     loopCount = endPageNum - currentPage
-        // }
-
-        for (let idx = 0; idx < endPageNum; idx++) {
+        for (let idx = 0; idx < lastPagerNum; idx++) {
             let clonePage = page.clone()
             let url = '/channel/detail/' + channelId + '?page=' + (idx + startNum) + '&field='
                 + postSearch.field + '&' + 'query=' + postSearch.querys
@@ -141,12 +132,12 @@ $(function () {
             clonePage.id = 'page' + (Number(startNum) + 1)
             clonePage.children('a').text(idx + startNum)
             clonePage.children('a').click(function () {
-                setChannelPosts(channelId, idx + startNum, postSearch)
+                channelPosts = getChannelPosts(channelId, idx + startNum, postSearch)
 
                 removePosts()
                 $('#postTableBody').append(backUpPost)
 
-                showPosts()
+                showPosts(channelPosts)
                 $('#currentPage').text(idx + startNum)
             })
 
@@ -166,7 +157,7 @@ $(function () {
 
     function getChannelId() {
         let pathname = $(location).attr('pathname')
-        return pathname.charAt(pathname.lastIndexOf('/') + 1)
+        return pathname.substr(pathname.lastIndexOf('/') + 1)
     }
 
     function getCurrentPage() {
@@ -178,8 +169,9 @@ $(function () {
         return queryString.substr(queryString.indexOf('=') + 1)
     }
 
-    function setPostSearch() {
+    function getPostSearch() {
         let queryString = decodeURI($(location).attr('search'))
+        let postSearch = {}
 
         if (!queryString.includes("field", 0) || !queryString.includes("query", 0)) {
             postSearch.field = ""
@@ -199,11 +191,20 @@ $(function () {
             let firstIndex = queryStringOfPostSearch.indexOf("=") + 1
             postSearch.querys = queryStringOfPostSearch.substr(firstIndex)
         }
+
+        return postSearch
     }
 
     function setEventHandler() {
         $('#postingButton').click(function () {
-            $(location).attr('href', '/post/create?channel=' + channelId)
+            let result = request.getRequest('/post/create?channel=' + channelId);
+
+            if (result != null) {
+                $(location).attr('href', '/post/create?channel=' + channelId)
+            }
+            else {
+                alert('가입된 회원만 글을 작성할 수 있습니다.')
+            }
         })
 
         $('#backButton').click(function () {
@@ -320,6 +321,10 @@ $(function () {
                 showChannelNotice(curNoticePage)
             }
         })
+    }
+
+    function getLastPagerNum() {
+        return Math.floor(allPostsCount / postNumOnScreen) + 1;
     }
 
 })
