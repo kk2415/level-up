@@ -10,11 +10,12 @@ public interface NoticeRepository {
 
     public void save(Notice notice);
     public Notice findById(Long id);
-    public List<Notice> findAll(int page, PostSearch postSearch);
+    public List<Notice> findAll(Long page, PostSearch postSearch);
     public List<Notice> findByMemberId(Long memberId);
     public List<Notice> findAll();
     public Notice findNextPage(Long id);
     public Notice findPrevPage(Long id);
+    public Long count(Long page, PostSearch postSearch);
     public void delete(Long id);
 
 }

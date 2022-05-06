@@ -10,7 +10,6 @@ import com.together.levelup.dto.channel.*;
 import com.together.levelup.exception.ImageNotFoundException;
 import com.together.levelup.service.ChannelService;
 import com.together.levelup.service.FileService;
-import com.together.levelup.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 public class ChannelApiController {
 
     private final ChannelService channelService;
-    private final MemberService memberService;
     private final FileService fileService;
     private final FileStore fileStore;
 
@@ -167,7 +165,7 @@ public class ChannelApiController {
 
 
     /**
-     * 생성
+     * 삭제
      * */
     @DeleteMapping("/channel/{channelId}")
     public ResponseEntity deleteChannel(@PathVariable Long channelId) {

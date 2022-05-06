@@ -29,7 +29,7 @@ $(function () {
     function getMemberEmail() {
         let member = request.getRequest('/api/member');
 
-        return member.email
+        return member == null ? null : member.email
     }
 
     function isLoginMember() {

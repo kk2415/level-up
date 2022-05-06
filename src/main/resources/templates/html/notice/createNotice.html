@@ -1,13 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html><!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
@@ -47,58 +38,43 @@
 
 <!-- Contact Section-->
 <section class="page-section" id="contact">
-        <div class="container" style="width: 50%">
-            <div class="row row-cols-1">
-                <div class="col border-bottom">
-                    <p id="manager" class="h6">매니저</p>
-                    <h1 id="name" class="display-3">스터디 이름</h1>
-                    <br>
-                    <p class="h6">
-                        <span>등록일
-                            &nbsp;
-                            <span id="dateCreated">2022.04.25</span>
-                        </span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                        <span>인원
-                            &nbsp;
-                            <span id="memberCount">0</span>
-                        </span>
-                        &nbsp;&nbsp;&nbsp;
-
-                        <span> /
-                            &nbsp;
-                            <span id="limitedMemberNumber">20</span>
-                        </span>
-                    </p>
-                </div>
-                <div class="col">
-                    <br><br>
-                    <h1 class="display-6">
-                        <p id="description">스터디 설명</p>
-                    </h1>
-                    <br><br><br><br>
-                </div>
-                <div class="d-grid gap-2 d-md-block float-end">
-                    <button class="btn btn-primary btn-lg" type="button" id="modifyButton" style="display: none">수정</button>
-                    <button class="btn btn-primary btn-lg" type="button" id="deleteButton" style="display: none">삭제</button>
-                </div>
-            </div>
-
-            <br><br>
-            <button class="btn btn-primary btn-lg form-control" type="button" id="registerStudyButton">스터디 신청하기</button>
-            <hr>
-
-
-            <br><br>
-
-
-            <div>
-                <button class="btn btn-primary btn-lg float-start" type="button" id="toAllStudyChannelButton">목록으로</button>
-                <button class="btn btn-primary btn-lg float-end" type="button" id="enterStudyButton">스터디 접속</button>
-            </div>
-
+    <div class="container-sm">
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">새 글 쓰기</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
         </div>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="title" placeholder="제목을 작성해주세요">
+        </div>
+
+        <br><br>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea id="content"></textarea>
+        </div>
+
+        <div class="alert alert-danger" id="alert" role="alert">
+            <h4 class="alert-heading"></h4>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="button" id="postingButton">작성</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg" type="button" id="cancelButton">취소</button>
+            </div>
+        </div>
+
+    </div>
 </section>
 
 <!-- Footer-->
@@ -110,7 +86,7 @@
     <div class="container"><small>Copyright &copy; Your Website 2022</small></div>
 </div>
 
-<script type="module" src="/js/channel/detailChannelDescription.js"></script>
+<script type="module" src="/js/notice/createNotice.js"></script>
 
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

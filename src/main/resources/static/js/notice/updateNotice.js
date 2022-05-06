@@ -2,37 +2,33 @@ import httpRequest from "/js/module/httpRequest.js";
 
 $(function () {
     let request = new httpRequest()
-    let post = {}
-    let channelId = getChannelId();
-    let alertMessageBox = $('#alert');
 
-    console.log(channelId)
+    let noticeId = getNoticeId()
+    let noticeResponse = getNotice()
+    let requestNotice = {}
+
+    hideAlertMessageBox()
+    setEventHandler()
 
     configSummernote()
-    hideAlertMessageBox();
-    setEventHandler();
+    showNotice(noticeResponse)
+
+
+    function getNotice() {
+        return request.getRequest('/api/notice/' + noticeId + '?view=false')
+    }
 
     function setEventHandler() {
-        $('#postingButton').click(function () {
-            alertMessageBox.children('p').remove()
-            let category = $('#category').val();
+        $('#updateButton').click(function () {
+            requestNotice.title = $('#title').val()
+            requestNotice.content = $('#content').val()
+            requestNotice.uploadFiles = getUploadFiles(requestNotice.content)
 
-            if (category === 'NONE') {
-                alertMessageBox.css('display', 'block')
-                alertMessageBox.append('<p>카테고리를 입력해주세요</p>')
-            }
-            else {
-                setPost()
-                post.uploadFiles = getUploadFiles(post.content)
-                post.category = category
-
-                console.log(post)
-                uploadPost(post)
-            }
+            updateNotice(requestNotice)
         })
 
         $('#cancelButton').click(function () {
-            window.history.back()
+            $(location).attr('href', '/notice?page=1')
         })
     }
 
@@ -57,36 +53,32 @@ $(function () {
         return uploadFiles;
     }
 
-    function setPost() {
-        post.title = $('#title').val()
-        post.content = $('#content').val()
-        post.channelId = channelId
-    }
-
-    function uploadPost(data) {
-        let result = request.postRequest('/api/post', data, () => {
-            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-        })
-
-        if (result == null) {
-            alert('가입된 회원만 글을 작성할 수 있습니다.')
-        }
-    }
-
-    function getChannelId() {
-        let search = decodeURI($(location).attr('search'))
-        return search.substr(search.indexOf('=') + 1)
-    }
-
     function hideAlertMessageBox() {
-        alertMessageBox.css('display', 'none')
+        $('#alert').css('display', 'none')
+    }
+
+    function showNotice(noticeResponse) {
+        $('#title').val(noticeResponse.title)
+        $('#content').html(noticeResponse.content)
+    }
+
+    function getNoticeId() {
+        let pathname = decodeURI($(location).attr('pathname'))
+
+        return pathname.substr(pathname.lastIndexOf('/') + 1)
+    }
+
+    function updateNotice(noticeRequest) {
+        request.patchRequest('/api/notice/' + noticeId, noticeRequest, () => {
+            $(location).attr('href', '/notice?page=1')
+        })
     }
 
     function uploadFile(file, editor) {
         let form = new FormData()
         form.append("file", file)
 
-        request.postMultipartRequest('/api/post/files', form, (data) => {
+        request.postMultipartRequest('/api/notice/file', form, (data) => {
             $(editor).summernote('insertImage', data)
         })
     }
@@ -117,4 +109,5 @@ $(function () {
             })
         })
     }
+
 })

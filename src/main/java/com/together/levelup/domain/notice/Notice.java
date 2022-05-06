@@ -34,15 +34,16 @@ public class Notice {
     @Column(name = "views")
     private Long views;
 
-    @OneToMany(mappedBy = "notice")
-    private List<Comment> comments = new ArrayList<>();
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "notice")
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
     private List<File> files = new ArrayList<>();
+
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class CreateCommentRequest {
 
-    @NotNull
     private String memberEmail;
 
     @NotNull

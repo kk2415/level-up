@@ -4,7 +4,6 @@ import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.dto.post.PostSearch;
-import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +30,7 @@ class JpaNoticeRepositoryTest {
     private Notice notic1;
     private Notice notic2;
     private Notice notic3;
+    private Notice notic4;
 
     @BeforeEach
     public void before() {
@@ -45,7 +45,8 @@ class JpaNoticeRepositoryTest {
 
         notic1 = Notice.createNotice(member1, "첫 공지사항 입니다.", member1.getName(), "주목해주세요");
         notic2 = Notice.createNotice(member1, "두번째 공지사항 입니다.", member1.getName(), "주목해주세요");
-        notic3 = Notice.createNotice(member2, "세번째 공지사항 입니다.", member1.getName(), "주목해주세요");
+        notic3 = Notice.createNotice(member2, "세번째 공지사항 입니다.", member2.getName(), "주목해주세요");
+        notic4 = Notice.createNotice(member2, "사이트 폐쇠됨", member2.getName(), "주목해주세요");
     }
 
     @Test
@@ -77,10 +78,33 @@ class JpaNoticeRepositoryTest {
         noticeRepository.save(notic1);
         noticeRepository.save(notic2);
         noticeRepository.save(notic3);
+        noticeRepository.save(notic4);
 
-        List<Notice> findNotice = noticeRepository.findAll(1, new PostSearch("title", "두번째"));
-        Assertions.assertThat(findNotice.size()).isEqualTo(1);
-        Assertions.assertThat(findNotice.get(0).getTitle()).isEqualTo("두번째 공지사항 입니다.");
+        List<Notice> findNotice1 = noticeRepository.findAll(1L, new PostSearch("title", "두번째"));
+        Assertions.assertThat(findNotice1.size()).isEqualTo(1);
+        Assertions.assertThat(findNotice1.get(0).getTitle()).isEqualTo("두번째 공지사항 입니다.");
+
+        List<Notice> findNotice2 = noticeRepository.findAll(null, new PostSearch("title", "공지사항"));
+        Assertions.assertThat(findNotice2.size()).isEqualTo(3);
+
+        List<Notice> findNotice3 = noticeRepository.findAll(null, new PostSearch(null, null));
+        Assertions.assertThat(findNotice3.size()).isEqualTo(4);
+    }
+
+    @Test
+    public void 공지사항_개수_테스트() throws InterruptedException {
+        noticeRepository.save(notic1);
+        noticeRepository.save(notic2);
+        noticeRepository.save(notic3);
+        noticeRepository.save(notic4);
+
+        Long count1 = noticeRepository.count(1L, new PostSearch("title", "두번째"));
+        Long count2 = noticeRepository.count(null, new PostSearch("title", "공지사항"));
+        Long count3 = noticeRepository.count(null, new PostSearch(null, null));
+
+        Assertions.assertThat(count1).isEqualTo(1);
+        Assertions.assertThat(count2).isEqualTo(3);
+        Assertions.assertThat(count3).isEqualTo(4);
     }
 
     @Test

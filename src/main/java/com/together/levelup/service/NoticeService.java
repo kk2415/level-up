@@ -1,5 +1,6 @@
 package com.together.levelup.service;
 
+import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.dto.post.PostSearch;
 import com.together.levelup.repository.notice.NoticeRepository;
@@ -15,15 +16,19 @@ import java.util.List;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final MemberService memberService;
 
     /**
      * 생성
      * */
     @Transactional
-    public Long create(Long id) {
-        Notice findNotice = noticeRepository.findById(id);
-        noticeRepository.save(findNotice);
-        return findNotice.getId();
+    public Long create(Long memberId, String title, String writer ,String content) {
+        Member findMember = memberService.findOne(memberId);
+
+        Notice notice = Notice.createNotice(findMember, title, writer, content);
+        noticeRepository.save(notice);
+
+        return notice.getId();
     }
 
 
@@ -38,8 +43,15 @@ public class NoticeService {
         return noticeRepository.findAll();
     }
 
-    public List<Notice> findAll(int page, PostSearch postSearch) {
+    public List<Notice> findAll(Long page, PostSearch postSearch) {
+        if (page == null && postSearch.getField() == null && postSearch.getQuery() == null) {
+            return noticeRepository.findAll();
+        }
         return noticeRepository.findAll(page, postSearch);
+    }
+
+    public Long count(Long page, PostSearch postSearch) {
+        return noticeRepository.count(page, postSearch);
     }
 
     public List<Notice> findByMemberId(Long memberId) {
@@ -59,9 +71,14 @@ public class NoticeService {
      * 수정
      * */
     @Transactional
-    public void upadte(Long id, String title, String content) {
+    public void update(Long id, String title, String content) {
         Notice findNotice = noticeRepository.findById(id);
         findNotice.change(title, content);
+    }
+
+    @Transactional
+    public void addViews(Notice findNotice) {
+        findNotice.addViews();
     }
 
 

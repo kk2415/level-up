@@ -1,84 +1,73 @@
 import httpRequest from "/js/module/httpRequest.js";
-import ChannelNotice from "/js/module/channelNotice.js";
 
 $(function () {
     let request = new httpRequest()
-    let channelNotice = new ChannelNotice()
 
     const pagerLength = 5
     const postNumOnScreen = 10
     const noticeNumOnScreen = 5
 
-    let backUpPost = $('#post');
-    let backUpChannelNotice = $('#channelNotice');
+    let backUpNotice = $('#notice');
 
-    let channelId = getChannelId()
-    let channelName = getChannelName(channelId)
     let currentPage = getCurrentPage()
     let postSearch = getPostSearch()
-    let allPostsCount = getPostsCount(postSearch)
+    let allNoticeCount = getAllNoticeCount(postSearch)
+    let lastPagerNum = getLastPagerNum(allNoticeCount)
+    let noticeResponse = getNotices(currentPage, postSearch)
 
-    let lastPagerNum = getLastPagerNum()
-    let channelPosts = getChannelPosts(channelId, currentPage, postSearch)
-
-    let allNoticeCount = 0
     let curNoticePage = 1
 
-    console.log(channelPosts)
-
-    $('#channelName').text(channelName)
     $('#currentPage').text(currentPage)
     $('#lastPage').text(lastPagerNum)
 
     setEventHandler()
-    setNoticeEventHandler()
 
-    showChannelNotice(1)
-    showPosts(channelPosts)
+    showNotices(noticeResponse)
     showPager(lastPagerNum, postSearch)
 
-    function getPostsCount(postSearch) {
-        let postsCount = 0
-        let url = '/api/' + channelId + '/search/posts-size?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
+    function getAllNoticeCount(postSearch) {
+        let url = '/api/notices/count?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
         if (postSearch.field === "") {
-            url = '/api/' + channelId + '/search/posts-size'
+            url = '/api/notices/count'
         }
 
-        return request.getRequest(url)
+        let result = request.getRequest(url);
+
+        return result == null ? null : result.data
     }
 
-    function getChannelPosts(channelId, page, postSearch) {
-        let url = '/api/' + channelId + '/posts/' + page + '?' +
+    function getNotices(page, postSearch) {
+        let url = '/api/notices?page=' + page + '&' +
             'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
         if (postSearch.field === "") {
-            url = '/api/' + channelId + '/posts/' + page
+            url = '/api/notices?page=' + page
         }
 
         return request.getRequest(url)
     }
 
-    function showPosts(channelPosts) {
-        let posts = channelPosts.data
-        let count = channelPosts.count
-        let post = $('#post');
+    function showNotices(noticeResponse) {
+        let notices = noticeResponse.data
+        let count = noticeResponse.count
+        let notice = $('#notice');
 
         for (let idx = 0; idx < count; idx++) {
-            let clonePost = post.clone()
+            let clonePost = notice.clone()
 
             if (idx === 0) {
-                clonePost = post
+                clonePost = notice
             }
 
             clonePost.id = idx
-            clonePost.children('td').eq(0).text(posts[idx].writer)
-            clonePost.children('td').eq(1).children('a').text(posts[idx].title + ' [' + posts[idx].commentCount + ']')
-            clonePost.children('td').eq(1).children('a').attr('href', '/post/detail/' + posts[idx].id + '?channel=' + channelId)
-            clonePost.children('td').eq(2).text(posts[idx].views)
-            clonePost.children('td').eq(3).text(posts[idx].voteCount)
-            clonePost.children('td').eq(4).text(posts[idx].dateCreated)
-            $('#postTableBody').append(clonePost)
+            clonePost.children('td').eq(0).text(notices[idx].writer)
+            clonePost.children('td').eq(1).children('a').text(notices[idx].title + ' [' + notices[idx].commentCount + ']')
+            clonePost.children('td').eq(1).children('a').attr('href', '/notice/' + notices[idx].id)
+            clonePost.children('td').eq(2).text(notices[idx].views)
+            clonePost.children('td').eq(3).text(notices[idx].voteCount)
+            clonePost.children('td').eq(4).text(notices[idx].dateCreated)
+            $('#noticeTableBody').append(clonePost)
         }
     }
 
@@ -110,34 +99,22 @@ $(function () {
         }
     }
 
-    function getChannelName(channelId) {
-        let result = request.getRequest('/api/channel/' + channelId);
-
-        return result.name
-    }
-
     function showPager(lastPagerNum, postSearch) {
         let page = $('#page');
         let startNum = currentPage - (currentPage - 1) % pagerLength
 
         for (let idx = 0; idx < lastPagerNum; idx++) {
             let clonePage = page.clone()
-            let url = '/channel/detail/' + channelId + '?page=' + (idx + startNum) + '&field='
-                + postSearch.field + '&' + 'query=' + postSearch.querys
-
-            if (postSearch.field == "" || postSearch.querys == "") {
-                url = '/channel/detail/' + channelId + '?page=' + (idx + startNum)
-            }
 
             clonePage.id = 'page' + (Number(startNum) + 1)
             clonePage.children('a').text(idx + startNum)
             clonePage.children('a').click(function () {
-                channelPosts = getChannelPosts(channelId, idx + startNum, postSearch)
+                noticeResponse = getNotices(idx + startNum, postSearch)
 
                 removePosts()
-                $('#postTableBody').append(backUpPost)
+                $('#noticeTableBody').append(backUpNotice)
 
-                showPosts(channelPosts)
+                showNotices(noticeResponse)
                 $('#currentPage').text(idx + startNum)
             })
 
@@ -148,16 +125,7 @@ $(function () {
     }
 
     function removePosts() {
-        $('#postTableBody').children('tr').remove()
-    }
-
-    function removeChannelNotice() {
-        $('#channelNoticeTableBody').children('tr').remove()
-    }
-
-    function getChannelId() {
-        let pathname = $(location).attr('pathname')
-        return pathname.substr(pathname.lastIndexOf('/') + 1)
+        $('#noticeTableBody').children('tr').remove()
     }
 
     function getCurrentPage() {
@@ -197,10 +165,10 @@ $(function () {
 
     function setEventHandler() {
         $('#postingButton').click(function () {
-            let result = request.getRequest('/post/create?channel=' + channelId);
+            let result = request.getRequest('/notice/create');
 
             if (result != null) {
-                $(location).attr('href', '/post/create?channel=' + channelId)
+                $(location).attr('href', '/notice/create')
             }
             else {
                 alert('가입된 회원만 글을 작성할 수 있습니다.')
@@ -213,15 +181,15 @@ $(function () {
 
         $('#next').click(function () {
             let startNum = currentPage - (currentPage - 1) % pagerLength
-            let lastNum = Math.floor(allPostsCount / postNumOnScreen) + 1
+            let lastNum = Math.floor(allNoticeCount / postNumOnScreen) + 1
             let nextPage = startNum + pagerLength
 
 
-            let url = '/channel/detail/' + channelId + '?page=' + nextPage + '&field='
+            let url = '/notice?page=' + nextPage + '&field='
                 + postSearch.field + '&' + 'query=' + postSearch.querys
 
             if (postSearch.field == "" || postSearch.querys == "") {
-                url = '/channel/detail/' + channelId + '?page=' + nextPage
+                url = '/notice?page=' + nextPage
             }
 
             if (nextPage < lastNum) {
@@ -236,12 +204,13 @@ $(function () {
             let startNum = currentPage - (currentPage - 1) % pagerLength
             let previousPage = startNum - pagerLength
 
-            let url = '/channel/detail/' + channelId + '?page=' + previousPage + '&field='
+            let url = '/notice?page=' + previousPage + '&field='
                 + postSearch.field + '&' + 'query=' + postSearch.querys
 
             if (postSearch.field == "" || postSearch.querys == "") {
-                url = '/channel/detail/' + channelId + '?page=' + previousPage
+                url = '/notice?page=' + previousPage
             }
+
 
             if (previousPage > 0) {
                 $('#previous').attr('href', url)
@@ -260,11 +229,11 @@ $(function () {
                 postSearch.field = $('#navbarDropdown').val()
                 postSearch.querys = $('#search').val()
 
-                let url = '/channel/detail/' + channelId + '?page=' + 1 + '&' +
-                    'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
+                let url = '/notice?page=' + 1 + '&field='
+                    + postSearch.field + '&' + 'query=' + postSearch.querys
 
-                if (postSearch.field === "" || postSearch.querys === "") {
-                    url = '/channel/detail/' + channelId + '?page=' + 1
+                if (postSearch.field == "" || postSearch.querys == "") {
+                    url = '/notice?page=' + 1
                 }
 
                 $(location).attr('href', url)
@@ -275,56 +244,20 @@ $(function () {
             postSearch.field = $('#navbarDropdown').val()
             postSearch.querys = $('#search').val()
 
-            let url = '/channel/detail/' + channelId + '?page=' + 1 + '&' +
-                'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
+            let url = '/notice?page=' + 1 + '&field='
+                + postSearch.field + '&' + 'query=' + postSearch.querys
 
-            if (postSearch.field === "" || postSearch.querys === "") {
-                url = '/channel/detail/' + channelId + '?page=' + 1
+            if (postSearch.field == "" || postSearch.querys == "") {
+                url = '/notice?page=' + 1
             }
 
             $(location).attr('href', url)
         })
     }
 
-    function setNoticeEventHandler() {
-        $('#createNotice').click(function () {
-            $(location).attr('href', '/channel-notice/create?channel=' + channelId)
-        })
 
-        $('#nextNoticeList').click(function () {
-            if (curNoticePage - 1 <= 0) {
-                alert("이전 페이지가 없습니다.")
-            }
-            else {
-                removeChannelNotice()
-                $('#channelNoticeTable').append(backUpChannelNotice)
-
-                curNoticePage -= 1
-                console.log(curNoticePage)
-                showChannelNotice(curNoticePage)
-            }
-        })
-
-        $('#prevNoticeList').click(function () {
-            let lastNum = Math.floor(allNoticeCount / noticeNumOnScreen) + 1
-            console.log(allNoticeCount)
-
-            if (curNoticePage + 1 > lastNum) {
-                alert("다음 페이지가 없습니다.")
-            }
-            else {
-                removeChannelNotice()
-                $('#channelNoticeTable').append(backUpChannelNotice)
-
-                curNoticePage += 1
-                console.log(curNoticePage)
-                showChannelNotice(curNoticePage)
-            }
-        })
-    }
-
-    function getLastPagerNum() {
-        return Math.floor(allPostsCount / postNumOnScreen) + 1;
+    function getLastPagerNum(allNoticeCount) {
+        return Math.floor(allNoticeCount / postNumOnScreen) + 1;
     }
 
 })

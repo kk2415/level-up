@@ -8,6 +8,7 @@ import com.together.levelup.domain.post.Post;
 import com.together.levelup.dto.*;
 import com.together.levelup.dto.post.*;
 import com.together.levelup.exception.MemberNotFoundException;
+import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.exception.PostNotFoundException;
 import com.together.levelup.service.FileService;
 import com.together.levelup.service.MemberService;
@@ -44,11 +45,11 @@ public class PostApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
-
-        if (member == null) {
-            throw new MemberNotFoundException("가입된 회원만 글을 작성할 수 있습니다");
+        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
+            throw new NotLoggedInException("가입된 회원만 글을 작성할 수 있습니다");
         }
+
+        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
 
         Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
@@ -202,26 +203,6 @@ public class PostApiController {
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }
 
-//    @GetMapping("/post/{postId}/vote-count")
-//    @Transactional
-//    public ResponseEntity addVoteCount(@PathVariable Long postId,
-//                                       HttpServletRequest request) {
-//        HttpSession session = request.getSession(false);
-//
-//        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
-//            throw new MemberNotFoundException("가입된 회원만 추천 기능을 사용할 수 있습니다.");
-//        }
-//        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
-//
-//        Post findPost = postService.findById(postId);
-//
-//        if (false) {
-//            throw new IllegalArgumentException("이미 추천한 회원입니다.");
-//        }
-//
-//        postService.addVoteCount(findPost);
-//        return new ResponseEntity(new Result("추천수가 1 증가하였습니다.", 0), HttpStatus.OK);
-//    }
 
     /**
      * 삭제

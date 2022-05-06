@@ -36,14 +36,4 @@ public class ChannelDescriptionFileTest {
         em.persist(channel);
     }
 
-    @Test
-    @Commit
-    public void 생성_테스트() {
-        UploadFile uploadFile = new UploadFile("channelImage", FileStore.CHANNEL_DEFAULT_THUMBNAIL_IMAGE);
-
-        ChannelDescriptionFile channelDescriptionFile = ChannelDescriptionFile.createChannelDescriptionFile(uploadFile);
-
-        channel.addDescriptionFile(channelDescriptionFile);
-        Assertions.assertThat(channel.getChannelDescriptionFiles().get(0).getChannel()).isEqualTo(channel);
-    }
 }

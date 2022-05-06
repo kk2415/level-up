@@ -70,13 +70,13 @@ $(function () {
     function loadMemberInfo() {
         let result = request.getRequest('/api/member');
 
-        if ('status' in result && result.status !== 200) {
-            console.log('회원 로드 실패')
-            console.log(result)
-        }
-        else {
+        if (result != null) {
             channel.memberEmail = result.email;
             channel.managerName = result.name;
+        }
+        else {
+            console.log('회원 로드 실패')
+            console.log(result)
         }
     }
 

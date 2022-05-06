@@ -34,14 +34,14 @@ public class ChannelNotice {
     @Column(name = "views")
     private Long views;
 
-    @OneToMany(mappedBy = "channelNotice")
+    @OneToMany(mappedBy = "channelNotice", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    @OneToMany(mappedBy = "channelNotice")
+    @OneToMany(mappedBy = "channelNotice", cascade = CascadeType.REMOVE)
     private List<File> files = new ArrayList<>();
 
     //==연관관계 메서드==//

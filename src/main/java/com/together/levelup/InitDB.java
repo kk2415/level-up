@@ -4,10 +4,12 @@ import com.together.levelup.domain.file.FileStore;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
+import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.notice.ChannelNotice;
+import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.post.PostCategory;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class InitDB {
         private final EntityManager em;
 
         public void initDb() throws InterruptedException {
-            Member manager1 = Member.createMember("test0@naver.com", "000000", "테스트네임0",
+            Member manager1 = Member.createMember(Authority.ADMIN, "test0@naver.com", "000000", "테스트네임0",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
             Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
@@ -115,6 +117,7 @@ public class InitDB {
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개7", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개8", "방갑습니다", PostCategory.INTRODUCE));
             em.persist(Post.createPost(member1, channel1, "꿀팁대공개9", "방갑습니다", PostCategory.INTRODUCE));
+            em.persist(Post.createPost(member1, channel1, "꿀팁대공개10", "방갑습니다", PostCategory.INTRODUCE));
 
 
             ChannelNotice channelNotice1 = ChannelNotice.createChannelNotice(channel1, "11", channel1.getManagerName(), "11");
@@ -135,6 +138,16 @@ public class InitDB {
             em.persist(channelNotice4);
             em.persist(channelNotice5);
             em.persist(channelNotice6);
+
+            Notice notice1 = Notice.createNotice(member1, "공지사항 1", member1.getName(), "공지시항 1입니다.");
+            Notice notice2 = Notice.createNotice(member1, "공지사항 2", member1.getName(), "공지시항 2입니다.");
+            Notice notice3 = Notice.createNotice(member1, "공지사항 3", member1.getName(), "공지시항 3입니다.");
+            Notice notice4 = Notice.createNotice(member1, "공지사항 4", member1.getName(), "공지시항 4입니다.");
+
+            em.persist(notice1);
+            em.persist(notice2);
+            em.persist(notice3);
+            em.persist(notice4);
         }
     }
 }

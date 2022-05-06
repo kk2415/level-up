@@ -2,11 +2,8 @@ import httpRequest from "/js/module/httpRequest.js";
 
 $(function () {
     let request = new httpRequest()
-    let post = {}
-    let channelId = getChannelId();
+    let noticeRequest = {}
     let alertMessageBox = $('#alert');
-
-    console.log(channelId)
 
     configSummernote()
     hideAlertMessageBox();
@@ -15,20 +12,9 @@ $(function () {
     function setEventHandler() {
         $('#postingButton').click(function () {
             alertMessageBox.children('p').remove()
-            let category = $('#category').val();
 
-            if (category === 'NONE') {
-                alertMessageBox.css('display', 'block')
-                alertMessageBox.append('<p>카테고리를 입력해주세요</p>')
-            }
-            else {
-                setPost()
-                post.uploadFiles = getUploadFiles(post.content)
-                post.category = category
-
-                console.log(post)
-                uploadPost(post)
-            }
+            setRequest()
+            createNotice(noticeRequest)
         })
 
         $('#cancelButton').click(function () {
@@ -57,25 +43,20 @@ $(function () {
         return uploadFiles;
     }
 
-    function setPost() {
-        post.title = $('#title').val()
-        post.content = $('#content').val()
-        post.channelId = channelId
+    function setRequest() {
+        noticeRequest.title = $('#title').val()
+        noticeRequest.content = $('#content').val()
+        noticeRequest.uploadFiles = getUploadFiles(noticeRequest.content)
     }
 
-    function uploadPost(data) {
-        let result = request.postRequest('/api/post', data, () => {
-            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+    function createNotice(noticeRequest) {
+        let result = request.postRequest('/api/notice', noticeRequest, () => {
+            $(location).attr('href', '/notice?page=1')
         })
 
         if (result == null) {
             alert('가입된 회원만 글을 작성할 수 있습니다.')
         }
-    }
-
-    function getChannelId() {
-        let search = decodeURI($(location).attr('search'))
-        return search.substr(search.indexOf('=') + 1)
     }
 
     function hideAlertMessageBox() {
@@ -86,7 +67,7 @@ $(function () {
         let form = new FormData()
         form.append("file", file)
 
-        request.postMultipartRequest('/api/post/files', form, (data) => {
+        request.postMultipartRequest('/api/notice/file', form, (data) => {
             $(editor).summernote('insertImage', data)
         })
     }

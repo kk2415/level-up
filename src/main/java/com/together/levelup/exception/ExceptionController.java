@@ -16,17 +16,17 @@ import java.util.List;
 @RestControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
-
-        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
+//        ExceptionResponse exceptionResponse = new ExceptionResponse();
+//
+//        exceptionResponse.setTimeStamp(LocalDateTime.now());
+//        exceptionResponse.setMessage(e.getMessage());
+//        exceptionResponse.setException(e.getClass().getName());
+//        exceptionResponse.setPath(request.getRequestURI());
+//
+//        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {
@@ -72,7 +72,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ImageNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> notFoundImageException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> notFoundImageException(ImageNotFoundException e, HttpServletRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
@@ -84,7 +84,19 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> postNotFoundException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> postNotFoundException(PostNotFoundException e, HttpServletRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(e.getClass().getName());
+        exceptionResponse.setPath(request.getRequestURI());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotLoggedInException.class)
+    public ResponseEntity<ExceptionResponse> notLoggedInException(NotLoggedInException e, HttpServletRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());

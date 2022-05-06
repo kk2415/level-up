@@ -86,4 +86,18 @@ public class Member {
         return member;
     }
 
+    public static Member createMember(Authority authority, String email, String password, String name,
+                                      Gender gender, String birthday, String phone, UploadFile uploadFile) {
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(password);
+        member.setName(name);
+        member.setGender(gender);
+        member.setBirthday(birthday);
+        member.setPhone(phone);
+        member.setAuthority(authority);
+        member.setDateCreated(LocalDateTime.now());
+        member.setUploadFile(uploadFile);
+        return member;
+    }
 }

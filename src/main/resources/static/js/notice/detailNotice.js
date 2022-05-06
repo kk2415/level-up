@@ -4,53 +4,24 @@ $(function () {
     let request = new httpRequest()
     let backupComment = $('#comment');
 
-    let postId = getPostId()
-    let channelId = getChannelId()
-    let memberEmail = getMemberEmail()
-
-    let post = getPost()
+    let noticeId = getNoticeId()
+    let noticeResponse = getNotice()
     let comments = getComments()
     let comment = {}
 
-    setEventHandler()
-    showModifyAndDeleteButton()
+    console.log(noticeId)
+    console.log(noticeResponse)
+    console.log(comments)
 
-    showPost(post)
+    setEventHandler()
+
+    showPost(noticeResponse)
     showComments(comments)
 
 
-    function getMemberEmail() {
-        let member = request.getRequest('/api/member');
-
-        return member == null ? null : member.email
-    }
-
-    function isMyPost() {
-        let bool = false
-
-        $.ajax({
-            url: '/api/post/' + postId + '/check-member?email=' + memberEmail,
-            method: "GET",
-            async: false,
-        })
-        .done(function () {
-            bool = true
-        })
-        .fail(function (error) {
-            console.log(error)
-        })
-        return bool;
-    }
-
-    function isLoginMember() {
-        if (memberEmail == null) {
-            return false
-        }
-        return true
-    }
 
     function getComments() {
-        return request.getRequest('/api/comment/' + postId + '?identity=POST')
+        return request.getRequest('/api/comment/' + noticeId + '?identity=NOTICE')
     }
 
     function showComments(comments) {
@@ -86,32 +57,25 @@ $(function () {
     }
 
     function createComment() {
-        comment.memberEmail = getMemberEmail()
-        comment.articleId = postId
+        comment.memberEmail = ''
+        comment.articleId = noticeId
         comment.content = $('#contentOfWritingComment').val()
-        comment.identity = 'POST'
-
+        comment.identity = 'NOTICE'
         console.log(comment)
-        if (comment.memberEmail !== null) {
-            request.postRequest('/api/comment', comment)
-        }
-        else {
+
+        let result = request.postRequest('/api/comment', comment);
+        if (result == null) {
             alert("댓글을 작성하려면 로그인을 해야합니다.")
         }
     }
 
-    function getPostId() {
+    function getNoticeId() {
         let pathname = decodeURI($(location).attr('pathname'))
         return pathname.substr(pathname.lastIndexOf('/') + 1)
     }
 
-    function getChannelId() {
-        let search = decodeURI($(location).attr('search'))
-        return search.substr(search.indexOf('=') + 1)
-    }
-
-    function getPost() {
-        return request.getRequest('/api/post/' + postId + '?view=true')
+    function getNotice() {
+        return request.getRequest('/api/notice/' + noticeId + '?view=true')
     }
 
     function showPost(post) {
@@ -124,13 +88,6 @@ $(function () {
         $('#commentCount').text(post.commentCount)
         $('#commentCount2').text(post.commentCount)
         $('#content').html(post.content)
-    }
-
-    function showModifyAndDeleteButton() {
-        if (isLoginMember() && isMyPost()) {
-            $('#modifyButton').css('display', 'inline-block')
-            $('#deleteButton').css('display', 'inline-block')
-        }
     }
 
     function removeComments() {
@@ -149,16 +106,16 @@ $(function () {
         })
 
         $('#allPostButton').click(function () {
-           $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+           $(location).attr('href', '/notice?page=1')
         })
 
         $('#prevPostButton').click(function () {
 
-            let result = request.getRequest('/api/post/' + postId + '/prevPost');
+            let result = request.getRequest('/api/notice/' + noticeId + '/prev');
 
             if (result != null) {
                 let prevPostId = result.id
-                $(location).attr('href', '/post/detail/' + prevPostId + '?channel=' + channelId)
+                $(location).attr('href', '/notice/' + prevPostId)
             }
             else {
                 alert("이전 페이지가 없습니다.")
@@ -166,11 +123,11 @@ $(function () {
         })
 
         $('#nextPostButton').click(function () {
-            let result = request.getRequest('/api/post/' + postId + '/nextPost');
+            let result = request.getRequest('/api/notice/' + noticeId + '/next');
 
             if (result != null) {
                 let nextPostId = result.id
-                $(location).attr('href', '/post/detail/' + nextPostId + '?channel=' + channelId)
+                $(location).attr('href', '/notice/' + nextPostId)
             }
             else {
                 alert("다음 페이지가 없습니다.")
@@ -178,24 +135,13 @@ $(function () {
         })
 
         $('#modifyButton').click(function () {
-            $(location).attr('href', '/post/edit/' + postId + '?email=' + memberEmail + '&channel=' + channelId)
+            $(location).attr('href', '/notice/edit/' + noticeId)
         })
 
         $('#deleteButton').click(function () {
-            request.deleteRequest('/api/post/' + postId, () => {
+            request.deleteRequest('/api/notice/' + noticeId, () => {
                 alert('삭제되었습니다.')
-                $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-            })
-        })
-
-        $('#vote').click(function () {
-            let voteRequest = {
-                'articleId' : postId,
-                'identity' : 'POST',
-            }
-
-            request.postRequest('/api/vote', voteRequest, function () {
-                $('#voteCount2').text(post.voteCount + 1)
+                $(location).attr('href', '/notice?page=1')
             })
         })
 
