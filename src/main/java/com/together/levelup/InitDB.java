@@ -4,6 +4,7 @@ import com.together.levelup.domain.file.FileStore;
 import com.together.levelup.domain.channel.Channel;
 import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
+import com.together.levelup.domain.member.Authority;
 import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.file.UploadFile;
@@ -37,7 +38,7 @@ public class InitDB {
         private final EntityManager em;
 
         public void initDb() throws InterruptedException {
-            Member manager1 = Member.createMember("test0@naver.com", "000000", "테스트네임0",
+            Member manager1 = Member.createMember(Authority.ADMIN, "test0@naver.com", "000000", "테스트네임0",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
             Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));

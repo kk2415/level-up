@@ -9,6 +9,7 @@ import com.together.levelup.dto.notice.NoticeRequest;
 import com.together.levelup.dto.Result;
 import com.together.levelup.dto.notice.NoticeResponse;
 import com.together.levelup.dto.notice.UpdateNoticeRequest;
+import com.together.levelup.dto.post.PostSearch;
 import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.service.FileService;
 import com.together.levelup.service.NoticeService;
@@ -76,9 +77,12 @@ public class NoticeApiController {
      * 조회
      * */
     @GetMapping("/notices")
-    public Result notices() {
-        List<Notice> notices = noticeService.findAll();
+    public Result notices(@RequestParam(required = false) Long page,
+                          @RequestParam(required = false) String field,
+                          @RequestParam(required = false) String query) {
+        PostSearch postSearch = new PostSearch(field, query);
 
+        List<Notice> notices = noticeService.findAll(page, postSearch);
         List<NoticeResponse> noticeResponses = notices.stream()
                 .map(n -> new NoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(),
                         DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),

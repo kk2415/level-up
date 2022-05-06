@@ -43,7 +43,10 @@ public class NoticeService {
         return noticeRepository.findAll();
     }
 
-    public List<Notice> findAll(int page, PostSearch postSearch) {
+    public List<Notice> findAll(Long page, PostSearch postSearch) {
+        if (page == null && postSearch.getField() == null && postSearch.getQuery() == null) {
+            return noticeRepository.findAll();
+        }
         return noticeRepository.findAll(page, postSearch);
     }
 

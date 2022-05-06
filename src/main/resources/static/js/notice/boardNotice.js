@@ -1,9 +1,9 @@
 import httpRequest from "/js/module/httpRequest.js";
-import Notice from "/js/module/notice.js";
+// import Notice from "/js/module/notice.js";
 
 $(function () {
     let request = new httpRequest()
-    let notice = new Notice()
+    // let notice = new Notice()
 
     const pagerLength = 5
     const postNumOnScreen = 10
@@ -22,24 +22,27 @@ $(function () {
     let allNoticeCount = 0
     let curNoticePage = 1
 
-    console.log(notices)
+    console.log('currentPage : ' + currentPage)
+    console.log('postSearch : ' + postSearch)
+    console.log('allPostsCount + ' + allPostsCount)
+    console.log('lastPagerNum : ' +lastPagerNum)
+    console.log('notices : ' + notices)
 
-    $('#currentPage').text(currentPage)
-    $('#lastPage').text(lastPagerNum)
-
-    setEventHandler()
-    setNoticeEventHandler()
-
-    showChannelNotice(1)
-    showPosts(notices)
-    showPager(lastPagerNum, postSearch)
+    // $('#currentPage').text(currentPage)
+    // $('#lastPage').text(lastPagerNum)
+    //
+    // setEventHandler()
+    // setNoticeEventHandler()
+    //
+    // showChannelNotice(1)
+    // showPosts(notices)
+    // showPager(lastPagerNum, postSearch)
 
     function getPostsCount(postSearch) {
-        let postsCount = 0
-        let url = '/api/' + channelId + '/search/posts-size?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
+        let url = '/api/notices?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
         if (postSearch.field === "") {
-            url = '/api/' + channelId + '/search/posts-size'
+            url = '/api/notices'
         }
 
         return request.getRequest(url)

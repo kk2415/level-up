@@ -1,5 +1,6 @@
 package com.together.levelup;
 
+import com.together.levelup.intercepter.AdminCheckIntercepter;
 import com.together.levelup.intercepter.LoginCheckIntercepter;
 import com.together.levelup.repository.comment.CommentRepository;
 import com.together.levelup.repository.comment.JpaCommentRepository;
@@ -53,6 +54,10 @@ public class SpringConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/member/logout", "/member/myPage",
                         "/post/edit/{postId}", "/post/create");
+
+        registry.addInterceptor(new AdminCheckIntercepter())
+                .order(2)
+                .addPathPatterns("/**");
     }
 
 }
