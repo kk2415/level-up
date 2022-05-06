@@ -50,6 +50,10 @@ public class NoticeService {
         return noticeRepository.findAll(page, postSearch);
     }
 
+    public Long count(Long page, PostSearch postSearch) {
+        return noticeRepository.count(page, postSearch);
+    }
+
     public List<Notice> findByMemberId(Long memberId) {
         return noticeRepository.findByMemberId(memberId);
     }
@@ -70,6 +74,11 @@ public class NoticeService {
     public void update(Long id, String title, String content) {
         Notice findNotice = noticeRepository.findById(id);
         findNotice.change(title, content);
+    }
+
+    @Transactional
+    public void addViews(Notice findNotice) {
+        findNotice.addViews();
     }
 
 

@@ -6,11 +6,14 @@ import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.comment.CommentResponse;
 import com.together.levelup.dto.comment.CreateCommentRequest;
 import com.together.levelup.dto.Result;
+import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,16 +35,21 @@ public class CommentApiController {
      * 댓글 생성
      */
     @PostMapping("/comment")
-    public CommentResponse create(@RequestBody @Validated CreateCommentRequest commentRequest) {
-        Member findMember = memberService.findByEmail(commentRequest.getMemberEmail());
+    public CommentResponse create(@RequestBody @Validated CreateCommentRequest commentRequest,
+                                  HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
+            Member findMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
 
-        Long commentId = commentService.create(commentRequest.getIdentity(), findMember.getId(),
-                commentRequest.getArticleId(), commentRequest.getContent());
+            Long commentId = commentService.create(commentRequest.getIdentity(), findMember.getId(),
+                    commentRequest.getArticleId(), commentRequest.getContent());
 
-        Comment findComment = commentService.findOne(commentId);
-        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
-                findComment.getVoteCount());
+            Comment findComment = commentService.findOne(commentId);
+            return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
+                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
+                    findComment.getVoteCount());
+        }
+        throw new NotLoggedInException("미인증 사용자");
     }
 
     /***

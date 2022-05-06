@@ -92,13 +92,45 @@ public class NoticeApiController {
         return new Result(noticeResponses, noticeResponses.size());
     }
 
+    @GetMapping("/notices/count")
+    public Result noticesCount(@RequestParam(required = false) Long page,
+                          @RequestParam(required = false) String field,
+                          @RequestParam(required = false) String query) {
+        PostSearch postSearch = new PostSearch(field, query);
+
+        Long count = noticeService.count(page, postSearch);
+        return new Result(count, 1);
+    }
+
     @GetMapping("/notice/{noticeId}")
-    public NoticeResponse notice(@PathVariable Long noticeId) {
+    public NoticeResponse notice(@PathVariable Long noticeId,
+                                 @RequestParam(required = false, defaultValue = "false") String view) {
         Notice findNotice = noticeService.findById(noticeId);
+        if (view.equals("true")) {
+            noticeService.addViews(findNotice);
+        }
 
         return new NoticeResponse(findNotice.getId(), findNotice.getTitle(), findNotice.getWriter(), findNotice.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
                 findNotice.getViews(), findNotice.getComments().size());
+    }
+
+    @GetMapping("/notice/{noticeId}/next")
+    public NoticeResponse findNextPage(@PathVariable Long noticeId) {
+        Notice nextPage = noticeService.findNextPage(noticeId);
+
+        return new NoticeResponse(nextPage.getId(), nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
+                nextPage.getViews(), nextPage.getComments().size());
+    }
+
+    @GetMapping("/notice/{noticeId}/prev")
+    public NoticeResponse findPrevPage(@PathVariable Long noticeId) {
+        Notice prevPage = noticeService.findPrevPage(noticeId);
+
+        return new NoticeResponse(prevPage.getId(), prevPage.getTitle(), prevPage.getWriter(), prevPage.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
+                prevPage.getViews(), prevPage.getComments().size());
     }
 
 
@@ -115,7 +147,7 @@ public class NoticeApiController {
     /**
      * 삭제
      * */
-    @DeleteMapping("/notice/{channelId}")
+    @DeleteMapping("/notice/{noticeId}")
     public ResponseEntity delete(@PathVariable Long noticeId) {
         noticeService.delete(noticeId);
 

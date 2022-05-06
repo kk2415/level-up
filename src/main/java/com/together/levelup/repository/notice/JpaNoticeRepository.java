@@ -107,8 +107,7 @@ public class JpaNoticeRepository implements NoticeRepository {
 
         JPAQuery<Long> query = queryFactory.select(QNotice.notice.count())
                 .from(QNotice.notice)
-                .where(equalQuery(postSearch))
-                .orderBy(QNotice.notice.dateCreated.desc());
+                .where(equalQuery(postSearch));
 
         if (page != null) {
             Long firstPage = (page - 1) * 10; //0, 10, 20, 30

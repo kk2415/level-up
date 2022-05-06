@@ -2,7 +2,6 @@ package com.together.levelup.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,21 +34,20 @@ public class NoticeController {
      * 조회
      * */
     @GetMapping("")
-    public String notice(@RequestParam(required = false, defaultValue = "1") Long page,
+    public String notices(@RequestParam(required = false, defaultValue = "1") Long page,
                          @RequestParam(required = false) String field,
-                         @RequestParam(required = false) String query,
-                         HttpServletRequest request,
-                         Model model) {
-
-//        model.addAttribute("isAdmin", false);
-//
-//        if (request.getAttribute("isAdmin").equals(true)) {
-//            model.addAttribute("isAdmin", true);
-//        }
+                         @RequestParam(required = false) String query) {
 
         return "html/notice/boardNotice";
     }
 
+    /**
+     * 조회
+     * */
+    @GetMapping("/{noticeId}")
+    public String notice(@PathVariable Long noticeId) {
+        return "html/notice/detailNotice";
+    }
 
     /**
      * 수정

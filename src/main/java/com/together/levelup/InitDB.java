@@ -9,6 +9,7 @@ import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.notice.ChannelNotice;
+import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.post.PostCategory;
 import lombok.RequiredArgsConstructor;
@@ -137,6 +138,16 @@ public class InitDB {
             em.persist(channelNotice4);
             em.persist(channelNotice5);
             em.persist(channelNotice6);
+
+            Notice notice1 = Notice.createNotice(member1, "공지사항 1", member1.getName(), "공지시항 1입니다.");
+            Notice notice2 = Notice.createNotice(member1, "공지사항 2", member1.getName(), "공지시항 2입니다.");
+            Notice notice3 = Notice.createNotice(member1, "공지사항 3", member1.getName(), "공지시항 3입니다.");
+            Notice notice4 = Notice.createNotice(member1, "공지사항 4", member1.getName(), "공지시항 4입니다.");
+
+            em.persist(notice1);
+            em.persist(notice2);
+            em.persist(notice3);
+            em.persist(notice4);
         }
     }
 }
