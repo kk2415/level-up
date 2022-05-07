@@ -117,7 +117,8 @@ public class PostApiController {
 
         return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
-                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+                findPost.getVoteCount(), findPost.getViews(),
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
     @GetMapping("/{channelId}/posts/{page}")
@@ -135,7 +136,8 @@ public class PostApiController {
         List<PostResponse> postResponses = findPosts.stream()
                 .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getWriter(), p.getContent(), p.getPostCategory(),
                         DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
-                        p.getVoteCount(), p.getViews(), p.getComments().size()))
+                        p.getVoteCount(), p.getViews(),
+                        (int) p.getComments().stream().filter(c -> c.getParent() == null).count()))
                 .collect(Collectors.toList());
 
         return new Result(postResponses, postResponses.size());

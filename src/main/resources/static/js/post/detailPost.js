@@ -167,14 +167,15 @@ function showReply(replyList, reply) {
     cloneReply.children('#replyEmailAndDate').children('#replyEmail').text(reply.writer)
     cloneReply.children('#replyEmailAndDate').children('#replyDate').text(reply.dateCreated)
     cloneReply.children('#replyContent').children().text(reply.content)
-    cloneReply.children('#replyVote').children('.btn').click(function () {
+    cloneReply.children('#replyVote').children('#replyVoteCount').text(reply.voteCount)
+    cloneReply.children('#replyVote').children('#replyVoteButton').click(function () {
         let voteRequest = {
             'articleId': reply.id,
             'identity': 'COMMENT',
         }
 
-        request.postRequest('/api/vote', voteRequest, function () {
-            $('#replyVoteCount').text(reply.voteCount + 1)
+        request.postRequest('/api/vote', voteRequest, () => {
+            cloneReply.children('#replyVote').children('#replyVoteCount').text(reply.voteCount + 1)
         })
     })
 

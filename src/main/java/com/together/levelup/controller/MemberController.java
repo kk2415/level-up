@@ -19,19 +19,9 @@ public class MemberController {
         return "html/member/createMember";
     }
 
-    @PostMapping("/create")
-    public String createPost() {
-        return "redirect:/";
-    }
-
     @GetMapping("/login")
-    public String loginGet() {
+    public String loginGet(@RequestParam String redirectURL) {
         return "html/member/loginMember";
-    }
-
-    @PostMapping("/login")
-    public String loginPost() {
-        return "redirect:/";
     }
 
     @GetMapping("/logout")
