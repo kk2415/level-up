@@ -12,5 +12,6 @@ public class CommentResponse {
     private String content;
     private String dateCreated;
     private Long voteCount;
+    private Long replyCount;
 
 }

@@ -65,9 +65,6 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private List<File> files = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
-//    private List<ChannelDescriptionFile> channelDescriptionFiles = new ArrayList<>();
-
     @OneToMany(mappedBy = "channel")
     private List<ChannelNotice> channelNotices = new ArrayList<>();
 
@@ -80,6 +77,10 @@ public class Channel {
      * */
     //==연관관계 메서드==//
     public void setMember(Member member) {
+        if (member != null) {
+            member.getChannels().remove(this);
+        }
+
         this.member = member;
         member.getChannels().add(this);
     }
@@ -132,6 +133,10 @@ public class Channel {
         }
 
         for (ChannelMember channelMember : channelMembers) {
+            if (memberCount >= limitedMemberNumber ) {
+                break;
+            }
+
             this.getChannelMembers().add(channelMember);
             channelMember.setChannel(this);
             memberCount++;

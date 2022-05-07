@@ -64,11 +64,19 @@ public class Post {
 
     //==연관관계 메서드==//
     public void setMember(Member member) {
+        if (member != null) {
+            member.getPosts().remove(this);
+        }
+
         this.member = member;
         member.getPosts().add(this);
     }
 
     public void setChannel(Channel channel) {
+        if (channel != null) {
+            channel.getPosts().remove(this);
+        }
+
         this.channel = channel;
         channel.getPosts().add(this);
     }

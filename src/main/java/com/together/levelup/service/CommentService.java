@@ -49,6 +49,18 @@ public class CommentService {
         }
     }
 
+    public Long createReplyComment(Long parentId, ArticleIdentity identity, Long memeberId, Long articleId, String content) {
+        Member writer = memberRepository.findById(memeberId);
+        Comment parent = commentRepository.findById(parentId);
+        Object article = identifyArticle(identity, articleId);
+
+        Comment child = Comment.createComment(writer, article, content);
+        commentRepository.save(child);
+
+        parent.addChildComment(child);
+        return child.getId();
+    }
+
     /**
      * 댓글 수정
      * */
@@ -69,6 +81,10 @@ public class CommentService {
      * */
     public Comment findOne(Long commentId) {
         return commentRepository.findById(commentId);
+    }
+
+    public List<Comment> findReplyById(Long id) {
+        return commentRepository.findReplyById(id);
     }
 
     public List<Comment> findByMemberId(Long memberId) {

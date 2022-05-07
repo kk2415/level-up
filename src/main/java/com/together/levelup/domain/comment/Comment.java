@@ -58,6 +58,14 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     private List<Vote> votes = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "parent")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> child = new ArrayList<>();
+
+
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
@@ -84,6 +92,11 @@ public class Comment {
         qna.getComments().add(this);
     }
 
+    public void addChildComment(Comment child) {
+        this.child.add(child);
+        child.setParent(this);
+    }
+
     //==생성 메서드==//
     public static Comment createComment(Member member, Object article, String content) {
         Comment comment = new Comment();
@@ -93,7 +106,6 @@ public class Comment {
         comment.setDateCreated(LocalDateTime.now());
         comment.setContent(content);
         comment.setVoteCount(0L);
-
         setArticle(article, comment);
 
         return comment;

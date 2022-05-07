@@ -8,6 +8,7 @@ public interface CommentRepository {
 
     public void save(Comment comment);
     public Comment findById(Long id);
+    public List<Comment> findReplyById(Long id);
     public List<Comment> findByMemberId(Long memberId);
     public List<Comment> findByPostId(Long postId);
     public List<Comment> findByNoticeId(Long noticeId);

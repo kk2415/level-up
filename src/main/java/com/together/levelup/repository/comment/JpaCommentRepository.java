@@ -31,6 +31,15 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
+    public List<Comment> findReplyById(Long commentId) {
+        String query = "select c from Comment c where c.parent.id = :commentId";
+
+        return em.createQuery(query, Comment.class)
+                .setParameter("commentId", commentId)
+                .getResultList();
+    }
+
+    @Override
     public List<Comment> findByMemberId(Long memberId) {
         String query = "select c from Comment c inner join c.member m where m.id = :memberId";
 
@@ -41,7 +50,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByPostId(Long postId) {
-        String query = "select c from Comment c inner join c.post p where p.id = :postId order by c.dateCreated";
+        String query = "select c from Comment c join fetch c.post p where p.id = :postId order by c.dateCreated";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("postId", postId)
@@ -50,7 +59,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByNoticeId(Long noticeId) {
-        String query = "select c from Comment c inner join c.notice n where n.id = :noticeId order by c.dateCreated";
+        String query = "select c from Comment c join fetch c.notice n where n.id = :noticeId order by c.dateCreated";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("noticeId", noticeId)
@@ -59,7 +68,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByChannelNoticeId(Long channelNoticeId) {
-        String query = "select c from Comment c inner join c.channelNotice cn where cn.id = :channelNoticeId order by c.dateCreated";
+        String query = "select c from Comment c join fetch c.channelNotice cn where cn.id = :channelNoticeId order by c.dateCreated";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("channelNoticeId", channelNoticeId)
@@ -68,7 +77,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByQnaId(Long qnaId) {
-        String query = "select c from Comment c inner join c.qna q where q.id = :qnaId order by c.dateCreated";
+        String query = "select c from Comment c join fetch c.qna q where q.id = :qnaId order by c.dateCreated";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("qnaId", qnaId)
