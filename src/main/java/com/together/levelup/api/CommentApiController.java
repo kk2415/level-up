@@ -6,6 +6,7 @@ import com.together.levelup.domain.member.Member;
 import com.together.levelup.dto.comment.CommentResponse;
 import com.together.levelup.dto.comment.CreateCommentRequest;
 import com.together.levelup.dto.Result;
+import com.together.levelup.dto.comment.CreateReplyCommentRequest;
 import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.service.*;
 import lombok.RequiredArgsConstructor;
@@ -47,22 +48,56 @@ public class CommentApiController {
             Comment findComment = commentService.findOne(commentId);
             return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
                     DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
-                    findComment.getVoteCount());
+                    findComment.getVoteCount(), (long) findComment.getChild().size());
         }
         throw new NotLoggedInException("미인증 사용자");
     }
+
+    @PostMapping("/comment/reply")
+    public CommentResponse createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
+                                  HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
+            Member writer = (Member)session.getAttribute(SessionName.SESSION_NAME);
+
+            Long commentId = commentService.createReplyComment(commentRequest.getParentId(), commentRequest.getIdentity(),
+                    writer.getId(), commentRequest.getArticleId(), commentRequest.getContent());
+
+            Comment findComment = commentService.findOne(commentId);
+            return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
+                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
+                    findComment.getVoteCount(), (long) findComment.getChild().size());
+        }
+        throw new NotLoggedInException("미인증 사용자");
+    }
+
 
     /***
      * 댓글 조회
      */
     @GetMapping("/comment/{articleId}")
-    public Result findByPostId(@PathVariable Long articleId,
-                               @RequestParam ArticleIdentity identity) {
+    public Result find(@PathVariable Long articleId,
+                       @RequestParam ArticleIdentity identity) {
         List<Comment> findComments = identifyArticle(identity, articleId);
 
-        List<CommentResponse> comments = findComments.stream().map(c -> new CommentResponse(c.getId() ,c.getWriter(),
-                c.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
-                c.getVoteCount())).collect(Collectors.toList());
+        List<CommentResponse> comments = findComments.stream()
+                .filter(c -> c.getParent() == null)
+                .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
+                        c.getVoteCount(), (long) c.getChild().size())).collect(Collectors.toList());
+
+        return new Result(comments, comments.size());
+    }
+
+    @GetMapping("/comment/{commentId}/reply")
+    public Result findReply(@PathVariable Long commentId) {
+        System.out.println(commentId);
+        List<Comment> findComments = commentService.findReplyById(commentId);
+
+        List<CommentResponse> comments = findComments.stream()
+                .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
+                        c.getVoteCount(), (long) c.getChild().size())).collect(Collectors.toList());
 
         return new Result(comments, comments.size());
     }

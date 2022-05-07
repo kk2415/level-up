@@ -21,6 +21,7 @@ public class ChannelService {
 
     private final ChannelRepository channelRepository;
     private final MemberRepository memberRepository;
+//    private final ChannelMemberRepository channelMemberRepository;
 
     /**
      * 채널 추가
@@ -103,6 +104,19 @@ public class ChannelService {
     @Transactional
     public void deleteChannel(Long channelId) {
         channelRepository.delete(channelId);
+    }
+
+    @Transactional
+    public void deleteChannelMember(Long channelId, Long memberId) {
+//        ChannelMember channelMember = channelMemberRepository.findByChannelAndMember(channelId, memberId)
+
+//        Channel findChannel = channelRepository.findById(channelId);
+//        Member findMember = memberRepository.findById(memberId);
+
+//        findChannel.getChannelMembers().remove(channelMember);
+//        findMember.getChannelMembers().remove(channelMember);
+//
+//        channelMemberRepository.delete(channelMember.getId());
     }
 
     /**
