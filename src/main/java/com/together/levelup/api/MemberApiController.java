@@ -48,10 +48,6 @@ public class MemberApiController {
      * */
     @PostMapping("/member")
     public ResponseEntity createMember(@RequestBody @Valid CreateMemberRequest memberRequest, HttpServletRequest request) throws IOException {
-//        if (memberRequest.getUploadFile() != null) {
-//            System.out.println(memberRequest.getUploadFile().getStoreFileName());
-//        }
-
         Member member = Member.createMember(memberRequest.getEmail(), memberRequest.getPassword(),
                 memberRequest.getName(), memberRequest.getGender(), memberRequest.getBirthday(),
                 memberRequest.getPhone(), memberRequest.getUploadFile());

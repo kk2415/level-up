@@ -1,9 +1,16 @@
 import httpRequest from "/js/module/httpRequest.js";
 import {loginMemberValidation as validation} from '/js/module/validation.js';
 
+function getRedirectUrl() {
+    let search = decodeURI($(location).attr('search'));
+
+    return search.substr(search.indexOf('=') + 1)
+}
+
 $(function () {
     let request = new httpRequest()
     let loginForm = {}
+    let redirectUrl = getRedirectUrl()
 
     hiadAlertMessageBox()
     setLoginInfoEventHandler()
@@ -47,10 +54,10 @@ $(function () {
 
     function requestPost() {
         let result = request.postRequest('/api/member/login', loginForm, () => {
-            $(location).attr('href', '/')
+            $(location).attr('href', redirectUrl)
         })
 
-        if ('status' in result && result.status !== 200) {
+        if (result == null) {
             removeAlertMassageBox()
 
             $('#alert').append('<p>이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.</p>')
