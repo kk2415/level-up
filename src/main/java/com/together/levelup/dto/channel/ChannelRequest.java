@@ -34,7 +34,6 @@ public class ChannelRequest {
     @NotNull
     private UploadFile thumbnailImage;
 
-    @NotNull
     private List<UploadFile> uploadFiles;
 
 }

@@ -98,7 +98,7 @@ public class ChannelNoticeApiController {
         return new ChannelNoticeResponse(id, findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
-                findNotice.getComments().size());
+                (int)findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
     @GetMapping("/channel-notices")
@@ -109,7 +109,8 @@ public class ChannelNoticeApiController {
 
         List<PagingChannelNoticeResponse> noticeResponses = findNotices.stream()
                 .map(n -> new PagingChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()), n.getComments().size(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),
+                        (int)n.getComments().stream().filter(c -> c.getParent() == null).count(),
                         noticeCount))
                 .collect(Collectors.toList());
 
@@ -122,7 +123,8 @@ public class ChannelNoticeApiController {
 
         return new ChannelNoticeResponse(nextPage.getId(), nextPage.getTitle(),
                 nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()), nextPage.getComments().size());
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
+                (int)nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
     @GetMapping("/channel-notice/{id}/prevPost")
@@ -131,7 +133,8 @@ public class ChannelNoticeApiController {
 
         return new ChannelNoticeResponse(prevPage.getId(), prevPage.getTitle(),
                 prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()), prevPage.getComments().size());
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
+                (int)prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
 

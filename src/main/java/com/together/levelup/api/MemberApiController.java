@@ -106,7 +106,8 @@ public class MemberApiController {
     public ResponseEntity findAllMembers() {
         List<MemberResponse> members = memberService.findAllMembers()
                 .stream()
-                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(), m.getPhone(), m.getUploadFile()))
+                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(), m.getPhone(),
+                        m.getUploadFile()))
                 .collect(Collectors.toList());
 
         return new ResponseEntity(new Result(members, members.size()), HttpStatus.OK);

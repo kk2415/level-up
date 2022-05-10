@@ -28,14 +28,9 @@ public class ChannelController {
         return "html/channel/createStudyChannel";
     }
 
-    @GetMapping("/study/edit/{channelId}")
-    public String editStudy() {
-        return "html/channel/updateStudyChannel";
-    }
-
-    @GetMapping("/project/edit/{channelId}")
-    public String editProejct() {
-        return "html/channel/updateProjectChannel";
+    @GetMapping("/edit/{channelId}")
+    public String edit() {
+        return "html/channel/updateChannel";
     }
 
     @GetMapping("/detail/{channelId}")
@@ -61,6 +56,12 @@ public class ChannelController {
 
         return "html/channel/detailChannel";
     }
+
+    @GetMapping("/{channelId}/manager")
+    public String detailManager(@PathVariable Long channelId) {
+        return "html/channel/manager";
+    }
+
 
     @GetMapping("/detail-description/{channelId}")
     public String detailDescription() {

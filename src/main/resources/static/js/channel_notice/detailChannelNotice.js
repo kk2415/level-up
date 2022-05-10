@@ -1,155 +1,292 @@
 import httpRequest from "/js/module/httpRequest.js";
 
+let request = new httpRequest()
+let channelNoticeId = getChannelNoticeId()
+let channelId = getChannelId()
+let channelNoticeResponse = getChannelNoticeResponse()
+let comments = getComments()
+let backupComment = $('#comment');
+let comment = {}
+
+
 $(function () {
-    let request = new httpRequest()
 
-    let channelNoticeId = getChannelNoticeId()
-    let channelId = getChannelId()
+    console.log(comments)
 
-    let channelNoticeResponse = getChannelNoticeResponse()
-    let comments = getComments()
+    hideCreateReplyForm()
+    hideReplyList()
 
-    let backupComment = $('#comment');
-    let comment = {}
-
-    setEventHandler()
+    setChannelNoticeEventHandler()
+    setCommentEventHandler()
 
     showChannelNotice(channelNoticeResponse)
     showComments(comments)
+})
 
 
+/**
+ * getter
+ * */
+function getMemberEmail() {
+    let member = request.getRequest('/api/member');
+
+    return member == null ? null : member.email
+}
+
+function getComments() {
+    return request.getRequest('/api/comment/' + channelNoticeId + '?identity=CHANNEL_NOTICE')
+}
+
+function getChannelNoticeId() {
+    let pathname = decodeURI($(location).attr('pathname'))
+    return pathname.substr(pathname.lastIndexOf('/') + 1)
+}
+
+function getChannelId() {
+    let search = decodeURI($(location).attr('search'))
+    return search.substr(search.indexOf('=') + 1)
+}
+
+function getChannelNoticeResponse() {
+    return request.getRequest('/api/channel-notice/' + channelNoticeId + '?view=true')
+}
 
 
+/**
+ * channelNotice function
+ * */
+function showChannelNotice(channelNoticeResponse) {
+    $('#writer').text(channelNoticeResponse.writer)
+    $('#title').text(channelNoticeResponse.title)
+    $('#dateCreated').text(channelNoticeResponse.dateCreated)
+    $('#views').text(channelNoticeResponse.views)
+    $('#voteCount').text(channelNoticeResponse.voteCount)
+    $('#commentCount').text(channelNoticeResponse.commentCount)
+    $('#allCommentCount').text(channelNoticeResponse.commentCount)
+    $('#content').html(channelNoticeResponse.content)
+}
 
-    function getMemberEmail() {
-        let member = request.getRequest('/api/member');
 
-        return member == null ? null : member.email
-    }
+/**
+ * comment function
+ * */
+function showComments(comments) {
+    let count = comments.count
+    let comment = comments.data
 
-    function getComments() {
-        return request.getRequest('/api/comment/' + channelNoticeId + '?identity=CHANNEL_NOTICE')
-    }
+    for (let idx = count - 1; idx >= 0; idx--) {
 
-    function showComments(comments) {
+        let cloneComment = $('#comment').clone();
 
-        let count = comments.count
-        let comment = comments.data
+        cloneComment.id = 'comment' + idx
+        cloneComment.css('display', 'block')
+        cloneComment.children('#commentWriter').text(comment[idx].writer)
+        cloneComment.children('#commentDate').text(comment[idx].dateCreated)
+        cloneComment.children('#commentContent').text(comment[idx].content)
+        cloneComment.children('#commentVote').children('#commentVoteCount').text(comment[idx].voteCount)
 
-        for (let idx = count - 1; idx >= 0; idx--) {
+        cloneComment.children('#commentVote').children('button').click(function () {
+            let voteRequest = {
+                'articleId' : comment[idx].id,
+                'identity' : 'COMMENT',
+            }
 
-            let cloneComment = $('#comment').clone();
+            request.postRequest('/api/vote', voteRequest, function () {
+                cloneComment.children('#commentVote').children('#commentVoteCount').text(comment[idx].voteCount + 1)
+            })
+        })
 
-            cloneComment.id = 'comment' + idx
-            cloneComment.css('display', 'block')
-            cloneComment.children('#commentWriter').text(comment[idx].writer)
-            cloneComment.children('#commentDate').text(comment[idx].dateCreated)
-            cloneComment.children('#commentContent').text(comment[idx].content)
-            $('#comment').after(cloneComment)
+        if (comment[idx].replyCount > 0) {
+            cloneComment.children('#replyButton').text(`답글 ${comment[idx].replyCount}`)
         }
 
-        $('#comment').css('display', 'none')
+        cloneComment.children('#replyButton').click(function () {
+            showReplyList(cloneComment, comment[idx]);
+        })
+
+        $('#comment').after(cloneComment)
     }
 
-    function createComment() {
-        comment.memberEmail = getMemberEmail()
-        comment.articleId = channelNoticeId
-        comment.content = $('#contentOfWritingComment').val()
-        comment.identity = 'CHANNEL_NOTICE'
+    $('#comment').css('display', 'none')
+}
 
-        console.log(comment)
-        if (comment.memberEmail !== null) {
+function createComment() {
+    let comment = {}
+    comment.memberEmail = ''
+    comment.articleId = channelNoticeId
+    comment.content = $('#contentOfWritingComment').val()
+    comment.identity = 'CHANNEL_NOTICE'
 
-            request.postRequest('/api/comment', comment)
+    let result = request.postRequest('/api/comment', comment)
+
+    if (result == null) {
+        alert("댓글을 작성하려면 로그인을 해야합니다.")
+    }
+}
+
+
+function removeComments() {
+    $('.comment').remove()
+    $('#contentOfWritingComment').val('')
+}
+
+
+/**
+ * reply function
+ * */
+function showReplyList(commentNode, commentResponse) {
+    let replyList = commentNode.children('#replyList');
+
+    if (replyList.css('display') === 'block') {
+        replyList.css('display', 'none')
+        replyList.children().remove()
+        commentNode.children('#createReplyForm').remove()
+        return
+    }
+
+    replyList.css('display', 'block')
+
+    let replyResponse = request.getRequest('/api/comment/' + commentResponse.id + '/reply')
+    let replys = replyResponse.data
+    let count = replyResponse.count
+
+    for (let i = 0; i < count; i++) {
+        showReply(replyList, replys[i]);
+    }
+
+    showCreateReplyForm(commentNode, commentResponse, 'CHANNEL_NOTICE')
+}
+
+function showReply(replyList, reply) {
+    let cloneReply = $('#reply').clone();
+
+    cloneReply.id = 'reply' + reply.id
+    cloneReply.children('#replyEmailAndDate').children('#replyEmail').text(reply.writer)
+    cloneReply.children('#replyEmailAndDate').children('#replyDate').text(reply.dateCreated)
+    cloneReply.children('#replyContent').children().text(reply.content)
+    cloneReply.children('#replyVote').children('#replyVoteCount').text(reply.voteCount)
+    cloneReply.children('#replyVote').children('#replyVoteButton').click(function () {
+        let voteRequest = {
+            'articleId': reply.id,
+            'identity': 'COMMENT',
+        }
+
+        request.postRequest('/api/vote', voteRequest, () => {
+            cloneReply.children('#replyVote').children('#replyVoteCount').text(reply.voteCount + 1)
+        })
+    })
+
+    cloneReply.css('display', 'block')
+    replyList.append(cloneReply)
+}
+
+function showCreateReplyForm(commentNode, commentResponse, identity) {
+    let replyFormClone = $('#createReplyForm').clone();
+
+    replyFormClone.css('display', 'block')
+    replyFormClone.children().eq(0).children().text(commentResponse.writer)
+    replyFormClone.children().eq(2).children().click(function () {
+        createReply(commentNode, commentResponse, replyFormClone.children().eq(1).children().val(), identity);
+    })
+    commentNode.append(replyFormClone)
+}
+
+function createReply(commentNode, commentResponse, content, identity) {
+    let replyRequest = {}
+
+    replyRequest.parentId = commentResponse.id
+    replyRequest.content = content
+    replyRequest.articleId = channelNoticeId
+    replyRequest.identity = identity
+
+    request.postRequest('/api/comment/reply', replyRequest, function () {
+        commentNode.children('#createReplyForm').remove()
+
+        commentNode.children('#replyList').css('display', 'none')
+        commentNode.children('#replyList').children().remove()
+
+        commentNode.children('#replyButton').text(`답글 ${commentResponse.replyCount + 1}`)
+        showReplyList(commentNode, commentResponse)
+    });
+}
+
+
+
+/**
+ * channelNotic event handler
+ * */
+function setChannelNoticeEventHandler() {
+    $('#allPostButton').click(function () {
+        $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+    })
+
+    $('#nextPostButton').click(function () {
+        let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/nextPost');
+
+        if (result != null) {
+            let nextPostId = result.id
+            $(location).attr('href', '/channel-notice/detail/' + nextPostId + '?channel=' + channelId)
         }
         else {
-            alert("댓글을 작성하려면 로그인을 해야합니다.")
+            alert("다음 페이지가 없습니다.")
         }
-    }
+    })
 
-    function getChannelNoticeId() {
-        let pathname = decodeURI($(location).attr('pathname'))
-        return pathname.substr(pathname.lastIndexOf('/') + 1)
-    }
+    $('#prevPostButton').click(function () {
 
-    function getChannelId() {
-        let search = decodeURI($(location).attr('search'))
-        return search.substr(search.indexOf('=') + 1)
-    }
+        let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/prevPost');
 
-    function getChannelNoticeResponse() {
-        return request.getRequest('/api/channel-notice/' + channelNoticeId + '?view=true')
-    }
+        if (result != null) {
+            let prevPostId = result.id
+            $(location).attr('href', '/channel-notice/detail/' + prevPostId + '?channel=' + channelId)
+        }
+        else {
+            alert("이전 페이지가 없습니다.")
+        }
+    })
 
-    function showChannelNotice(channelNoticeResponse) {
-        $('#writer').text(channelNoticeResponse.writer)
-        $('#title').text(channelNoticeResponse.title)
-        $('#dateCreated').text(channelNoticeResponse.dateCreated)
-        $('#views').text(channelNoticeResponse.views)
-        $('#voteCount').text(channelNoticeResponse.voteCount)
-        $('#commentCount').text(channelNoticeResponse.commentCount)
-        $('#allCommentCount').text(channelNoticeResponse.commentCount)
-        $('#content').html(channelNoticeResponse.content)
-    }
+    $('#modifyButton').click(function () {
+        $(location).attr('href', '/channel-notice/edit/' + channelNoticeId + '?channel=' + channelId)
+    })
 
-    function removeComments() {
-        $('.comment').remove()
-        $('#contentOfWritingComment').val('')
-    }
+    $('#deleteButton').click(function () {
+        let requestBody = {
+            ids : [],
+        }
+        requestBody.ids.push(channelNoticeId)
 
-    function setEventHandler() {
-        $('#commentingButton').click(function () {
-            createComment()
-            comments = getComments()
-            removeComments()
-            $('#commentFrame').append(backupComment)
-            showComments(comments)
-        })
+        request.deleteRequest('/api/channel-notice?channel=' + channelId, () => {
+            alert('삭제되었습니다.')
+            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+        }, requestBody)
+    })
+}
 
-        $('#allPostButton').click(function () {
-           $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-        })
 
-        $('#nextPostButton').click(function () {
-            let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/nextPost');
+/**
+ * comment event handler
+ * */
+function setCommentEventHandler() {
+    $('#commentingButton').click(function () {
+        createComment()
+        comments = getComments()
 
-            if (result != null) {
-                let nextPostId = result.id
-                $(location).attr('href', '/channel-notice/detail/' + nextPostId + '?channel=' + channelId)
-            }
-            else {
-                alert("다음 페이지가 없습니다.")
-            }
-        })
+        removeComments()
+        $('#commentFrame').append(backupComment)
+        showComments(comments)
+    })
+}
 
-        $('#prevPostButton').click(function () {
 
-            let result = request.getRequest('/api/channel-notice/' + channelNoticeId + '/prevPost');
 
-            if (result != null) {
-                let prevPostId = result.id
-                $(location).attr('href', '/channel-notice/detail/' + prevPostId + '?channel=' + channelId)
-            }
-            else {
-                alert("이전 페이지가 없습니다.")
-            }
-        })
+/**
+ * hide reply from
+ * */
+function hideReplyList() {
+    $('#replyList').css('display', 'none')
+    $('#reply').css('display', 'none')
+}
 
-        $('#modifyButton').click(function () {
-            $(location).attr('href', '/channel-notice/edit/' + channelNoticeId + '?channel=' + channelId)
-        })
-
-        $('#deleteButton').click(function () {
-            let requestBody = {
-                ids : [],
-            }
-            requestBody.ids.push(channelNoticeId)
-
-            request.deleteRequest('/api/channel-notice?channel=' + channelId, () => {
-                alert('삭제되었습니다.')
-                $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-            }, requestBody)
-        })
-
-    }
-})
+function hideCreateReplyForm() {
+    $('#createReplyForm').css('display', 'none')
+}

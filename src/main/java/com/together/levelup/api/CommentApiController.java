@@ -91,7 +91,6 @@ public class CommentApiController {
 
     @GetMapping("/comment/{commentId}/reply")
     public Result findReply(@PathVariable Long commentId) {
-        System.out.println(commentId);
         List<Comment> findComments = commentService.findReplyById(commentId);
 
         List<CommentResponse> comments = findComments.stream()

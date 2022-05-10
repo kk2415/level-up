@@ -4,12 +4,10 @@ import {createChannelValidation as validation} from '/js/module/validation.js';
 $(function () {
     let request = new httpRequest()
     let channel = {}
-    let isAttachedFile = false
 
     configSummernote()
     hideAlertMessageBox();
     setButtonEventHandler()
-
 
     function setButtonEventHandler() {
         $('#submitButton').click(function () {
@@ -35,13 +33,6 @@ $(function () {
         })
     }
 
-    function setChannelObject() {
-        channel.name = $('#name').val()
-        channel.limitedMemberNumber = $('#limitedMemberNumber').val()
-        channel.description = $('#description').val()
-        channel.thumbnailDescription = $('#thumbnailDescription').val()
-    }
-
     function validate() {
         let bool = true;
 
@@ -61,17 +52,20 @@ $(function () {
         return bool;
     }
 
-    function uploadThumbnailImage() {
-        let file = new FormData();
-        file.append('file', $('#file')[0].files[0]);
+    function createChannel() {
+        request.postRequest('/api/channel', channel, (response) => {
+            console.log("채널 등록 성공")
+            $(location).attr('href', '/')
+        })
 
-        let result = request.postMultipartRequest('/api/channel/thumbnail', file);
+        console.log("채널 등록 실패")
+    }
 
-        let uploadimage = {}
-        uploadimage.storeFileName = result.storeFileName
-        uploadimage.uploadFileName = result.uploadFileName
-
-        channel.thumbnailImage = uploadimage;
+    function setChannelObject() {
+        channel.name = $('#name').val()
+        channel.limitedMemberNumber = $('#limitedMemberNumber').val()
+        channel.description = $('#description').val()
+        channel.thumbnailDescription = $('#thumbnailDescription').val()
     }
 
     function loadMemberInfo() {
@@ -112,17 +106,20 @@ $(function () {
         return uploadFiles;
     }
 
-    function createChannel() {
-        request.postRequest('/api/channel', channel, (response) => {
-            console.log("채널 등록 성공")
-            $(location).attr('href', '/')
-        })
+    function uploadThumbnailImage() {
+        let file = new FormData();
+        file.append('file', $('#file')[0].files[0]);
 
-        console.log("채널 등록 실패")
+        let result = request.postMultipartRequest('/api/channel/thumbnail', file);
+
+        let uploadimage = {}
+        uploadimage.storeFileName = result.storeFileName
+        uploadimage.uploadFileName = result.uploadFileName
+
+        channel.thumbnailImage = uploadimage;
     }
 
     function uploadFile(files, editor) {
-        isAttachedFile = true
 
         let form = new FormData();
         form.append("files", files);

@@ -5,8 +5,8 @@ $(function () {
     let request = new httpRequest()
     let channel = {}
 
-    hideAlertMessageBox();
     configSummernote()
+    hideAlertMessageBox();
     setButtonEventHandler()
 
 
@@ -16,9 +16,10 @@ $(function () {
 
             setChannelObject()
             if (validate()) {
-                uploadImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
+                uploadThumbnailImage(); //이미지를 업로드하는 동시에 그 경로가 channel 오브젝트에 저장됨 -> 나중에 두 기능을 분리하는 리팩토링해야됨
                 loadMemberInfo(); //멤버 이메일과 이름을 channel 오브젝트에 저장
                 channel.category = "PROJECT"
+                channel.uploadFiles = getUploadFiles(channel.description);
                 console.log(channel);
 
                 createProjectChannel();
@@ -80,7 +81,32 @@ $(function () {
         }
     }
 
-    function uploadImage() {
+    function getUploadFiles(htmlCode) {
+        let uploadFiles = []
+        let offset = 0
+
+        while (htmlCode.indexOf('img src', offset) !== -1) {
+            let uploadFile = {}
+
+            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
+            let firstIdx = imgTagStr.indexOf('"') + 1
+            let lastIdx = imgTagStr.indexOf('"', firstIdx)
+
+            uploadFile.storeFileName = imgTagStr.substring(firstIdx, lastIdx)
+            uploadFile.uploadFileName = 'image'
+
+            uploadFiles.push(uploadFile)
+
+            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
+
+            // console.log(firstIdx)
+            // console.log(lastIdx)
+            // console.log(imgTagStr.substring(firstIdx, lastIdx))
+        }
+        return uploadFiles;
+    }
+
+    function uploadThumbnailImage() {
         let file = new FormData();
         file.append('file', $('#file')[0].files[0]);
 
@@ -91,14 +117,6 @@ $(function () {
         uploadimage.uploadFileName = result.uploadFileName
 
         channel.thumbnailImage = uploadimage;
-    }
-
-    function hideAlertMessageBox() {
-        $('#alert').css('display', 'none');
-    }
-
-    function showAlertMessageBox() {
-        $('#alert').css('display', 'block');
     }
 
     function uploadFile(files, editor) {
@@ -118,7 +136,9 @@ $(function () {
                 maxHeight: null,
                 callbacks: {
                     onImageUpload : function(files) {
-                        uploadFile(files[0], this);
+                        for (let i = 0; i < files.length; i++) {
+                            uploadFile(files[i], this);
+                        }
                     },
                     onPaste: function (e) {
                         let clipboardData = e.originalEvent.clipboardData;
@@ -132,6 +152,14 @@ $(function () {
                 }
             })
         })
+    }
+
+    function hideAlertMessageBox() {
+        $('#alert').css('display', 'none');
+    }
+
+    function showAlertMessageBox() {
+        $('#alert').css('display', 'block');
     }
 
 })

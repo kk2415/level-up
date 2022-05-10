@@ -43,6 +43,9 @@ public class Channel {
     @Column(name = "member_count")
     private Long memberCount;
 
+    @Column(name = "waiting_member_count")
+    private Long waitingMemberCount;
+
     @Enumerated(EnumType.STRING)
     private ChannelCategory category;
 
@@ -90,24 +93,20 @@ public class Channel {
         channelMember.setChannel(this);
     }
 
-//    public void setChannelDescriptionFile(ChannelDescriptionFile channelDescriptionFiles) {
-//        this.channelDescriptionFiles.add(channelDescriptionFiles);
-//        channelDescriptionFiles.setChannel(this);
-//    }
-
     //==생성 메서드==//
     public static Channel createChannel(Member member, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
         Channel channel = new Channel();
 
         channel.setMember(member);
         channel.setName(name);
-        channel.setManagerName(member.getName());
-//        channel.setManagerName(member.getEmail());
+//        channel.setManagerName(member.getName());
+        channel.setManagerName(member.getEmail());
         channel.setLimitedMemberNumber(limitNumber);
         channel.setDescription(description);
         channel.setThumbnailDescription(thumbnailDescription);
         channel.setDateCreated(LocalDateTime.now());
         channel.setMemberCount(0L);
+        channel.setWaitingMemberCount(0L);
         channel.setCategory(category);
         channel.setThumbnailImage(thumbnailImage);
 
@@ -121,6 +120,10 @@ public class Channel {
         }
 
         for (ChannelMember channelMember : channelMembers) {
+            if (memberCount >= limitedMemberNumber ) {
+                break;
+            }
+
             this.getChannelMembers().add(channelMember);
             channelMember.setChannel(this);
             memberCount++;
@@ -143,6 +146,69 @@ public class Channel {
         }
     }
 
+    public void addWaitingMember(ChannelMember... channelMembers) {
+        if (memberCount >= limitedMemberNumber ) {
+            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().add(channelMember);
+            channelMember.setChannel(this);
+            waitingMemberCount++;
+        }
+    }
+
+    public void removeMember(ChannelMember... channelMembers) {
+        if (memberCount <= 0 ) {
+            throw new IllegalStateException("더이상 제거할 수 없습니다.");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().remove(channelMember);
+            channelMember.setChannel(null);
+
+            channelMember.getMember().getChannelMembers().remove(channelMember);
+            channelMember.setMember(null);
+            memberCount--;
+        }
+    }
+
+    public void removeMember(List<ChannelMember> channelMembers) {
+        if (memberCount <= 0 ) {
+            throw new IllegalStateException("더이상 제거할 수 없습니다.");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().remove(channelMember);
+            channelMember.getMember().getChannelMembers().remove(channelMember);
+            memberCount--;
+        }
+    }
+
+    public void removeWaitingMember(ChannelMember... channelMembers) {
+        if (waitingMemberCount <= 0 ) {
+            throw new IllegalStateException("더이상 제거할 수 없습니다.");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().remove(channelMember);
+            channelMember.getWaitingMember().getChannelMembers().remove(channelMember);
+            waitingMemberCount--;
+        }
+    }
+
+    public void removeWaitingMember(List<ChannelMember> channelMembers) {
+        if (waitingMemberCount <= 0 ) {
+            throw new IllegalStateException("더이상 제거할 수 없습니다.");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().remove(channelMember);
+            channelMember.getWaitingMember().getChannelMembers().remove(channelMember);
+            waitingMemberCount--;
+        }
+    }
+
     public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         this.setName(name);
         this.setLimitedMemberNumber(limitNumber);
@@ -159,15 +225,5 @@ public class Channel {
         this.setThumbnailImage(thumbnailImage);
         this.setCategory(category);
     }
-
-//    public void addDescriptionFile(ChannelDescriptionFile channelDescriptionFile) {
-//        this.setChannelDescriptionFile(channelDescriptionFile);
-//    }
-//
-//    public void addDescriptionFile(List<ChannelDescriptionFile> channelDescriptionFile) {
-//        for (ChannelDescriptionFile descriptionFile : channelDescriptionFile) {
-//            this.setChannelDescriptionFile(descriptionFile);
-//        }
-//    }
 
 }

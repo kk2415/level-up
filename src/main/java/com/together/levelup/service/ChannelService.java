@@ -5,6 +5,7 @@ import com.together.levelup.domain.channel.ChannelCategory;
 import com.together.levelup.domain.channel.ChannelMember;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.file.UploadFile;
+import com.together.levelup.repository.channel.ChannelMemberRepository;
 import com.together.levelup.repository.channel.ChannelRepository;
 import com.together.levelup.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ChannelService {
 
     private final ChannelRepository channelRepository;
+    private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
 //    private final ChannelMemberRepository channelMemberRepository;
 
@@ -65,19 +67,36 @@ public class ChannelService {
 
         for (Long id : memberIds) {
             Member findMember = memberRepository.findById(id);
-            channelMembers.add(ChannelMember.createChannelMember(findMember));
+            ChannelMember channelMember = ChannelMember.createChannelMember(findMember);
+            channelMembers.add(channelMember);
         }
 
         channel.addMember(channelMembers);
     }
 
+    @Transactional
     public void addMember(Long channelId, Long... memberIds) {
         Channel channel = channelRepository.findById(channelId);
         List<ChannelMember> channelMembers = new ArrayList<>();
 
         for (Long id : memberIds) {
             Member findMember = memberRepository.findById(id);
-            channelMembers.add(ChannelMember.createChannelMember(findMember));
+            ChannelMember channelMember = ChannelMember.createChannelMember(findMember);
+            channelMembers.add(channelMember);
+        }
+
+        channel.addMember(channelMembers);
+    }
+
+    @Transactional
+    public void addWaitingMember(Long channelId, Long... memberIds) {
+        Channel channel = channelRepository.findById(channelId);
+        List<ChannelMember> channelMembers = new ArrayList<>();
+
+        for (Long id : memberIds) {
+            Member findMember = memberRepository.findById(id);
+            ChannelMember channelMember = ChannelMember.createChannelWaitingMember(findMember);
+            channelMembers.add(channelMember);
         }
 
         channel.addMember(channelMembers);
@@ -118,6 +137,39 @@ public class ChannelService {
 //
 //        channelMemberRepository.delete(channelMember.getId());
     }
+
+    @Transactional
+    public void deleteMember(Long channelId, String email) {
+        Channel findChannel = findOne(channelId);
+        Member findMember = memberRepository.findByEmail(email).get(0);
+
+        List<ChannelMember> members = channelMemberRepository.findByChannelAndMember(channelId, findMember.getId());
+        findChannel.removeMember(members);
+
+        for (ChannelMember channelMember : members) {
+            channelMemberRepository.delete(channelMember.getId());
+        }
+    }
+
+    @Transactional
+    public void deleteWaitingMember(Long channelId, String email) {
+        Channel findChannel = findOne(channelId);
+        List<Member> findMembers = memberRepository.findByEmail(email);
+
+        if (findMembers.size() > 0) {
+            Member findMember = findMembers.get(0);
+
+            List<ChannelMember> waitingMember = channelMemberRepository
+                    .findByChannelAndWaitingMember(channelId, findMember.getId());
+            findChannel.removeWaitingMember(waitingMember);
+
+            for (ChannelMember channelMember : waitingMember) {
+                channelMemberRepository.delete(channelMember.getId());
+            }
+        }
+    }
+
+
 
     /**
      * 채널 조회

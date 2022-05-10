@@ -86,7 +86,8 @@ public class NoticeApiController {
         List<NoticeResponse> noticeResponses = notices.stream()
                 .map(n -> new NoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(),
                         DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),
-                        n.getViews(), n.getComments().size()))
+                        n.getViews(),
+                        (int) n.getComments().stream().filter(c -> c.getParent() == null).count()))
                 .collect(Collectors.toList());
 
         return new Result(noticeResponses, noticeResponses.size());
@@ -112,7 +113,7 @@ public class NoticeApiController {
 
         return new NoticeResponse(findNotice.getId(), findNotice.getTitle(), findNotice.getWriter(), findNotice.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
-                findNotice.getViews(), findNotice.getComments().size());
+                findNotice.getViews(), (int) findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
     @GetMapping("/notice/{noticeId}/next")
@@ -121,7 +122,7 @@ public class NoticeApiController {
 
         return new NoticeResponse(nextPage.getId(), nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
-                nextPage.getViews(), nextPage.getComments().size());
+                nextPage.getViews(), (int) nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
     @GetMapping("/notice/{noticeId}/prev")
@@ -130,7 +131,7 @@ public class NoticeApiController {
 
         return new NoticeResponse(prevPage.getId(), prevPage.getTitle(), prevPage.getWriter(), prevPage.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
-                prevPage.getViews(), prevPage.getComments().size());
+                prevPage.getViews(), (int) prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
 

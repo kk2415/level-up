@@ -109,7 +109,7 @@ public class Post {
         post.setContent(content);
         post.setDateCreated(LocalDateTime.now());
         post.setVoteCount(0L);
-        post.setWriter(member.getName());
+        post.setWriter(member.getEmail());
         post.setPostCategory(postCategory);
         post.setViews(0L);
 

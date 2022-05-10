@@ -66,6 +66,26 @@ public class MemberService {
         return members.get(0);
     }
 
+    public List<Member> findByChannelId(Long channelId) {
+        return memberRepository.findByChannelId(channelId);
+    }
+
+    public List<Member> findByChannelId(Long channelId, int page) {
+        return memberRepository.findByChannelId(channelId, page, 5);
+    }
+
+    public List<Member> findByChannelId(Long channelId, int page, int count) {
+        return memberRepository.findByChannelId(channelId, page, count);
+    }
+
+    public List<Member> findWaitingMemberByChannelId(Long channelId) {
+        return memberRepository.findWaitingMemberByChannelId(channelId);
+    }
+
+    public List<Member> findWaitingMemberByChannelId(Long channelId, int page) {
+        return memberRepository.findWaitingMemberByChannelId(channelId, page, 5);
+    }
+
     /**
      * 멤버 삭제
      * */
