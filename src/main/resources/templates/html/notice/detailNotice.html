@@ -83,8 +83,45 @@
                         <span id="commentVoteCount">0</span>&nbsp;&nbsp;
                         <button type="button">추천</button>
                     </span>
-                <p id="commentReply">답글쓰기</p>
+                <p id="replyButton">답글쓰기</p>
+                <div class="container border" id="replyList">
+                </div>
             </div>
+
+            <div id="reply" class="row">
+                <div class="col bg-secondary text-dark bg-opacity-10" id="replyEmailAndDate">
+                    <span id="replyEmail">kkh2415@naver.com</span>
+                    <br>
+                    <span id="replyDate">22.05.01 15:24:11</span>
+                </div>
+
+                <div class="w-100"></div>
+
+                <div class="col bg-secondary text-dark bg-opacity-10 d-flex fs-3" id="replyContent">
+                    <div class="overflow-auto"></div>
+                </div>
+
+                <div class="col bg-secondary text-dark bg-opacity-10" id="replyVote">
+                    <span id="replyVoteCount" class="fs-5">0</span>
+                    <span id="replyVoteButton" class="btn-sm btn btn-primary" type="button">추천</span>
+                    <br><br>
+                </div>
+                <hr>
+            </div>
+
+            <div id="createReplyForm" class="createReplyForm row row-cols-1 border offset-sm-0">
+                <div class="col">
+                    <span id="createReplyWriter">댓글작성자</span>
+                </div>
+                <div class="col">
+                    <textarea id="createReplyContent" minlength="1" maxlength="200" class="form-control" rows="3" placeholder="댓글을 입력해주세요"></textarea>
+                    <br>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-sm btn float-end" type="button" id="createReply">등록</button>
+                </div>
+            </div>
+
         </div>
 
         <br>

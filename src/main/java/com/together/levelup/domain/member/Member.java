@@ -58,6 +58,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<ChannelMember> channelMembers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "waitingMember")
+    private List<ChannelMember> channelWaitingMembers = new ArrayList<>();
+
     @OneToMany(mappedBy = "member")
     private List<Channel> channels = new ArrayList<>();
 

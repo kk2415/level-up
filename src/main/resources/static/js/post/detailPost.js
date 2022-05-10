@@ -120,10 +120,9 @@ function createComment() {
     comment.identity = 'POST'
 
     console.log(comment)
-    if (comment.memberEmail !== null) {
-        request.postRequest('/api/comment', comment)
-    }
-    else {
+    let result = request.postRequest('/api/comment', comment)
+
+    if (result == null) {
         alert("댓글을 작성하려면 로그인을 해야합니다.")
     }
 }

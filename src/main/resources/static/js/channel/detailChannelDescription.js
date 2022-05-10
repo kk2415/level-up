@@ -1,89 +1,101 @@
 import httpRequest from "/js/module/httpRequest.js";
 
+let request = new httpRequest()
+
+let memberEmail = getMemberEmail()
+let channelId = getChannelId()
+let channelDescription = getChannelDescription()
+
 $(function () {
-    let request = new httpRequest()
-    let memberEmail = getMemberEmail()
-    let channelId = getChannelId()
-    let channelDescription = {}
-
     setEventHandler()
-    setChannelDescription()
-    console.log(channelDescription)
 
-    showChannelDescription()
     showModifyAndDeleteButton()
+    showChannelDescription()
+})
 
-    function showChannelDescription() {
-        $('#manager').text(channelDescription.managerName)
-        $('#name').text(channelDescription.name)
-        $('#dateCreated').text(channelDescription.dateCreated)
-        $('#memberCount').text(channelDescription.memberCount)
-        $('#limitedMemberNumber').text(channelDescription.limitedMemberNumber)
-        $('#description').html(channelDescription.description)
-    }
 
-    function setChannelDescription() {
-        channelDescription = request.getRequest('/api/detail-description/' + channelId)
-    }
+/**
+ * getter
+ * */
+function getMemberEmail() {
+    let member = request.getRequest('/api/member');
 
-    function getMemberEmail() {
-        let member = request.getRequest('/api/member');
+    return member == null ? null : member.email
+}
 
-        return member == null ? null : member.email
-    }
+function getChannelId() {
+    let pathname = decodeURI($(location).attr('pathname'))
 
-    function isLoginMember() {
-        if (memberEmail == null) {
-            return false
-        }
-        return true
-    }
+    return pathname.substr(pathname.lastIndexOf('/') + 1)
+}
 
-    function getChannelId() {
-        let pathname = decodeURI($(location).attr('pathname'))
-        return pathname.substr(pathname.lastIndexOf('/') + 1)
-    }
+function getChannelDescription() {
+    return request.getRequest('/api/detail-description/' + channelId)
+}
 
-    function isMyChannel() {
-        if (memberEmail == channelDescription.managerName) {
-            return true
-        }
+
+/**
+ * channelDescription
+ * */
+function showChannelDescription() {
+    $('#manager').text(channelDescription.managerName)
+    $('#name').text(channelDescription.name)
+    $('#dateCreated').text(channelDescription.dateCreated)
+    $('#memberCount').text(channelDescription.memberCount)
+    $('#limitedMemberNumber').text(channelDescription.limitedMemberNumber)
+    $('#description').html(channelDescription.description)
+}
+
+
+/**
+ * eventHandler
+ * */
+function setEventHandler() {
+    $('#registerStudyButton').click(function () {
+        alert('신청되었습니다.')
+    })
+
+    $('#enterStudyButton').click(function () {
+        $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
+    })
+
+    $('#toAllStudyChannelButton').click(function () {
+        $(location).attr('href', '/')
+    })
+
+    $('#modifyButton').click(function () {
+        $(location).attr('href', '/channel/edit/' + channelId)
+    })
+
+    $('#deleteButton').click(function () {
+        request.deleteRequest('/api/channel/' + channelId, () => {
+            alert("삭제되었습니다.")
+            $(location).attr('href', '/')
+        });
+    })
+}
+
+
+/**
+ *
+ * */
+function isLoginMember() {
+    if (memberEmail == null) {
         return false
     }
+    return true
+}
 
-    function showModifyAndDeleteButton() {
-        if (isLoginMember() && isMyChannel()) {
-            $('#modifyButton').css('display', 'inline-block')
-            $('#deleteButton').css('display', 'inline-block')
-        }
+function isMyChannel() {
+    if (memberEmail == channelDescription.managerName) {
+        return true
     }
+    return false
+}
 
-    function setEventHandler() {
-        $('#registerStudyButton').click(function () {
-        })
-
-        $('#enterStudyButton').click(function () {
-            $(location).attr('href', '/channel/detail/' + channelId + '?page=1')
-        })
-
-        $('#toAllStudyChannelButton').click(function () {
-            $(location).attr('href', '/')
-        })
-
-        $('#modifyButton').click(function () {
-            if (channelDescription.category === 'STUDY') {
-                $(location).attr('href', '/channel/study/edit/' + channelId)
-            }
-            else {
-                $(location).attr('href', '/channel/project/edit/' + channelId)
-            }
-        })
-
-        $('#deleteButton').click(function () {
-            request.deleteRequest('/api/channel/' + channelId, () => {
-                alert("삭제되었습니다.")
-                $(location).attr('href', '/')
-            });
-        })
+function showModifyAndDeleteButton() {
+    if (isLoginMember() && isMyChannel()) {
+        $('#modifyButton').css('display', 'inline-block')
+        $('#deleteButton').css('display', 'inline-block')
     }
-})
+}

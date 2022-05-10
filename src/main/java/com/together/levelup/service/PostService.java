@@ -113,8 +113,8 @@ public class PostService {
         return postRepository.findByChannelId(channelId, postSearch);
     }
 
-    public List<Post> findByChannelId(Long channelId, int page, PostSearch postSearch) {
-        return postRepository.findByChannelId(channelId, page, postSearch);
+    public List<Post> findByChannelId(Long channelId, int page, int postCount, PostSearch postSearch) {
+        return postRepository.findByChannelId(channelId, page, postCount, postSearch);
     }
 
     public Post findNextPage(Long id) {

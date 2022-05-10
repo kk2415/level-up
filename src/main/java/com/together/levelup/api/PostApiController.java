@@ -5,9 +5,8 @@ import com.together.levelup.domain.file.ImageType;
 import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.Post;
-import com.together.levelup.dto.*;
+import com.together.levelup.dto.Result;
 import com.together.levelup.dto.post.*;
-import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.exception.PostNotFoundException;
 import com.together.levelup.service.FileService;
@@ -16,7 +15,6 @@ import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,6 +75,7 @@ public class PostApiController {
         return new ResponseEntity(storeFileName, HttpStatus.OK);
     }
 
+
     /**
      * 조회
      * */
@@ -124,6 +123,7 @@ public class PostApiController {
     @GetMapping("/{channelId}/posts/{page}")
     public Result listingChannelPosts(@PathVariable Long channelId,
                                       @PathVariable int page,
+                                      @RequestParam(required = false, defaultValue = "10") int postCount,
                                       @RequestParam(required = false) String field,
                                       @RequestParam(required = false) String query) {
 
@@ -132,7 +132,7 @@ public class PostApiController {
             postSearch = new PostSearch(field, query);
         }
 
-        List<Post> findPosts = postService.findByChannelId(channelId, page, postSearch);
+        List<Post> findPosts = postService.findByChannelId(channelId, page, postCount, postSearch);
         List<PostResponse> postResponses = findPosts.stream()
                 .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getWriter(), p.getContent(), p.getPostCategory(),
                         DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
@@ -186,6 +186,7 @@ public class PostApiController {
                 findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
     }
 
+
     /**
      * 수정
      * */
@@ -213,7 +214,7 @@ public class PostApiController {
     public ResponseEntity deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(new Result("게시물이 성공적으로 삭제되었습니다.", 1), HttpStatus.OK);
     }
 
 }
