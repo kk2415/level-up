@@ -7,7 +7,6 @@ import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.dto.Result;
 import com.together.levelup.dto.post.*;
-import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.exception.PostNotFoundException;
 import com.together.levelup.service.FileService;
 import com.together.levelup.service.MemberService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -41,14 +39,8 @@ public class PostApiController {
      * */
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
-            throw new NotLoggedInException("가입된 회원만 글을 작성할 수 있습니다");
-        }
-
-        Member member = (Member) session.getAttribute(SessionName.SESSION_NAME);
-
+    public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request,
+                               @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
         Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
         Post findPost = postService.findById(postId);

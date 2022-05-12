@@ -1,6 +1,7 @@
 package com.together.levelup;
 
 import com.together.levelup.intercepter.AdminCheckIntercepter;
+import com.together.levelup.intercepter.LoginCheckApiIntercepter;
 import com.together.levelup.intercepter.LoginCheckIntercepter;
 import com.together.levelup.repository.comment.CommentRepository;
 import com.together.levelup.repository.comment.JpaCommentRepository;
@@ -52,11 +53,31 @@ public class SpringConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckIntercepter())
                 .order(1)
-                .addPathPatterns("/member/logout", "/member/myPage",
-                        "/post/edit/{postId}", "/post/create");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/css/**", "/js/**", "/assets/**", "/error",
+                        "/", "/api/**",
+                        "/member/login", "/member/logout", "/member/create",
+                        "/channel/detail/{channelId}", "/channel/detail-description/{channelId}",
+                        "/notice", "/notice/{noticeId}",
+                        "/channel-notice/detail/{id}",
+                        "/post/detail/{postId}");
+
+        registry.addInterceptor(new LoginCheckApiIntercepter())
+                .order(2)
+                .addPathPatterns("/api/member/{email}/image",
+                        "/api/notice", "/api/notice/{noticeId}",
+                        "/api/channel-notice", "/api/channel-notice/{id}",
+                        "/api/comment", "/api/comment/reply",
+                        "/api/post", "/api/post/{postId}",
+                        "/api/channel/{channelId}/manager",
+                        "/api/channel",
+                        "/api/channel/{channelId}",
+                        "/api/channel/{channelId}/waiting-member",
+                        "/api/channel/{channelId}/member/{email}",
+                        "/api/channel/{channelId}/waiting-member/{email}");
 
         registry.addInterceptor(new AdminCheckIntercepter())
-                .order(2)
+                .order(3)
                 .addPathPatterns("/**");
     }
 

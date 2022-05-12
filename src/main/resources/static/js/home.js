@@ -1,8 +1,8 @@
 import httpRequest from '/js/module/httpRequest.js';
 
-$(function () {
-    let request = new httpRequest()
+let request = new httpRequest()
 
+$(function () {
     loadStudyChannels()
     loadProjectChannels()
 
@@ -16,11 +16,19 @@ $(function () {
 })
 
 $('#createStudyButton').click(function () {
-    $(location).attr('href', '/channel/study/create')
+    let result = request.getRequest('/channel/study/create')
+
+    if (result == null) {
+        alert("스터디 생성을 위해선 로그인해야 합니다.")
+    }
 })
 
 $('#createProjectButton').click(function () {
-    $(location).attr('href', '/channel/project/create')
+    let result = request.getRequest('/channel/project/create')
+
+    if (result == null) {
+        alert("프로젝트 생성을 위해선 로그인해야 합니다.")
+    }
 })
 
 function createProjectChannels(data) {

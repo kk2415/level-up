@@ -13,13 +13,9 @@ import com.together.levelup.service.ChannelService;
 import com.together.levelup.service.MemberService;
 import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,39 +34,33 @@ public class ChannelManagerApiController {
      * 조회
      * */
     @GetMapping("/channel/{channelId}/manager")
-    public ManagerResponse channel(@PathVariable Long channelId,
-                                   HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ManagerResponse channel(@PathVariable Long channelId, HttpServletRequest request,
+                                   @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+        Channel channel = channelService.findOne(channelId);
+        List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
+        List<Member> members = memberService.findByChannelId(channelId);
+        List<Post> posts = postService.findByChannelId(channelId, new PostSearch(null, null));
 
-        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
-            Member findMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
+        ChannelInfo channelInfo = new ChannelInfo(channel.getName(), member.getName(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getDateCreated()),
+                channel.getMemberCount(), (long)waitingMembers.size(), (long) posts.size(),
+                channel.getThumbnailImage().getStoreFileName());
 
-            Channel channel = channelService.findOne(channelId);
-            List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
-            List<Member> members = memberService.findByChannelId(channelId);
-            List<Post> posts = postService.findByChannelId(channelId, new PostSearch(null, null));
+        List<MemberResponse> waitingMemberResponses = waitingMembers.stream().map(m -> new MemberResponse(
+                m.getEmail(), m.getName(), m.getGender(),
+                m.getBirthday(), m.getPhone(), m.getUploadFile()))
+                .collect(Collectors.toList());
 
-            ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getDateCreated()),
-                    channel.getMemberCount(), (long)waitingMembers.size(), (long) posts.size(),
-                    channel.getThumbnailImage().getStoreFileName());
+        List<MemberResponse> memberResponses = members.stream().map(m -> new MemberResponse(
+                m.getEmail(), m.getName(), m.getGender(),
+                m.getBirthday(), m.getPhone(), m.getUploadFile()))
+                .collect(Collectors.toList());
 
-            List<MemberResponse> waitingMemberResponses = waitingMembers.stream().map(m -> new MemberResponse(
-                    m.getEmail(), m.getName(), m.getGender(),
-                    m.getBirthday(), m.getPhone(), m.getUploadFile()))
-                    .collect(Collectors.toList());
+        List<ManagerPostResponse> postResponses = posts.stream().map(p -> new ManagerPostResponse(p.getId(),
+                p.getTitle(), p.getWriter())).collect(Collectors.toList());
 
-            List<MemberResponse> memberResponses = members.stream().map(m -> new MemberResponse(
-                    m.getEmail(), m.getName(), m.getGender(),
-                    m.getBirthday(), m.getPhone(), m.getUploadFile()))
-                    .collect(Collectors.toList());
-
-            List<ManagerPostResponse> postResponses = posts.stream().map(p -> new ManagerPostResponse(p.getId(),
-                    p.getTitle(), p.getWriter())).collect(Collectors.toList());
-
-            if (channel.getMember().getId().equals(findMember.getId())) {
-                return new ManagerResponse(channelInfo, waitingMemberResponses, memberResponses, postResponses);
-            }
+        if (channel.getMember().getId().equals(member.getId())) {
+            return new ManagerResponse(channelInfo, waitingMemberResponses, memberResponses, postResponses);
         }
         throw new NotLoggedInException("미인증 사용자");
     }

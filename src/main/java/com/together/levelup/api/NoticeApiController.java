@@ -10,7 +10,6 @@ import com.together.levelup.dto.Result;
 import com.together.levelup.dto.notice.NoticeResponse;
 import com.together.levelup.dto.notice.UpdateNoticeRequest;
 import com.together.levelup.dto.post.PostSearch;
-import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.service.FileService;
 import com.together.levelup.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -41,24 +39,17 @@ public class NoticeApiController {
      * */
     @PostMapping("/notice")
     public ResponseEntity create(@RequestBody @Validated NoticeRequest noticeRequest,
-                                        HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+                                 HttpServletRequest request,
+                                 @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+        Long noticeId = noticeService.create(member.getId(), noticeRequest.getTitle(), member.getName(),
+                noticeRequest.getContent());
 
-        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
-            Member findMember = (Member) session.getAttribute(SessionName.SESSION_NAME);
-
-            Long noticeId = noticeService.create(findMember.getId(), noticeRequest.getTitle(), findMember.getName(),
-                    noticeRequest.getContent());
-
-            Notice findNotice = noticeService.findById(noticeId);
-            for (UploadFile uploadFile : noticeRequest.getUploadFiles()) {
-                fileService.create(findNotice, uploadFile);
-            }
-
-            return new ResponseEntity(new Result("공지사항 생성 성공", 1), HttpStatus.CREATED);
+        Notice findNotice = noticeService.findById(noticeId);
+        for (UploadFile uploadFile : noticeRequest.getUploadFiles()) {
+            fileService.create(findNotice, uploadFile);
         }
 
-        throw new NotLoggedInException("미인증 사용자");
+        return new ResponseEntity(new Result("공지사항 생성 성공", 1), HttpStatus.CREATED);
     }
 
     @PostMapping("/notice/file")

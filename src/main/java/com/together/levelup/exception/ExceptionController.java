@@ -55,7 +55,6 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
                                                                   HttpServletRequest request) {
-
         CreateExceptionResponse createExceptionResponse = new CreateExceptionResponse();
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 

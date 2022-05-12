@@ -1,5 +1,6 @@
 package com.together.levelup.controller;
 
+import com.together.levelup.api.SessionName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,7 @@ public class MemberController {
     @GetMapping("/logout")
     public String loginOut(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session != null) {
+        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
             session.invalidate();
         }
 
