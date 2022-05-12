@@ -55,6 +55,7 @@ $(function () {
         channelNoticeRequest.title = $('#title').val()
         channelNoticeRequest.content = $('#content').val()
         channelNoticeRequest.uploadFiles = getUploadFiles(channelNoticeRequest.content)
+        console.log(channelNoticeRequest.uploadFiles)
     }
 
     function createChannelNotice(data) {

@@ -54,14 +54,9 @@ public class MemberApiController {
 
         Long memberId = memberService.join(member);
 
-        String nextUri = getNextUri("/{id}", memberId);
-        Links links = new Links();
-        links.setSelf(request.getRequestURL().toString());
-        links.setNext(nextUri);
-
         CreateMemberResponse response = new CreateMemberResponse(memberRequest.getEmail(),
                 memberRequest.getPassword(), memberRequest.getName(),
-                memberRequest.getGender(), memberRequest.getBirthday(), memberRequest.getPhone(), links);
+                memberRequest.getGender(), memberRequest.getBirthday(), memberRequest.getPhone());
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -73,14 +68,9 @@ public class MemberApiController {
          * 먼저 이 api로 이미지를 저장한 후 이미지의 경로명을 클라이언트에게 리턴(ResponseEntity(uploadFile, HttpStatus.OK))
          * 그러면 클라이언트는 받은 경로를 객체에 저장한 후 회원가입 api를 호출함
          * */
-
-        UploadFile uploadFile;
-
-        if (file == null || file.isEmpty()) {
+        UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
+        if (uploadFile == null) {
             uploadFile = new UploadFile("default.png", fileStore.MEMBER_DEFAULT_IMAGE);
-        }
-        else {
-            uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
         }
 
         return new ResponseEntity(uploadFile, HttpStatus.OK);
@@ -172,8 +162,6 @@ public class MemberApiController {
             findMember.setUploadFile(uploadFile); //변경 감지의 의한 update문 쿼리 발생
         }
     }
-
-
 
     private void deleteProfilImage(Member findMember) {
         String storeFileName = findMember.getUploadFile().getStoreFileName();

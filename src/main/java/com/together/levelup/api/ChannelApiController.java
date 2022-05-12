@@ -10,7 +10,6 @@ import com.together.levelup.dto.Result;
 import com.together.levelup.dto.channel.*;
 import com.together.levelup.dto.member.MemberResponse;
 import com.together.levelup.exception.ImageNotFoundException;
-import com.together.levelup.exception.NotLoggedInException;
 import com.together.levelup.service.ChannelService;
 import com.together.levelup.service.FileService;
 import com.together.levelup.service.MemberService;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.format.DateTimeFormatter;
@@ -90,31 +88,24 @@ public class ChannelApiController {
         return new ResponseEntity(uploadFile, HttpStatus.OK);
     }
 
-    @PostMapping("/channel/{channelId}/waiting-member")
-    public CreateChannelResponse addWaitingMember(@PathVariable Long channelId,
+    @PostMapping("/channel/{channelId}/waiting-member/{email}")
+    public ResponseEntity addWaitingMember(@PathVariable Long channelId,
+                                                  @PathVariable String email,
                                                   HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
-            Member member = (Member)session.getAttribute(SessionName.SESSION_NAME);
-
-            channelService.addWaitingMember(channelId, member.getId());
-        }
-        throw new NotLoggedInException("미인증 사용자");
+        Member member = memberService.findByEmail(email);
+        channelService.addWaitingMember(channelId, member.getId());
+        return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.OK);
     }
 
     @PostMapping("/channel/{channelId}/member/{email}")
     public ResponseEntity addMember(@PathVariable Long channelId,
                                     @PathVariable String email,
                                     HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
-            Member findMember = memberService.findByEmail(email);
+        Member findMember = memberService.findByEmail(email);
 
-            channelService.deleteWaitingMember(channelId, email);
-            channelService.addMember(channelId, findMember.getId());
-            return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.OK);
-        }
-        throw new NotLoggedInException("미인증 사용자");
+        channelService.deleteWaitingMember(channelId, email);
+        channelService.addMember(channelId, findMember.getId());
+        return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.OK);
     }
 
 
@@ -189,10 +180,7 @@ public class ChannelApiController {
                                  @RequestParam(required = false) Long page,
                                  @RequestParam(required = false) Long count,
                                  HttpServletRequest request) {
-        List<Member> members = memberService.findByChannelId(channelId);
-        if (page != null) {
-            members = memberService.findByChannelId(channelId, Math.toIntExact(page));
-        }
+        List<Member> members = memberService.findByChannelId(channelId, page, 5L);
 
         List<MemberResponse> memberResponses = members.stream()
                 .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
@@ -207,10 +195,7 @@ public class ChannelApiController {
                                         @RequestParam(required = false) Long page,
                                         @RequestParam(required = false) Long count,
                                         HttpServletRequest request) {
-        List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
-        if (page != null) {
-            waitingMembers = memberService.findWaitingMemberByChannelId(channelId, Math.toIntExact(page));
-        }
+        List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId, page);
 
         List<MemberResponse> memberResponses = waitingMembers.stream()
                 .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),

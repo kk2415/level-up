@@ -46,10 +46,10 @@ $(function () {
  * */
 function getPostsCount(postSearch) {
     let postsCount = 0
-    let url = '/api/' + channelId + '/search/posts-size?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
+    let url = '/api/' + channelId + '/search/count?field=' + postSearch.field + '&' + 'query=' + postSearch.querys
 
     if (postSearch.field === "") {
-        url = '/api/' + channelId + '/search/posts-size'
+        url = '/api/' + channelId + '/search/count'
     }
 
     return request.getRequest(url)

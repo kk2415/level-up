@@ -15,6 +15,5 @@ public class CreateMemberResponse {
     private Gender gender;
     private String birthday;
     private String phone;
-    private Links links;
 
 }

@@ -70,20 +70,16 @@ public class MemberService {
         return memberRepository.findByChannelId(channelId);
     }
 
-    public List<Member> findByChannelId(Long channelId, int page) {
-        return memberRepository.findByChannelId(channelId, page, 5);
-    }
-
-    public List<Member> findByChannelId(Long channelId, int page, int count) {
-        return memberRepository.findByChannelId(channelId, page, count);
+    public List<Member> findByChannelId(Long channelId, Long page, Long count) {
+        return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count));
     }
 
     public List<Member> findWaitingMemberByChannelId(Long channelId) {
         return memberRepository.findWaitingMemberByChannelId(channelId);
     }
 
-    public List<Member> findWaitingMemberByChannelId(Long channelId, int page) {
-        return memberRepository.findWaitingMemberByChannelId(channelId, page, 5);
+    public List<Member> findWaitingMemberByChannelId(Long channelId, Long page) {
+        return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5);
     }
 
     /**

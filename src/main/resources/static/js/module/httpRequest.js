@@ -147,4 +147,11 @@ export default class httpRequest {
         return result
     }
 
+    moveTo(url) {
+        let result = this.getRequest(url)
+
+        if (result == null) {
+            alert("로그인해야 합니다.")
+        }
+    }
 }

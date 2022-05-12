@@ -13,11 +13,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
-//        if (member == null) {
-//            return "html/home/home";
-//        }
-//
-//        return "html/home/loginHome";
         return "html/home/home";
     }
 

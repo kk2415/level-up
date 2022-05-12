@@ -22,6 +22,7 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
 
+
     /**
      * 조회
      * */
@@ -97,6 +98,8 @@ public class JpaMemberRepository implements MemberRepository {
                 .setMaxResults(lastPage)
                 .getResultList();
     }
+
+
 
     /**
      * 수정
