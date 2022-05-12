@@ -92,7 +92,7 @@ public class PostApiController {
         return new Result(postResponses, postResponses.size());
     }
 
-    @GetMapping("/{channelId}/search/posts-size")
+    @GetMapping("/{channelId}/search/count")
     public int findAllPostWithQuery(@PathVariable Long channelId,
                                        @RequestParam(required = false) String field,
                                        @RequestParam(required = false) String query) {
