@@ -45,10 +45,24 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public List<Member> findByEmail(String email) {
+    public Member findByEmail(String email) {
         return em.createQuery("select m from Member m where m.email = :email", Member.class)
                 .setParameter("email", email)
-                .getResultList();
+                .getResultList()
+                .stream().findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public Member findByEmailAndPassword(String email, String password) {
+        String query = "select m from Member m where m.email = :email and m.password = :password";
+
+        return em.createQuery(query, Member.class)
+                .setParameter("email", email)
+                .setParameter("password", password)
+                .getResultList()
+                .stream().findAny()
+                .orElse(null);
     }
 
     @Override

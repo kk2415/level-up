@@ -13,6 +13,7 @@ import com.together.levelup.domain.notice.Notice;
 import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.post.PostCategory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,32 +38,41 @@ public class InitDB {
     static class InitService {
 
         private final EntityManager em;
+        private final PasswordEncoder passwordEncoder;
 
         public void initDb() throws InterruptedException {
-            Member manager1 = Member.createMember(Authority.ADMIN, "test0@naver.com", "000000", "테스트네임0",
+            Member manager1 = Member.createMember(Authority.ADMIN, "test0@naver.com",
+                    passwordEncoder.encode("00000000"), "테스트네임0", Gender.MALE, "19970927",
+                    "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
+
+            Member manager2 = Member.createMember("test1@naver.com", passwordEncoder.encode("00000000"), "테스트네임1",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member manager2 = Member.createMember("test1@naver.com", "000000", "테스트네임1",
+            Member member1 = Member.createMember("test2@naver.com", passwordEncoder.encode("00000000"), "테스트네임2",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member1 = Member.createMember("test2@naver.com", "000000", "테스트네임2",
+            Member member2 = Member.createMember("test3@naver.com", passwordEncoder.encode("00000000"), "테스트네임3",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member2 = Member.createMember("test3@naver.com", "000000", "테스트네임3",
+            Member member3 = Member.createMember("test4@naver.com", passwordEncoder.encode("00000000"), "테스트네임4",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member3 = Member.createMember("test4@naver.com", "000000", "테스트네임4",
+            Member member4 = Member.createMember("test5@naver.com", passwordEncoder.encode("00000000"), "테스트네임4",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member4 = Member.createMember("test5@naver.com", "000000", "테스트네임4",
+            Member member5 = Member.createMember("test6@naver.com", passwordEncoder.encode("00000000"), "테스트네임4",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member5 = Member.createMember("test6@naver.com", "000000", "테스트네임4",
+            Member member6 = Member.createMember("test7@naver.com", passwordEncoder.encode("00000000"), "테스트네임4",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member6 = Member.createMember("test7@naver.com", "000000", "테스트네임4",
+            Member member7 = Member.createMember("test8@naver.com", passwordEncoder.encode("00000000"), "테스트네임4",
                     Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member7 = Member.createMember("test8@naver.com", "000000", "테스트네임4",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member8 = Member.createMember("test9@naver.com", "000000", "테스트네임4",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member9 = Member.createMember("test10@naver.com", "000000", "테스트네임4",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
-            Member member10 = Member.createMember("test11@naver.com", "000000", "테스트네임4",
-                    Gender.MALE, "19970927", "010-2354-9960", new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
+
+            Member member8 = Member.createMember("test9@naver.com", passwordEncoder.encode("00000000"),
+                    "테스트네임4", Gender.MALE, "19970927", "010-2354-9960",
+                    new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
+
+            Member member9 = Member.createMember("test10@naver.com", passwordEncoder.encode("00000000"),
+                    "테스트네임4", Gender.MALE, "19970927", "010-2354-9960",
+                    new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
+
+            Member member10 = Member.createMember("test11@naver.com", passwordEncoder.encode("00000000"),
+                    "테스트네임4", Gender.MALE, "19970927", "010-2354-9960",
+                    new UploadFile("내 이미지", "/images/member/AFF947XXQ-5554WSDQ12.png"));
 
             em.persist(manager1);
             em.persist(manager2);

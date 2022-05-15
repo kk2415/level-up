@@ -25,6 +25,8 @@ let curNoticePage = 1
 
 $(function () {
     console.log(channelPosts)
+    console.log(allPostsCount)
+    console.log(lastPagerNum)
 
     $('#channelName').text(channelName)
     $('#currentPage').text(currentPage)
@@ -247,47 +249,6 @@ function setPostEventHandler() {
         $(location).attr('href', '/')
     })
 
-    $('#next').click(function () {
-        let startNum = currentPage - (currentPage - 1) % pagerLength
-        let lastNum = Math.floor(allPostsCount / postNumOnScreen) + 1
-        let nextPage = startNum + pagerLength
-
-
-        let url = '/channel/detail/' + channelId + '?page=' + nextPage + '&field='
-            + postSearch.field + '&' + 'query=' + postSearch.querys
-
-        if (postSearch.field == "" || postSearch.querys == "") {
-            url = '/channel/detail/' + channelId + '?page=' + nextPage
-        }
-
-        if (nextPage < lastNum) {
-            $('#next').attr('href', url)
-        }
-        else {
-            alert("다음 페이지가 없습니다")
-        }
-    })
-
-    $('#previous').click(function () {
-        let startNum = currentPage - (currentPage - 1) % pagerLength
-        let previousPage = startNum - pagerLength
-
-        let url = '/channel/detail/' + channelId + '?page=' + previousPage + '&field='
-            + postSearch.field + '&' + 'query=' + postSearch.querys
-
-        if (postSearch.field == "" || postSearch.querys == "") {
-            url = '/channel/detail/' + channelId + '?page=' + previousPage
-        }
-
-        if (previousPage > 0) {
-            $('#previous').attr('href', url)
-        }
-        else {
-            alert("이전 페이지가 없습니다")
-        }
-
-    })
-
     $('#search').keydown(function (event) {
 
         if (event.keyCode == 13) {
@@ -383,7 +344,7 @@ function setPagerEventHandler() {
             url = '/channel/detail/' + channelId + '?page=' + nextPage
         }
 
-        if (nextPage < lastNum) {
+        if (nextPage <= lastNum) {
             $('#next').attr('href', url)
         }
         else {
@@ -409,38 +370,6 @@ function setPagerEventHandler() {
             alert("이전 페이지가 없습니다")
         }
 
-    })
-
-    $('#search').keydown(function (event) {
-        if (event.keyCode == 13) {
-            event.preventDefault()
-
-            postSearch.field = $('#navbarDropdown').val()
-            postSearch.querys = $('#search').val()
-
-            let url = '/channel/detail/' + channelId + '?page=' + 1 + '&' +
-                'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
-
-            if (postSearch.field === "" || postSearch.querys === "") {
-                url = '/channel/detail/' + channelId + '?page=' + 1
-            }
-
-            $(location).attr('href', url)
-        }
-    })
-
-    $('#searchButton').click(function () {
-        postSearch.field = $('#navbarDropdown').val()
-        postSearch.querys = $('#search').val()
-
-        let url = '/channel/detail/' + channelId + '?page=' + 1 + '&' +
-            'field=' + postSearch.field + '&' + 'query=' + postSearch.querys
-
-        if (postSearch.field === "" || postSearch.querys === "") {
-            url = '/channel/detail/' + channelId + '?page=' + 1
-        }
-
-        $(location).attr('href', url)
     })
 }
 
