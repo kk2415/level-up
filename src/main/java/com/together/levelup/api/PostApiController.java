@@ -12,17 +12,20 @@ import com.together.levelup.service.FileService;
 import com.together.levelup.service.MemberService;
 import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,30 +41,32 @@ public class PostApiController {
      * 생성
      * */
     @PostMapping("/post")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PostResponse create(@Validated @RequestBody CreatePostRequest postRequest, HttpServletRequest request,
-                               @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
-        Long postId = postService.post(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
+    public ResponseEntity create(@Validated @RequestBody CreatePostRequest postRequest,
+                              @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+        Long postId = postService.create(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
         Post findPost = postService.findById(postId);
 
-        for (UploadFile uploadFile : postRequest.getUploadFiles()) {
-            fileService.create(findPost, uploadFile);
-        }
+        fileService.create(findPost, postRequest.getUploadFiles());
 
-        String dateTime = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated());
-        return new PostResponse(findPost.getTitle(), findPost.getWriter(),
-                findPost.getContent(), findPost.getPostCategory(), dateTime,
+        PostResponse postResponse = new PostResponse(findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), findPost.getPostCategory(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
                 findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+
+        EntityModel<PostResponse> model = EntityModel.of(postResponse)
+                .add(linkTo(methodOn(this.getClass()).readPost(postId, "false")).withSelfRel());
+
+        return new ResponseEntity(model, HttpStatus.CREATED);
     }
 
     @PostMapping("/post/files")
     public ResponseEntity storeFiles(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) {
+        UploadFile uploadFiles = fileStore.storeFile(ImageType.POST, file);
+
+        if (uploadFiles == null) {
             return new ResponseEntity("파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-
-        UploadFile uploadFiles = fileStore.storeFile(ImageType.POST, file);
 
         String storeFileName = uploadFiles.getStoreFileName();
         return new ResponseEntity(storeFileName, HttpStatus.OK);
@@ -118,11 +123,7 @@ public class PostApiController {
                                       @RequestParam(required = false, defaultValue = "10") int postCount,
                                       @RequestParam(required = false) String field,
                                       @RequestParam(required = false) String query) {
-
-        PostSearch postSearch = null;
-        if (field != null && query != null) {
-            postSearch = new PostSearch(field, query);
-        }
+        PostSearch postSearch = new PostSearch(field, query);
 
         List<Post> findPosts = postService.findByChannelId(channelId, page, postCount, postSearch);
         List<PostResponse> postResponses = findPosts.stream()
@@ -158,24 +159,10 @@ public class PostApiController {
     }
 
     @GetMapping("/post/{postId}/check-member")
-    public PostResponse findPostByMemberId(@PathVariable Long postId, @RequestParam String email) {
-        Member findMember = memberService.findByEmail(email);
-        Post findPost = postService.findById(postId);
-        List<Post> findPosts = postService.findByMemberId(findMember.getId());
+    public ResponseEntity findPostByMemberId(@PathVariable Long postId, @RequestParam String email) {
+        postService.oauth(postId, email);
 
-        if (findPosts == null) {
-            throw new PostNotFoundException("게시글의 대한 권한이 없습니다");
-        }
-
-        long count = findPosts.stream().map(p -> p.getId().equals(postId)).count();
-
-        if (count <= 0) {
-            throw new PostNotFoundException("게시글의 대한 권한이 없습니다");
-        }
-
-        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
-                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+        return new ResponseEntity(new Result("인증 성공", 1), HttpStatus.OK);
     }
 
 

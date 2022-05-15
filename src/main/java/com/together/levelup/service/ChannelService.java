@@ -40,10 +40,10 @@ public class ChannelService {
 
     @Transactional
     public Long create(String email, String name, Long limitNumber, String descript, String thumbnailDescript, ChannelCategory category, UploadFile uploadFile) {
-        List<Member> members = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
         validationDuplicateChannel(name);
 
-        Channel channel = Channel.createChannel(members.get(0), name, limitNumber, descript, thumbnailDescript, category, uploadFile);
+        Channel channel = Channel.createChannel(member, name, limitNumber, descript, thumbnailDescript, category, uploadFile);
         channelRepository.save(channel);
         return channel.getId();
     }
@@ -141,7 +141,7 @@ public class ChannelService {
     @Transactional
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = findOne(channelId);
-        Member findMember = memberRepository.findByEmail(email).get(0);
+        Member findMember = memberRepository.findByEmail(email);
 
         List<ChannelMember> members = channelMemberRepository.findByChannelAndMember(channelId, findMember.getId());
         findChannel.removeMember(members);
@@ -154,18 +154,14 @@ public class ChannelService {
     @Transactional
     public void deleteWaitingMember(Long channelId, String email) {
         Channel findChannel = findOne(channelId);
-        List<Member> findMembers = memberRepository.findByEmail(email);
+        Member findMember = memberRepository.findByEmail(email);
 
-        if (findMembers.size() > 0) {
-            Member findMember = findMembers.get(0);
+        List<ChannelMember> waitingMember = channelMemberRepository
+                .findByChannelAndWaitingMember(channelId, findMember.getId());
+        findChannel.removeWaitingMember(waitingMember);
 
-            List<ChannelMember> waitingMember = channelMemberRepository
-                    .findByChannelAndWaitingMember(channelId, findMember.getId());
-            findChannel.removeWaitingMember(waitingMember);
-
-            for (ChannelMember channelMember : waitingMember) {
-                channelMemberRepository.delete(channelMember.getId());
-            }
+        for (ChannelMember channelMember : waitingMember) {
+            channelMemberRepository.delete(channelMember.getId());
         }
     }
 

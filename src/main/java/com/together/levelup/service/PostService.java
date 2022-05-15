@@ -1,8 +1,8 @@
 package com.together.levelup.service;
 
 import com.together.levelup.domain.channel.Channel;
-import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.member.Member;
+import com.together.levelup.domain.post.Post;
 import com.together.levelup.domain.post.PostCategory;
 import com.together.levelup.dto.post.PostSearch;
 import com.together.levelup.exception.PostNotFoundException;
@@ -27,14 +27,14 @@ public class PostService {
     /**
      * 게시글 등록
      * */
-    public Long post(Long memberId, String title, String content) {
+    public Long create(Long memberId, String title, String content) {
         Member member = memberRepository.findById(memberId);
         Post post = Post.createPost(member, title, content);
         postRepository.save(post);
         return post.getId();
     }
 
-    public Long post(Long memberId, Long channelId, String title, String content, PostCategory postCategory) {
+    public Long create(Long memberId, Long channelId, String title, String content, PostCategory postCategory) {
         Member member = memberRepository.findById(memberId);
         Channel channel = channelRepository.findById(channelId);
 
@@ -123,6 +123,22 @@ public class PostService {
 
     public Post findPrevPage(Long id) {
         return postRepository.findPrevPage(id);
+    }
+
+
+
+    /**
+     * 게시글 권한
+     * */
+    public Long oauth(Long postId, String email) {
+        Member findMember = memberRepository.findByEmail(email);
+        List<Post> findPosts = findByMemberId(findMember.getId());
+
+        long count = findMember.getPosts().stream().map(p -> p.getId().equals(postId)).count();
+        if (count <= 0) {
+            throw new PostNotFoundException("게시글의 대한 권한이 없습니다");
+        }
+        return postId;
     }
 
 }

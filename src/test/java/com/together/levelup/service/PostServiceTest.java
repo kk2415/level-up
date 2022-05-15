@@ -68,8 +68,8 @@ class PostServiceTest {
         memberService.join(member1);
         memberService.join(member2);
 
-        Long postId1 = postService.post(member1.getId(), "제목1", "내용1");
-        Long postId2 = postService.post(member2.getId(), "제목2", "내용2");
+        Long postId1 = postService.create(member1.getId(), "제목1", "내용1");
+        Long postId2 = postService.create(member2.getId(), "제목2", "내용2");
 
         Post findPost1 = postService.findById(postId1);
         Post findPost2 = postService.findById(postId2);
@@ -83,8 +83,8 @@ class PostServiceTest {
         memberService.join(member1);
         memberService.join(member2);
 
-        Long postId1 = postService.post(member1.getId(), "제목1", "내용1");
-        Long postId2 = postService.post(member2.getId(), "제목2", "내용2");
+        Long postId1 = postService.create(member1.getId(), "제목1", "내용1");
+        Long postId2 = postService.create(member2.getId(), "제목2", "내용2");
 
         Post findPost1 = postService.findById(postId1);
         Post findPost2 = postService.findById(postId2);
@@ -100,8 +100,8 @@ class PostServiceTest {
         memberService.join(member1);
         memberService.join(member2);
 
-        Long postId1 = postService.post(member1.getId(), "제목1", "내용1");
-        Long postId2 = postService.post(member2.getId(), "제목2", "내용2");
+        Long postId1 = postService.create(member1.getId(), "제목1", "내용1");
+        Long postId2 = postService.create(member2.getId(), "제목2", "내용2");
 
         Post findPost1 = postService.findById(postId1);
         Post findPost2 = postService.findById(postId2);

@@ -2,22 +2,29 @@ package com.together.levelup.api;
 
 import com.together.levelup.domain.file.FileStore;
 import com.together.levelup.domain.file.ImageType;
-import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.file.UploadFile;
-import com.together.levelup.dto.*;
+import com.together.levelup.domain.member.Member;
+import com.together.levelup.dto.LoginForm;
+import com.together.levelup.dto.Result;
 import com.together.levelup.dto.member.CreateMemberRequest;
 import com.together.levelup.dto.member.CreateMemberResponse;
 import com.together.levelup.dto.member.MemberResponse;
-import com.together.levelup.exception.MemberNotFoundException;
 import com.together.levelup.exception.ImageNotFoundException;
+import com.together.levelup.exception.MemberNotFoundException;
+import com.together.levelup.security.TokenProvider;
 import com.together.levelup.service.LoginService;
 import com.together.levelup.service.MemberService;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,13 +49,15 @@ public class MemberApiController {
     private final MemberService memberService;
     private final LoginService loginService;
     private final FileStore fileStore;
+    private final TokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 생성
      * */
     @PostMapping("/member")
     public ResponseEntity createMember(@RequestBody @Valid CreateMemberRequest memberRequest, HttpServletRequest request) throws IOException {
-        Member member = Member.createMember(memberRequest.getEmail(), memberRequest.getPassword(),
+        Member member = Member.createMember(memberRequest.getEmail(), passwordEncoder.encode(memberRequest.getPassword()),
                 memberRequest.getName(), memberRequest.getGender(), memberRequest.getBirthday(),
                 memberRequest.getPhone(), memberRequest.getUploadFile());
 
@@ -81,12 +90,26 @@ public class MemberApiController {
      * */
     @PostMapping("/member/login")
     public ResponseEntity login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
-        Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword());
+        Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword(), passwordEncoder);
+        String token = tokenProvider.create(member);
+
         HttpSession session = request.getSession();
         session.setAttribute(SessionName.SESSION_NAME, member);
 
-        return new ResponseEntity(new MemberResponse(member.getEmail(), member.getName(), member.getGender(),
-                member.getBirthday(), member.getPhone(), member.getUploadFile()), HttpStatus.OK);
+        LoginResponse response = LoginResponse.builder()
+                .email(member.getEmail())
+                .token(token)
+                .build();
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class LoginResponse {
+        private String email;
+        private String token;
     }
 
     /**
@@ -104,7 +127,9 @@ public class MemberApiController {
     }
 
     @GetMapping("/member/{email}")
-    public MemberResponse findMember(@PathVariable("email") String email) {
+    public MemberResponse findMember(@AuthenticationPrincipal Long memberId,
+                                     @PathVariable("email") String email) {
+        log.info("id : {}", memberId);
         Member findMember = memberService.findByEmail(email);
 
         return new MemberResponse(findMember.getEmail(), findMember.getName(),

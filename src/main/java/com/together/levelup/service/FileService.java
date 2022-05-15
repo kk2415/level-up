@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,17 @@ public class FileService {
 
         fileRepository.save(file);
         return file.getId();
+    }
+
+    public List<Long> create(Object object, List<UploadFile> uploadFile) {
+        List<Long> ids = new ArrayList<>();
+
+        for (UploadFile file : uploadFile) {
+            Long id = create(object, file);
+            ids.add(id);
+        }
+
+        return ids;
     }
 
     /**
