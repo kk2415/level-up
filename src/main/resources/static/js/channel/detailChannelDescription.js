@@ -52,7 +52,14 @@ function showChannelDescription() {
  * */
 function setEventHandler() {
     $('#registerStudyButton').click(function () {
-        alert('신청되었습니다.')
+        let result = request.postRequest('/api/channel/' + channelId + '/waiting-member')
+
+        if (result == null) {
+            alert('로그인해야합니다.')
+        }
+        else {
+            alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
+        }
     })
 
     $('#enterStudyButton').click(function () {

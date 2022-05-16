@@ -88,24 +88,20 @@ public class ChannelApiController {
         return new ResponseEntity(uploadFile, HttpStatus.OK);
     }
 
-    @PostMapping("/channel/{channelId}/waiting-member/{email}")
+    @PostMapping("/channel/{channelId}/waiting-member")
     public ResponseEntity addWaitingMember(@PathVariable Long channelId,
-                                                  @PathVariable String email,
-                                                  HttpServletRequest request) {
-        Member member = memberService.findByEmail(email);
+                                           @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
         channelService.addWaitingMember(channelId, member.getId());
-        return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.OK);
+        return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.CREATED);
     }
 
     @PostMapping("/channel/{channelId}/member/{email}")
     public ResponseEntity addMember(@PathVariable Long channelId,
                                     @PathVariable String email,
-                                    HttpServletRequest request) {
-        Member findMember = memberService.findByEmail(email);
-
+                                    @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
         channelService.deleteWaitingMember(channelId, email);
-        channelService.addMember(channelId, findMember.getId());
-        return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.OK);
+        channelService.addMember(channelId, member.getId());
+        return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.CREATED);
     }
 
 

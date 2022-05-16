@@ -10,13 +10,6 @@ $(function () {
     $('#login').attr('href', '/member/login?redirectURL=' + url)
     $('#logout').attr('href', '/member/logout')
     $('#notice').attr('href', '/notice?page=1')
-
-    $('#study').click(function () {
-    })
-    $('#project').click(function () {
-    })
-    $('#QNA').click(function () {
-    })
 })
 
 function moveTo(url) {
@@ -43,11 +36,8 @@ function setEventHandler() {
     $('#notice').click(function () {
         moveTo('/notice?page=1')
     })
-    $('#study').click(function () {
-    })
-    $('#project').click(function () {
-    })
     $('#QNA').click(function () {
+        alert('서비스 준비중입니다.')
     })
 }
 
