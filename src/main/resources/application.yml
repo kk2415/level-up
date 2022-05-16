@@ -10,7 +10,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        show_sql:
+        show_sql: true
         format_sql:
         default_batch_fetch_size: 100 #컬렉션에서 있는 모든 엔티티에 select 쿼리를 날리지 않고 IN 절로 한 번에 조회
         #장점
