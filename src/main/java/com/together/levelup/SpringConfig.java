@@ -80,8 +80,7 @@ public class SpringConfig implements WebMvcConfigurer {
                         "/api/channel",
                         "/api/channel/{channelId}",
                         "/api/channel/{channelId}/waiting-member",
-                        "/api/channel/{channelId}/member/{email}",
-                        "/api/channel/{channelId}/waiting-member/{email}");
+                        "/api/channel/{channelId}/member/{email}");
 
         registry.addInterceptor(new AdminCheckIntercepter())
                 .order(3)

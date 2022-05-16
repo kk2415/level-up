@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests() // "/", "/auth/**", "/api/member/login" 이 경로는 제외
-                    .antMatchers("/", "/auth/**", "/api/member/login")
+                    .antMatchers("/**")
                     .permitAll()
                 .anyRequest()
                     .authenticated();

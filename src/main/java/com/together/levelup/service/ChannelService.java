@@ -95,11 +95,14 @@ public class ChannelService {
 
         for (Long id : memberIds) {
             Member findMember = memberRepository.findById(id);
-            ChannelMember channelMember = ChannelMember.createChannelWaitingMember(findMember);
-            channelMembers.add(channelMember);
-        }
+            List<ChannelMember> waitingMembers = channelMemberRepository.findByChannelAndWaitingMember(channelId, findMember.getId());
 
-        channel.addMember(channelMembers);
+            if (waitingMembers.isEmpty()) {
+                ChannelMember channelMember = ChannelMember.createChannelWaitingMember(findMember);
+                channelMembers.add(channelMember);
+            }
+        }
+        channel.addWaitingMember(channelMembers);
     }
 
     /**

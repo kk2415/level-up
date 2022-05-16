@@ -158,6 +158,18 @@ public class Channel {
         }
     }
 
+    public void addWaitingMember(List<ChannelMember> channelMembers) {
+        if (memberCount >= limitedMemberNumber ) {
+            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+        }
+
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().add(channelMember);
+            channelMember.setChannel(this);
+            waitingMemberCount++;
+        }
+    }
+
     public void removeMember(ChannelMember... channelMembers) {
         if (memberCount <= 0 ) {
             throw new IllegalStateException("더이상 제거할 수 없습니다.");
@@ -198,10 +210,6 @@ public class Channel {
     }
 
     public void removeWaitingMember(List<ChannelMember> channelMembers) {
-        if (waitingMemberCount <= 0 ) {
-            throw new IllegalStateException("더이상 제거할 수 없습니다.");
-        }
-
         for (ChannelMember channelMember : channelMembers) {
             this.getChannelMembers().remove(channelMember);
             channelMember.getWaitingMember().getChannelMembers().remove(channelMember);
