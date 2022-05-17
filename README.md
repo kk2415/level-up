@@ -1,7 +1,7 @@
 #Level Up Application
 
 ## Understanding Level Up Application
-[See the presentation here](https://github.com/kk2415/community/wiki)
+[See the introduction here](https://github.com/kk2415/community/wiki)
 
 ## 프로젝트 환경
 #### 백엔드
