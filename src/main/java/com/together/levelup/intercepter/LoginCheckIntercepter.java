@@ -14,8 +14,6 @@ public class LoginCheckIntercepter implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
 
-        System.out.println(request.getMethod());
-
         if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
             throw new NotLoggedInException("미인증 요청입니다.");
         }

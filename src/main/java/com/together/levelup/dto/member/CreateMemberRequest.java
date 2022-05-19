@@ -5,6 +5,7 @@ import com.together.levelup.domain.member.Gender;
 import com.together.levelup.domain.file.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.EnumType;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class CreateMemberRequest {
 

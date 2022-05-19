@@ -18,6 +18,9 @@ function moveTo(url) {
     if (result == null) {
         alert("로그인해야 합니다.")
     }
+    else {
+        $(location).attr('href', url)
+    }
 }
 
 function setEventHandler() {
