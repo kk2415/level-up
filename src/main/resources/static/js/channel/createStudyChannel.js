@@ -37,7 +37,7 @@ $(function () {
         let bool = true;
 
         if (!validation.name.test(channel.name) || channel.name == null) {
-            $('#alert').append('<p>[채널 이름] : 이름은 2자리 이상 15이하 자리수만 입력 가능합니다.</p>')
+            $('#alert').append('<p>[채널 이름] : 이름은 2자리 이상 20이하 자리수만 입력 가능합니다.</p>')
             bool = false;
         }
         if (!validation.limitedMemberNumber.test(channel.limitedMemberNumber) || channel.limitedMemberNumber == null) {
@@ -45,7 +45,7 @@ $(function () {
             bool = false;
         }
         if (!validation.thumbnailDescription.test(channel.thumbnailDescription) || channel.thumbnailDescription == null) {
-            $('#alert').append('<p>[썸네일 인사말] : 썸네일 인사말은 1자리 이상 20자리 이하 자리수만 입력 가능합니다.</p>')
+            $('#alert').append('<p>[썸네일 인사말] : 썸네일 인사말은 1자리 이상 30자리 이하 자리수만 입력 가능합니다.</p>')
             bool = false;
         }
 

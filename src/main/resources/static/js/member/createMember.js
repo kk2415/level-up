@@ -103,6 +103,7 @@ function validate() {
         bool = false;
     }
     if (!validation.phone.test($('#phone').val()) || $('#phone').val() == null) {
+        alert($('#phone').val())
         $('#alert').append('<p>[휴대폰번호] : 유효한 형식이 아닙니다.</p>')
         bool = false;
     }

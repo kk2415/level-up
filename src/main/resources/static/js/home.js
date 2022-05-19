@@ -21,6 +21,9 @@ $('#createStudyButton').click(function () {
     if (result == null) {
         alert("스터디 생성을 위해선 로그인해야 합니다.")
     }
+    else {
+        $(location).attr('href', '/channel/study/create')
+    }
 })
 
 $('#createProjectButton').click(function () {
@@ -28,6 +31,9 @@ $('#createProjectButton').click(function () {
 
     if (result == null) {
         alert("프로젝트 생성을 위해선 로그인해야 합니다.")
+    }
+    else {
+        $(location).attr('href', '/channel/project/create')
     }
 })
 
