@@ -20,11 +20,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.format.DateTimeFormatter;
@@ -89,18 +89,17 @@ public class ChannelApiController {
     }
 
     @PostMapping("/channel/{channelId}/waiting-member")
-    public ResponseEntity addWaitingMember(@PathVariable Long channelId,
-                                           @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
-        channelService.addWaitingMember(channelId, member.getId());
+    public ResponseEntity addWaitingMember(@PathVariable Long channelId, @AuthenticationPrincipal String id) {
+        channelService.addWaitingMember(channelId, Long.valueOf(id));
         return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.CREATED);
     }
 
     @PostMapping("/channel/{channelId}/member/{email}")
     public ResponseEntity addMember(@PathVariable Long channelId,
                                     @PathVariable String email,
-                                    @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+                                    @AuthenticationPrincipal String id) {
         channelService.deleteWaitingMember(channelId, email);
-        channelService.addMember(channelId, member.getId());
+        channelService.addMember(channelId, Long.valueOf(id));
         return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.CREATED);
     }
 
@@ -174,8 +173,7 @@ public class ChannelApiController {
     @GetMapping("/channel/{channelId}/members")
     public Result channelMembers(@PathVariable Long channelId,
                                  @RequestParam(required = false) Long page,
-                                 @RequestParam(required = false) Long count,
-                                 HttpServletRequest request) {
+                                 @RequestParam(required = false) Long count) {
         List<Member> members = memberService.findByChannelId(channelId, page, 5L);
 
         List<MemberResponse> memberResponses = members.stream()
@@ -189,8 +187,7 @@ public class ChannelApiController {
     @GetMapping("/channel/{channelId}/waiting-members")
     public Result channelWaitingMembers(@PathVariable Long channelId,
                                         @RequestParam(required = false) Long page,
-                                        @RequestParam(required = false) Long count,
-                                        HttpServletRequest request) {
+                                        @RequestParam(required = false) Long count) {
         List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId, page);
 
         List<MemberResponse> memberResponses = waitingMembers.stream()
@@ -215,7 +212,8 @@ public class ChannelApiController {
      * 수정
      * */
     @PatchMapping("/channel/{channelId}")
-    public ResponseEntity updateDetailDescription(@PathVariable Long channelId, @RequestBody @Validated UpdateChannelRequest channelRequest) {
+    public ResponseEntity updateDetailDescription(@PathVariable Long channelId,
+                                                  @RequestBody @Validated UpdateChannelRequest channelRequest) {
         channelService.update(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
                 channelRequest.getDescription(), channelRequest.getThumbnailDescription(), channelRequest.getThumbnailImage());
 
@@ -240,8 +238,7 @@ public class ChannelApiController {
 
     @DeleteMapping("/channel/{channelId}/member/{email}")
     public ResponseEntity deleteMembers(@PathVariable Long channelId,
-                                        @PathVariable String email,
-                                        HttpServletRequest request) {
+                                        @PathVariable String email) {
         channelService.deleteMember(channelId, email);
 
         return new ResponseEntity(new Result("채널 회원 삭제 완료", 1), HttpStatus.OK);
@@ -249,8 +246,7 @@ public class ChannelApiController {
 
     @DeleteMapping("/channel/{channelId}/waiting-member/{email}")
     public ResponseEntity deleteWaitingMembers(@PathVariable Long channelId,
-                                               @PathVariable String email,
-                                               HttpServletRequest request) {
+                                               @PathVariable String email) {
         channelService.deleteWaitingMember(channelId, email);
 
         return new ResponseEntity(new Result("가입 대기 회원 삭제 완료", 1), HttpStatus.OK);

@@ -1,12 +1,6 @@
 import httpRequest from "/js/module/httpRequest.js";
 import {loginMemberValidation as validation} from '/js/module/validation.js';
 
-function getRedirectUrl() {
-    let search = decodeURI($(location).attr('search'));
-
-    return search.substr(search.indexOf('=') + 1)
-}
-
 $(function () {
     let request = new httpRequest()
     let loginForm = {}
@@ -15,6 +9,12 @@ $(function () {
     hiadAlertMessageBox()
     setLoginInfoEventHandler()
     setButtonEventHandler()
+
+    function getRedirectUrl() {
+        let search = decodeURI($(location).attr('search'));
+
+        return search.substr(search.indexOf('=') + 1)
+    }
 
     function setButtonEventHandler() {
         $('#loginButton').click(function () {
@@ -30,7 +30,7 @@ $(function () {
         removeAlertMassageBox()
 
         if (validate()) {
-            requestPost();
+            login();
         }
         else {
             showAlertMessageBox()
@@ -52,8 +52,10 @@ $(function () {
         return bool;
     }
 
-    function requestPost() {
-        let result = request.postRequest('/api/member/login', loginForm, () => {
+    function login() {
+        let result = request.postRequest('/api/member/login', loginForm, (data) => {
+            console.log(data.token)
+            sessionStorage.setItem("ACCESS_TOKEN", data.token)
             $(location).attr('href', redirectUrl)
         })
 

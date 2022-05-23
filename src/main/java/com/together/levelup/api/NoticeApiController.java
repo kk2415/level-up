@@ -5,21 +5,22 @@ import com.together.levelup.domain.file.ImageType;
 import com.together.levelup.domain.file.UploadFile;
 import com.together.levelup.domain.member.Member;
 import com.together.levelup.domain.notice.Notice;
-import com.together.levelup.dto.notice.NoticeRequest;
 import com.together.levelup.dto.Result;
+import com.together.levelup.dto.notice.NoticeRequest;
 import com.together.levelup.dto.notice.NoticeResponse;
 import com.together.levelup.dto.notice.UpdateNoticeRequest;
 import com.together.levelup.dto.post.PostSearch;
 import com.together.levelup.service.FileService;
+import com.together.levelup.service.MemberService;
 import com.together.levelup.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class NoticeApiController {
 
     private final NoticeService noticeService;
+    private final MemberService memberService;
     private final FileService fileService;
     private final FileStore fileStore;
 
@@ -39,8 +41,8 @@ public class NoticeApiController {
      * */
     @PostMapping("/notice")
     public ResponseEntity create(@RequestBody @Validated NoticeRequest noticeRequest,
-                                 HttpServletRequest request,
-                                 @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+                                 @AuthenticationPrincipal String id) {
+        Member member = memberService.findOne(Long.valueOf(id));
         Long noticeId = noticeService.create(member.getId(), noticeRequest.getTitle(), member.getName(),
                 noticeRequest.getContent());
 
@@ -130,7 +132,8 @@ public class NoticeApiController {
      * 수정
      * */
     @PatchMapping("/notice/{noticeId}")
-    public ResponseEntity update(@PathVariable Long noticeId, @RequestBody @Validated UpdateNoticeRequest noticeRequest) {
+    public ResponseEntity update(@PathVariable Long noticeId,
+                                 @RequestBody @Validated UpdateNoticeRequest noticeRequest) {
         noticeService.update(noticeId, noticeRequest.getTitle(), noticeRequest.getContent());
 
         return new ResponseEntity(new Result("수정 성공", 1), HttpStatus.OK);

@@ -1,11 +1,22 @@
 export default class httpRequest {
 
+    constructor() {
+        this.ACCESS_TOKEN = "ACCESS_TOKEN"
+    }
+
     getRequest(url, callback) {
         let result = {}
+        let headers = {}
+        const accessToken = sessionStorage.getItem(this.ACCESS_TOKEN)
+
+        if (accessToken && accessToken !== null) {
+            headers.Authorization = "Bearer "+ accessToken
+        }
 
         $.ajax({
             url: url,
             method: "GET",
+            headers : headers,
             async: false,
         })
         .done(function (response) {
@@ -23,12 +34,19 @@ export default class httpRequest {
 
     postRequest(url, requestData, callback) {
         let result = {}
+        let headers = {}
+        const accessToken = sessionStorage.getItem(this.ACCESS_TOKEN)
+
+        if (accessToken && accessToken !== null) {
+            headers.Authorization = "Bearer "+ accessToken
+        }
 
         $.ajax({
             url: url,
             method: 'POST',
             dataType: 'json',
-            contentType: 'application/json',
+            headers : headers,
+            contentType : "application/json",
             data: JSON.stringify(requestData),
             async: false,
         })
@@ -47,12 +65,19 @@ export default class httpRequest {
 
     patchRequest(url, requestData, callback) {
         let result = {}
+        let headers = {}
+        const accessToken = sessionStorage.getItem(this.ACCESS_TOKEN)
+
+        if (accessToken && accessToken !== null) {
+            headers.Authorization = "Bearer "+ accessToken
+        }
 
         $.ajax({
             url: url,
             method: 'PATCH',
             dataType: 'json',
-            contentType: 'application/json',
+            headers : headers,
+            contentType : "application/json",
             data: JSON.stringify(requestData),
             async: false,
         })
@@ -71,11 +96,18 @@ export default class httpRequest {
 
     postMultipartRequest(url, form, callback) {
         let result = {}
+        let headers = {}
+        const accessToken = sessionStorage.getItem(this.ACCESS_TOKEN)
+
+        if (accessToken && accessToken !== null) {
+            headers.Authorization = "Bearer "+ accessToken
+        }
 
         $.ajax({
             url: url,
             method: 'POST',
             data: form,
+            headers : headers,
             processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음
             contentType: false, // - contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
             cache: false,
@@ -98,11 +130,18 @@ export default class httpRequest {
 
     patchMultipartRequest(url, form, callback) {
         let result = {}
+        let headers = {}
+        const accessToken = sessionStorage.getItem(this.ACCESS_TOKEN)
+
+        if (accessToken && accessToken !== null) {
+            headers.Authorization = "Bearer "+ accessToken
+        }
 
         $.ajax({
             url: url,
             method: 'PATCH',
             data: form,
+            headers : headers,
             processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음
             contentType: false, // - contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
             cache: false,
@@ -125,12 +164,19 @@ export default class httpRequest {
 
     deleteRequest(url, callback, requestData) {
         let result = {}
+        let headers = {}
+        const accessToken = sessionStorage.getItem(this.ACCESS_TOKEN)
+
+        if (accessToken && accessToken !== null) {
+            headers.Authorization = "Bearer "+ accessToken
+        }
 
         $.ajax({
             url: url,
             method: "DELETE",
             dataType: 'json',
-            contentType: 'application/json',
+            headers : headers,
+            contentType : "application/json",
             data: JSON.stringify(requestData),
             async: false,
         })

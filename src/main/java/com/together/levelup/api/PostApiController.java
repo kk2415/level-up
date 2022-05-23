@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,8 +43,8 @@ public class PostApiController {
      * */
     @PostMapping("/post")
     public ResponseEntity create(@Validated @RequestBody CreatePostRequest postRequest,
-                              @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
-        Long postId = postService.create(member.getId(), postRequest.getChannelId(), postRequest.getTitle(),
+                                 @AuthenticationPrincipal String id) {
+        Long postId = postService.create(Long.valueOf(id), postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
         Post findPost = postService.findById(postId);
 
