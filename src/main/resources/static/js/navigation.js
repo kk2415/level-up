@@ -4,13 +4,28 @@ let request = new httpRequest()
 let url = getUrl()
 
 $(function () {
+    renderNavigation()
     setEventHandler()
     $('#register').attr('href', '/member/create')
     $('#myPage').attr('href', '/member/myPage')
     $('#login').attr('href', '/member/login?redirectURL=' + url)
-    $('#logout').attr('href', '/member/logout')
     $('#notice').attr('href', '/notice?page=1')
 })
+
+function renderNavigation() {
+    let token = sessionStorage.getItem("ACCESS_TOKEN")
+
+    if (token && token !== null) {
+        $('#login').css('display', 'none')
+        $('#logout').css('display', 'inline-block')
+        $('#myPage').css('display', 'inline-block')
+    }
+    else {
+        $('#login').css('display', 'inline-block')
+        $('#logout').css('display', 'none')
+        $('#myPage').css('display', 'none')
+    }
+}
 
 function moveTo(url) {
     let result = request.getRequest(url)
@@ -34,6 +49,7 @@ function setEventHandler() {
         moveTo('/member/login?redirectURL=' + url)
     })
     $('#logout').click(function () {
+        sessionStorage.removeItem("ACCESS_TOKEN")
         moveTo('/member/logout')
     })
     $('#notice').click(function () {

@@ -16,11 +16,11 @@ import com.together.levelup.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -42,11 +42,10 @@ public class ChannelNoticeApiController {
     @PostMapping("/channel-notice")
     public ResponseEntity create(@RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
-                                 HttpServletRequest request,
-                                 @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+                                 @AuthenticationPrincipal String memberId) {
         Member manager = channelService.findOne(channel).getMember();
 
-        if (member.getId().equals(manager.getId())) {
+        if (Long.valueOf(memberId).equals(manager.getId())) {
             Long id = channelNoticeService.create(channel, noticeRequest.getTitle(), manager.getName(),
                     noticeRequest.getContent());
 
@@ -139,10 +138,10 @@ public class ChannelNoticeApiController {
     public ResponseEntity update(@PathVariable Long id,
                                  @RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
-                                 @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+                                 @AuthenticationPrincipal String memberId) {
         Member manager = channelService.findOne(channel).getMember();
 
-        if (member.getId().equals(manager.getId())) {
+        if (Long.valueOf(memberId).equals(manager.getId())) {
             channelNoticeService.upadte(id, noticeRequest.getTitle(), noticeRequest.getContent());
             return new ResponseEntity(new Result("채널 공지사항이 수정되었습니다.", 0), HttpStatus.CREATED);
         }
@@ -157,10 +156,10 @@ public class ChannelNoticeApiController {
     @DeleteMapping("/channel-notice")
     public ResponseEntity delete(@RequestParam Long channel,
                                  @RequestBody @Validated DeleteChannelNoticeRequest noticeRequest,
-                                 @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+                                 @AuthenticationPrincipal String memberId) {
         Member manager = channelService.findOne(channel).getMember();
 
-        if (member.getId().equals(manager.getId())) {
+        if (Long.valueOf(memberId).equals(manager.getId())) {
             channelNoticeService.deleteAll(noticeRequest.getIds());
             return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
         }

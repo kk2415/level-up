@@ -13,9 +13,9 @@ import com.together.levelup.service.ChannelService;
 import com.together.levelup.service.MemberService;
 import com.together.levelup.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,14 +34,14 @@ public class ChannelManagerApiController {
      * 조회
      * */
     @GetMapping("/channel/{channelId}/manager")
-    public ManagerResponse channel(@PathVariable Long channelId, HttpServletRequest request,
-                                   @SessionAttribute(name = SessionName.SESSION_NAME, required = false) Member member) {
+    public ManagerResponse channel(@PathVariable Long channelId,
+                                   @AuthenticationPrincipal String id) {
         Channel channel = channelService.findOne(channelId);
         List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
         List<Member> members = memberService.findByChannelId(channelId);
         List<Post> posts = postService.findByChannelId(channelId, new PostSearch(null, null));
 
-        ChannelInfo channelInfo = new ChannelInfo(channel.getName(), member.getName(),
+        ChannelInfo channelInfo = new ChannelInfo(channel.getName(), id,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getDateCreated()),
                 channel.getMemberCount(), (long)waitingMembers.size(), (long) posts.size(),
                 channel.getThumbnailImage().getStoreFileName());
@@ -59,9 +59,10 @@ public class ChannelManagerApiController {
         List<ManagerPostResponse> postResponses = posts.stream().map(p -> new ManagerPostResponse(p.getId(),
                 p.getTitle(), p.getWriter())).collect(Collectors.toList());
 
-        if (channel.getMember().getId().equals(member.getId())) {
+        if (channel.getMember().getId().equals(Long.valueOf(id))) {
             return new ManagerResponse(channelInfo, waitingMemberResponses, memberResponses, postResponses);
         }
+
         throw new NotLoggedInException("미인증 사용자");
     }
 

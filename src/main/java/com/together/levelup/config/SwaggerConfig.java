@@ -1,4 +1,4 @@
-package com.together.levelup;
+package com.together.levelup.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
