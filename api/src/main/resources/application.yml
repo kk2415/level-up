@@ -1,0 +1,18 @@
+server:
+  port: 9002
+  servlet:
+    session:
+      tracking-modes: COOKIE
+      timeout: 1800
+
+file:
+  dir: C:/Task/study/levelup
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+
+  application:
+    name: api

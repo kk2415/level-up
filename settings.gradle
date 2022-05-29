@@ -1,1 +1,4 @@
-rootProject.name = 'levelup'
+rootProject.name = 'level-up'
+include 'core'
+include 'api'
+

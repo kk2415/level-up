@@ -1,0 +1,47 @@
+buildscript {
+    ext {
+        queryDslVersion = "4.4.0"
+    }
+}
+
+plugins {
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
+bootJar {
+    enabled = false
+}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.levelup.core.CoreApplication'
+        )
+    }
+    enabled = true
+}
+
+dependencies {
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+}
+
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+//querydsl 추가 끝
