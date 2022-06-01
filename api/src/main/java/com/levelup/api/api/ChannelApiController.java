@@ -116,7 +116,8 @@ public class ChannelApiController {
 
         List<ChannelResponse> responseList = channels.stream().map(c -> new ChannelResponse(c.getId(),
                         c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getDescription(),
-                        c.getThumbnailDescription(), c.getMemberCount())).collect(Collectors.toList());
+                        c.getThumbnailDescription(), c.getMemberCount(), c.getThumbnailImage().getStoreFileName()))
+                .collect(Collectors.toList());
 
         return new Result(responseList, responseList.size());
     }
@@ -126,8 +127,8 @@ public class ChannelApiController {
         Channel findChannel = channelService.findOne(channelId);
 
         return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getDescription(),
-                findChannel.getThumbnailDescription(), findChannel.getMemberCount());
+                findChannel.getManagerName(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
+                findChannel.getMemberCount(), findChannel.getThumbnailImage().getStoreFileName());
     }
 
     @GetMapping("/detail-description/{channelId}")
@@ -145,8 +146,8 @@ public class ChannelApiController {
         List<Channel> findChannels = channelService.findByCategory(category);
 
         List<ChannelResponse> responseList = findChannels.stream().map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(),
-                        c.getDescription(), c.getThumbnailDescription(), c.getMemberCount()))
+                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getDescription(),
+                        c.getThumbnailDescription(), c.getMemberCount(), c.getThumbnailImage().getStoreFileName()))
                 .collect(Collectors.toList());
 
         return new Result(responseList, responseList.size());

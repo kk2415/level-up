@@ -1,13 +1,11 @@
 package com.levelup.api.api;
 
 import com.levelup.api.security.TokenProvider;
-import com.levelup.api.service.LoginService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.LoginForm;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
@@ -15,9 +13,6 @@ import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.exception.ImageNotFoundException;
 import com.levelup.core.exception.MemberNotFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -27,13 +22,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +42,6 @@ import java.util.stream.Collectors;
 public class MemberApiController {
 
     private final MemberService memberService;
-    private final LoginService loginService;
     private final FileStore fileStore;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -87,32 +79,6 @@ public class MemberApiController {
         return new ResponseEntity(uploadFile, HttpStatus.OK);
     }
 
-    /**
-     * 로그인
-     * */
-    @PostMapping("/member/login")
-    public ResponseEntity login(@RequestBody @Validated LoginForm loginForm, HttpServletRequest request) {
-        Member member = loginService.login(loginForm.getEmail(), loginForm.getPassword(), passwordEncoder);
-        String token = tokenProvider.create(member);
-
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionName.SESSION_NAME, member);
-
-        LoginResponse response = LoginResponse.builder()
-                .email(member.getEmail())
-                .token(token)
-                .build();
-
-        return new ResponseEntity(response, HttpStatus.OK);
-    }
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-    public static class LoginResponse {
-        private String email;
-        private String token;
-    }
 
     /**
      * 조회
@@ -159,13 +125,12 @@ public class MemberApiController {
     }
 
     @GetMapping("/member")
-    public MemberResponse confirmLogin(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute(SessionName.SESSION_NAME) == null) {
-            throw new MemberNotFoundException("해당하는 회원이 없습니다.");
+    public MemberResponse confirmLogin(@AuthenticationPrincipal Long memberId) {
+        if (memberId == null) {
+            throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
         }
 
-        Member member = (Member)session.getAttribute(SessionName.SESSION_NAME);
+        Member member = memberService.findOne(memberId);
         return new MemberResponse(member.getEmail(), member.getName(),
                 member.getGender(), member.getBirthday(), member.getPhone(), member.getUploadFile());
     }

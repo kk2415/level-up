@@ -36,6 +36,10 @@ public class CreateMemberRequest {
 
     @NotNull
     @NotBlank
+    private String confirmPassword;
+
+    @NotNull
+    @NotBlank
     @Pattern(regexp = "^[가-힣]{2,}$", message = "이름은 2자리 이상, 한글만 입력하세요")
     @Size(min = 2)
     private String name;
