@@ -15,5 +15,6 @@ public class ChannelResponse {
     private String description;
     private String thumbnailDescription;
     private Long memberCount;
+    private String storeFileName;
 
 }

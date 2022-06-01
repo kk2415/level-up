@@ -1,9 +1,13 @@
 package com.levelup.api.config;
 
 import com.levelup.api.filter.JwtAuthenticationFilter;
+import com.levelup.api.filter.SecurityLoginFilter;
+import com.levelup.api.security.TokenProvider;
+import com.levelup.api.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,12 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final MemberService memberService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -39,35 +45,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증 실패시
+                .accessDeniedHandler(jwtAccessDeniedHandler) //권한 에러 처리(관리자 권한 등)
                 .and()
 
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                    .antMatchers("/api/member/{email}/image",
-                            "/api/notice", "/api/notice/{noticeId}",
-                            "/api/channel-notice", "/api/channel-notice/{id}",
-                            "/api/comment", "/api/comment/reply",
-                            "/api/post", "/api/post/{postId}",
-                            "/api/channel/{channelId}/manager",
-                            "/api/channel", "/api/channel/{channelId}",
-                            "/api/channel/{channelId}/waiting-member",
-                            "/api/channel/{channelId}/member/{email}",
-                            "/post/create", "/channel/study/create", "/channel/project/create").authenticated()
-                    .anyRequest().permitAll()
-                .and()
-                .formLogin()
-                        .loginPage("/member/login?redirectURL=")
-                        .permitAll()
-                        .and()
-                .logout()
-                        .permitAll();
+//                .antMatchers(HttpMethod.GET, "/**", "/api/**").permitAll()
+                .antMatchers("/**", "/api/**").permitAll();
+//                    .antMatchers("/api/member/{email}/image",
+//                            "/api/notice", "/api/notice/{noticeId}",
+//                            "/api/channel-notice", "/api/channel-notice/{id}",
+//                            "/api/comment", "/api/comment/reply",
+//                            "/api/post", "/api/post/{postId}",
+//                            "/api/channel/{channelId}/manager",
+//                            "/api/channel", "/api/channel/{channelId}",
+//                            "/api/channel/{channelId}/waiting-member",
+//                            "/api/channel/{channelId}/member/{email}",
+//                            "/post/create", "/channel/study/create", "/channel/project/create").authenticated()
 
 
-        http.addFilterAfter(
-                jwtAuthenticationFilter,
-                CorsFilter.class
-        );
+        http.addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());
+
     }
+
+    //select pwd from users where email=?
+    //데이터베이스 pwd와 사용자가 입력한 pwd 비교
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+    private SecurityLoginFilter getSecurityLoginFilter() throws Exception {
+        SecurityLoginFilter securityLoginFilter = new SecurityLoginFilter(memberService, new TokenProvider());
+
+        securityLoginFilter.setAuthenticationManager(authenticationManager());
+        return securityLoginFilter;
+    }
+
 }

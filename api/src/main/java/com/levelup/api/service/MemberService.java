@@ -7,15 +7,22 @@ import com.levelup.core.exception.DuplicateEmailException;
 import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
     final int HANGUL_UNICODE_START = 0xAC00;
     final int HANGUL_UNICODE_END = 0xD7AF;
@@ -95,4 +102,19 @@ public class MemberService {
         memberRepository.delete(memberId);
     }
 
+    /**
+     * 로그인 처리
+     * */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("loadUserByUsername start");
+
+        Member member = memberRepository.findByEmail(username);
+        if (member == null) {
+            throw new MemberNotFoundException("잘못된 이메일입니다.");
+        }
+
+        return new User(member.getEmail(), member.getPassword(), true, true,
+                true, true, new ArrayList<>());
+    }
 }
