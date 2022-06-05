@@ -1,4 +1,4 @@
-package com.levelup.core.dto;
+package com.levelup.core.dto.member;
 
 import com.levelup.core.domain.member.Authority;
 import lombok.Builder;

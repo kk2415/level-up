@@ -1,49 +1,63 @@
 package com.levelup.api.service;
 
 
+import com.levelup.core.domain.file.FileStore;
+import com.levelup.core.domain.file.ImageType;
+import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.member.MemberJoinForm;
+import com.levelup.core.dto.member.CreateMemberRequest;
+import com.levelup.core.dto.member.CreateMemberResponse;
+import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.exception.DuplicateEmailException;
+import com.levelup.core.exception.ImageNotFoundException;
 import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService implements UserDetailsService {
 
     final int HANGUL_UNICODE_START = 0xAC00;
     final int HANGUL_UNICODE_END = 0xD7AF;
 
+    private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final FileStore fileStore;
 
     /**
-     * 회원가입
+     * 생성
      * */
-    @Transactional
-    public Long join(MemberJoinForm memberForm) {
-        validationDuplicateMember(memberForm.getEmail()); //중복 회원 검증
-        memberRepository.save(memberForm.toEntity());
-        return memberRepository.findByEmail(memberForm.getEmail()).getId();
-    }
+    public CreateMemberResponse create(CreateMemberRequest memberRequest) {
+        validationDuplicateMember(memberRequest.getEmail());
 
-    @Transactional
-    public Long join(Member member) {
-        validationDuplicateMember(member.getEmail()); //중복 회원 검증
+        Member member = memberRequest.toEntity();
+        member.setPassword(passwordEncoder.encode(member.getPassword()));//중복 회원 검증
+
         memberRepository.save(member);
-        return member.getId();
+
+        return new CreateMemberResponse(member.getEmail(), member.getPassword(), member.getName(),
+                member.getGender(), member.getBirthday(), member.getPhone());
     }
 
     private void validationDuplicateMember(String email) {
@@ -55,6 +69,20 @@ public class MemberService implements UserDetailsService {
         }
     }
 
+    public UploadFile createProfileImage(MultipartFile file) throws IOException {
+        /**
+         * json이랑 이미지 파일을 동시에 서버에 보낼 수가 없으니
+         * 먼저 이 api로 이미지를 저장한 후 이미지의 경로명을 클라이언트에게 리턴(ResponseEntity(uploadFile, HttpStatus.OK))
+         * 그러면 클라이언트는 받은 경로를 객체에 저장한 후 회원가입 api를 호출함
+         * */
+        if (file == null || file.isEmpty()) {
+            throw new ImageNotFoundException("존재하지 않는 이미지입니다.");
+        }
+
+        return fileStore.storeFile(ImageType.MEMBER, file);
+    }
+
+
     /**
      * 멤버조회
      * */
@@ -62,21 +90,26 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmailAndPassword(email, password);
     }
 
-    public List<Member> findAllMembers() {
-        return memberRepository.findAll();
+    public List<MemberResponse> findAllMembers() {
+        return memberRepository.findAll()
+                .stream()
+                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
+                        m.getPhone(), m.getUploadFile()))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Member findOne(Long memberId) {
         return memberRepository.findById(memberId);
     }
 
-    public Member findByEmail(String email) {
-        Member member = memberRepository.findByEmail(email);
+    public MemberResponse findByEmail(String email) {
+        Member findMember = memberRepository.findByEmail(email);
 
-        if (member == null) {
+        if (findMember == null) {
             throw new MemberNotFoundException("가입된 이메일이 없습니다");
         }
-        return member;
+        return new MemberResponse(findMember.getEmail(), findMember.getName(),
+                findMember.getGender(), findMember.getBirthday(), findMember.getPhone(), findMember.getUploadFile());
     }
 
     public List<Member> findByChannelId(Long channelId) {
@@ -95,12 +128,59 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5);
     }
 
+    public UrlResource getProfileImage(String email) throws MalformedURLException {
+        Member findMember = memberRepository.findByEmail(email);
+
+        if (findMember.getUploadFile() == null) {
+            throw new ImageNotFoundException("프로필 사진을 찾을 수 없습니다");
+        }
+
+        UploadFile uploadFile = findMember.getUploadFile();
+        String fullPath = fileStore.getFullPath(uploadFile.getStoreFileName());
+
+        /*
+         * @ResponseBody + byte[]또는, Resource를 반환하는 경우 바이트 정보가 반환됩니다.
+         * <img> 에서는 이 바이트 정보를 읽어서 이미지로 반환하게 됩니다.
+         *
+         * Resource를 리턴할 때 ResourceHttpMessageConverter가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
+         * */
+        return new UrlResource("file:" + fullPath);
+    }
+
+
+    /**
+     * 멤버 수정
+     * */
+    public void modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
+        }
+
+        Member member = memberRepository.findById(memberId);
+
+        deleteProfileImage(member.getUploadFile().getStoreFileName());
+
+        UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
+        member.setUploadFile(uploadFile); //변경 감지의 의한 update문 쿼리 발생
+    }
+
+    private void deleteProfileImage(String storeFileName) {
+        if (!storeFileName.equals(FileStore.MEMBER_DEFAULT_IMAGE)) {
+            File imageFile = new File(fileStore.getFullPath(storeFileName));
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+        }
+    }
+
+
     /**
      * 멤버 삭제
      * */
     public void delete(Long memberId) {
         memberRepository.delete(memberId);
     }
+
 
     /**
      * 로그인 처리

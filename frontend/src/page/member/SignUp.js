@@ -5,7 +5,7 @@ import HorizonLine from "../../component/HorizonLine";
 import { signUp } from '../../api/ApiService'
 import { uploadFile } from '../../api/FileService'
 
-const SignUp = ({show, onHide} ) => {
+const SignUp = () => {
     const [file, setFile] = useState(null)
 
     const handleChangeFile = (event) => {
@@ -30,7 +30,7 @@ const SignUp = ({show, onHide} ) => {
 
         let result = await signUp(member)
         if (result) {
-            onHide()
+            window.location.href = '/'
         }
     }
 

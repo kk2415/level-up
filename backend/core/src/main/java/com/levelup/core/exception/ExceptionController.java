@@ -30,6 +30,8 @@ public class ExceptionController {
 
     @ExceptionHandler(MemberNotFoundException.class)
     public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
@@ -42,6 +44,8 @@ public class ExceptionController {
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<ExceptionResponse> duplicateEmailExceptionHandler(Exception e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
@@ -55,6 +59,9 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
                                                                   HttpServletRequest request) {
+        log.error(e.getClass().getName());
+        log.error(e.getMessage());
+
         CreateExceptionResponse createExceptionResponse = new CreateExceptionResponse();
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 
@@ -72,6 +79,8 @@ public class ExceptionController {
 
     @ExceptionHandler(ImageNotFoundException.class)
     public ResponseEntity<ExceptionResponse> notFoundImageException(ImageNotFoundException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
@@ -84,6 +93,8 @@ public class ExceptionController {
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ExceptionResponse> postNotFoundException(PostNotFoundException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());
@@ -96,6 +107,8 @@ public class ExceptionController {
 
     @ExceptionHandler(NotLoggedInException.class)
     public ResponseEntity<ExceptionResponse> notLoggedInException(NotLoggedInException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
         exceptionResponse.setTimeStamp(LocalDateTime.now());

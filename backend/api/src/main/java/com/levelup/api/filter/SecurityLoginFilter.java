@@ -2,25 +2,21 @@ package com.levelup.api.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.spi.json.GsonJsonProvider;
-import com.levelup.api.api.MemberApiController;
 import com.levelup.api.api.SessionName;
 import com.levelup.api.security.TokenProvider;
 import com.levelup.api.service.MemberService;
-import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.LoginRequest;
-import com.levelup.core.dto.LoginResponse;
+import com.levelup.core.dto.member.LoginRequest;
+import com.levelup.core.dto.member.LoginResponse;
+import com.levelup.core.dto.member.MemberResponse;
+import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.core.MethodParameter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,15 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
 public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
     @Override
@@ -69,7 +63,7 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         ObjectMapper mapper = new ObjectMapper();
         String email = ((User)authResult.getPrincipal()).getUsername();
-        Member member = memberService.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
         String token = tokenProvider.create(member);
 
         LoginResponse loginResponse = LoginResponse.builder()
