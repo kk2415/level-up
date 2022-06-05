@@ -44,7 +44,7 @@ public class ChannelNoticeApiController {
     @PostMapping("/channel-notice")
     public ResponseEntity create(@RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal String memberId) {
+                                 @AuthenticationPrincipal Long memberId) {
         Member manager = channelService.findOne(channel).getMember();
 
         if (Long.valueOf(memberId).equals(manager.getId())) {
@@ -53,12 +53,9 @@ public class ChannelNoticeApiController {
 
             ChannelNotice channelNotice = channelNoticeService.findById(id);
 
-            for (UploadFile uploadFile : noticeRequest.getUploadFiles()) {
-                fileService.create(channelNotice, uploadFile);
-            }
-
-            return new ResponseEntity(new ChannelNoticeResponse(channelNotice.getId(), channelNotice.getTitle(),
-                    channelNotice.getWriter(), channelNotice.getContent(), channelNotice.getViews(),
+            return new ResponseEntity(new ChannelNoticeResponse(channelNotice.getId(),
+                    channelNotice.getChannel().getMember().getId(), channelNotice.getTitle(),
+                    channelNotice.getWriter(), channelNotice.getContent(), channelNotice.getViews(), 0L,
                     DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getDateCreated()),
                     channelNotice.getComments().size()), HttpStatus.OK);
         }
@@ -90,8 +87,8 @@ public class ChannelNoticeApiController {
             channelNoticeService.addViews(findNotice);
         }
 
-        return new ChannelNoticeResponse(id, findNotice.getTitle(),
-                findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(),
+        return new ChannelNoticeResponse(id, findNotice.getChannel().getMember().getId(), findNotice.getTitle(),
+                findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(), 0L,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
                 (int)findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
@@ -116,8 +113,8 @@ public class ChannelNoticeApiController {
     public ChannelNoticeResponse findNextPost(@PathVariable Long id) {
         ChannelNotice nextPage = channelNoticeService.findNextPage(id);
 
-        return new ChannelNoticeResponse(nextPage.getId(), nextPage.getTitle(),
-                nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(),
+        return new ChannelNoticeResponse(nextPage.getId(), nextPage.getChannel().getMember().getId(),
+                nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(), 0L,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
                 (int)nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
@@ -126,8 +123,9 @@ public class ChannelNoticeApiController {
     public ChannelNoticeResponse findPrevPost(@PathVariable Long id) {
         ChannelNotice prevPage = channelNoticeService.findPrevPage(id);
 
-        return new ChannelNoticeResponse(prevPage.getId(), prevPage.getTitle(),
-                prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(),
+        return new ChannelNoticeResponse(prevPage.getId(), prevPage.getChannel().getMember().getId(),
+                prevPage.getTitle(),
+                prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(), 0L,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
                 (int)prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
@@ -140,10 +138,10 @@ public class ChannelNoticeApiController {
     public ResponseEntity update(@PathVariable Long id,
                                  @RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal String memberId) {
+                                 @AuthenticationPrincipal Long memberId) {
         Member manager = channelService.findOne(channel).getMember();
 
-        if (Long.valueOf(memberId).equals(manager.getId())) {
+        if (memberId.equals(manager.getId())) {
             channelNoticeService.upadte(id, noticeRequest.getTitle(), noticeRequest.getContent());
             return new ResponseEntity(new Result("채널 공지사항이 수정되었습니다.", 0), HttpStatus.CREATED);
         }
@@ -156,13 +154,27 @@ public class ChannelNoticeApiController {
      * 삭제
      * */
     @DeleteMapping("/channel-notice")
-    public ResponseEntity delete(@RequestParam Long channel,
+    public ResponseEntity deleteAll(@RequestParam Long channel,
                                  @RequestBody @Validated DeleteChannelNoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal String memberId) {
+                                 @AuthenticationPrincipal Long memberId) {
         Member manager = channelService.findOne(channel).getMember();
 
         if (Long.valueOf(memberId).equals(manager.getId())) {
             channelNoticeService.deleteAll(noticeRequest.getIds());
+            return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
+        }
+
+        return new ResponseEntity("로그인이 안되어있거나 매니저가 아닙니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/channel-notice/{channelNoticeId}")
+    public ResponseEntity delet0e(@PathVariable Long channelNoticeId,
+                                 @RequestParam Long channel,
+                                 @AuthenticationPrincipal Long memberId) {
+        Member manager = channelService.findOne(channel).getMember();
+
+        if (memberId.equals(manager.getId())) {
+            channelNoticeService.delete(channelNoticeId);
             return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
         }
 

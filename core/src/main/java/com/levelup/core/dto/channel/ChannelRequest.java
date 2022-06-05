@@ -4,6 +4,7 @@ import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.Data;
 
+import javax.persistence.EmbeddedId;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -18,9 +19,6 @@ public class ChannelRequest {
 
     @NotNull
     private Long limitedMemberNumber;
-
-    @NotNull
-    private String managerName;
 
     @NotNull
     private String description;

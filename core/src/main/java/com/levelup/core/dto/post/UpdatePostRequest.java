@@ -10,13 +10,11 @@ import java.util.List;
 @Data
 public class UpdatePostRequest {
 
-    @NotNull
     private String memberEmail;
 
     @NotNull
     private String title;
 
-    @NotNull
     private String writer;
 
     @NotNull

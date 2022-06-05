@@ -48,21 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증 실패시
                 .accessDeniedHandler(jwtAccessDeniedHandler) //권한 에러 처리(관리자 권한 등)
                 .and()
-
                 .authorizeRequests()
-//                .antMatchers(HttpMethod.GET, "/**", "/api/**").permitAll()
                 .antMatchers("/**", "/api/**").permitAll();
-//                    .antMatchers("/api/member/{email}/image",
-//                            "/api/notice", "/api/notice/{noticeId}",
-//                            "/api/channel-notice", "/api/channel-notice/{id}",
-//                            "/api/comment", "/api/comment/reply",
-//                            "/api/post", "/api/post/{postId}",
-//                            "/api/channel/{channelId}/manager",
-//                            "/api/channel", "/api/channel/{channelId}",
-//                            "/api/channel/{channelId}/waiting-member",
-//                            "/api/channel/{channelId}/member/{email}",
-//                            "/post/create", "/channel/study/create", "/channel/project/create").authenticated()
-
 
         http.addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());

@@ -127,6 +127,7 @@ public class MemberApiController {
     @GetMapping("/member")
     public MemberResponse confirmLogin(@AuthenticationPrincipal Long memberId) {
         if (memberId == null) {
+            log.warn("@AuthenticationPrincipal 에러");
             throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
         }
 

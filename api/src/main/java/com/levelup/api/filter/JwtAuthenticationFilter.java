@@ -34,10 +34,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //            log.info("header : {}", request.getHeader("Authorization"));
             //토큰 검사하기. JWT이므로 인가 서버에 요청하지 않고도 검증 가능
             if (token != null && !token.equalsIgnoreCase("null")) {
-                log.info("token : {}", token);
-
                 //id 가져오기
-                String memberId = tokenProvider.validateAndGetUserId(token);
+                Long memberId = Long.valueOf(tokenProvider.validateAndGetUserId(token));
+
+//                log.info("URI : {}", request.getRequestURI());
+//                log.info("token : {}", token);
+//                log.info("memberId : {}", memberId);
 
                 //인증완료. SecurityContextHolder에 등록해야 인증된 사용자라고 생각한다.
                 AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

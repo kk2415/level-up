@@ -42,13 +42,14 @@ public class ChannelManagerApiController {
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
     @GetMapping("/channel/{channelId}/manager")
     public ManagerResponse channel(@PathVariable Long channelId,
-                                   @AuthenticationPrincipal String id) {
+                                   @AuthenticationPrincipal Long id) {
         Channel channel = channelService.findOne(channelId);
+        Member findMember = memberService.findOne(id);
         List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
         List<Member> members = memberService.findByChannelId(channelId);
         List<Post> posts = postService.findByChannelId(channelId, new PostSearch(null, null));
 
-        ChannelInfo channelInfo = new ChannelInfo(channel.getName(), id,
+        ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getDateCreated()),
                 channel.getMemberCount(), (long)waitingMembers.size(), (long) posts.size(),
                 channel.getThumbnailImage().getStoreFileName());
@@ -66,11 +67,11 @@ public class ChannelManagerApiController {
         List<ManagerPostResponse> postResponses = posts.stream().map(p -> new ManagerPostResponse(p.getId(),
                 p.getTitle(), p.getWriter())).collect(Collectors.toList());
 
-        if (channel.getMember().getId().equals(Long.valueOf(id))) {
-            return new ManagerResponse(channelInfo, waitingMemberResponses, memberResponses, postResponses);
-        }
+//        if (channel.getMember().getId().equals(id)) {
+//        }
+        return new ManagerResponse(channelInfo, waitingMemberResponses, memberResponses, postResponses);
 
-        throw new NotLoggedInException("미인증 사용자");
+//        throw new NotLoggedInException("미인증 사용자");
     }
 
     /**

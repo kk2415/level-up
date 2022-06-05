@@ -12,6 +12,7 @@ public class ChannelResponse {
     private String name;
     private Long limitedMemberNumber;
     private String managerName;
+    private Long managerId;
     private String description;
     private String thumbnailDescription;
     private Long memberCount;
