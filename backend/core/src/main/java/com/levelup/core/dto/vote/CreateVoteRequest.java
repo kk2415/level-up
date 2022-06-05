@@ -1,4 +1,4 @@
-package com.levelup.core.dto;
+package com.levelup.core.dto.vote;
 
 import com.levelup.core.domain.comment.ArticleIdentity;
 import lombok.Data;

@@ -15,7 +15,6 @@ const MyPage = () => {
             window.location.href = '/'
         }
 
-        console.log(result)
         setMember(result)
     }
 
@@ -29,7 +28,6 @@ const MyPage = () => {
 
     const handleAccess = () => {
         if (myPageFile) {
-            console.log(myPageFile)
             uploadFile('/api/member/' + member.email + '/image', 'PATCH', myPageFile)
         }
 
@@ -42,8 +40,6 @@ const MyPage = () => {
     useEffect(() => {
         loadMember()
     }, [])
-
-    console.log(member)
 
     return (
         <Container>

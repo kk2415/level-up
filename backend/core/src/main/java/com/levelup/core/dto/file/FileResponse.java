@@ -1,4 +1,4 @@
-package com.levelup.core.dto;
+package com.levelup.core.dto.file;
 
 import com.levelup.core.domain.file.UploadFile;
 import lombok.AllArgsConstructor;

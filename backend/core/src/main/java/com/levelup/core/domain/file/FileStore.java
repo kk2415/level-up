@@ -38,7 +38,7 @@ public class FileStore {
 
     public UploadFile storeFile(ImageType imageType, MultipartFile multipartFile) throws IOException {
         if (multipartFile == null || multipartFile.isEmpty()) {
-            return null;
+            return new UploadFile("default.png", MEMBER_DEFAULT_IMAGE);
         }
 
         String uploadFilename = multipartFile.getOriginalFilename();

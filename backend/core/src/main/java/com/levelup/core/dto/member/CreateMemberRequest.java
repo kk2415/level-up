@@ -61,18 +61,18 @@ public class CreateMemberRequest {
 
     private Authority authority;
 
-//    public Member toEntity() {
-//        Member member = new Member();
-//        member.setEmail(this.email);
-//        member.setPassword(password);
-//        member.setName(name);
-//        member.setGender(gender);
-//        member.setBirthday(birthday);
-//        member.setPhone(phone);
-//        member.setAuthority(Authority.NORMAL);
-//        member.setDateCreated(LocalDateTime.now());
-//        member.setUploadFile(uploadFile);
-//        return member;
-//    }
+    public Member toEntity() {
+        Member member = new Member();
+        member.setEmail(email);
+        member.setPassword(password);
+        member.setName(name);
+        member.setGender(gender);
+        member.setBirthday(birthday);
+        member.setPhone(phone);
+        member.setAuthority(Authority.NORMAL);
+        member.setDateCreated(LocalDateTime.now());
+        member.setUploadFile(uploadFile);
+        return member;
+    }
 
 }
