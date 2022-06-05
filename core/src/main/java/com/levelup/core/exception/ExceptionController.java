@@ -16,17 +16,17 @@ import java.util.List;
 @RestControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
-
-        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
+//        ExceptionResponse exceptionResponse = new ExceptionResponse();
+//
+//        exceptionResponse.setTimeStamp(LocalDateTime.now());
+//        exceptionResponse.setMessage(e.getMessage());
+//        exceptionResponse.setException(e.getClass().getName());
+//        exceptionResponse.setPath(request.getRequestURI());
+//
+//        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {

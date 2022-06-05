@@ -46,17 +46,25 @@ public class PostApiController {
      * */
     @PostMapping("/post")
     public ResponseEntity create(@Validated @RequestBody CreatePostRequest postRequest,
-                                 @AuthenticationPrincipal String id) {
-        Long postId = postService.create(Long.valueOf(id), postRequest.getChannelId(), postRequest.getTitle(),
+                                 @AuthenticationPrincipal Long id) {
+        Long postId = postService.create(id, postRequest.getChannelId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
         Post findPost = postService.findById(postId);
 
-        fileService.create(findPost, postRequest.getUploadFiles());
+//        fileService.create(findPost, postRequest.getUploadFiles());
 
-        PostResponse postResponse = new PostResponse(findPost.getTitle(), findPost.getWriter(),
-                findPost.getContent(), findPost.getPostCategory(),
+        PostResponse postResponse = new PostResponse(
+                findPost.getId(),
+                findPost.getMember().getId(),
+                findPost.getTitle(),
+                findPost.getWriter(),
+                findPost.getContent(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
-                findPost.getVoteCount(), findPost.getViews(), findPost.getComments().size());
+                findPost.getVoteCount(),
+                findPost.getViews(),
+                findPost.getComments().size(),
+                findPost.getPostCategory()
+        );
 
         EntityModel<PostResponse> model = EntityModel.of(postResponse)
                 .add(linkTo(methodOn(this.getClass()).readPost(postId, "false")).withSelfRel());
@@ -85,9 +93,9 @@ public class PostApiController {
         List<Post> findPosts = postService.findAll();
 
         List<PostResponse> postResponses = findPosts.stream()
-                .map(p -> new PostResponse(p.getTitle(), p.getWriter(), p.getContent(), p.getPostCategory(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
-                        p.getVoteCount(), p.getViews(), p.getComments().size()))
+                .map(p -> new PostResponse(p.getId(), p.getMember().getId(), p.getTitle(), p.getWriter(),
+                        p.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
+                        p.getVoteCount(), p.getViews(), p.getComments().size(), p.getPostCategory()))
                 .collect(Collectors.toList());
 
         return new Result<>(postResponses, postResponses.size());
@@ -115,10 +123,10 @@ public class PostApiController {
             postService.addViews(findPost);
         }
 
-        return new PostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+        return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
                 findPost.getVoteCount(), findPost.getViews(),
-                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count());
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
 
     @GetMapping("/{channelId}/posts/{page}")
@@ -130,11 +138,12 @@ public class PostApiController {
         PostSearch postSearch = new PostSearch(field, query);
 
         List<Post> findPosts = postService.findByChannelId(channelId, page, postCount, postSearch);
+
         List<PostResponse> postResponses = findPosts.stream()
-                .map(p -> new PostResponse(p.getId(), p.getTitle(), p.getWriter(), p.getContent(), p.getPostCategory(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()),
-                        p.getVoteCount(), p.getViews(),
-                        (int) p.getComments().stream().filter(c -> c.getParent() == null).count()))
+                .map(p -> new PostResponse(p.getId(), p.getMember().getId(), p.getTitle(), p.getWriter(), p.getContent(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()), p.getVoteCount(),
+                        p.getViews(), (int) p.getComments().stream().filter(c -> c.getParent() == null).count(),
+                        p.getPostCategory()))
                 .collect(Collectors.toList());
 
         return new Result(postResponses, postResponses.size());
@@ -142,24 +151,30 @@ public class PostApiController {
 
     @GetMapping("/post/{postId}/nextPost")
     public PostResponse findNextPost(@PathVariable Long postId) {
-        Post nextPage = postService.findNextPage(postId);
+        Post findPost = postService.findNextPage(postId);
 
-        return new PostResponse(nextPage.getId(), nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(), nextPage.getPostCategory(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
-                nextPage.getVoteCount(), nextPage.getViews(), nextPage.getComments().size());
+        if (findPost == null) {
+            throw new PostNotFoundException();
+        }
+
+        return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(), findPost.getViews(),
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
 
     @GetMapping("/post/{postId}/prevPost")
     public PostResponse findPrevPost(@PathVariable Long postId) {
-        Post prevPage = postService.findPrevPage(postId);
+        Post findPost = postService.findPrevPage(postId);
 
-        if (prevPage == null) {
+        if (findPost == null) {
             throw new PostNotFoundException();
         }
 
-        return new PostResponse(prevPage.getId(), prevPage.getTitle(), prevPage.getWriter(), prevPage.getContent(), prevPage.getPostCategory(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
-                prevPage.getVoteCount(), prevPage.getViews(), prevPage.getComments().size());
+        return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(), findPost.getViews(),
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
 
     @GetMapping("/post/{postId}/check-member")
@@ -174,17 +189,16 @@ public class PostApiController {
      * 수정
      * */
     @PatchMapping("/post/{postId}")
-    public UpdatePostResponse updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest postRequest) {
-        Member findMember = memberService.findByEmail(postRequest.getMemberEmail());
+    public UpdatePostResponse updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest postRequest,
+                                         @AuthenticationPrincipal Long id) {
+        System.out.println(postRequest.getContent());
+        System.out.println(postRequest.getTitle());
+
+        Member findMember = memberService.findOne(id);
 
         postService.updatePost(postId, findMember.getId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
         Post findPost = postService.findById(postId);
-
-        fileService.deleteByPostId(findPost.getId());
-        for (UploadFile uploadFile : postRequest.getUploadFiles()) {
-            fileService.create(findPost, uploadFile);
-        }
 
         return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(), findPost.getPostCategory());
     }

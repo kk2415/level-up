@@ -1,6 +1,7 @@
 package com.levelup.core.dto.channel;
 
 import com.levelup.core.domain.channel.ChannelCategory;
+import com.levelup.core.domain.file.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -16,5 +17,6 @@ public class ChannelDescriptionResponse {
     private Long memberCount;
     private Long limitedMemberNumber;
     private ChannelCategory category;
+    private UploadFile thumbnailImage;
 
 }

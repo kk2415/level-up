@@ -11,6 +11,7 @@ import com.levelup.core.dto.comment.CreateReplyCommentRequest;
 import com.levelup.core.exception.NotLoggedInException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,38 +40,27 @@ public class CommentApiController {
      */
     @PostMapping("/comment")
     public CommentResponse create(@RequestBody @Validated CreateCommentRequest commentRequest,
-                                  HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
-            Member findMember = (Member)session.getAttribute(SessionName.SESSION_NAME);
+                                  @AuthenticationPrincipal Long memberId) {
+        Long commentId = commentService.create(commentRequest.getIdentity(), memberId,
+                commentRequest.getArticleId(), commentRequest.getContent());
 
-            Long commentId = commentService.create(commentRequest.getIdentity(), findMember.getId(),
-                    commentRequest.getArticleId(), commentRequest.getContent());
-
-            Comment findComment = commentService.findOne(commentId);
-            return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
-                    findComment.getVoteCount(), (long) findComment.getChild().size());
-        }
-        throw new NotLoggedInException("미인증 사용자");
+        Comment findComment = commentService.findOne(commentId);
+        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
+                findComment.getVoteCount(), (long) findComment.getChild().size());
     }
 
     @PostMapping("/comment/reply")
     public CommentResponse createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
-                                  HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute(SessionName.SESSION_NAME) != null) {
-            Member writer = (Member)session.getAttribute(SessionName.SESSION_NAME);
+                                              @AuthenticationPrincipal Long memberId) {
+        Long commentId = commentService.createReplyComment(commentRequest.getParentId(),
+                commentRequest.getIdentity(), memberId, commentRequest.getArticleId(),
+                commentRequest.getContent());
 
-            Long commentId = commentService.createReplyComment(commentRequest.getParentId(), commentRequest.getIdentity(),
-                    writer.getId(), commentRequest.getArticleId(), commentRequest.getContent());
-
-            Comment findComment = commentService.findOne(commentId);
-            return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
-                    findComment.getVoteCount(), (long) findComment.getChild().size());
-        }
-        throw new NotLoggedInException("미인증 사용자");
+        Comment findComment = commentService.findOne(commentId);
+        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
+                findComment.getVoteCount(), (long) findComment.getChild().size());
     }
 
 
