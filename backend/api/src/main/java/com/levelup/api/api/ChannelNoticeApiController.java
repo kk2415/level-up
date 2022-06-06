@@ -3,6 +3,7 @@ package com.levelup.api.api;
 import com.levelup.api.service.ChannelNoticeService;
 import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.FileService;
+import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
@@ -35,8 +36,10 @@ public class ChannelNoticeApiController {
 
     private final ChannelNoticeService channelNoticeService;
     private final ChannelService channelService;
+    private final MemberService memberService;
     private final FileStore fileStore;
     private final FileService fileService;
+
 
     /**
      * 생성
@@ -45,10 +48,11 @@ public class ChannelNoticeApiController {
     public ResponseEntity create(@RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
                                  @AuthenticationPrincipal Long memberId) {
-        Member manager = channelService.findOne(channel).getMember();
+        Long managerId = channelService.getById(channel).getManagerId();
+        Member member = memberService.findOne(memberId);
 
-        if (Long.valueOf(memberId).equals(manager.getId())) {
-            Long id = channelNoticeService.create(channel, noticeRequest.getTitle(), manager.getName(),
+        if (memberId.equals(managerId)) {
+            Long id = channelNoticeService.create(channel, noticeRequest.getTitle(), member.getName(),
                     noticeRequest.getContent());
 
             ChannelNotice channelNotice = channelNoticeService.findById(id);
@@ -139,9 +143,9 @@ public class ChannelNoticeApiController {
                                  @RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
                                  @AuthenticationPrincipal Long memberId) {
-        Member manager = channelService.findOne(channel).getMember();
+        Long managerId = channelService.getById(channel).getManagerId();
 
-        if (memberId.equals(manager.getId())) {
+        if (memberId.equals(managerId)) {
             channelNoticeService.upadte(id, noticeRequest.getTitle(), noticeRequest.getContent());
             return new ResponseEntity(new Result("채널 공지사항이 수정되었습니다.", 0), HttpStatus.CREATED);
         }
@@ -157,9 +161,9 @@ public class ChannelNoticeApiController {
     public ResponseEntity deleteAll(@RequestParam Long channel,
                                  @RequestBody @Validated DeleteChannelNoticeRequest noticeRequest,
                                  @AuthenticationPrincipal Long memberId) {
-        Member manager = channelService.findOne(channel).getMember();
+        Long managerId = channelService.getById(channel).getManagerId();
 
-        if (Long.valueOf(memberId).equals(manager.getId())) {
+        if (memberId.equals(managerId)) {
             channelNoticeService.deleteAll(noticeRequest.getIds());
             return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
         }
@@ -171,9 +175,9 @@ public class ChannelNoticeApiController {
     public ResponseEntity delet0e(@PathVariable Long channelNoticeId,
                                  @RequestParam Long channel,
                                  @AuthenticationPrincipal Long memberId) {
-        Member manager = channelService.findOne(channel).getMember();
+        Long managerId = channelService.getById(channel).getManagerId();
 
-        if (memberId.equals(manager.getId())) {
+        if (memberId.equals(managerId)) {
             channelNoticeService.delete(channelNoticeId);
             return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
         }

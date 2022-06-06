@@ -71,10 +71,6 @@ public class MemberService implements UserDetailsService {
          * 먼저 이 api로 이미지를 저장한 후 이미지의 경로명을 클라이언트에게 리턴(ResponseEntity(uploadFile, HttpStatus.OK))
          * 그러면 클라이언트는 받은 경로를 객체에 저장한 후 회원가입 api를 호출함
          * */
-        if (file == null || file.isEmpty()) {
-            throw new ImageNotFoundException("존재하지 않는 이미지입니다.");
-        }
-
         return fileStore.storeFile(ImageType.MEMBER, file);
     }
 
@@ -112,16 +108,24 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByChannelId(channelId);
     }
 
-    public List<Member> findByChannelId(Long channelId, Long page, Long count) {
-        return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count));
+    public List<MemberResponse> findByChannelId(Long channelId, Long page, Long count) {
+        return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count))
+                .stream()
+                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
+                        m.getPhone(), m.getUploadFile()))
+                .collect(Collectors.toList());
     }
 
     public List<Member> findWaitingMemberByChannelId(Long channelId) {
         return memberRepository.findWaitingMemberByChannelId(channelId);
     }
 
-    public List<Member> findWaitingMemberByChannelId(Long channelId, Long page) {
-        return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5);
+    public List<MemberResponse> findWaitingMemberByChannelId(Long channelId, Long page) {
+        return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5)
+                .stream()
+                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
+                        m.getPhone(), m.getUploadFile()))
+                .collect(Collectors.toList());
     }
 
     public UrlResource getProfileImage(String email) throws MalformedURLException {

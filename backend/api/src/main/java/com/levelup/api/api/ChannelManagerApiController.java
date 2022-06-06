@@ -11,7 +11,7 @@ import com.levelup.core.dto.channel.ManagerPostResponse;
 import com.levelup.core.dto.channel.ManagerResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.post.PostSearch;
-import com.levelup.core.exception.NotLoggedInException;
+import com.levelup.core.repository.channel.ChannelRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 public class ChannelManagerApiController {
 
     private final ChannelService channelService;
+    private final ChannelRepository channelRepository;
     private final PostService postService;
     private final MemberService memberService;
 
@@ -43,7 +44,7 @@ public class ChannelManagerApiController {
     @GetMapping("/channel/{channelId}/manager")
     public ManagerResponse channel(@PathVariable Long channelId,
                                    @AuthenticationPrincipal Long id) {
-        Channel channel = channelService.findOne(channelId);
+        Channel channel = channelRepository.findById(channelId);
         Member findMember = memberService.findOne(id);
         List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
         List<Member> members = memberService.findByChannelId(channelId);

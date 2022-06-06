@@ -197,7 +197,7 @@ public class Channel {
         }
     }
 
-    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
+    public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         this.name = name;
         this.limitedMemberNumber = limitNumber;
         this.description = description;
@@ -205,13 +205,17 @@ public class Channel {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
+    public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
         this.name = name;
         this.limitedMemberNumber = limitNumber;
         this.description = description;
         this.thumbnailDescription = thumbnailDescription;
         this.thumbnailImage = thumbnailImage;
         this.category = category;
+    }
+
+    public void modifyThumbNail(UploadFile thumbnailImage) {
+        this.thumbnailImage = thumbnailImage;
     }
 
 }
