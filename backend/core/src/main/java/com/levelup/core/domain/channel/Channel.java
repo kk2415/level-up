@@ -6,10 +6,7 @@ import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.notice.ChannelNotice;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.exception.NoPlaceChnnelException;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,7 +15,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "channel")
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
 
@@ -92,26 +91,6 @@ public class Channel {
     public void setChannelMember(ChannelMember channelMember) {
         this.channelMembers.add(channelMember);
         channelMember.setChannel(this);
-    }
-
-    //==생성 메서드==//
-    public static Channel createChannel(Member member, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
-        Channel channel = new Channel();
-
-        channel.setMember(member);
-        channel.setName(name);
-//        channel.setManagerName(member.getName());
-        channel.setManagerName(member.getEmail());
-        channel.setLimitedMemberNumber(limitNumber);
-        channel.setDescription(description);
-        channel.setThumbnailDescription(thumbnailDescription);
-        channel.setDateCreated(LocalDateTime.now());
-        channel.setMemberCount(0L);
-        channel.setWaitingMemberCount(0L);
-        channel.setCategory(category);
-        channel.setThumbnailImage(thumbnailImage);
-
-        return channel;
     }
 
     //==비즈니스 로직==//
@@ -218,21 +197,25 @@ public class Channel {
         }
     }
 
-    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
-        this.setName(name);
-        this.setLimitedMemberNumber(limitNumber);
-        this.setDescription(description);
-        this.setThumbnailDescription(thumbnailDescription);
-        this.setThumbnailImage(thumbnailImage);
+    public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
+        this.name = name;
+        this.limitedMemberNumber = limitNumber;
+        this.description = description;
+        this.thumbnailDescription = thumbnailDescription;
+        this.thumbnailImage = thumbnailImage;
     }
 
-    public void changeChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
-        this.setName(name);
-        this.setLimitedMemberNumber(limitNumber);
-        this.setDescription(description);
-        this.setThumbnailDescription(thumbnailDescription);
-        this.setThumbnailImage(thumbnailImage);
-        this.setCategory(category);
+    public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
+        this.name = name;
+        this.limitedMemberNumber = limitNumber;
+        this.description = description;
+        this.thumbnailDescription = thumbnailDescription;
+        this.thumbnailImage = thumbnailImage;
+        this.category = category;
+    }
+
+    public void modifyThumbNail(UploadFile thumbnailImage) {
+        this.thumbnailImage = thumbnailImage;
     }
 
 }

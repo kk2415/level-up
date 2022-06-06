@@ -27,14 +27,11 @@ const CreateChannel = () => {
     }
 
     const handleModifyButton = async () => {
-        let formData = new FormData(document.getElementById('form'));
         let thumbnailImageDir = description.thumbnailImage
 
         if (thumbnail !== null) {
-            thumbnailImageDir = await uploadFile('/api/member/image', 'POST', thumbnail)
+            thumbnailImageDir = await uploadFile('/api/channel/' + channelId + '/thumbnail', 'PATCH', thumbnail)
         }
-
-        // let uploadFiles = getUploadFiles(contents);
 
         let channel = {
             name : $('#name').val(),
@@ -43,7 +40,6 @@ const CreateChannel = () => {
             category : $('#category').val(),
             thumbnailDescription : $('#thumbnailDescription').val(),
             thumbnailImage : thumbnailImageDir,
-            // uploadFiles : uploadFiles,
         }
         console.log(channel)
 

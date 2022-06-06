@@ -18,4 +18,5 @@ public class ChannelResponse {
     private Long memberCount;
     private String storeFileName;
 
+
 }
