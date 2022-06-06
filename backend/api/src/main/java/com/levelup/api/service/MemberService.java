@@ -14,7 +14,6 @@ import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,9 +36,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class MemberService implements UserDetailsService {
-
-    final int HANGUL_UNICODE_START = 0xAC00;
-    final int HANGUL_UNICODE_END = 0xD7AF;
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;

@@ -28,7 +28,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,18 +56,7 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
-        Long channelId = channelService.create(channelRequest.getMemberEmail(), channelRequest.getName(),
-                channelRequest.getLimitedMemberNumber(), channelRequest.getDescription(),
-                channelRequest.getThumbnailDescription(), channelRequest.getCategory(),
-                channelRequest.getThumbnailImage());
-
-//        System.out.println(channelRequest.getThumbnailImage());
-//        System.out.println(channelRequest.getThumbnailImage().getStoreFileName());
-//        System.out.println(channelRequest.getThumbnailImage().getUploadFileName());
-        Channel findChannel = channelService.findOne(channelId);
-
-        return new CreateChannelResponse(findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getDescription());
+        return channelService.create(channelRequest);
     }
 
     @PostMapping("/channel/descriptionFiles/base64")
@@ -235,7 +223,6 @@ public class ChannelApiController {
     }
 
 
-
     /**
      * 수정
      * */
@@ -251,7 +238,6 @@ public class ChannelApiController {
                 findChannel.getThumbnailDescription(), findChannel.getThumbnailImage()),
                 HttpStatus.OK);
     }
-
 
 
     /**

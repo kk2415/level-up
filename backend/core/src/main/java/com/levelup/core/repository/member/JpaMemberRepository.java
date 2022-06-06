@@ -17,8 +17,10 @@ public class JpaMemberRepository implements MemberRepository {
      * 생성
      * */
     @Override
-    public void save(Member member) {
+    public Long save(Member member) {
         em.persist(member);
+
+        return member.getId();
     }
 
 

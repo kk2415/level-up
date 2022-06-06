@@ -6,6 +6,8 @@ import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.dto.channel.ChannelRequest;
+import com.levelup.core.dto.channel.CreateChannelResponse;
 import com.levelup.core.repository.channel.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -18,7 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ChannelService {
 
     private final ChannelRepository channelRepository;
@@ -29,24 +31,18 @@ public class ChannelService {
     /**
      * 채널 추가
      * */
-    @Transactional
-    public Long create(Long memberId, String name, Long limitNumber, String descript, String thumbnailDescript, ChannelCategory category, UploadFile uploadFile) {
-        Member member = memberRepository.findById(memberId);
+    public CreateChannelResponse create(ChannelRequest channelRequest) {
+        validationDuplicateChannel(channelRequest.getName());
 
-        validationDuplicateChannel(name);
-        Channel channel = Channel.createChannel(member, name, limitNumber, descript, thumbnailDescript, category, uploadFile);
+        Member member = memberRepository.findByEmail(channelRequest.getMemberEmail());
+
+        Channel channel = channelRequest.toEntity();
+        channel.setMember(member);
+
         channelRepository.save(channel);
-        return channel.getId();
-    }
 
-    @Transactional
-    public Long create(String email, String name, Long limitNumber, String descript, String thumbnailDescript, ChannelCategory category, UploadFile uploadFile) {
-        Member member = memberRepository.findByEmail(email);
-        validationDuplicateChannel(name);
-
-        Channel channel = Channel.createChannel(member, name, limitNumber, descript, thumbnailDescript, category, uploadFile);
-        channelRepository.save(channel);
-        return channel.getId();
+        return new CreateChannelResponse(channel.getName(), channel.getLimitedMemberNumber(),
+                channel.getManagerName(), channel.getDescription());
     }
 
     private void validationDuplicateChannel(String name) {
@@ -61,7 +57,6 @@ public class ChannelService {
     /**
      * 채널에 멤버 추가
      * */
-    @Transactional
     public void addMember(Long channelId, List<Long> memberIds) {
         Channel channel = channelRepository.findById(channelId);
         List<ChannelMember> channelMembers = new ArrayList<>();
@@ -75,7 +70,6 @@ public class ChannelService {
         channel.addMember(channelMembers);
     }
 
-    @Transactional
     public void addMember(Long channelId, Long... memberIds) {
         Channel channel = channelRepository.findById(channelId);
         List<ChannelMember> channelMembers = new ArrayList<>();
@@ -89,7 +83,6 @@ public class ChannelService {
         channel.addMember(channelMembers);
     }
 
-    @Transactional
     public void addWaitingMember(Long channelId, Long... memberIds) {
         Channel channel = channelRepository.findById(channelId);
         List<ChannelMember> channelMembers = new ArrayList<>();
@@ -109,13 +102,11 @@ public class ChannelService {
     /**
      * 채널 수정
      * */
-    @Transactional
     public void update(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId);
         channel.changeChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
     }
 
-    @Transactional
     public void update(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId);
         channel.changeChannel(name, limitNumber, description, thumbnailDescription, category, thumbnailImage);
@@ -124,12 +115,10 @@ public class ChannelService {
     /**
      * 채널 삭제
      * */
-    @Transactional
     public void deleteChannel(Long channelId) {
         channelRepository.delete(channelId);
     }
 
-    @Transactional
     public void deleteChannelMember(Long channelId, Long memberId) {
 //        ChannelMember channelMember = channelMemberRepository.findByChannelAndMember(channelId, memberId)
 
@@ -142,7 +131,6 @@ public class ChannelService {
 //        channelMemberRepository.delete(channelMember.getId());
     }
 
-    @Transactional
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = findOne(channelId);
         Member findMember = memberRepository.findByEmail(email);
@@ -155,7 +143,6 @@ public class ChannelService {
         }
     }
 
-    @Transactional
     public void deleteWaitingMember(Long channelId, String email) {
         Channel findChannel = findOne(channelId);
         Member findMember = memberRepository.findByEmail(email);
