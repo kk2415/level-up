@@ -11,8 +11,6 @@ import com.levelup.core.dto.channel.*;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.repository.channel.ChannelRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;

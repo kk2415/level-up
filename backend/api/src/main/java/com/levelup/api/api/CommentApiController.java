@@ -2,24 +2,18 @@ package com.levelup.api.api;
 
 import com.levelup.api.service.*;
 import com.levelup.core.domain.comment.ArticleIdentity;
-import com.levelup.core.domain.comment.Comment;
-import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.comment.CommentResponse;
 import com.levelup.core.dto.comment.CreateCommentRequest;
 import com.levelup.core.dto.comment.CreateReplyCommentRequest;
-import com.levelup.core.exception.NotLoggedInException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "댓글 API")
 @RestController
@@ -32,75 +26,44 @@ public class CommentApiController {
     private final PostService postService;
     private final ChannelNoticeService channelNoticeService;
     private final NoticeService noticeService;
-//    private final QnaService qnaService;
 
 
     /***
      * 댓글 생성
      */
     @PostMapping("/comment")
-    public CommentResponse create(@RequestBody @Validated CreateCommentRequest commentRequest,
-                                  @AuthenticationPrincipal Long memberId) {
-        Long commentId = commentService.create(commentRequest.getIdentity(), memberId,
-                commentRequest.getArticleId(), commentRequest.getContent());
+    public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
+                                 @AuthenticationPrincipal Long memberId) {
+        CommentResponse comment = commentService.create(commentRequest, memberId);
 
-        Comment findComment = commentService.findOne(commentId);
-        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
-                findComment.getVoteCount(), (long) findComment.getChild().size());
+        return ResponseEntity.ok().body(comment);
     }
 
     @PostMapping("/comment/reply")
-    public CommentResponse createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
+    public ResponseEntity<CommentResponse> createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
                                               @AuthenticationPrincipal Long memberId) {
-        Long commentId = commentService.createReplyComment(commentRequest.getParentId(),
-                commentRequest.getIdentity(), memberId, commentRequest.getArticleId(),
-                commentRequest.getContent());
+        CommentResponse replyComment = commentService.createReplyComment(commentRequest, memberId);
 
-        Comment findComment = commentService.findOne(commentId);
-        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
-                findComment.getVoteCount(), (long) findComment.getChild().size());
+        return ResponseEntity.ok().body(replyComment);
     }
 
 
-    /***
+    /**
      * 댓글 조회
      */
     @GetMapping("/comment/{articleId}")
-    public Result find(@PathVariable Long articleId,
+    public ResponseEntity<Result<CommentResponse>> find(@PathVariable Long articleId,
                        @RequestParam ArticleIdentity identity) {
-        List<Comment> findComments = identifyArticle(identity, articleId);
+        List<CommentResponse> comments = commentService.getAllByIdentityAndArticleId(identity, articleId);
 
-        List<CommentResponse> comments = findComments.stream()
-                .filter(c -> c.getParent() == null)
-                .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
-                        c.getVoteCount(), (long) c.getChild().size())).collect(Collectors.toList());
-
-        return new Result(comments, comments.size());
+        return ResponseEntity.ok().body(new Result(comments, comments.size()));
     }
 
     @GetMapping("/comment/{commentId}/reply")
-    public Result findReply(@PathVariable Long commentId) {
-        List<Comment> findComments = commentService.findReplyById(commentId);
+    public ResponseEntity<Result<CommentResponse>> findReply(@PathVariable Long commentId) {
+        List<CommentResponse> comments = commentService.findReplyById(commentId);
 
-        List<CommentResponse> comments = findComments.stream()
-                .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
-                        c.getVoteCount(), (long) c.getChild().size())).collect(Collectors.toList());
-
-        return new Result(comments, comments.size());
-    }
-
-    private List<Comment> identifyArticle(ArticleIdentity identity, Long articleId) {
-        switch (identity) {
-            case POST: return commentService.findByPostId(articleId);
-            case CHANNEL_NOTICE: return commentService.findByChannelNoticeId(articleId);
-            case NOTICE: return commentService.findByNoticeId(articleId);
-            case QNA: return commentService.findByQnaId(articleId);
-            default: throw new IllegalArgumentException("Unknown Article Identity");
-        }
+        return ResponseEntity.ok().body(new Result(comments, comments.size()));
     }
 
 }

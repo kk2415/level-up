@@ -10,7 +10,7 @@ import com.levelup.core.domain.post.Post;
 import com.levelup.core.dto.channel.ManagerPostResponse;
 import com.levelup.core.dto.channel.ManagerResponse;
 import com.levelup.core.dto.member.MemberResponse;
-import com.levelup.core.dto.post.PostSearch;
+import com.levelup.core.dto.post.SearchCondition;
 import com.levelup.core.repository.channel.ChannelRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +48,7 @@ public class ChannelManagerApiController {
         Member findMember = memberService.findOne(id);
         List<Member> waitingMembers = memberService.findWaitingMemberByChannelId(channelId);
         List<Member> members = memberService.findByChannelId(channelId);
-        List<Post> posts = postService.findByChannelId(channelId, new PostSearch(null, null));
+        List<Post> posts = postService.findByChannelId(channelId, new SearchCondition(null, null));
 
         ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getDateCreated()),

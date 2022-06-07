@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PostSearch {
+public class SearchCondition {
 
     private String field;
     private String query;

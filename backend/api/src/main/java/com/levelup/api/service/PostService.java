@@ -4,7 +4,7 @@ import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.PostCategory;
-import com.levelup.core.dto.post.PostSearch;
+import com.levelup.core.dto.post.SearchCondition;
 import com.levelup.core.exception.PostNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -109,11 +109,11 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public List<Post> findByChannelId(Long channelId, PostSearch postSearch) {
+    public List<Post> findByChannelId(Long channelId, SearchCondition postSearch) {
         return postRepository.findByChannelId(channelId, postSearch);
     }
 
-    public List<Post> findByChannelId(Long channelId, int page, int postCount, PostSearch postSearch) {
+    public List<Post> findByChannelId(Long channelId, int page, int postCount, SearchCondition postSearch) {
         return postRepository.findByChannelId(channelId, page, postCount, postSearch);
     }
 

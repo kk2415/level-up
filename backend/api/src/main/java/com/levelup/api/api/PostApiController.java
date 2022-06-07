@@ -105,9 +105,9 @@ public class PostApiController {
     public int findAllPostWithQuery(@PathVariable Long channelId,
                                        @RequestParam(required = false) String field,
                                        @RequestParam(required = false) String query) {
-        PostSearch postSearch = null;
+        SearchCondition postSearch = null;
         if (field != null && query != null) {
-            postSearch = new PostSearch(field, query);
+            postSearch = new SearchCondition(field, query);
         }
         List<Post> findPosts = postService.findByChannelId(channelId, postSearch);
 
@@ -135,7 +135,7 @@ public class PostApiController {
                                       @RequestParam(required = false, defaultValue = "10") int postCount,
                                       @RequestParam(required = false) String field,
                                       @RequestParam(required = false) String query) {
-        PostSearch postSearch = new PostSearch(field, query);
+        SearchCondition postSearch = new SearchCondition(field, query);
 
         List<Post> findPosts = postService.findByChannelId(channelId, page, postCount, postSearch);
 
