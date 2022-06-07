@@ -2,7 +2,7 @@ package com.levelup.core.repository.notice;
 
 import com.levelup.core.domain.notice.Notice;
 import com.levelup.core.domain.notice.QNotice;
-import com.levelup.core.dto.post.PostSearch;
+import com.levelup.core.dto.post.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -42,7 +42,7 @@ public class JpaNoticeRepository implements NoticeRepository {
     }
 
     @Override
-    public List<Notice> findAll(Long page, PostSearch postSearch) {
+    public List<Notice> findAll(Long page, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         JPAQuery<Notice> query = queryFactory.select(QNotice.notice)
@@ -58,7 +58,7 @@ public class JpaNoticeRepository implements NoticeRepository {
         return query.fetch();
     }
 
-    private BooleanExpression equalQuery(PostSearch postSearch) {
+    private BooleanExpression equalQuery(SearchCondition postSearch) {
         if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
             return null;
         }
@@ -102,7 +102,7 @@ public class JpaNoticeRepository implements NoticeRepository {
     }
 
     @Override
-    public Long count(Long page, PostSearch postSearch) {
+    public Long count(Long page, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         JPAQuery<Long> query = queryFactory.select(QNotice.notice.count())

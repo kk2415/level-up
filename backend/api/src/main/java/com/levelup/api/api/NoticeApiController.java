@@ -1,19 +1,12 @@
 package com.levelup.api.api;
 
 
-import com.levelup.api.service.FileService;
-import com.levelup.api.service.MemberService;
 import com.levelup.api.service.NoticeService;
-import com.levelup.core.domain.file.FileStore;
-import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.notice.Notice;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.notice.NoticeRequest;
 import com.levelup.core.dto.notice.NoticeResponse;
 import com.levelup.core.dto.notice.UpdateNoticeRequest;
-import com.levelup.core.dto.post.PostSearch;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "공지사항 API")
 @RestController
@@ -35,99 +26,68 @@ import java.util.stream.Collectors;
 public class NoticeApiController {
 
     private final NoticeService noticeService;
-    private final MemberService memberService;
-    private final FileService fileService;
-    private final FileStore fileStore;
+
 
     /**
      * 생성
      * */
     @PostMapping("/notice")
-    public ResponseEntity create(@RequestBody @Validated NoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal String id) {
-        Member member = memberService.findOne(Long.valueOf(id));
-        Long noticeId = noticeService.create(member.getId(), noticeRequest.getTitle(), member.getName(),
-                noticeRequest.getContent());
+    public ResponseEntity<NoticeResponse> create(@RequestBody @Validated NoticeRequest noticeRequest,
+                                 @AuthenticationPrincipal Long memberId) {
+        NoticeResponse findNotice = noticeService.create(noticeRequest, memberId);
 
-        Notice findNotice = noticeService.findById(noticeId);
-        for (UploadFile uploadFile : noticeRequest.getUploadFiles()) {
-            fileService.create(findNotice, uploadFile);
-        }
-
-        return new ResponseEntity(new Result<>("공지사항 생성 성공", 1), HttpStatus.CREATED);
+        return ResponseEntity.ok().body(findNotice);
     }
 
     @PostMapping("/notice/file")
-    public ResponseEntity storeFile(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) {
-            return new ResponseEntity("파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<UploadFile> storeFile(MultipartFile file) throws IOException {
+        UploadFile uploadFiles = noticeService.createFileByMultiPart(file);
 
-        UploadFile uploadFiles = fileStore.storeFile(ImageType.NOTICE, file);
-
-        return new ResponseEntity(uploadFiles.getStoreFileName(), HttpStatus.OK);
+        return ResponseEntity.ok().body(uploadFiles);
     }
 
 
     /**
      * 조회
      * */
-    @GetMapping("/notices")
-    public Result notices(@RequestParam(required = false) Long page,
-                          @RequestParam(required = false) String field,
-                          @RequestParam(required = false) String query) {
-        PostSearch postSearch = new PostSearch(field, query);
-
-        List<Notice> notices = noticeService.findAll(page, postSearch);
-        List<NoticeResponse> noticeResponses = notices.stream()
-                .map(n -> new NoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),
-                        n.getViews(),
-                        (int) n.getComments().stream().filter(c -> c.getParent() == null).count()))
-                .collect(Collectors.toList());
-
-        return new Result(noticeResponses, noticeResponses.size());
-    }
-
-    @GetMapping("/notices/count")
-    public Result noticesCount(@RequestParam(required = false) Long page,
-                          @RequestParam(required = false) String field,
-                          @RequestParam(required = false) String query) {
-        PostSearch postSearch = new PostSearch(field, query);
-
-        Long count = noticeService.count(page, postSearch);
-        return new Result(count, 1);
-    }
-
     @GetMapping("/notice/{noticeId}")
-    public NoticeResponse notice(@PathVariable Long noticeId,
-                                 @RequestParam(required = false, defaultValue = "false") String view) {
-        Notice findNotice = noticeService.findById(noticeId);
-        if (view.equals("true")) {
-            noticeService.addViews(findNotice);
-        }
+    public ResponseEntity getNotice(@PathVariable Long noticeId,
+                                    @RequestParam(required = false, defaultValue = "false") String view) {
+        NoticeResponse findNotice = noticeService.findById(noticeId, view);
 
-        return new NoticeResponse(findNotice.getId(), findNotice.getTitle(), findNotice.getWriter(), findNotice.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
-                findNotice.getViews(), (int) findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
+        return ResponseEntity.ok().body(findNotice);
+    }
+
+    @GetMapping("/notices")
+    public ResponseEntity getNotices(@RequestParam(required = false) Long page,
+                          @RequestParam(required = false) String field,
+                          @RequestParam(required = false) String query) {
+        List<NoticeResponse> notices = noticeService.findAll(page, field, query);
+
+        return ResponseEntity.ok().body(new Result(notices, notices.size()));
     }
 
     @GetMapping("/notice/{noticeId}/next")
-    public NoticeResponse findNextPage(@PathVariable Long noticeId) {
-        Notice nextPage = noticeService.findNextPage(noticeId);
+    public ResponseEntity getNextNotice(@PathVariable Long noticeId) {
+        NoticeResponse nextPage = noticeService.findNextPage(noticeId);
 
-        return new NoticeResponse(nextPage.getId(), nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
-                nextPage.getViews(), (int) nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
+        return ResponseEntity.ok().body(nextPage);
     }
 
     @GetMapping("/notice/{noticeId}/prev")
-    public NoticeResponse findPrevPage(@PathVariable Long noticeId) {
-        Notice prevPage = noticeService.findPrevPage(noticeId);
+    public ResponseEntity getPrevNotice(@PathVariable Long noticeId) {
+        NoticeResponse prevPage = noticeService.findPrevPage(noticeId);
 
-        return new NoticeResponse(prevPage.getId(), prevPage.getTitle(), prevPage.getWriter(), prevPage.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
-                prevPage.getViews(), (int) prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
+        return ResponseEntity.ok().body(prevPage);
+    }
+
+    @GetMapping("/notices/count")
+    public ResponseEntity getNoticesCount(@RequestParam(required = false) Long page,
+                                       @RequestParam(required = false) String field,
+                                       @RequestParam(required = false) String query) {
+        Long count = noticeService.count(page, field, query);
+
+        return ResponseEntity.ok().body(new Result(count, 1));
     }
 
 
@@ -141,6 +101,7 @@ public class NoticeApiController {
 
         return new ResponseEntity(new Result("수정 성공", 1), HttpStatus.OK);
     }
+
 
     /**
      * 삭제

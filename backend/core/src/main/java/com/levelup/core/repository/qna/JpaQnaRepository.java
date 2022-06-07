@@ -2,7 +2,7 @@ package com.levelup.core.repository.qna;
 
 import com.levelup.core.domain.qna.QQna;
 import com.levelup.core.domain.qna.Qna;
-import com.levelup.core.dto.post.PostSearch;
+import com.levelup.core.dto.post.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class JpaQnaRepository implements QnaRepository {
     }
 
     @Override
-    public List<Qna> findAll(int page, PostSearch postSearch) {
+    public List<Qna> findAll(int page, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         int firstPage = (page - 1) * 10; //0, 10, 20, 30
@@ -49,7 +49,7 @@ public class JpaQnaRepository implements QnaRepository {
                 .fetch();
     }
 
-    private BooleanExpression equalQuery(PostSearch postSearch) {
+    private BooleanExpression equalQuery(SearchCondition postSearch) {
         if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
             return null;
         }

@@ -2,7 +2,7 @@ package com.levelup.core.repository.post;
 
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.QPost;
-import com.levelup.core.dto.post.PostSearch;
+import com.levelup.core.dto.post.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +87,7 @@ public class JpaPostRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findByChannelId(Long channelId, PostSearch postSearch) {
+    public List<Post> findByChannelId(Long channelId, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         return queryFactory.select(QPost.post)
@@ -99,7 +99,7 @@ public class JpaPostRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findByChannelId(Long channelId, int page, int postCount, PostSearch postSearch) {
+    public List<Post> findByChannelId(Long channelId, int page, int postCount, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         int firstPage = (page - 1) * postCount; //0, 10, 20, 30
@@ -114,7 +114,7 @@ public class JpaPostRepository implements PostRepository {
                 .fetch();
     }
 
-    private BooleanExpression equalQuery(PostSearch postSearch) {
+    private BooleanExpression equalQuery(SearchCondition postSearch) {
         if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
             return null;
         }
