@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ManagerResponse {
+public class ChannelManagerResponse {
 
     private ChannelInfo channelInfo;
     private List<MemberResponse> waitingMembers = new ArrayList<>();
