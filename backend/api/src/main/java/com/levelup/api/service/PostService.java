@@ -1,10 +1,16 @@
 package com.levelup.api.service;
 
-import com.levelup.core.domain.channel.Channel;
+import com.levelup.api.api.DateFormat;
+import com.levelup.core.domain.file.FileStore;
+import com.levelup.core.domain.file.ImageType;
+import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.PostCategory;
+import com.levelup.core.dto.post.CreatePostRequest;
+import com.levelup.core.dto.post.PostResponse;
 import com.levelup.core.dto.post.SearchCondition;
+import com.levelup.core.dto.post.UpdatePostResponse;
 import com.levelup.core.exception.PostNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -12,8 +18,13 @@ import com.levelup.core.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,32 +33,45 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final ChannelRepository channelRepository;
+    private final FileStore fileStore;
+
 
     /**
      * 게시글 등록
      * */
-    public Long create(Long memberId, String title, String content) {
+    public PostResponse create(CreatePostRequest postRequest, Long memberId) {
         Member member = memberRepository.findById(memberId);
-        Post post = Post.createPost(member, title, content);
-        postRepository.save(post);
-        return post.getId();
+        Post findPost = Post.createPost(member, postRequest.getTitle(), postRequest.getContent());
+
+        postRepository.save(findPost);
+
+        return new PostResponse(
+                findPost.getId(),
+                findPost.getMember().getId(),
+                findPost.getTitle(),
+                findPost.getWriter(),
+                findPost.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(),
+                findPost.getViews(),
+                findPost.getComments().size(),
+                findPost.getPostCategory()
+        );
     }
 
-    public Long create(Long memberId, Long channelId, String title, String content, PostCategory postCategory) {
-        Member member = memberRepository.findById(memberId);
-        Channel channel = channelRepository.findById(channelId);
+    public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
+        if (file == null) {
+            throw new FileNotFoundException("파일이 존재하지 않습니다.");
+        }
 
-        Post post = Post.createPost(member, channel, title, content, postCategory);
-        postRepository.save(post);
-        return post.getId();
+        return fileStore.storeFile(ImageType.POST, file);
     }
 
 
     /**
      * 게시글 수정
      * */
-    public void updatePost(Long postId, Long memberId, String title, String content, PostCategory category) {
+    public UpdatePostResponse updatePost(Long postId, Long memberId, String title, String content, PostCategory category) {
         /**
          * @Transactional에 의해서 commit이 진행됨
          * 커밋이 딱 되면 jpa가 플러쉬를 날린다.
@@ -55,20 +79,24 @@ public class PostService {
          * 그러면 UPDATE 쿼리를 바뀐 엔티티에 맞게 DB에 알아서 날려준다
          * */
         List<Post> findPosts = postRepository.findByMemberId(memberId);
+
         if (findPosts == null) {
             throw new PostNotFoundException("작성한 게시글이 없습니다");
         }
 
-        Post post = findPosts.stream()
+        Post findPost = findPosts.stream()
                 .filter(p -> p.getId().equals(postId))
                 .findAny()
                 .orElse(null);
 
-        if (post == null) {
+        if (findPost == null) {
             throw new PostNotFoundException("작성한 게시글이 없습니다");
         }
 
-        post.changePost(title, content, category);
+        findPost.changePost(title, content, category);
+
+        return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(),
+                findPost.getPostCategory());
     }
 
     public void addVoteCount(Post findPost) {
@@ -81,24 +109,68 @@ public class PostService {
 
 
     /**
-     * 게시글 삭제
-     * */
-    public void deletePost(Long postId) {
-        postRepository.delete(postId);
-    }
-
-
-    /**
      * 게시글 조회
      * */
-    public Post findById(Long postId) {
-        return postRepository.findById(postId);
+    public PostResponse getPost(Long postId, String view) {
+        Post findPost = postRepository.findById(postId);
+
+        if (view.equals("true")) {
+            findPost.addViews();;
+        }
+
+        return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(), findPost.getViews(),
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
 
-    public Post readPost(Long postId) {
-        Post findPost = postRepository.findById(postId);
-        findPost.addViews();
-        return  findPost;
+    public List<PostResponse> getPosts(Long channelId, int page, int postCount, String field, String query) {
+        SearchCondition searchCondition = new SearchCondition(field, query);
+        List<Post> findPosts = postRepository.findByChannelId(channelId, page, postCount, searchCondition);
+
+        return findPosts.stream()
+                .map(p -> new PostResponse(p.getId(), p.getMember().getId(), p.getTitle(), p.getWriter(), p.getContent(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()), p.getVoteCount(),
+                        p.getViews(), (int) p.getComments().stream().filter(c -> c.getParent() == null).count(),
+                        p.getPostCategory()))
+                .collect(Collectors.toList());
+    }
+
+    public Long getPostsCount(Long channelId, String field, String query) {
+        SearchCondition searchCondition = null;
+        if (field != null && query != null) {
+            searchCondition = new SearchCondition(field, query);
+        }
+
+        List<Post> post = postRepository.findByChannelId(channelId, searchCondition);
+
+        return (long)post.size();
+    }
+
+    public PostResponse findNextPage(Long id) {
+        Post findPost = postRepository.findNextPage(id);
+
+        if (findPost == null) {
+            throw new PostNotFoundException();
+        }
+
+        return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(), findPost.getViews(),
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
+    }
+
+    public PostResponse findPrevPage(Long id) {
+        Post findPost = postRepository.findPrevPage(id);
+
+        if (findPost == null) {
+            throw new PostNotFoundException();
+        }
+
+        return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getVoteCount(), findPost.getViews(),
+                (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
 
     public List<Post> findByMemberId(Long memberId) {
@@ -117,12 +189,12 @@ public class PostService {
         return postRepository.findByChannelId(channelId, page, postCount, postSearch);
     }
 
-    public Post findNextPage(Long id) {
-        return postRepository.findNextPage(id);
-    }
 
-    public Post findPrevPage(Long id) {
-        return postRepository.findPrevPage(id);
+    /**
+     * 게시글 삭제
+     * */
+    public void deletePost(Long postId) {
+        postRepository.delete(postId);
     }
 
 

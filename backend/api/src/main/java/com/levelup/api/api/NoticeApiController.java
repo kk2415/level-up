@@ -50,8 +50,16 @@ public class NoticeApiController {
     /**
      * 조회
      * */
+    @GetMapping("/notice/{noticeId}")
+    public ResponseEntity getNotice(@PathVariable Long noticeId,
+                                    @RequestParam(required = false, defaultValue = "false") String view) {
+        NoticeResponse findNotice = noticeService.findById(noticeId, view);
+
+        return ResponseEntity.ok().body(findNotice);
+    }
+
     @GetMapping("/notices")
-    public ResponseEntity notices(@RequestParam(required = false) Long page,
+    public ResponseEntity getNotices(@RequestParam(required = false) Long page,
                           @RequestParam(required = false) String field,
                           @RequestParam(required = false) String query) {
         List<NoticeResponse> notices = noticeService.findAll(page, field, query);
@@ -59,30 +67,22 @@ public class NoticeApiController {
         return ResponseEntity.ok().body(new Result(notices, notices.size()));
     }
 
-    @GetMapping("/notice/{noticeId}")
-    public ResponseEntity notice(@PathVariable Long noticeId,
-                                 @RequestParam(required = false, defaultValue = "false") String view) {
-        NoticeResponse findNotice = noticeService.findById(noticeId, view);
-
-        return ResponseEntity.ok().body(findNotice);
-    }
-
     @GetMapping("/notice/{noticeId}/next")
-    public ResponseEntity findNextPage(@PathVariable Long noticeId) {
+    public ResponseEntity getNextNotice(@PathVariable Long noticeId) {
         NoticeResponse nextPage = noticeService.findNextPage(noticeId);
 
         return ResponseEntity.ok().body(nextPage);
     }
 
     @GetMapping("/notice/{noticeId}/prev")
-    public ResponseEntity findPrevPage(@PathVariable Long noticeId) {
+    public ResponseEntity getPrevNotice(@PathVariable Long noticeId) {
         NoticeResponse prevPage = noticeService.findPrevPage(noticeId);
 
         return ResponseEntity.ok().body(prevPage);
     }
 
     @GetMapping("/notices/count")
-    public ResponseEntity noticesCount(@RequestParam(required = false) Long page,
+    public ResponseEntity getNoticesCount(@RequestParam(required = false) Long page,
                                        @RequestParam(required = false) String field,
                                        @RequestParam(required = false) String query) {
         Long count = noticeService.count(page, field, query);
