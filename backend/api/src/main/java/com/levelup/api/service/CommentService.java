@@ -10,6 +10,7 @@ import com.levelup.core.dto.comment.CreateCommentRequest;
 import com.levelup.core.dto.comment.CreateReplyCommentRequest;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
+import com.levelup.core.repository.notice.ChannelNoticeRepository;
 import com.levelup.core.repository.notice.NoticeRepository;
 import com.levelup.core.repository.post.PostRepository;
 import com.levelup.core.repository.qna.QnaRepository;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +29,7 @@ public class CommentService {
 
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final ChannelNoticeRepository channelNoticeRepository;
     private final PostRepository postRepository;
     private final NoticeRepository noticeRepository;
     private final ChannelNoticeService channelNoticeService;
@@ -52,7 +53,7 @@ public class CommentService {
     private Object identifyArticle(ArticleIdentity identity, Long articleId) {
         switch (identity) {
             case POST: return postRepository.findById(articleId);
-            case CHANNEL_NOTICE: return channelNoticeService.findById(articleId);
+            case CHANNEL_NOTICE: return channelNoticeRepository.findById(articleId);
             case NOTICE: return noticeRepository.findById(articleId);
             case QNA: return qnaRepository.findById(articleId);
             default: throw new IllegalArgumentException("Unknown Article Identity");
