@@ -7,6 +7,7 @@ import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.qna.Qna;
 import com.levelup.core.domain.vote.Vote;
+import com.levelup.core.exception.DuplicateVoteException;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.post.PostRepository;
@@ -29,16 +30,32 @@ public class VoteService {
     private final PostRepository postRepository;
     private final QnaRepository qnaRepository;
 
-    public Long save(ArticleIdentity identity, Long articleId, Long memberId) {
+    public Long create(ArticleIdentity identity, Long articleId, Long memberId) {
         Object article = identifyArticle(identity, articleId);
         Member findMember = memberRepository.findById(memberId);
 
+        validDuplicateVote(identity, articleId, memberId);
+
         Vote vote = Vote.createVote(findMember, article);
-
         voteRepository.save(vote);
-        addVoteCount(article, articleId);
 
+        addVoteCount(article, articleId);
         return vote.getId();
+    }
+
+    private void validDuplicateVote(ArticleIdentity identity, Long articleId, Long memberId) {
+        List<Vote> votes;
+
+        switch (identity) {
+            case POST: votes = voteRepository.findByPostAndMember(articleId, memberId); break;
+            case QNA: votes = voteRepository.findByQnaAndMember(articleId, memberId); break;
+            case COMMENT: votes = voteRepository.findByCommentAndMember(articleId, memberId); break;
+            default: throw new IllegalArgumentException("Unknown Article Identity");
+        }
+
+        if (!votes.isEmpty()) {
+            throw new DuplicateVoteException("추천은 한 번만 할 수 있습니다!");
+        }
     }
 
     private Object identifyArticle(ArticleIdentity identity, Long articleId) {
@@ -76,14 +93,6 @@ public class VoteService {
 
     public List<Vote> findByCommentAndMember(Long commentId, Long memberId) {
         return voteRepository.findByCommentAndMember(commentId, memberId);
-    }
-
-    public List<Vote> findByPostId(Long postId) {
-        return voteRepository.findByPostId(postId);
-    }
-
-    public List<Vote> findByQnaId(Long qnaId) {
-        return voteRepository.findByQnaId(qnaId);
     }
 
     public List<Vote> findAll() {
