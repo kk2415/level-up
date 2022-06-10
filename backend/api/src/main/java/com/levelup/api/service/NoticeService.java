@@ -42,7 +42,7 @@ public class NoticeService {
         noticeRepository.save(notice);
 
         return new NoticeResponse(notice.getId(), notice.getTitle(), notice.getWriter(), notice.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getCreatedDate()),
                 notice.getViews(), (int) notice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -67,7 +67,7 @@ public class NoticeService {
         }
 
         return new NoticeResponse(findNotice.getId(), findNotice.getTitle(), findNotice.getWriter(), findNotice.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getCreatedDate()),
                 findNotice.getViews(), (int) findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -75,7 +75,7 @@ public class NoticeService {
         return noticeRepository.findAll()
                 .stream()
                 .map(n -> new NoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getCreatedDate()),
                         n.getViews(),
                         (int) n.getComments().stream().filter(c -> c.getParent() == null).count()))
                 .collect(Collectors.toList());
@@ -91,7 +91,7 @@ public class NoticeService {
         return noticeRepository.findAll(page, searchCondition)
                 .stream()
                 .map(n -> new NoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getCreatedDate()),
                         n.getViews(),
                         (int) n.getComments().stream().filter(c -> c.getParent() == null).count()))
                 .collect(Collectors.toList());
@@ -114,7 +114,7 @@ public class NoticeService {
         Notice nextPage = noticeRepository.findNextPage(id);
 
         return new NoticeResponse(nextPage.getId(), nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getCreatedDate()),
                 nextPage.getViews(), (int) nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -122,7 +122,7 @@ public class NoticeService {
         Notice prevPage = noticeRepository.findPrevPage(id);
 
         return new NoticeResponse(prevPage.getId(), prevPage.getTitle(), prevPage.getWriter(), prevPage.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getCreatedDate()),
                 prevPage.getViews(), (int) prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 

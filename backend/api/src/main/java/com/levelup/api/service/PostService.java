@@ -46,7 +46,6 @@ public class PostService {
         Channel channel = channelRepository.findById(postRequest.getChannelId());
 
         Post findPost = postRequest.toEntity(channel, member);
-
         postRepository.save(findPost);
 
         return new PostResponse(
@@ -55,7 +54,7 @@ public class PostService {
                 findPost.getTitle(),
                 findPost.getWriter(),
                 findPost.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getCreatedDate()),
                 findPost.getVoteCount(),
                 findPost.getViews(),
                 findPost.getComments().size(),
@@ -103,14 +102,6 @@ public class PostService {
                 findPost.getPostCategory());
     }
 
-    public void addVoteCount(Post findPost) {
-        findPost.addVoteCount();
-    }
-
-    public void addViews(Post findPost) {
-        findPost.addViews();
-    }
-
 
     /**
      * 게시글 조회
@@ -123,7 +114,7 @@ public class PostService {
         }
 
         return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
-                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getCreatedDate()),
                 findPost.getVoteCount(), findPost.getViews(),
                 (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
@@ -134,7 +125,7 @@ public class PostService {
 
         return findPosts.stream()
                 .map(p -> new PostResponse(p.getId(), p.getMember().getId(), p.getTitle(), p.getWriter(), p.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getDateCreated()), p.getVoteCount(),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(p.getCreatedDate()), p.getVoteCount(),
                         p.getViews(), (int) p.getComments().stream().filter(c -> c.getParent() == null).count(),
                         p.getPostCategory()))
                 .collect(Collectors.toList());
@@ -159,7 +150,7 @@ public class PostService {
         }
 
         return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
-                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getCreatedDate()),
                 findPost.getVoteCount(), findPost.getViews(),
                 (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }
@@ -172,7 +163,7 @@ public class PostService {
         }
 
         return new PostResponse(findPost.getId(), findPost.getMember().getId(), findPost.getTitle(), findPost.getWriter(),
-                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getDateCreated()),
+                findPost.getContent(), DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findPost.getCreatedDate()),
                 findPost.getVoteCount(), findPost.getViews(),
                 (int) findPost.getComments().stream().filter(c -> c.getParent() == null).count(), findPost.getPostCategory());
     }

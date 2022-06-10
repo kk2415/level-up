@@ -1,6 +1,7 @@
 package com.levelup.core.domain.comment;
 
 import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.notice.ChannelNotice;
 import com.levelup.core.domain.notice.Notice;
@@ -19,7 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -28,9 +29,6 @@ public class Comment {
 
     private String writer;
     private String content;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Column(name = "vote_count")
     private Long voteCount;

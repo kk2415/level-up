@@ -27,7 +27,6 @@ public class CreateCommentRequest {
         Comment comment = Comment.builder()
                 .member(member)
                 .writer(member.getName())
-                .dateCreated(LocalDateTime.now())
                 .content(content)
                 .voteCount(0L)
                 .child(new ArrayList<>())

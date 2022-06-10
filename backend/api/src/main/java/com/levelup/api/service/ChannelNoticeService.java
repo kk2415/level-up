@@ -7,9 +7,9 @@ import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.notice.ChannelNotice;
-import com.levelup.core.dto.notice_channel.ChannelNoticeRequest;
-import com.levelup.core.dto.notice_channel.ChannelNoticeResponse;
-import com.levelup.core.dto.notice_channel.PagingChannelNoticeResponse;
+import com.levelup.core.dto.channelNotice.ChannelNoticeRequest;
+import com.levelup.core.dto.channelNotice.ChannelNoticeResponse;
+import com.levelup.core.dto.channelNotice.PagingChannelNoticeResponse;
 import com.levelup.core.exception.AuthorizationException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -53,7 +53,7 @@ public class ChannelNoticeService {
             return new ChannelNoticeResponse(channelNotice.getId(),
                     channelNotice.getChannel().getManager().getId(), channelNotice.getTitle(),
                     channelNotice.getWriter(), channelNotice.getContent(), channelNotice.getViews(), 0L,
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getDateCreated()),
+                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getCreatedDate()),
                     channelNotice.getComments().size());
         }
 
@@ -81,7 +81,7 @@ public class ChannelNoticeService {
 
         return new ChannelNoticeResponse(id, findNotice.getChannel().getManager().getId(), findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(), 0L,
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getCreatedDate()),
                 (int)findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -91,7 +91,7 @@ public class ChannelNoticeService {
 
         return findNotices.stream()
                 .map(n -> new PagingChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getDateCreated()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getCreatedDate()),
                         (int)n.getComments().stream().filter(c -> c.getParent() == null).count(),
                         noticeCount))
                 .collect(Collectors.toList());
@@ -106,7 +106,7 @@ public class ChannelNoticeService {
 
         return new ChannelNoticeResponse(nextPage.getId(), nextPage.getChannel().getManager().getId(),
                 nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(), 0L,
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getCreatedDate()),
                 (int)nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -116,7 +116,7 @@ public class ChannelNoticeService {
         return new ChannelNoticeResponse(prevPage.getId(), prevPage.getChannel().getManager().getId(),
                 prevPage.getTitle(),
                 prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(), 0L,
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getCreatedDate()),
                 (int)prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -135,7 +135,7 @@ public class ChannelNoticeService {
             return new ChannelNoticeResponse(notice.getId(), notice.getChannel().getManager().getId(),
                     notice.getTitle(),
                     notice.getWriter(), notice.getContent(), notice.getViews(), 0L,
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getDateCreated()),
+                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getCreatedDate()),
                     (int)notice.getComments().stream().filter(c -> c.getParent() == null).count());
         }
 

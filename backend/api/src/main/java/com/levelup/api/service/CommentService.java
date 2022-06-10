@@ -32,7 +32,6 @@ public class CommentService {
     private final ChannelNoticeRepository channelNoticeRepository;
     private final PostRepository postRepository;
     private final NoticeRepository noticeRepository;
-    private final ChannelNoticeService channelNoticeService;
     private final QnaRepository qnaRepository;
 
     /**
@@ -47,7 +46,7 @@ public class CommentService {
         commentRepository.save(findComment);
 
         return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getCreatedDate()),
                 findComment.getVoteCount(), (long) findComment.getChild().size());
     }
 
@@ -62,7 +61,7 @@ public class CommentService {
         parent.addChildComment(child);
 
         return new CommentResponse(child.getId(), child.getWriter(), child.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getDateCreated()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getCreatedDate()),
                 child.getVoteCount(), (long) child.getChild().size());
     }
 
@@ -103,7 +102,7 @@ public class CommentService {
         return comments.stream()
                 .filter(c -> c.getParent() == null)
                 .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreatedDate()),
                         c.getVoteCount(), (long) c.getChild().size()))
                 .collect(Collectors.toList());
     }
@@ -113,7 +112,7 @@ public class CommentService {
 
         return reply.stream()
                 .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getDateCreated()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreatedDate()),
                         c.getVoteCount(), (long) c.getChild().size()))
                 .collect(Collectors.toList());
     }

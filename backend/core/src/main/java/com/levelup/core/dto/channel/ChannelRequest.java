@@ -48,7 +48,6 @@ public class ChannelRequest {
                 .limitedMemberNumber(limitedMemberNumber)
                 .description(description)
                 .thumbnailDescription(thumbnailDescription)
-                .dateCreated(LocalDateTime.now())
                 .memberCount(0L)
                 .waitingMemberCount(0L)
                 .category(category)

@@ -1,5 +1,6 @@
 package com.levelup.core.domain.qna;
 
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
@@ -16,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
-public class Qna {
+public class Qna extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -25,9 +26,6 @@ public class Qna {
     private String title;
     private String writer;
     private String content;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Column(name = "vote_count")
     private Long voteCount;
@@ -62,7 +60,6 @@ public class Qna {
         qna.setTitle(title);
         qna.setWriter(writer);
         qna.setContent(content);
-        qna.setDateCreated(LocalDateTime.now());
         qna.setVoteCount(0L);
         qna.setViews(0L);
 
