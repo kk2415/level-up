@@ -3,9 +3,11 @@ package com.levelup.api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 //@EnableGlobalMethodSecurity(securedEnabled = true) //secured 애노테이션 활성화
+@EnableCaching
 @EntityScan("com.levelup.core")
 @EnableJpaRepositories("com.levelup.core")
 @SpringBootApplication(scanBasePackages = "com.levelup")

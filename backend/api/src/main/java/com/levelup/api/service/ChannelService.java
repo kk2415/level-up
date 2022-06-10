@@ -23,6 +23,8 @@ import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,7 @@ public class ChannelService {
     /**
      * 생성
      * */
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public CreateChannelResponse create(ChannelRequest channelRequest) {
         validationDuplicateChannel(channelRequest.getName());
 
@@ -92,6 +95,7 @@ public class ChannelService {
         channel.addMember(channelMembers);
     }
 
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void addMember(Long channelId, Long... memberIds) {
         Channel channel = channelRepository.findById(channelId);
         List<ChannelMember> channelMembers = new ArrayList<>();
@@ -153,6 +157,7 @@ public class ChannelService {
         return channelRepository.findByMemberId(memberId);
     }
 
+    @Cacheable(cacheNames = "ChannelCategory")
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
                 .stream().map(c -> new ChannelResponse(c.getId(),
@@ -175,7 +180,7 @@ public class ChannelService {
         return channelRepository.findAll(start, end);
     }
 
-    public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
+        public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
         Channel findChannel = channelRepository.findById(channelId);
 
         if (findChannel.getThumbnailImage() == null) {
@@ -226,6 +231,7 @@ public class ChannelService {
     /**
      * 채널 수정
      * */
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public ChannelResponse update(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId);
         channel.modifyChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
@@ -236,6 +242,7 @@ public class ChannelService {
                 channel.getThumbnailImage().getStoreFileName());
     }
 
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public UploadFile modifyChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId);
 
@@ -260,6 +267,7 @@ public class ChannelService {
     /**
      * 채널 삭제
      * */
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteChannel(Long channelId) {
         channelRepository.delete(channelId);
     }
@@ -276,6 +284,7 @@ public class ChannelService {
 //        channelMemberRepository.delete(channelMember.getId());
     }
 
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = channelRepository.findById(channelId);
         Member findMember = memberRepository.findByEmail(email);
