@@ -11,6 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class MemberResponse {
 
+    private Long id;
     private String email;
     private String name;
     private Gender gender;

@@ -63,7 +63,7 @@ public class JpaChannelNoticeRepository implements ChannelNoticeRepository {
 
     @Override
     public List<ChannelNotice> findByMemberId(Long memberId) {
-        String query = "select cn from ChannelNotice cn inner join cn.channel c where c.member.id = :memberId";
+        String query = "select cn from ChannelNotice cn inner join cn.channel c where c.manager.id = :memberId";
 
         return em.createQuery(query, ChannelNotice.class)
                 .setParameter("memberId", memberId)

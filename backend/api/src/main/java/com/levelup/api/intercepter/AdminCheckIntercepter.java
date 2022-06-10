@@ -1,6 +1,6 @@
 package com.levelup.api.intercepter;
 
-import com.levelup.api.api.SessionName;
+import com.levelup.api.config.SessionName;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
 import org.springframework.web.servlet.HandlerInterceptor;

@@ -1,5 +1,6 @@
 package com.levelup.core.domain.vote;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.post.Post;
@@ -20,6 +21,10 @@ public class Vote {
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     @JoinColumn(name = "post_id")
     @ManyToOne(fetch = FetchType.LAZY)

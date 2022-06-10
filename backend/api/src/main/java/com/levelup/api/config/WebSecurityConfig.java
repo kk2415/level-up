@@ -1,12 +1,13 @@
 package com.levelup.api.config;
 
-import com.levelup.api.filter.JwtAuthenticationFilter;
-import com.levelup.api.filter.SecurityLoginFilter;
+import com.levelup.api.security.JwtAuthenticationFilter;
+import com.levelup.api.security.SecurityLoginFilter;
 import com.levelup.api.security.TokenProvider;
 import com.levelup.api.service.MemberService;
+import com.levelup.core.domain.member.Authority;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
@@ -43,14 +43,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증 실패시
-                .accessDeniedHandler(jwtAccessDeniedHandler) //권한 에러 처리(관리자 권한 등)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/**", "/api/**").permitAll();
+                .accessDeniedHandler(jwtAccessDeniedHandler); //권한 에러 처리(관리자 권한 등)
+
+        http.authorizeRequests()
+                .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**",
+                        "/channel/{\\d+}/waiting-member/**").hasRole(Authority.CHANNEL_MANAGER.name())
+                .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
+                .antMatchers("/api/channel/**").authenticated()
+                .antMatchers( HttpMethod.POST,"/api/member").permitAll()
+                .antMatchers("/api/member").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
+                .antMatchers("/api/comment/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
+                        "/api/{\\d+}/posts/{\\d+}").permitAll()
+                .antMatchers("/api/post/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                .antMatchers("/api/notice/**").authenticated()
+                .anyRequest().permitAll();
+
+
+        http.formLogin().loginPage("/login");
 
         http.addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());
-
     }
 
     //select pwd from users where email=?

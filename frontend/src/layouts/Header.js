@@ -31,7 +31,7 @@ const Header = () => {
 	}
 
 	useEffect(() => {
-		if (sessionStorage.getItem(TOKEN) === 'null') {
+		if (sessionStorage.getItem(TOKEN) === 'null' || sessionStorage.getItem(TOKEN) === null) {
 			setSignUpShow(true)
 			setSignInShow(true)
 			setSignOutShow(false)

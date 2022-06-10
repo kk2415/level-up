@@ -5,10 +5,7 @@ import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.vote.Vote;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,7 +15,9 @@ import java.util.List;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 
@@ -81,54 +80,19 @@ public class Post {
         channel.getPosts().add(this);
     }
 
-    //==생성 메서드==//
-    public static Post createPost(Member member, String title, String content) {
-        Post post = new Post();
-
-        post.setMember(member);
-        post.setTitle(title);
-        post.setContent(content);
-        post.setDateCreated(LocalDateTime.now());
-        post.setVoteCount(0L);
-        post.setWriter(member.getName());
-        post.setViews(0L);
-
-        return post;
-    }
-
-    public static Post createPost(Member member, Channel channel, String title, String content) {
-        return createPost(member, channel, title, content,PostCategory.INFO);
-    }
-
-    public static Post createPost(Member member, Channel channel, String title, String content, PostCategory postCategory) {
-        Post post = new Post();
-
-        post.setMember(member);
-        post.setChannel(channel);
-        post.setTitle(title);
-        post.setContent(content);
-        post.setDateCreated(LocalDateTime.now());
-        post.setVoteCount(0L);
-        post.setWriter(member.getEmail());
-        post.setPostCategory(postCategory);
-        post.setViews(0L);
-
-        return post;
-    }
-
     //==비즈니스 로직==//
     public void changePost(String title, String content, PostCategory category) {
-        this.setTitle(title);
-        this.setContent(content);
-        this.setPostCategory(category);
+        this.title = (title);
+        this.content = (content);
+        this.postCategory = (category);
     }
 
     public void addViews() {
-        this.setViews(this.views + 1);
+        this.views = (this.views + 1);
     }
 
     public void addVoteCount() {
-        this.setVoteCount(this.voteCount + 1);
+        this.voteCount = (this.voteCount + 1);
     }
 
 }

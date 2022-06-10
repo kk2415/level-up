@@ -1,5 +1,6 @@
 package com.levelup.core.domain.member;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
@@ -8,8 +9,10 @@ import com.levelup.core.domain.notice.Notice;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.qna.Qna;
 import com.levelup.core.domain.vote.Vote;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,7 +21,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "member")
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
 
     @Id @GeneratedValue
@@ -38,13 +44,16 @@ public class Member {
     private String phone;
 
     @Embedded
-    private UploadFile uploadFile;
+    private UploadFile profileImage;
 
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @OneToMany(mappedBy = "member")
+    private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
@@ -62,7 +71,7 @@ public class Member {
     @OneToMany(mappedBy = "waitingMember")
     private List<ChannelMember> channelWaitingMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "manager")
     private List<Channel> channels = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
@@ -74,34 +83,16 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Vote> votes;
 
-    //==생성 메서드==//
-    public static Member createMember(String email, String password, String name,
-                                      Gender gender, String birthday, String phone, UploadFile uploadFile) {
-        Member member = new Member();
-        member.setEmail(email);
-        member.setPassword(password);
-        member.setName(name);
-        member.setGender(gender);
-        member.setBirthday(birthday);
-        member.setPhone(phone);
-        member.setAuthority(Authority.NORMAL);
-        member.setDateCreated(LocalDateTime.now());
-        member.setUploadFile(uploadFile);
-        return member;
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
     }
 
-    public static Member createMember(Authority authority, String email, String password, String name,
-                                      Gender gender, String birthday, String phone, UploadFile uploadFile) {
-        Member member = new Member();
-        member.setEmail(email);
-        member.setPassword(password);
-        member.setName(name);
-        member.setGender(gender);
-        member.setBirthday(birthday);
-        member.setPhone(phone);
-        member.setAuthority(authority);
-        member.setDateCreated(LocalDateTime.now());
-        member.setUploadFile(uploadFile);
-        return member;
+    public void setPassword(String password) {
+        this.password = password;
     }
+
+    public void modifyProfileImage(UploadFile profileImage) {
+        this.profileImage = profileImage;
+    }
+
 }

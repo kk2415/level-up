@@ -1,15 +1,17 @@
 package com.levelup.api.api;
 
+import com.levelup.api.config.DateFormat;
 import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.domain.file.Base64Dto;
+import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.channel.*;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.repository.channel.ChannelRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -128,6 +130,15 @@ public class ChannelApiController {
         return new Result(waitingMembers, waitingMembers.size());
     }
 
+    @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
+    @GetMapping("/channel/{channelId}/manager")
+    public ResponseEntity getChannelAllInfo(@PathVariable Long channelId,
+                                   @AuthenticationPrincipal Long memberId) {
+        ChannelManagerResponse channelAllInfo = channelService.getChannelAllInfo(channelId, memberId);
+
+        return ResponseEntity.ok().body(channelAllInfo);
+    }
+
 
     /**
      * 수정
@@ -135,10 +146,9 @@ public class ChannelApiController {
     @PatchMapping("/channel/{channelId}")
     public ResponseEntity modifyDetailDescription(@PathVariable Long channelId,
                                                   @RequestBody @Validated UpdateChannelRequest channelRequest) {
-        channelService.update(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
+        ChannelResponse findChannel = channelService.update(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
                 channelRequest.getDescription(), channelRequest.getThumbnailDescription(), channelRequest.getThumbnailImage());
 
-        ChannelResponse findChannel = channelService.getById(channelId);
         return ResponseEntity.ok().body(findChannel);
     }
 

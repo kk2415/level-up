@@ -1,5 +1,6 @@
 package com.levelup.core.domain.file;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.notice.ChannelNotice;
 import com.levelup.core.domain.notice.Notice;
@@ -20,6 +21,10 @@ public class File {
 
     @Embedded
     private UploadFile uploadFile;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")

@@ -1,4 +1,4 @@
-package com.levelup.core.domain.file;
+package com.levelup.core.dto.file;
 
 import lombok.Data;
 

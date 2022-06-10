@@ -1,14 +1,12 @@
-package com.levelup.api.filter;
+package com.levelup.api.security;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.levelup.api.api.SessionName;
+import com.levelup.api.config.SessionName;
 import com.levelup.api.security.TokenProvider;
-import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.member.LoginRequest;
 import com.levelup.core.dto.member.LoginResponse;
-import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +39,6 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
         try {
             LoginRequest creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
 
-            System.out.println(creds.getEmail());
-            System.out.println(creds.getPassword());
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),

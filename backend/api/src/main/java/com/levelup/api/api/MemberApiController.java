@@ -35,6 +35,12 @@ public class MemberApiController {
     private final MemberRepository memberRepository;
 
 
+    @GetMapping("/channel-manager-")
+    public String channelManager() {
+        return "channelManager";
+    }
+
+
     /**
      * 생성
      * */
@@ -81,8 +87,8 @@ public class MemberApiController {
         }
 
         Member member = memberService.findOne(memberId);
-        return new MemberResponse(member.getEmail(), member.getName(),
-                member.getGender(), member.getBirthday(), member.getPhone(), member.getUploadFile());
+        return new MemberResponse(member.getId(), member.getEmail(), member.getName(),
+                member.getGender(), member.getBirthday(), member.getPhone(), member.getProfileImage());
     }
 
     /**

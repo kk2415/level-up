@@ -1,15 +1,13 @@
 package com.levelup.core.domain.comment;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.notice.ChannelNotice;
 import com.levelup.core.domain.notice.Notice;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.qna.Qna;
 import com.levelup.core.domain.vote.Vote;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 
@@ -42,6 +42,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_id")
@@ -92,47 +96,42 @@ public class Comment {
         qna.getComments().add(this);
     }
 
-    public void addChildComment(Comment child) {
-        this.child.add(child);
-        child.setParent(this);
+    public void setChannelNotice(ChannelNotice channelNotice) {
+        this.channelNotice = channelNotice;
     }
 
-    //==생성 메서드==//
-    public static Comment createComment(Member member, Object article, String content) {
-        Comment comment = new Comment();
-
-        comment.setMember(member);
-        comment.setWriter(member.getName());
-        comment.setDateCreated(LocalDateTime.now());
-        comment.setContent(content);
-        comment.setVoteCount(0L);
-        setArticle(article, comment);
-
-        return comment;
+    public void setQna(Qna qna) {
+        this.qna = qna;
     }
 
-    private static void setArticle(Object object, Comment comment) {
+    public void setArticle(Object object) {
         if (object instanceof Post) {
-            comment.setPost((Post) object);
+            this.post = ((Post) object);
         }
         else if (object instanceof Notice) {
-            comment.setNotice((Notice) object);
+            this.notice = ((Notice) object);
         }
         else if (object instanceof ChannelNotice) {
-            comment.setChannelNotice((ChannelNotice) object);
+            this.channelNotice = ((ChannelNotice) object);
         }
         else if (object instanceof Qna) {
-            comment.setQna((Qna) object);
+            this.qna = ((Qna) object);
         }
     }
+
 
     //==비즈니스 로직==//
     public void changeComment(String content) {
-        this.setContent(content);
+        this.content = (content);
     }
 
     public void addVoteCount() {
-        this.setVoteCount(this.voteCount + 1);
+        this.voteCount = (this.voteCount + 1);
+    }
+
+    public void addChildComment(Comment child) {
+        this.child.add(child);
+        child.parent = (this);
     }
 
 }
