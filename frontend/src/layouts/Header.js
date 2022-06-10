@@ -11,8 +11,6 @@ import SignIn from "../page/member/SignIn";
 const Header = () => {
 	const navigate = useNavigate();
 
-	const [signUpModalOn, setSignUpModalOn] = useState(false)
-	const [signInModalOn, setSignInModalOn] = useState(false)
 	const [signUpShow, setSignUpShow] = useState(true)
 	const [signInShow, setSignInShow] = useState(true)
 	const [signOutShow, setSignOutShow] = useState(false)

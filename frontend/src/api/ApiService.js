@@ -125,7 +125,6 @@ export function signOut() {
     sessionStorage.setItem(TOKEN, null)
     sessionStorage.setItem('email', null)
     sessionStorage.setItem('id', null)
-    alert('로그아웃되었습니다.')
     window.location.href = "/"
 }
 
