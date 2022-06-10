@@ -1,6 +1,7 @@
 package com.levelup.core.domain.file;
 
 import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.notice.ChannelNotice;
 import com.levelup.core.domain.notice.Notice;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-public class File {
+public class File extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

@@ -1,5 +1,6 @@
 package com.levelup.core.domain.post;
 
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
@@ -19,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "post_id")
@@ -30,9 +31,6 @@ public class Post {
 
     @Lob
     private String content;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Column(name = "vote_count")
     private Long voteCount;

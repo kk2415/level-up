@@ -1,5 +1,6 @@
 package com.levelup.core.domain.notice;
 
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
@@ -17,7 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notice {
+public class Notice extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -28,9 +29,6 @@ public class Notice {
 
     @Lob
     private String content;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Column(name = "views")
     private Long views;
@@ -59,7 +57,6 @@ public class Notice {
                 .title(title)
                 .writer(writer)
                 .content(content)
-                .dateCreated(LocalDateTime.now())
                 .views(0L)
                 .build();
     }

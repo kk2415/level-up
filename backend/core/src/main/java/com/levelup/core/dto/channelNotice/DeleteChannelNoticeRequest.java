@@ -1,4 +1,4 @@
-package com.levelup.core.dto.notice_channel;
+package com.levelup.core.dto.channelNotice;
 
 import lombok.Data;
 

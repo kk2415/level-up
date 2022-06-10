@@ -1,6 +1,7 @@
 package com.levelup.core.domain.channel;
 
 import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -10,7 +11,6 @@ import com.levelup.core.exception.NoPlaceChnnelException;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Channel {
+public class Channel extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -31,9 +31,6 @@ public class Channel {
 
     @Column(name = "limited_mem_num")
     private Long limitedMemberNumber;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Column(name = "manager_name")
     private String managerName;

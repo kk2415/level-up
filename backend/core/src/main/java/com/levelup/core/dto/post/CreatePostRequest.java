@@ -36,7 +36,6 @@ public class CreatePostRequest {
                 .channel(channel)
                 .title(title)
                 .content(content)
-                .dateCreated(LocalDateTime.now())
                 .voteCount(0L)
                 .views(0L)
                 .postCategory(category)

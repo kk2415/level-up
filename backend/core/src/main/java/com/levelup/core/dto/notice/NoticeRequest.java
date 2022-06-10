@@ -27,7 +27,6 @@ public class NoticeRequest {
                 .title(title)
                 .writer(member.getName())
                 .content(content)
-                .dateCreated(LocalDateTime.now())
                 .views(0L)
                 .build();
     }

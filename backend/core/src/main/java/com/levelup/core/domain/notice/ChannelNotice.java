@@ -1,5 +1,6 @@
 package com.levelup.core.domain.notice;
 
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
@@ -16,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "channel_notice")
 @Getter @Setter
-public class ChannelNotice {
+public class ChannelNotice extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -27,9 +28,6 @@ public class ChannelNotice {
 
     @Lob
     private String content;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Column(name = "views")
     private Long views;
@@ -58,7 +56,6 @@ public class ChannelNotice {
         channelNotice.setTitle(title);
         channelNotice.setWriter(writer);
         channelNotice.setContent(content);
-        channelNotice.setDateCreated(LocalDateTime.now());
         channelNotice.setViews(0L);
 
         return channelNotice;

@@ -66,7 +66,6 @@ public class CreateMemberRequest {
                 .birthday(birthday)
                 .phone(phone)
                 .authority(Authority.NORMAL)
-                .dateCreated(LocalDateTime.now())
                 .profileImage(uploadFile)
                 .channels(new ArrayList<>())
                 .build();

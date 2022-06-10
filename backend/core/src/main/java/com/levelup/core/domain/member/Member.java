@@ -1,6 +1,7 @@
 package com.levelup.core.domain.member;
 
 import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
@@ -15,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "member_id")
@@ -45,9 +45,6 @@ public class Member {
 
     @Embedded
     private UploadFile profileImage;
-
-    @Column(name = "date_created")
-    private LocalDateTime dateCreated;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
