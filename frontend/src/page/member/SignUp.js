@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Container } from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login'
+
+import $ from 'jquery'
+
 import HorizonLine from "../../component/HorizonLine";
 import { signUp } from '../../api/ApiService'
 import { uploadFile } from '../../api/FileService'
+import {createMemberValidation as validation} from '../../api/validation'
 
 const SignUp = () => {
     const [file, setFile] = useState(null)
+    const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
 
     const handleChangeFile = (event) => {
         setFile(event.target.files[0])
@@ -28,10 +33,48 @@ const SignUp = () => {
         }
         console.log(member)
 
-        let result = await signUp(member)
-        if (result) {
-            window.location.href = '/'
+        if (validate(member)) {
+            await signUp(member)
         }
+    }
+
+    const validate = (member) => {
+        let valid = true;
+
+        removeAlertMassageBox()
+        if (!validation.name.test(member.name) || member.name === null) {
+            $('#alert').append('<h5>[이름] : 이름은 2자리 이상 15이하, 한글만 입력하세요</h5>')
+            valid = false;
+        }
+        if (!validation.email.test(member.email) || member.email === null) {
+            $('#alert').append('<h5>[이매일] : 유효한 이메일 형식이 아닙니다.</h5>')
+            valid = false;
+        }
+        if (!validation.password.test(member.password) || member.password === null) {
+            $('#alert').append('<h5>[비밀번호] : 비밀번호는 8자리이상 24이하, 영문자/숫자만 및 특수문자만 입력하세요</h5>')
+            valid = false;
+        }
+        if (member.password !== member.confirmPassword) {
+            $('#alert').append('<h5>[비밀번호] : 비밀번호와 비밀번호 확인이 일치하지 않습니다.</h5>')
+            valid = false;
+        }
+        if (!validation.phone.test(member.phone) || member.phone === null) {
+            $('#alert').append('<h5>[휴대폰번호] : 유효한 형식이 아닙니다.</h5>')
+            valid = false;
+        }
+        if (!validation.birthday.test(member.birthday) || member.birthday === null) {
+            $('#alert').append('<h5>[생년월일] : 생년월일은 6자리 이상 입력해주세요</h5>')
+            valid = false;
+        }
+
+        if (!valid) {
+            setOnShowAlertMsg(true)
+        }
+        return valid
+    }
+
+    const removeAlertMassageBox = () => {
+        $('#alert').children('h5').remove();
     }
 
     return (
@@ -78,6 +121,14 @@ const SignUp = () => {
                 <Form.Label>프로필 사진 선택</Form.Label>
                 <Form.Control onChange={handleChangeFile} id='file' type='file' />
             </Form.Group>
+
+            {
+                onShowAlertMsg &&
+                <div className="alert alert-danger mt-5" id="alert" role="alert">
+                    <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                    <hr/>
+                </div>
+            }
 
             <Container className="d-grid gap-2">
                 <Button className='my-3' variant='info' type='button' onClick={() => {HandleSignUpButton()}} >

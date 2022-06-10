@@ -1,6 +1,6 @@
 package com.levelup.api.service;
 
-import com.levelup.api.api.DateFormat;
+import com.levelup.api.config.DateFormat;
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
@@ -38,8 +38,7 @@ public class NoticeService {
     public NoticeResponse create(NoticeRequest noticeRequest, Long memberId) {
         Member findMember = memberService.findOne(memberId);
 
-        Notice notice = Notice.createNotice(findMember, noticeRequest.getTitle(), findMember.getName(),
-                noticeRequest.getContent());
+        Notice notice = noticeRequest.toEntity(findMember);
         noticeRepository.save(notice);
 
         return new NoticeResponse(notice.getId(), notice.getTitle(), notice.getWriter(), notice.getContent(),

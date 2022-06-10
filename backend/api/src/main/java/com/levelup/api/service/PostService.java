@@ -1,6 +1,7 @@
 package com.levelup.api.service;
 
-import com.levelup.api.api.DateFormat;
+import com.levelup.api.config.DateFormat;
+import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
@@ -33,6 +34,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final ChannelRepository channelRepository;
     private final FileStore fileStore;
 
 
@@ -41,7 +43,9 @@ public class PostService {
      * */
     public PostResponse create(CreatePostRequest postRequest, Long memberId) {
         Member member = memberRepository.findById(memberId);
-        Post findPost = Post.createPost(member, postRequest.getTitle(), postRequest.getContent());
+        Channel channel = channelRepository.findById(postRequest.getChannelId());
+
+        Post findPost = postRequest.toEntity(channel, member);
 
         postRepository.save(findPost);
 

@@ -9,7 +9,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleCreateChannel = () => {
-    if (sessionStorage.getItem(TOKEN)) {
+    if (sessionStorage.getItem(TOKEN) !== 'null') {
       navigate(`/channel/create`);
     }
     else {

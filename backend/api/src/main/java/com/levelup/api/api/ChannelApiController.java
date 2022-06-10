@@ -1,10 +1,11 @@
 package com.levelup.api.api;
 
+import com.levelup.api.config.DateFormat;
 import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.domain.file.Base64Dto;
+import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.channel.*;

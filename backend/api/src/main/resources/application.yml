@@ -14,10 +14,12 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+    schema: classpath:schema.sql
+#    initialization-mode: always
 
   jpa:
     hibernate:
-      ddl-auto:
+      ddl-auto: create-drop
     properties:
       hibernate:
         show_sql: true
@@ -37,9 +39,6 @@ spring:
     #OSIV를 끄면 트랜잭션을 종료할 때 영속성 컨텍스트를 닫고, 데이터베이스 커넥션도 반환한다. 따라서
     #커넥션 리소스를 낭비하지 않는다.
 
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
   servlet:
     multipart:
       max-file-size: 1MB

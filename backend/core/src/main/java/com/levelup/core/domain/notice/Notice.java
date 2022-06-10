@@ -3,8 +3,7 @@ package com.levelup.core.domain.notice;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +14,9 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Notice {
 
     @Id
@@ -53,26 +54,24 @@ public class Notice {
 
     //==생성 메서드==//
     public static Notice createNotice(Member member, String title, String writer, String content) {
-        Notice notice = new Notice();
-
-        notice.setMember(member);
-        notice.setTitle(title);
-        notice.setWriter(writer);
-        notice.setContent(content);
-        notice.setDateCreated(LocalDateTime.now());
-        notice.setViews(0L);
-
-        return notice;
+        return Notice.builder()
+                .member(member)
+                .title(title)
+                .writer(writer)
+                .content(content)
+                .dateCreated(LocalDateTime.now())
+                .views(0L)
+                .build();
     }
 
     //==비즈니스 로직==//
     public void change(String title, String content) {
-        this.setTitle(title);
-        this.setContent(content);
+        this.title = title;
+        this.content = content;
     }
 
     public void addViews() {
-        this.setViews(this.views + 1);
+        this.views = this.views + 1;
     }
 
 }

@@ -1,4 +1,4 @@
-package domain.member;
+package com.levelup.core.repository;
 
 import com.levelup.core.CoreApplication;
 import com.levelup.core.domain.member.Authority;
@@ -22,20 +22,6 @@ class MemberRepositoryTest {
 
     @Test
     public void 멤버_생성() {
-        Member member = new Member();
-        member.setEmail("test1@test.com");
-        member.setPassword("00000000");
-        member.setName("test");
-        member.setGender(Gender.MALE);
-        member.setBirthday("970927");
-        member.setPhone("010-4646-4654");
-        member.setUploadFile(null);
-        member.setDateCreated(LocalDateTime.now());
-        member.setAuthority(Authority.NORMAL);
-
-        Long memberId = memberRepository.save(member);
-        Member findMember = memberRepository.findById(memberId);
-        Assertions.assertThat(memberId).isEqualTo(findMember.getId());
     }
 
 }

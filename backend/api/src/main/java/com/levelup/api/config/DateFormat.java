@@ -1,4 +1,4 @@
-package com.levelup.api.api;
+package com.levelup.api.config;
 
 public interface DateFormat {
 

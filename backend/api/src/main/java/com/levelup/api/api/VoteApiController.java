@@ -2,11 +2,8 @@ package com.levelup.api.api;
 
 
 import com.levelup.api.service.VoteService;
-import com.levelup.core.domain.comment.ArticleIdentity;
-import com.levelup.core.domain.vote.Vote;
 import com.levelup.core.dto.vote.CreateVoteRequest;
 import com.levelup.core.dto.Result;
-import com.levelup.core.exception.DuplicateVoteException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Tag(name = "추천 API")
 @RestController

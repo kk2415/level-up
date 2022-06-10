@@ -1,8 +1,8 @@
 package com.levelup.api.service;
 
 
-import com.levelup.api.api.DateFormat;
-import com.levelup.core.domain.comment.ArticleIdentity;
+import com.levelup.api.config.DateFormat;
+import com.levelup.core.domain.Article.ArticleCategory;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.comment.CommentResponse;
@@ -42,7 +42,8 @@ public class CommentService {
         Member findMember = memberRepository.findById(memeberId);
         Object article = identifyArticle(commentRequest.getIdentity(), commentRequest.getArticleId());
 
-        Comment findComment = Comment.createComment(findMember, article, commentRequest.getContent());
+        Comment findComment = commentRequest.toEntity(findMember, article);
+
         commentRepository.save(findComment);
 
         return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
@@ -50,7 +51,22 @@ public class CommentService {
                 findComment.getVoteCount(), (long) findComment.getChild().size());
     }
 
-    private Object identifyArticle(ArticleIdentity identity, Long articleId) {
+    public CommentResponse createReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        Comment parent = commentRepository.findById(commentRequest.getParentId());
+        Object article = identifyArticle(commentRequest.getIdentity(), commentRequest.getArticleId());
+
+        Comment child = commentRequest.toEntity(member, article);
+        commentRepository.save(child);
+
+        parent.addChildComment(child);
+
+        return new CommentResponse(child.getId(), child.getWriter(), child.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getDateCreated()),
+                child.getVoteCount(), (long) child.getChild().size());
+    }
+
+    private Object identifyArticle(ArticleCategory identity, Long articleId) {
         switch (identity) {
             case POST: return postRepository.findById(articleId);
             case CHANNEL_NOTICE: return channelNoticeRepository.findById(articleId);
@@ -60,25 +76,11 @@ public class CommentService {
         }
     }
 
-    public CommentResponse createReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId);
-        Comment parent = commentRepository.findById(commentRequest.getParentId());
-        Object article = identifyArticle(commentRequest.getIdentity(), commentRequest.getArticleId());
-
-        Comment child = Comment.createComment(member, article, commentRequest.getContent());
-        commentRepository.save(child);
-        parent.addChildComment(child);
-
-        return new CommentResponse(child.getId(), child.getWriter(), child.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getDateCreated()),
-                child.getVoteCount(), (long) child.getChild().size());
-    }
-
 
     /**
      * 댓글 조회
      * */
-    public List<CommentResponse> getAllByIdentityAndArticleId(ArticleIdentity identity, Long articleId) {
+    public List<CommentResponse> getAllByIdentityAndArticleId(ArticleCategory identity, Long articleId) {
         List<Comment> comments;
 
         switch (identity) {

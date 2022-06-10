@@ -1,7 +1,7 @@
 package com.levelup.api.service;
 
 
-import com.levelup.core.domain.comment.ArticleIdentity;
+import com.levelup.core.domain.Article.ArticleCategory;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.post.Post;
@@ -30,7 +30,7 @@ public class VoteService {
     private final PostRepository postRepository;
     private final QnaRepository qnaRepository;
 
-    public Long create(ArticleIdentity identity, Long articleId, Long memberId) {
+    public Long create(ArticleCategory identity, Long articleId, Long memberId) {
         Object article = identifyArticle(identity, articleId);
         Member findMember = memberRepository.findById(memberId);
 
@@ -43,7 +43,7 @@ public class VoteService {
         return vote.getId();
     }
 
-    private void validDuplicateVote(ArticleIdentity identity, Long articleId, Long memberId) {
+    private void validDuplicateVote(ArticleCategory identity, Long articleId, Long memberId) {
         List<Vote> votes;
 
         switch (identity) {
@@ -58,7 +58,7 @@ public class VoteService {
         }
     }
 
-    private Object identifyArticle(ArticleIdentity identity, Long articleId) {
+    private Object identifyArticle(ArticleCategory identity, Long articleId) {
         switch (identity) {
             case POST: return postRepository.findById(articleId);
             case QNA: return qnaRepository.findById(articleId);

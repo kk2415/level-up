@@ -1,9 +1,9 @@
 package com.levelup.api.service;
 
-
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
@@ -15,6 +15,7 @@ import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +43,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
 
+
     /**
      * 생성
      * */
@@ -52,7 +55,7 @@ public class MemberService implements UserDetailsService {
 
         memberRepository.save(member);
 
-        return new CreateMemberResponse(member.getEmail(), member.getPassword(), member.getName(),
+        return new CreateMemberResponse(member.getId(), member.getEmail(), member.getPassword(), member.getName(),
                 member.getGender(), member.getBirthday(), member.getPhone());
     }
 
@@ -85,8 +88,8 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findAllMembers() {
         return memberRepository.findAll()
                 .stream()
-                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getUploadFile()))
+                .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
+                        m.getPhone(), m.getProfileImage()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -100,8 +103,8 @@ public class MemberService implements UserDetailsService {
         if (findMember == null) {
             throw new MemberNotFoundException("가입된 이메일이 없습니다");
         }
-        return new MemberResponse(findMember.getEmail(), findMember.getName(),
-                findMember.getGender(), findMember.getBirthday(), findMember.getPhone(), findMember.getUploadFile());
+        return new MemberResponse(findMember.getId(), findMember.getEmail(), findMember.getName(),
+                findMember.getGender(), findMember.getBirthday(), findMember.getPhone(), findMember.getProfileImage());
     }
 
     public List<Member> findByChannelId(Long channelId) {
@@ -111,8 +114,8 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findByChannelId(Long channelId, Long page, Long count) {
         return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count))
                 .stream()
-                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getUploadFile()))
+                .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
+                        m.getPhone(), m.getProfileImage()))
                 .collect(Collectors.toList());
     }
 
@@ -123,19 +126,19 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findWaitingMemberByChannelId(Long channelId, Long page) {
         return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5)
                 .stream()
-                .map(m -> new MemberResponse(m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getUploadFile()))
+                .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
+                        m.getPhone(), m.getProfileImage()))
                 .collect(Collectors.toList());
     }
 
     public UrlResource getProfileImage(String email) throws MalformedURLException {
         Member findMember = memberRepository.findByEmail(email);
 
-        if (findMember.getUploadFile() == null) {
+        if (findMember.getProfileImage() == null) {
             throw new ImageNotFoundException("프로필 사진을 찾을 수 없습니다");
         }
 
-        UploadFile uploadFile = findMember.getUploadFile();
+        UploadFile uploadFile = findMember.getProfileImage();
         String fullPath = fileStore.getFullPath(uploadFile.getStoreFileName());
 
         /*
@@ -158,10 +161,10 @@ public class MemberService implements UserDetailsService {
 
         Member member = memberRepository.findById(memberId);
 
-        deleteProfileImage(member.getUploadFile().getStoreFileName());
+        deleteProfileImage(member.getProfileImage().getStoreFileName());
 
         UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
-        member.setUploadFile(uploadFile); //변경 감지의 의한 update문 쿼리 발생
+        member.modifyProfileImage(uploadFile); //변경 감지의 의한 update문 쿼리 발생
     }
 
     private void deleteProfileImage(String storeFileName) {
@@ -194,7 +197,20 @@ public class MemberService implements UserDetailsService {
             throw new MemberNotFoundException("잘못된 이메일입니다.");
         }
 
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                return member.getAuthority().name();
+            }
+        });
+
         return new User(member.getEmail(), member.getPassword(), true, true,
-                true, true, new ArrayList<>());
+                true, true, authorities);
     }
+
+//    private Collection<? extends GrantedAuthority> getAutorities() {
+//
+//    }
+
 }

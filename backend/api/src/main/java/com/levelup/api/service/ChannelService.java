@@ -1,12 +1,13 @@
 package com.levelup.api.service;
 
 
-import com.levelup.api.api.DateFormat;
+import com.levelup.api.config.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelInfo;
 import com.levelup.core.domain.channel.ChannelMember;
-import com.levelup.core.domain.file.Base64Dto;
+import com.levelup.core.domain.member.Authority;
+import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
@@ -60,7 +61,8 @@ public class ChannelService {
         Member member = memberRepository.findByEmail(channelRequest.getMemberEmail());
 
         Channel channel = channelRequest.toEntity();
-        channel.setMember(member);
+        channel.setManager(member);
+        member.setAuthority(Authority.CHANNEL_MANAGER);
 
         channelRepository.save(channel);
 
@@ -143,7 +145,7 @@ public class ChannelService {
         Channel findChannel = channelRepository.findById(channelId);
 
         return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getMember().getId(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
+                findChannel.getManagerName(), findChannel.getManager().getId(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
                 findChannel.getMemberCount(), findChannel.getThumbnailImage().getStoreFileName());
     }
 
@@ -154,7 +156,7 @@ public class ChannelService {
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
                 .stream().map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getMember().getId(),
+                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getManager().getId(),
                         c.getDescription(), c.getThumbnailDescription(), c.getMemberCount(),
                         c.getThumbnailImage().getStoreFileName()))
                 .collect(Collectors.toList());
@@ -163,7 +165,7 @@ public class ChannelService {
     public List<ChannelResponse> getAll() {
         return channelRepository.findAll().stream()
                 .map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getMember().getId(),
+                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getManager().getId(),
                         c.getDescription(), c.getThumbnailDescription(), c.getMemberCount(),
                         c.getThumbnailImage().getStoreFileName()))
                 .collect(Collectors.toList());
@@ -205,13 +207,13 @@ public class ChannelService {
                 channel.getThumbnailImage().getStoreFileName());
 
         List<MemberResponse> waitingMemberResponses = waitingMembers.stream().map(m -> new MemberResponse(
-                        m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getUploadFile()))
+                        m.getId(), m.getEmail(), m.getName(), m.getGender(),
+                        m.getBirthday(), m.getPhone(), m.getProfileImage()))
                 .collect(Collectors.toList());
 
         List<MemberResponse> memberResponses = members.stream().map(m -> new MemberResponse(
-                        m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getUploadFile()))
+                        m.getId(), m.getEmail(), m.getName(), m.getGender(),
+                        m.getBirthday(), m.getPhone(), m.getProfileImage()))
                 .collect(Collectors.toList());
 
         List<ManagerPostResponse> postResponses = posts.stream().map(p -> new ManagerPostResponse(p.getId(),
@@ -229,7 +231,7 @@ public class ChannelService {
         channel.modifyChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
 
         return new ChannelResponse(channel.getId(),
-                channel.getName(), channel.getLimitedMemberNumber(), channel.getManagerName(), channel.getMember().getId(),
+                channel.getName(), channel.getLimitedMemberNumber(), channel.getManagerName(), channel.getManager().getId(),
                 channel.getDescription(), channel.getThumbnailDescription(), channel.getMemberCount(),
                 channel.getThumbnailImage().getStoreFileName());
     }

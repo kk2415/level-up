@@ -1,5 +1,6 @@
 package com.levelup.core.domain.channel;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -55,6 +56,9 @@ public class Channel {
     @Embedded
     private UploadFile thumbnailImage;
 
+    @OneToMany(mappedBy = "channel")
+    private List<Article> articles = new ArrayList<>();
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers = new ArrayList<>();
 
@@ -63,7 +67,7 @@ public class Channel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
-    private Member member;
+    private Member manager;
 
     @OneToMany(mappedBy = "channel")
     private List<File> files = new ArrayList<>();
@@ -79,19 +83,20 @@ public class Channel {
      * 만약 이렇게 연관관계 메서드를 호출하지 않으면 컬럼에 값이 들어가지 않는다.
      * */
     //==연관관계 메서드==//
-    public void setMember(Member member) {
-        if (member != null) {
-            member.getChannels().remove(this);
+    public void setManager(Member manager) {
+        if (this.manager != null) {
+            this.manager.getChannels().remove(this);
         }
 
-        this.member = member;
-        member.getChannels().add(this);
+        this.manager = manager;
+        manager.getChannels().add(this);
     }
 
     public void setChannelMember(ChannelMember channelMember) {
         this.channelMembers.add(channelMember);
         channelMember.setChannel(this);
     }
+
 
     //==비즈니스 로직==//
     public void addMember(ChannelMember... channelMembers) {
@@ -216,6 +221,11 @@ public class Channel {
 
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
+    }
+
+    public void addArticle(Article article) {
+        this.articles.add(article);
+        article.setChannel(this);
     }
 
 }

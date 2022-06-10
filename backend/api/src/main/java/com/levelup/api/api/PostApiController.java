@@ -1,9 +1,7 @@
 package com.levelup.api.api;
 
-import com.levelup.api.service.MemberService;
 import com.levelup.api.service.PostService;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.post.*;
 

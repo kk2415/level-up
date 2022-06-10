@@ -1,25 +1,53 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Modal, Button, Form, Container, Row, Col} from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login'
+
+import $ from 'jquery'
+
 import HorizonLine from "../../component/HorizonLine";
 import {BiUserCircle} from "react-icons/bi";
 import {Link} from "react-router-dom";
 import {signIn} from "../../api/ApiService";
 import '../../css/login.css'
+import {loginMemberValidation as validation} from '../../api/validation'
 
 const SignIn = ({} ) => {
+    const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
+
     async function HandleSignInButton() {
         let formData = new FormData(document.getElementById('signInForm'));
         let member = {
             email : formData.get('email'),
             password : formData.get('password'),
         }
-
         console.log(member)
-        let result = await signIn(member)
-        if (result) {
-            window.location.href = '/'
+
+        if (validate(member)) {
+            await signIn(member)
         }
+    }
+
+    const validate = (member) => {
+        let valid = true;
+
+        removeAlertMassageBox()
+        if (!validation.email.test(member.email) || member.email === null) {
+            $('#alert').append('<h5>[이매일] : 유효한 이메일 형식이 아닙니다.</h5>')
+            valid = false;
+        }
+        if (!validation.password.test(member.password) || member.password === null) {
+            $('#alert').append('<h5>[비밀번호] : 비밀번호는 8자리이상 24이하, 영문자/숫자만 및 특수문자만 입력하세요</h5>')
+            valid = false;
+        }
+
+        if (!valid) {
+            setOnShowAlertMsg(true)
+        }
+        return valid
+    }
+
+    const removeAlertMassageBox = () => {
+        $('#alert').children('h5').remove();
     }
 
     return (
@@ -34,6 +62,14 @@ const SignIn = ({} ) => {
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Control name="password" type="password" placeholder="비밀번호를 입력해주세요" />
                     </Form.Group>
+
+                    {
+                        onShowAlertMsg &&
+                        <div className="alert alert-danger mt-5" id="alert" role="alert">
+                            <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                            <hr/>
+                        </div>
+                    }
 
                     <Container className="d-grid gap-2">
                         <Button onClick={HandleSignInButton} className='my-3' variant='info' type='button' >

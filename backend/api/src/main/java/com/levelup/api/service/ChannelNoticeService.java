@@ -1,13 +1,12 @@
 package com.levelup.api.service;
 
-import com.levelup.api.api.DateFormat;
+import com.levelup.api.config.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.file.FileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.notice.ChannelNotice;
-import com.levelup.core.dto.Result;
 import com.levelup.core.dto.notice_channel.ChannelNoticeRequest;
 import com.levelup.core.dto.notice_channel.ChannelNoticeResponse;
 import com.levelup.core.dto.notice_channel.PagingChannelNoticeResponse;
@@ -16,8 +15,6 @@ import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.notice.ChannelNoticeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +40,7 @@ public class ChannelNoticeService {
      * 생성
      * */
     public ChannelNoticeResponse create(ChannelNoticeRequest noticeRequest, Long channelId, Long memberId) {
-        Long managerId = channelRepository.findById(channelId).getMember().getId();
+        Long managerId = channelRepository.findById(channelId).getManager().getId();
         Member member = memberRepository.findById(memberId);
 
         if (memberId.equals(managerId)) {
@@ -54,7 +51,7 @@ public class ChannelNoticeService {
             channelNoticeRepository.save(channelNotice);
 
             return new ChannelNoticeResponse(channelNotice.getId(),
-                    channelNotice.getChannel().getMember().getId(), channelNotice.getTitle(),
+                    channelNotice.getChannel().getManager().getId(), channelNotice.getTitle(),
                     channelNotice.getWriter(), channelNotice.getContent(), channelNotice.getViews(), 0L,
                     DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getDateCreated()),
                     channelNotice.getComments().size());
@@ -82,7 +79,7 @@ public class ChannelNoticeService {
             findNotice.addViews();
         }
 
-        return new ChannelNoticeResponse(id, findNotice.getChannel().getMember().getId(), findNotice.getTitle(),
+        return new ChannelNoticeResponse(id, findNotice.getChannel().getManager().getId(), findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(), 0L,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getDateCreated()),
                 (int)findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
@@ -107,7 +104,7 @@ public class ChannelNoticeService {
     public ChannelNoticeResponse findNextPage(Long id) {
         ChannelNotice nextPage = channelNoticeRepository.findNextPage(id);
 
-        return new ChannelNoticeResponse(nextPage.getId(), nextPage.getChannel().getMember().getId(),
+        return new ChannelNoticeResponse(nextPage.getId(), nextPage.getChannel().getManager().getId(),
                 nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(), 0L,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getDateCreated()),
                 (int)nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
@@ -116,7 +113,7 @@ public class ChannelNoticeService {
     public ChannelNoticeResponse findPrevPage(Long id) {
         ChannelNotice prevPage = channelNoticeRepository.findPrevPage(id);
 
-        return new ChannelNoticeResponse(prevPage.getId(), prevPage.getChannel().getMember().getId(),
+        return new ChannelNoticeResponse(prevPage.getId(), prevPage.getChannel().getManager().getId(),
                 prevPage.getTitle(),
                 prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(), 0L,
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getDateCreated()),
@@ -129,13 +126,13 @@ public class ChannelNoticeService {
      * */
     public ChannelNoticeResponse modifyChannelNotice(ChannelNoticeRequest noticeRequest, Long channelNoticeId, Long channelId,
                                     Long memberId) {
-        Long managerId = channelRepository.findById(channelId).getMember().getId();
+        Long managerId = channelRepository.findById(channelId).getManager().getId();
 
         if (memberId.equals(managerId)) {
             ChannelNotice notice = channelNoticeRepository.findById(channelNoticeId);
             notice.change(noticeRequest.getTitle(), noticeRequest.getContent());
 
-            return new ChannelNoticeResponse(notice.getId(), notice.getChannel().getMember().getId(),
+            return new ChannelNoticeResponse(notice.getId(), notice.getChannel().getManager().getId(),
                     notice.getTitle(),
                     notice.getWriter(), notice.getContent(), notice.getViews(), 0L,
                     DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getDateCreated()),
@@ -150,7 +147,7 @@ public class ChannelNoticeService {
      * 삭제
      * */
     public void delete(Long channelNoticeId, Long channelId, Long memberId) {
-        Long managerId = channelRepository.findById(channelId).getMember().getId();
+        Long managerId = channelRepository.findById(channelId).getManager().getId();
 
         if (!memberId.equals(managerId)) {
             throw new AuthorizationException("권한이 없습니다.");

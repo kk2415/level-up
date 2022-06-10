@@ -1,4 +1,4 @@
-package com.levelup.api.filter;
+package com.levelup.api.security;
 
 import com.levelup.api.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = parseBearerToken(request);
 
-//            log.info("header : {}", request.getHeader("Authorization"));
-            //토큰 검사하기. JWT이므로 인가 서버에 요청하지 않고도 검증 가능
+            // JWT 토큰이 있어야 컨텍스트홀더에 authenticationToken 저장
             if (token != null && !token.equalsIgnoreCase("null")) {
                 //id 가져오기
                 Long memberId = Long.valueOf(tokenProvider.validateAndGetUserId(token));
