@@ -15,6 +15,8 @@ import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.notice.ChannelNoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +41,7 @@ public class ChannelNoticeService {
     /**
      * 생성
      * */
+    @CacheEvict(value = "channelNotice", key = "#channelId")
     public ChannelNoticeResponse create(ChannelNoticeRequest noticeRequest, Long channelId, Long memberId) {
         Long managerId = channelRepository.findById(channelId).getManager().getId();
         Member member = memberRepository.findById(memberId);
@@ -85,6 +88,7 @@ public class ChannelNoticeService {
                 (int)findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
+    @Cacheable(value = "channelNotice", key = "#channelId")
     public List<PagingChannelNoticeResponse> getChannelNotices(Long channelId, int page) {
         List<ChannelNotice> findNotices = channelNoticeRepository.findByChannelId(channelId, page);
         int noticeCount = channelNoticeRepository.findByChannelId(channelId).size();
@@ -124,6 +128,7 @@ public class ChannelNoticeService {
     /**
      * 수정
      * */
+    @CacheEvict(value = "channelNotice", key = "#channelId")
     public ChannelNoticeResponse modifyChannelNotice(ChannelNoticeRequest noticeRequest, Long channelNoticeId, Long channelId,
                                     Long memberId) {
         Long managerId = channelRepository.findById(channelId).getManager().getId();
@@ -146,6 +151,7 @@ public class ChannelNoticeService {
     /**
      * 삭제
      * */
+    @CacheEvict(value = "channelNotice", key = "#channelId")
     public void delete(Long channelNoticeId, Long channelId, Long memberId) {
         Long managerId = channelRepository.findById(channelId).getManager().getId();
 
