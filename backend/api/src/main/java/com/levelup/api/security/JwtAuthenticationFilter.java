@@ -1,14 +1,13 @@
 package com.levelup.api.security;
 
-import com.levelup.api.security.TokenProvider;
+import com.levelup.core.domain.member.Member;
+import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,6 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -25,6 +26,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
+    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,20 +37,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && !token.equalsIgnoreCase("null")) {
                 //id 가져오기
                 Long memberId = Long.valueOf(tokenProvider.validateAndGetUserId(token));
+                Member member = memberRepository.findById(memberId);
 
-//                log.info("URI : {}", request.getRequestURI());
-//                log.info("token : {}", token);
-//                log.info("memberId : {}", memberId);
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getAuthority().name()));
 
                 //인증완료. SecurityContextHolder에 등록해야 인증된 사용자라고 생각한다.
-                AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        memberId, null, AuthorityUtils.NO_AUTHORITIES);
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                AbstractAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(memberId, null, authorities);
 
-                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-                securityContext.setAuthentication(authenticationToken);
-
-                SecurityContextHolder.setContext(securityContext);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
         catch(Exception e) {

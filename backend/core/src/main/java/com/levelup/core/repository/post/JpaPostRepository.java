@@ -57,7 +57,7 @@ public class JpaPostRepository implements PostRepository {
     @Override
     public List<Post> findByMemberId(Long memberId) {
         String query = "select p from Post p join fetch p.member m where m.id = :memberId "
-                + "order by p.dateCreated desc";
+                + "order by p.createdDate desc";
 
         return em.createQuery(query, Post.class)
                 .setParameter("memberId", memberId)
@@ -94,7 +94,7 @@ public class JpaPostRepository implements PostRepository {
                 .from(QPost.post)
                 .join(QPost.post.channel)
                 .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QPost.post.dateCreated.desc())
+                .orderBy(QPost.post.createdDate.desc())
                 .fetch();
     }
 
@@ -108,7 +108,7 @@ public class JpaPostRepository implements PostRepository {
                 .from(QPost.post)
                 .join(QPost.post.channel)
                 .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QPost.post.dateCreated.desc())
+                .orderBy(QPost.post.createdDate.desc())
                 .offset(firstPage)
                 .limit(postCount)
                 .fetch();

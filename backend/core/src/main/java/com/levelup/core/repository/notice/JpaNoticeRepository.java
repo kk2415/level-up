@@ -48,7 +48,7 @@ public class JpaNoticeRepository implements NoticeRepository {
         JPAQuery<Notice> query = queryFactory.select(QNotice.notice)
                 .from(QNotice.notice)
                 .where(equalQuery(postSearch))
-                .orderBy(QNotice.notice.dateCreated.desc());
+                .orderBy(QNotice.notice.createdDate.desc());
 
         if (page != null) {
             Long firstPage = (page - 1) * 10; //0, 10, 20, 30
@@ -72,7 +72,7 @@ public class JpaNoticeRepository implements NoticeRepository {
     @Override
     public List<Notice> findByMemberId(Long memberId) {
         String query = "select n from Notice n join n.member m where m.id = :memberId "
-                + "order by n.dateCreated desc";
+                + "order by n.createdDate desc";
 
         return em.createQuery(query, Notice.class)
                 .setParameter("memberId", memberId)

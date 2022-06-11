@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -198,19 +199,10 @@ public class MemberService implements UserDetailsService {
         }
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return member.getAuthority().name();
-            }
-        });
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getAuthority().name()));
 
         return new User(member.getEmail(), member.getPassword(), true, true,
                 true, true, authorities);
     }
-
-//    private Collection<? extends GrantedAuthority> getAutorities() {
-//
-//    }
 
 }

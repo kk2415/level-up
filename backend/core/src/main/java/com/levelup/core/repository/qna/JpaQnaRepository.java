@@ -43,7 +43,7 @@ public class JpaQnaRepository implements QnaRepository {
         return queryFactory.select(QQna.qna)
                 .from(QQna.qna)
                 .where(equalQuery(postSearch))
-                .orderBy(QQna.qna.dateCreated.desc())
+                .orderBy(QQna.qna.createdDate.desc())
                 .offset(firstPage)
                 .limit(10)
                 .fetch();
@@ -63,7 +63,7 @@ public class JpaQnaRepository implements QnaRepository {
     @Override
     public List<Qna> findByMemberId(Long memberId) {
         String query = "select q from Qna q join fetch q.member m where m.id = :memberId "
-                + "order by q.dateCreated desc";
+                + "order by q.createdDate desc";
 
         return em.createQuery(query, Qna.class)
                 .setParameter("memberId", memberId)

@@ -4,7 +4,6 @@ import com.levelup.api.security.JwtAuthenticationFilter;
 import com.levelup.api.security.SecurityLoginFilter;
 import com.levelup.api.security.TokenProvider;
 import com.levelup.api.service.MemberService;
-import com.levelup.core.domain.member.Authority;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
@@ -36,10 +35,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // http 시큐리티 빌더
         http.cors() //cors는 따로 설정했으니 기본 설정
                 .and()
+                .formLogin().disable()
                 .csrf().disable() // csrf는 현재 사용하지 않으니 disable
                 .httpBasic().disable() // token 방식을 사용하니 basic은 disable
-                .sessionManagement() // session 기반이 아님을 선언
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// session 기반이 아님을 선언
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증 실패시
@@ -47,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**",
-                        "/channel/{\\d+}/waiting-member/**").hasRole(Authority.CHANNEL_MANAGER.name())
+                        "/channel/{\\d+}/waiting-member/**").access("hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
                 .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
                 .antMatchers("/api/channel/**").authenticated()
                 .antMatchers( HttpMethod.POST,"/api/member").permitAll()
