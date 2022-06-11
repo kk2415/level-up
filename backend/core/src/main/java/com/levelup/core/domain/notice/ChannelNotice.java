@@ -33,14 +33,14 @@ public class ChannelNotice extends BaseTimeEntity {
     private Long views;
 
     @OneToMany(mappedBy = "channelNotice", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
     @OneToMany(mappedBy = "channelNotice", cascade = CascadeType.REMOVE)
-    private List<File> files = new ArrayList<>();
+    private List<File> files;
 
     //==연관관계 메서드==//
     public void setChannel(Channel channel) {

@@ -47,17 +47,17 @@ public class Post extends BaseTimeEntity {
     private Member member;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<File> files = new ArrayList<>();
+    private List<File> files;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Vote> votes = new ArrayList<>();
+    private List<Vote> votes;
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

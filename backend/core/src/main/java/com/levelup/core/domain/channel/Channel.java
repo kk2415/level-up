@@ -54,23 +54,23 @@ public class Channel extends BaseTimeEntity {
     private UploadFile thumbnailImage;
 
     @OneToMany(mappedBy = "channel")
-    private List<Article> articles = new ArrayList<>();
+    private List<Article> articles;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
-    private List<ChannelMember> channelMembers = new ArrayList<>();
+    private List<ChannelMember> channelMembers;
 
     @OneToMany(mappedBy = "channel")
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Member manager;
 
     @OneToMany(mappedBy = "channel")
-    private List<File> files = new ArrayList<>();
+    private List<File> files;
 
     @OneToMany(mappedBy = "channel")
-    private List<ChannelNotice> channelNotices = new ArrayList<>();
+    private List<ChannelNotice> channelNotices;
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.

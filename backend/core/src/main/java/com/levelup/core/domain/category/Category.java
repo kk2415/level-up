@@ -19,14 +19,14 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<CategoryChannel> categoryChannels = new ArrayList<>();
+    private List<CategoryChannel> categoryChannels;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Category> childs = new ArrayList<>();
+    private List<Category> childs;
 
     //==연관관계 메서드==//
     public void addChildCategory(Category child) {

@@ -56,13 +56,13 @@ public class Article extends BaseTimeEntity {
     private Channel channel;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<File> files = new ArrayList<>();
+    private List<File> files;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<Vote> votes = new ArrayList<>();
+    private List<Vote> votes;
 
     public void setMember(Member member) {
         this.member = member;

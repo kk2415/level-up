@@ -38,10 +38,10 @@ public class Notice extends BaseTimeEntity {
     private Member member;
 
     @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
-    private List<File> files = new ArrayList<>();
+    private List<File> files;
 
 
     //==연관관계 메서드==//
