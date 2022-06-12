@@ -5,7 +5,7 @@ import { GoogleLogin } from 'react-google-login'
 import $ from 'jquery'
 
 import HorizonLine from "../../component/HorizonLine";
-import { signUp } from '../../api/ApiService'
+import { MemberService } from '../../api/MemberService'
 import { uploadFile } from '../../api/FileService'
 import {createMemberValidation as validation} from '../../api/validation'
 
@@ -34,7 +34,7 @@ const SignUp = () => {
         console.log(member)
 
         if (validate(member)) {
-            await signUp(member)
+            await MemberService.signUp(member)
         }
     }
 

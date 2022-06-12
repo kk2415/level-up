@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import $ from 'jquery'
 import {Button, Form, Container, Row, Col, Image} from 'react-bootstrap';
 import HorizonLine from "../../component/HorizonLine";
-import { getMember } from '../../api/ApiService'
+import { MemberService } from '../../api/MemberService'
 import { uploadFile } from '../../api/FileService'
 import { BACKEND_URL } from "../../api/backEndHost"
 
 const MyPage = () => {
 
     const loadMember = async () => {
-        let result = await getMember()
+        let result = await MemberService.get()
         if (!result) {
             alert('권한이 없습니다')
             window.location.href = '/'

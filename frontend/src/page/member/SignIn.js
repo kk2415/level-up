@@ -7,7 +7,7 @@ import $ from 'jquery'
 import HorizonLine from "../../component/HorizonLine";
 import {BiUserCircle} from "react-icons/bi";
 import {Link} from "react-router-dom";
-import {signIn} from "../../api/ApiService";
+import {MemberService} from "../../api/MemberService";
 import '../../css/login.css'
 import {loginMemberValidation as validation} from '../../api/validation'
 
@@ -23,7 +23,7 @@ const SignIn = ({} ) => {
         console.log(member)
 
         if (validate(member)) {
-            await signIn(member)
+            await MemberService.signIn(member)
         }
     }
 

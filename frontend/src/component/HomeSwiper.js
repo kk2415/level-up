@@ -9,12 +9,12 @@ import "swiper/css/pagination";
 
 import CardSlide from "./CardSlide";
 import { send } from "../api/request"
-
+import { BACKEND_URL } from "../api/backEndHost"
 
 const StudySwiper = () => {
 	const [channels, setChannels] = useState([])
 	const [count, setCount] = useState(0)
-  
+
 	useEffect(() => {
 		send('/api/channels/' + 'STUDY', 'GET')
 			.then((data) => {
@@ -42,7 +42,7 @@ const StudySwiper = () => {
 			modules={[Pagination, Navigation]}
 			className="mySwiper"
 		  >
-  
+
 			{
 			  channels.map(function(channel) {
 				return (
@@ -52,7 +52,7 @@ const StudySwiper = () => {
 				)
 			  })
 			}
-  
+
 			</Swiper>
 		</Container>
 	  </>

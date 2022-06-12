@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 
 import ChannelService from "../../../api/ChannelService";
-import {MemberService} from "../../../api/ApiService";
+import {MemberService} from "../../../api/MemberService";
 
 import MemberRow from "../../../component/channel/manager/MemberRow"
 import Pager from "../../pager/Pager";

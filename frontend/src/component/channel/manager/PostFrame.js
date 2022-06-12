@@ -3,7 +3,7 @@ import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 
 import PostService from "../../../api/PostService";
 import ChannelService from "../../../api/ChannelService";
-import {MemberService} from "../../../api/ApiService";
+import {MemberService} from "../../../api/MemberService";
 
 import WaitingMemberRow from "../../../component/channel/manager/WaitingMemberRow";
 import MemberRow from "../../../component/channel/manager/MemberRow";

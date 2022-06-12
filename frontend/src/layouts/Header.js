@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {Navbar, Container, Nav, Button} from 'react-bootstrap'
 
 import {TOKEN} from '../api/token'
-import { signOut } from '../api/ApiService'
+import { MemberService } from '../api/MemberService'
 import SignUp from "../page/member/SignUp";
 import SignIn from "../page/member/SignIn";
 
@@ -23,7 +23,7 @@ const Header = () => {
 	}
 
 	const signOutButtonHandler = () => {
-		signOut()
+		MemberService.signOut()
 		setSignUpShow(true)
 		setSignInShow(true)
 		setSignOutShow(false)
