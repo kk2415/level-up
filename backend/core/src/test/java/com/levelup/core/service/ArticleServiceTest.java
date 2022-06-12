@@ -82,7 +82,6 @@ public class ArticleServiceTest {
                 .birthday("970927")
                 .phone("010-2354-9960")
                 .authority(Authority.NORMAL)
-                .dateCreated(LocalDateTime.now())
                 .profileImage(null)
                 .build();
     }
@@ -107,7 +106,6 @@ public class ArticleServiceTest {
         return Channel.builder()
                 .name(name)
                 .category(ChannelCategory.STUDY)
-                .dateCreated(LocalDateTime.now())
                 .managerName(member.getName())
                 .description(description)
                 .memberCount(0L)

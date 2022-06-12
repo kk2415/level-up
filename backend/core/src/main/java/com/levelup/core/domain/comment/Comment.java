@@ -58,14 +58,14 @@ public class Comment extends BaseTimeEntity {
     private Qna qna;
 
     @OneToMany(mappedBy = "comment")
-    private List<Vote> votes = new ArrayList<>();
+    private List<Vote> votes;
 
     @ManyToOne
     @JoinColumn(name = "parent")
     private Comment parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Comment> child = new ArrayList<>();
+    private List<Comment> child;
 
 
     //==연관관계 메서드==//

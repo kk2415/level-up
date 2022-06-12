@@ -42,7 +42,7 @@ subprojects {
         implementation 'com.fasterxml.jackson.core:jackson-annotations'
         implementation 'mysql:mysql-connector-java'
 
-        runtimeOnly 'com.h2database:h2'
+//        runtimeOnly 'com.h2database:h2'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
