@@ -14,10 +14,6 @@ const ChannelNotice = ({channelId}) => {
     const [notice, setNotice] = useState(null)
     const [noticeCount, setNoticeCount] = useState(0)
 
-    const handleManageChannel = () => {
-        window.location.href = '/channel/' + channelId + '/manager'
-    }
-
     const handleCreateNotice = () => {
         window.location.href = '/channel-notice/create?channel=' + channelId
     }
@@ -70,7 +66,7 @@ const ChannelNotice = ({channelId}) => {
                     <ChannelNoticeTable notices={notice} channelId={channelId} page={curNoticePage} />
                 </div>
                 <div className="col">
-                    <button onClick={handleManageChannel} className="btn btn-primary btn-sm float-start" type="button" id="manager">채널 관리
+                    <button className="btn btn-primary btn-sm float-start" type="button" id="manager">채널 관리
                     </button>
                     <div className="d-grid gap-2 d-md-block float-end">
                         <button className="btn btn-primary btn-sm" type="button" id="deleteNoticeAll">일괄삭제

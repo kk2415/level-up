@@ -55,7 +55,7 @@ const ChannelDescription = () => {
     }
 
     const handleRegisterChannel = async () => {
-        if (sessionStorage.getItem(TOKEN) !== 'null') {
+        if (sessionStorage.getItem(TOKEN)) {
             await ChannelService.addWaitingMember(channelId)
             alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
         }
@@ -122,11 +122,11 @@ const ChannelDescription = () => {
                         <div className="d-grid gap-2 d-md-block float-end">
                             {
                                 showModify &&
-                                <button onClick={handleModifyChannel} className="btn btn-primary btn-lg" type="button" id="modifyButton">수정</button>
+                                <button onClick={handleModifyChannel} className="btn btn-primary" type="button" id="modifyButton">수정</button>
                             }
                             {
                                 showDelete &&
-                                <button onClick={handleDeleteChannel} className="btn btn-primary btn-lg" type="button" id="deleteButton">삭제</button>
+                                <button onClick={handleDeleteChannel} className="btn btn-primary" type="button" id="deleteButton">삭제</button>
                             }
                         </div>
                     </div>
@@ -137,9 +137,9 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     <div>
-                        <button onClick={handleBack} className="btn btn-primary btn-lg float-start" type="button" id="toAllStudyChannelButton">목록으로
+                        <button onClick={handleBack} className="btn btn-primary float-start" type="button" id="toAllStudyChannelButton">목록으로
                         </button>
-                        <button onClick={handleEnterChannel} className="btn btn-primary btn-lg float-end" type="button" id="enterStudyButton">채널 접속</button>
+                        <button onClick={handleEnterChannel} className="btn btn-primary float-end" type="button" id="enterStudyButton">채널 접속</button>
                     </div>
                 </Container>
             }

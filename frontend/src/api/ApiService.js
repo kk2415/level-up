@@ -86,7 +86,6 @@ export async function signUp(member) {
     await send('/api/member', 'POST', member)
         .then((data) => {
             alert(data.name + '님 가입되었습니다')
-            window.location.href = '/'
             result = true
         })
         .catch((error) => {
@@ -106,6 +105,7 @@ export async function signIn(member) {
             sessionStorage.setItem(TOKEN, data.token)
             sessionStorage.setItem('email', data.email)
             sessionStorage.setItem('id', data.id)
+            sessionStorage.setItem('role', data.authority)
 
             console.log(data.email)
             console.log(data.id)
@@ -125,6 +125,7 @@ export function signOut() {
     sessionStorage.setItem(TOKEN, null)
     sessionStorage.setItem('email', null)
     sessionStorage.setItem('id', null)
+    sessionStorage.setItem('role', null)
     window.location.href = "/"
 }
 

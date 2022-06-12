@@ -15,6 +15,7 @@ const MyPage = () => {
             window.location.href = '/'
         }
 
+        console.log(result)
         setMember(result)
     }
 
@@ -28,7 +29,10 @@ const MyPage = () => {
 
     const handleAccess = () => {
         if (myPageFile) {
-            uploadFile('/api/member/' + member.email + '/image', 'PATCH', myPageFile)
+            let result = uploadFile('/api/member/' + member.email + '/image', 'PATCH', myPageFile)
+            if (result) {
+                alert('수정되었습니다.')
+            }
         }
 
         $('#file').attr('disabled', true)
@@ -40,6 +44,8 @@ const MyPage = () => {
     useEffect(() => {
         loadMember()
     }, [])
+
+    console.log(member)
 
     return (
         <Container>

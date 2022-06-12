@@ -14,6 +14,7 @@ const Header = () => {
 	const [signUpShow, setSignUpShow] = useState(true)
 	const [signInShow, setSignInShow] = useState(true)
 	const [signOutShow, setSignOutShow] = useState(false)
+	const [onShowAdmin, setOnShowAdmin] = useState(false)
 
 	const signInButtonHandler = () => {
 		setSignUpShow(false)
@@ -33,11 +34,16 @@ const Header = () => {
 			setSignUpShow(true)
 			setSignInShow(true)
 			setSignOutShow(false)
+			setOnShowAdmin(false)
 		}
 		else {
 			setSignUpShow(false)
 			setSignInShow(false)
 			setSignOutShow(true)
+		}
+
+		if (sessionStorage.getItem('role') === 'ADMIN') {
+			setOnShowAdmin(true)
 		}
 	})
 
@@ -102,13 +108,21 @@ const Header = () => {
 										공지사항
 									</Button>
 								</Nav.Link>
+								{
+									onShowAdmin &&
+									<Nav.Link>
+										<Button size="md">
+											관리자홈
+										</Button>
+									</Nav.Link>
+								}
 							</Nav>
 						</Navbar.Collapse>
 					</Container>
 				</Navbar>
 			</header>
 		</>
-  )
+	)
 }
 
 export default Header
