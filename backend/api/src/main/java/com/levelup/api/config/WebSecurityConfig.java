@@ -45,19 +45,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler); //권한 에러 처리(관리자 권한 등)
 
         http.authorizeRequests()
-                .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**",
-                        "/channel/{\\d+}/waiting-member/**").access("hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**", "/channel/{\\d+}/waiting-member/**")
+                .access("hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+
                 .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
-                .antMatchers("/api/channel/**").authenticated()
+                .antMatchers("/api/channel/**")
+                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+
                 .antMatchers( HttpMethod.POST,"/api/member").permitAll()
                 .antMatchers("/api/member").authenticated()
+
                 .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
-                .antMatchers("/api/comment/**").authenticated()
+                .antMatchers("/api/comment/**")
+                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+
                 .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
                         "/api/{\\d+}/posts/{\\d+}").permitAll()
-                .antMatchers("/api/post/**").authenticated()
+                .antMatchers("/api/post/**")
+                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+
                 .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-                .antMatchers("/api/notice/**").authenticated()
+                .antMatchers("/api/notice/**").hasRole("ADMIN")
                 .anyRequest().permitAll();
 
 

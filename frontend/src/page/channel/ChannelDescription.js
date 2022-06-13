@@ -21,6 +21,7 @@ const getManagerId = async (channelId) => {
 const ChannelDescription = () => {
     const navigate = useNavigate();
 
+    const [isManager, setIsManager] = useState(false)
     const [showModify, setShowModify] = useState(false)
     const [showDelete, setShowDelete] = useState(false)
     const [description, setDescription] = useState({})
@@ -45,6 +46,7 @@ const ChannelDescription = () => {
         if (managerId === Number(sessionStorage.getItem('id'))) {
             setShowModify(true)
             setShowDelete(true)
+            setIsManager(true)
         }
     }
 
@@ -119,19 +121,30 @@ const ChannelDescription = () => {
                             </h1>
                             <br /><br /><br /><br />
                         </div>
-                        <div className="d-grid gap-2 d-md-block float-end">
+                        <div className="float-end">
                             {
                                 showModify &&
-                                <button onClick={handleModifyChannel} className="btn btn-primary" type="button" id="modifyButton">수정</button>
+                                <button onClick={handleModifyChannel} className="btn btn-primary col-sm-1" type="button" id="modifyButton">
+                                    수정
+                                </button>
                             }
                             {
                                 showDelete &&
-                                <button onClick={handleDeleteChannel} className="btn btn-primary" type="button" id="deleteButton">삭제</button>
+                                <button onClick={handleDeleteChannel} className="btn btn-primary col-sm-1" type="button" id="deleteButton">
+                                    삭제
+                                </button>
                             }
                         </div>
                     </div>
                     <br /><br />
-                    <button onClick={handleRegisterChannel} className="btn btn-primary btn-lg form-control" type="button" id="registerStudyButton">신청하기</button>
+
+                    {
+                        !isManager &&
+                        <button onClick={handleRegisterChannel} className="btn btn-primary btn-lg form-control" type="button" id="registerStudyButton">
+                            신청하기
+                        </button>
+                    }
+
                     <hr />
 
                     <br /><br />

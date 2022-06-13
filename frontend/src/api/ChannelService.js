@@ -5,14 +5,22 @@ import { send } from "./request"
 const ChannelService = {
 
     create: async (channel) => {
+        let reuslt = false
+
         await send('/api/channel', 'POST', channel)
             .then((data) => {
                 alert('채널을 만들었습니다.')
+                reuslt = true
                 window.location.href = '/'
             })
             .catch((error) => {
+                if (error.status === 403) {
+                    alert('이메일 인증을 해야합니다.')
+                }
                 console.log(error)
             })
+
+        return reuslt
     },
 
     createNotice: async (notice, channelId) => {

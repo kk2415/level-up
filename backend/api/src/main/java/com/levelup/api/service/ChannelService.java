@@ -215,12 +215,12 @@ public class ChannelService {
 
         List<MemberResponse> waitingMemberResponses = waitingMembers.stream().map(m -> new MemberResponse(
                         m.getId(), m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getProfileImage()))
+                        m.getBirthday(), m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
                 .collect(Collectors.toList());
 
         List<MemberResponse> memberResponses = members.stream().map(m -> new MemberResponse(
                         m.getId(), m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getProfileImage()))
+                        m.getBirthday(), m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
                 .collect(Collectors.toList());
 
         List<ManagerPostResponse> postResponses = posts.stream().map(p -> new ManagerPostResponse(p.getId(),

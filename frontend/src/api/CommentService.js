@@ -12,6 +12,10 @@ const CommentService = {
             .catch((error) => {
                 result = null
                 console.log(error)
+
+                if (error.status === 403) {
+                    alert('이메일 인증을 해야합니다.')
+                }
             })
 
         return result
@@ -27,6 +31,10 @@ const CommentService = {
             .catch((error) => {
                 result = null
                 console.log(error)
+
+                if (error.status === 403) {
+                    alert('이메일 인증을 해야합니다.')
+                }
             })
 
         return result

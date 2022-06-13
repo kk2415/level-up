@@ -34,7 +34,7 @@ const CreateChannel = () => {
         console.log(contents)
 
         if (validate(channel)) {
-            await ChannelService.create(channel)
+            await ChannelService.create(channel);
         }
     }
 

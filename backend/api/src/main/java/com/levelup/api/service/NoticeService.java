@@ -9,6 +9,7 @@ import com.levelup.core.domain.notice.Notice;
 import com.levelup.core.dto.notice.NoticeRequest;
 import com.levelup.core.dto.notice.NoticeResponse;
 import com.levelup.core.dto.post.SearchCondition;
+import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.notice.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final LocalFileStore fileStore;
 
 
@@ -36,7 +37,7 @@ public class NoticeService {
      * */
     @Transactional
     public NoticeResponse create(NoticeRequest noticeRequest, Long memberId) {
-        Member findMember = memberService.findOne(memberId);
+        Member findMember = memberRepository.findById(memberId);
 
         Notice notice = noticeRequest.toEntity(findMember);
         noticeRepository.save(notice);

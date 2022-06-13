@@ -17,6 +17,7 @@ public class MemberResponse {
     private Gender gender;
     private String birthday;
     private String phone;
+    private boolean isConfirmed;
     private UploadFile uploadFile;
 
 }

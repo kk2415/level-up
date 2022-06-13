@@ -79,15 +79,13 @@ public class MemberApiController {
     }
 
     @GetMapping("/member")
-    public MemberResponse confirmLogin(@AuthenticationPrincipal Long memberId) {
+    public ResponseEntity confirmLogin(@AuthenticationPrincipal Long memberId) {
         if (memberId == null) {
-            log.warn("@AuthenticationPrincipal 에러");
             throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
         }
 
-        Member member = memberService.findOne(memberId);
-        return new MemberResponse(member.getId(), member.getEmail(), member.getName(),
-                member.getGender(), member.getBirthday(), member.getPhone(), member.getProfileImage());
+        MemberResponse member = memberService.findOne(memberId);
+        return ResponseEntity.ok().body(member);
     }
 
     /**

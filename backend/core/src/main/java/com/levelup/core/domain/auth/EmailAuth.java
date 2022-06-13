@@ -27,7 +27,7 @@ public class EmailAuth extends BaseTimeEntity {
     private String email;
 
     private String securityCode;
-    private boolean isConfirmed;
+    private Boolean isConfirmed;
 
     @OneToOne
     @JoinColumn(name = "member_id")

@@ -100,12 +100,16 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findAll()
                 .stream()
                 .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getProfileImage()))
+                        m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Member findOne(Long memberId) {
-        return memberRepository.findById(memberId);
+    public MemberResponse findOne(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+
+        return new MemberResponse(member.getId(), member.getEmail(), member.getName(),
+                member.getGender(), member.getBirthday(), member.getPhone(), member.getEmailAuth().getIsConfirmed(),
+                member.getProfileImage());
     }
 
     public MemberResponse findByEmail(String email) {
@@ -115,7 +119,8 @@ public class MemberService implements UserDetailsService {
             throw new MemberNotFoundException("가입된 이메일이 없습니다");
         }
         return new MemberResponse(findMember.getId(), findMember.getEmail(), findMember.getName(),
-                findMember.getGender(), findMember.getBirthday(), findMember.getPhone(), findMember.getProfileImage());
+                findMember.getGender(), findMember.getBirthday(), findMember.getPhone(),
+                findMember.getEmailAuth().getIsConfirmed(), findMember.getProfileImage());
     }
 
     public List<Member> findByChannelId(Long channelId) {
@@ -126,7 +131,7 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count))
                 .stream()
                 .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getProfileImage()))
+                        m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
                 .collect(Collectors.toList());
     }
 
@@ -138,7 +143,7 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5)
                 .stream()
                 .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getProfileImage()))
+                        m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
                 .collect(Collectors.toList());
     }
 

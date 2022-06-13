@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import {Link, useNavigate} from 'react-router-dom'
+
 import $ from 'jquery'
 import {Button, Form, Container, Row, Col, Image} from 'react-bootstrap';
 import HorizonLine from "../../component/HorizonLine";
@@ -7,6 +9,7 @@ import { uploadFile } from '../../api/FileService'
 import { S3_URL } from "../../api/backEndHost"
 
 const MyPage = () => {
+    let navigate = new useNavigate();
 
     const loadMember = async () => {
         let result = await MemberService.get()
@@ -38,6 +41,10 @@ const MyPage = () => {
         $('#file').attr('disabled', true)
     }
 
+    const handleConfirmEmail = () => {
+        navigate('/confirm-email')
+    }
+
     const [myPageFile, setMyPageFile] = useState(null)
     const [member, setMember] = useState({uploadFile : {storeFileName : ''}})
 
@@ -52,7 +59,6 @@ const MyPage = () => {
             <Form id='signUpForm' className='mt-5'>
                 <div className='w-100' style={{ textAlign: "center" }} >
                     <Image thumbnail roundedCircle
-                           // src={BACKEND_URL + member.uploadFile.storeFileName}
                            src={S3_URL + member.uploadFile.storeFileName}
                            className='mb-5'
                             style={{width: "50vh"}}
@@ -85,6 +91,14 @@ const MyPage = () => {
                 </Form.Group>
 
                 <HorizonLine text={""} />
+
+                {
+                    member.confirmed === false &&
+                    <button onClick={handleConfirmEmail} className='btn btn-danger w-100 mb-5'>
+                        이메일 인증 하기
+                    </button>
+                }
+
                 <br/>
                 <Row>
                     <Col className='col'>
