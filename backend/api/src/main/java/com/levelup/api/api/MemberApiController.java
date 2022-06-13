@@ -1,7 +1,7 @@
 package com.levelup.api.api;
 
+import com.levelup.api.service.EmailService;
 import com.levelup.api.service.MemberService;
-import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "회원 API")
 @Slf4j
@@ -34,13 +35,22 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final LocalFileStore fileStore;
+    private final EmailService emailService;
 
     @GetMapping("/channel-manager-")
     public String channelManager() {
         return "channelManager";
     }
 
+
+    @PostMapping("/email")
+    public void emailTest(@RequestBody Map<String, Object> params) {
+        String toAddress = (String) params.get("userId");
+        String subject = (String) params.get("subject");
+        String body = (String) params.get("body");
+
+        emailService.send(toAddress, subject, body);
+    }
 
     /**
      * 생성

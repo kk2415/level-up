@@ -58,6 +58,21 @@ spring:
       max-file-size: 1MB
       max-request-size: 10MB
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        debug: true
+        smtp:
+          connectiontimeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    username: koria789@gmail.com
+    password: dlxpnbkbcbaorjuh
+
 file:
   dir: C:/Task/study/levelup
   s3_dir: https://levelupbackends3.s3.ap-northeast-2.amazonaws.com/
