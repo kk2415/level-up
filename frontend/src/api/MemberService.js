@@ -10,6 +10,7 @@ export const MemberService = {
             .then((data) => {
                 alert(data.name + '님 가입되었습니다')
                 result = true
+                window.location.href = '/signin'
             })
             .catch((error) => {
                 alert('회원가입 실패')
