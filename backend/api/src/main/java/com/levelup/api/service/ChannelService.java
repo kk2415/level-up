@@ -248,14 +248,14 @@ public class ChannelService {
     public UploadFile modifyChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId);
 
-        deleteChannelThumbNail(channel.getThumbnailImage().getStoreFileName());
+//        deleteThumbNailInLocal(channel.getThumbnailImage().getStoreFileName());
 
         UploadFile thumbNail = fileStore.storeFile(ImageType.MEMBER, file);
         channel.modifyThumbNail(thumbNail);
         return thumbNail;
     }
 
-    private void deleteChannelThumbNail(String storeFileName) {
+    private void deleteThumbNailInLocal(String storeFileName) {
         if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
             File imageFile = new File(fileStore.getFullPath(storeFileName));
             if (imageFile.exists()) {

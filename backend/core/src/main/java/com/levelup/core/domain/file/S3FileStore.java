@@ -20,8 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3FileStore {
 
-    public final static String MEMBER_DEFAULT_IMAGE = "profile/AFF947XXQ-5554WSDQ12.png";
-    public final static String THUMBNAIL_DEFAULT_IMAGE = "thumbnail/fb23d674-c0ed-417c-b732-6743b8989406.png";
+    public final static String DEFAULT_IMAGE = "thumbnail/fb23d674-c0ed-417c-b732-6743b8989406.png";
     private final AmazonS3Client amazonS3Client;
 
     @Value("${file.dir}")
@@ -51,7 +50,7 @@ public class S3FileStore {
 
     public UploadFile storeFile(ImageType imageType, MultipartFile multipartFile) throws IOException {
         if (multipartFile == null || multipartFile.isEmpty()) {
-            return new UploadFile("default.png", MEMBER_DEFAULT_IMAGE);
+            return new UploadFile("default.png", DEFAULT_IMAGE);
         }
 
         String uploadFilename = multipartFile.getOriginalFilename();
