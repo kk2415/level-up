@@ -1,16 +1,18 @@
 package com.levelup.api.service;
 
+import com.levelup.core.domain.auth.EmailAuth;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
-import com.levelup.core.exception.DuplicateEmailException;
-import com.levelup.core.exception.ImageNotFoundException;
-import com.levelup.core.exception.MemberNotFoundException;
+import com.levelup.core.exception.*;
+import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,6 +42,8 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final EmailAuthRepository emailAuthRepository;
+    private final EmailService emailService;
     private final FileService fileService;
 //    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
@@ -53,10 +55,16 @@ public class MemberService implements UserDetailsService {
     public CreateMemberResponse create(CreateMemberRequest memberRequest) {
         validationDuplicateMember(memberRequest.getEmail());
 
+
         Member member = memberRequest.toEntity();
         member.setPassword(passwordEncoder.encode(member.getPassword()));//중복 회원 검증
 
+        EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
+        member.setEmailAuth(authEmail);
+
         memberRepository.save(member);
+
+        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
         return new CreateMemberResponse(member.getId(), member.getEmail(), member.getPassword(), member.getName(),
                 member.getGender(), member.getBirthday(), member.getPhone());
@@ -192,6 +200,29 @@ public class MemberService implements UserDetailsService {
             }
         }
     }
+
+
+    /**
+     * 이메일 인증
+     * */
+    public EmailAuthResponse confirmEmail(String securityCode, Long memberId) {
+        EmailAuth auth = emailAuthRepository.findByMemberId(memberId)
+                .orElseThrow(() -> {
+                    throw new MemberNotFoundException("해당하는 회원을 찾을 수 없습니다");
+                });
+
+        if (!auth.getSecurityCode().equals(securityCode)) {
+            throw new NotMatchSecurityCodeException("인증번호가 일치하지 않습니다.");
+        }
+
+        auth.setConfirmed(true);
+
+        Member member = memberRepository.findById(memberId);
+        member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
+
+        return new EmailAuthResponse(securityCode, true);
+    }
+
 
 
     /**

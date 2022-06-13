@@ -1,6 +1,7 @@
 package com.levelup.core.domain.member;
 
 import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.auth.EmailAuth;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
@@ -47,6 +48,9 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private UploadFile profileImage;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private EmailAuth emailAuth;
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -80,6 +84,11 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Vote> votes;
+
+    public void setEmailAuth(EmailAuth emailAuth) {
+        this.emailAuth = emailAuth;
+        emailAuth.setMember(this);
+    }
 
     public void setAuthority(Authority authority) {
         this.authority = authority;

@@ -23,7 +23,11 @@ const SignIn = ({} ) => {
         console.log(member)
 
         if (validate(member)) {
-            await MemberService.signIn(member)
+            let result = await MemberService.signIn(member);
+
+            if (result) {
+                window.location.href = '/'
+            }
         }
     }
 

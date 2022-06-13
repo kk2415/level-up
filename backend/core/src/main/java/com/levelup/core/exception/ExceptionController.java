@@ -39,7 +39,7 @@ public class ExceptionController {
         exceptionResponse.setException(e.getClass().getName());
         exceptionResponse.setPath(request.getRequestURI());
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
@@ -88,7 +88,7 @@ public class ExceptionController {
         exceptionResponse.setException(e.getClass().getName());
         exceptionResponse.setPath(request.getRequestURI());
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(PostNotFoundException.class)
@@ -102,7 +102,7 @@ public class ExceptionController {
         exceptionResponse.setException(e.getClass().getName());
         exceptionResponse.setPath(request.getRequestURI());
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotLoggedInException.class)
@@ -116,7 +116,21 @@ public class ExceptionController {
         exceptionResponse.setException(e.getClass().getName());
         exceptionResponse.setPath(request.getRequestURI());
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotConfirmedEmailException.class)
+    public ResponseEntity<ExceptionResponse> notLoggedInException(NotConfirmedEmailException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(e.getClass().getName());
+        exceptionResponse.setPath(request.getRequestURI());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
 }

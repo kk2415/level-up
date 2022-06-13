@@ -46,7 +46,6 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
                             new ArrayList<>()
                     )
             );
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

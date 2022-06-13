@@ -16,6 +16,7 @@ import DetailChannelNotice from "../page/channelNotice/DetailChannelNotice"
 import ModifyChannelNotice from "../page/channelNotice/ModifyChannelNotice"
 import Post from "../page/post/Post"
 import ModifyPost from "../page/post/ModifyPost"
+import ConfirmEmail from "../page/member/ConfirmEmail";
 
 const AppRouter = () => {
   return (
@@ -25,6 +26,7 @@ const AppRouter = () => {
 		<Route path="/signin" element={<SignIn />}></Route>
 		<Route path="/signup" element={<SignUp />}></Route>
 		<Route path="/mypage" element={<MyPage />}></Route>
+		<Route path="/confirm-email" element={<ConfirmEmail />}></Route>
 
 		<Route path="/channel/:channelId" element={<Channel />}></Route>
 		<Route path="/channel/create" element={<CreateChannel />}></Route>

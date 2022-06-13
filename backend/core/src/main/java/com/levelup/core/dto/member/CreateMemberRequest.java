@@ -13,9 +13,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Data
@@ -65,7 +62,7 @@ public class CreateMemberRequest {
                 .gender(gender)
                 .birthday(birthday)
                 .phone(phone)
-                .authority(Authority.NORMAL)
+                .authority(Authority.ANONYMOUS)
                 .profileImage(uploadFile)
                 .channels(new ArrayList<>())
                 .build();

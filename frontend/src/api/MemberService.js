@@ -10,7 +10,6 @@ export const MemberService = {
             .then((data) => {
                 alert(data.name + '님 가입되었습니다')
                 result = true
-                window.location.href = '/signin'
             })
             .catch((error) => {
                 alert('회원가입 실패')
@@ -34,11 +33,10 @@ export const MemberService = {
                 console.log(data.email)
                 console.log(data.id)
                 console.log(sessionStorage.getItem('id'))
-
-                window.location.href = '/'
             })
             .catch((error) => {
                 console.log(error)
+
                 alert("이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.")
             })
 
@@ -46,10 +44,7 @@ export const MemberService = {
     },
 
     signOut : function () {
-        sessionStorage.setItem(TOKEN, null)
-        sessionStorage.setItem('email', null)
-        sessionStorage.setItem('id', null)
-        sessionStorage.setItem('role', null)
+        sessionStorage.clear()
         window.location.href = "/"
     },
 
@@ -72,6 +67,21 @@ export const MemberService = {
         let members = {}
 
         await send('/api/channel/' + channelId + '/waiting-members/?page=' + page + '&count=' + count, 'GET')
+            .then((data) => {
+                members = data
+            })
+            .catch((error) => {
+                members = null
+                console.log(error)
+            })
+
+        return members
+    },
+
+    confirmEmail : async function confirmEmail(auth) {
+        let members = {}
+
+        await send('/api/confirm-email', 'POST', auth)
             .then((data) => {
                 members = data
             })

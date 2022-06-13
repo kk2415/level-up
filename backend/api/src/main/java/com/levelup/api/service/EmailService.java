@@ -23,12 +23,34 @@ public class EmailService {
         try {
             helper.setTo(toEmail);
             helper.setSubject(subject);
-            helper.setText(body);
+            helper.setText(body, true);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
 
         sender.send(message);
+    }
+
+    public void sendConfirmEmail(String toEmail, String securityCode) {
+        String subject = "회원가입 이메일 인증";
+        String body = "";
+
+        body += "<div style='margin:100px;'>";
+        body += "<h1> Level Up. </h1>";
+        body += "<br>";
+        body += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        body += "<br>";
+        body += "<p>감사합니다!<p>";
+        body += "<br>";
+        body += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        body += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        body += "<div style='font-size:130%'>";
+        body += "CODE : <strong>";
+        body += securityCode + "</strong><div><br/> ";
+        body += "</div>";
+
+
+        send(toEmail, subject, body);
     }
 
 }

@@ -34,7 +34,17 @@ const SignUp = () => {
         console.log(member)
 
         if (validate(member)) {
-            await MemberService.signUp(member)
+            let result = await MemberService.signUp(member);
+
+            if (result) {
+                let logInMember = {
+                    email : formData.get('email'),
+                    password : formData.get('password'),
+                }
+
+                await MemberService.signIn(logInMember);
+                window.location.href = '/confirm-email'
+            }
         }
     }
 

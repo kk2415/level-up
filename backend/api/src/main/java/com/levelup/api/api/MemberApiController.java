@@ -5,10 +5,13 @@ import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
+import com.levelup.core.dto.auth.EmailAuthRequest;
+import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.exception.MemberNotFoundException;
+import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,22 +38,6 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final EmailService emailService;
-
-    @GetMapping("/channel-manager-")
-    public String channelManager() {
-        return "channelManager";
-    }
-
-
-    @PostMapping("/email")
-    public void emailTest(@RequestBody Map<String, Object> params) {
-        String toAddress = (String) params.get("userId");
-        String subject = (String) params.get("subject");
-        String body = (String) params.get("body");
-
-        emailService.send(toAddress, subject, body);
-    }
 
     /**
      * 생성
@@ -111,6 +98,19 @@ public class MemberApiController {
         Member member = memberRepository.findByEmail(email);
 
         memberService.modifyProfileImage(file, member.getId());
+    }
+
+
+    /**
+     * 이메일 인증
+     * */
+    @PostMapping("/confirm-email")
+    public ResponseEntity emailTest(@RequestBody EmailAuthRequest request,
+                          @AuthenticationPrincipal Long memberId) {
+        System.out.println(request.getSecurityCode());
+        EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), memberId);
+
+        return ResponseEntity.ok().body(response);
     }
 
 }
