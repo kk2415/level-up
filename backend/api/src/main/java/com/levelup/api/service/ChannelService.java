@@ -8,7 +8,7 @@ import com.levelup.core.domain.channel.ChannelInfo;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.dto.file.Base64Dto;
-import com.levelup.core.domain.file.FileStore;
+import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -49,7 +49,7 @@ public class ChannelService {
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final FileStore fileStore;
+    private final LocalFileStore fileStore;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -254,7 +254,7 @@ public class ChannelService {
     }
 
     private void deleteChannelThumbNail(String storeFileName) {
-        if (!storeFileName.equals(FileStore.MEMBER_DEFAULT_IMAGE)) {
+        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
             File imageFile = new File(fileStore.getFullPath(storeFileName));
             if (imageFile.exists()) {
                 imageFile.delete();

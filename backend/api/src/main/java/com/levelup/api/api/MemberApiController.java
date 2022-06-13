@@ -1,6 +1,7 @@
 package com.levelup.api.api;
 
 import com.levelup.api.service.MemberService;
+import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
@@ -33,7 +34,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-
+    private final LocalFileStore fileStore;
 
     @GetMapping("/channel-manager-")
     public String channelManager() {
@@ -46,6 +47,8 @@ public class MemberApiController {
      * */
     @PostMapping("/member")
     public ResponseEntity create(@RequestBody @Valid CreateMemberRequest memberRequest) throws IOException {
+
+
         CreateMemberResponse response = memberService.create(memberRequest);
 
         return new ResponseEntity(response, HttpStatus.OK);
@@ -54,7 +57,6 @@ public class MemberApiController {
     @PostMapping("/member/image")
     public ResponseEntity createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
         UploadFile profileImage = memberService.createProfileImage(file);
-
         return ResponseEntity.ok().body(profileImage);
     }
 

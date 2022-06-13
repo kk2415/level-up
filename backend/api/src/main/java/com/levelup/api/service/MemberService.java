@@ -1,9 +1,9 @@
 package com.levelup.api.service;
 
-import com.levelup.core.domain.file.FileStore;
+import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
+import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
@@ -42,7 +42,9 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final FileStore fileStore;
+    private final FileService fileService;
+//    private final LocalFileStore fileStore;
+    private final S3FileStore fileStore;
 
 
     /**
@@ -169,7 +171,7 @@ public class MemberService implements UserDetailsService {
     }
 
     private void deleteProfileImage(String storeFileName) {
-        if (!storeFileName.equals(FileStore.MEMBER_DEFAULT_IMAGE)) {
+        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
             File imageFile = new File(fileStore.getFullPath(storeFileName));
             if (imageFile.exists()) {
                 imageFile.delete();

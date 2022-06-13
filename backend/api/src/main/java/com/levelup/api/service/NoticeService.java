@@ -1,7 +1,7 @@
 package com.levelup.api.service;
 
 import com.levelup.api.config.DateFormat;
-import com.levelup.core.domain.file.FileStore;
+import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -28,7 +28,7 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final MemberService memberService;
-    private final FileStore fileStore;
+    private final LocalFileStore fileStore;
 
 
     /**

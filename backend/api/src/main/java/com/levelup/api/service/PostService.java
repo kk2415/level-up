@@ -2,7 +2,7 @@ package com.levelup.api.service;
 
 import com.levelup.api.config.DateFormat;
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.file.FileStore;
+import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -35,7 +35,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final ChannelRepository channelRepository;
-    private final FileStore fileStore;
+    private final LocalFileStore fileStore;
 
 
     /**

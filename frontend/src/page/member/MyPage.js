@@ -4,7 +4,7 @@ import {Button, Form, Container, Row, Col, Image} from 'react-bootstrap';
 import HorizonLine from "../../component/HorizonLine";
 import { MemberService } from '../../api/MemberService'
 import { uploadFile } from '../../api/FileService'
-import { BACKEND_URL } from "../../api/backEndHost"
+import { S3_URL } from "../../api/backEndHost"
 
 const MyPage = () => {
 
@@ -52,7 +52,8 @@ const MyPage = () => {
             <Form id='signUpForm' className='mt-5'>
                 <div className='w-100' style={{ textAlign: "center" }} >
                     <Image thumbnail roundedCircle
-                           src={BACKEND_URL + member.uploadFile.storeFileName}
+                           // src={BACKEND_URL + member.uploadFile.storeFileName}
+                           src={S3_URL + member.uploadFile.storeFileName}
                            className='mb-5'
                             style={{width: "50vh"}}
                     />

@@ -3,6 +3,7 @@ package com.levelup.core.domain.file;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.notice.ChannelNotice;
 import com.levelup.core.domain.notice.Notice;
 import com.levelup.core.domain.post.Post;

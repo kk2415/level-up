@@ -5,6 +5,18 @@ server:
       tracking-modes: COOKIE
       timeout: 1800
 
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA5VCSTWTNH5VSDBMM
+      secret-key: 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
+    s3:
+      bucket: levelupbackends3
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 spring:
   application:
     name: levelup
@@ -21,7 +33,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto:
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
@@ -48,9 +60,12 @@ spring:
 
 file:
   dir: C:/Task/study/levelup
+  s3_dir: https://levelupbackends3.s3.ap-northeast-2.amazonaws.com/
+
 
 logging.level:
   org.hibernate.SQL: debug
+
 # org.hibernate.type: trace
 
 #logging:

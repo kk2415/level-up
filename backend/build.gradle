@@ -42,6 +42,8 @@ subprojects {
         implementation 'com.fasterxml.jackson.core:jackson-annotations'
         implementation 'mysql:mysql-connector-java'
 
+        implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 //        runtimeOnly 'com.h2database:h2'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'

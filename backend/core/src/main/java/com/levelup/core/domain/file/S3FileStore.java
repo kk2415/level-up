@@ -1,5 +1,10 @@
 package com.levelup.core.domain.file;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,18 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Component
-public class FileStore {
+@RequiredArgsConstructor
+public class S3FileStore {
 
     public final static String MEMBER_DEFAULT_IMAGE = "/images/member/AFF947XXQ-5554WSDQ12.png";
     public final static String CHANNEL_DEFAULT_THUMBNAIL_IMAGE = "/images/channel/thumbnail/rich-g5fba4398e_640.jpg";
-
+    private final AmazonS3Client amazonS3Client;
 
     @Value("${file.dir}")
-    private String fileDir;
+    private String LOCAL_FILE_DIR;
+
+    @Value("${file.s3_dir}")
+    private String S3_FILE_DIR;
+
+    @Value("${cloud.aws.s3.bucket}")
+    public String bucket;  // S3 버킷 이름
 
     public String getFullPath(String filename) {
-            return fileDir + filename;
+            return S3_FILE_DIR + filename;
     }
 
     public List<UploadFile> storeFiles(ImageType imageType, List<MultipartFile> multipartFiles) throws IOException {
@@ -43,9 +56,21 @@ public class FileStore {
 
         String uploadFilename = multipartFile.getOriginalFilename();
         String storeFileName = getStoreFileName(imageType, uploadFilename);
-        String fullPath = getFullPath(storeFileName);
 
-        multipartFile.transferTo(new File(fullPath));
+        File file = new File(LOCAL_FILE_DIR + "/" + uploadFilename);
+        multipartFile.transferTo(file);
+
+        System.out.println(storeFileName);
+        amazonS3Client.putObject(new PutObjectRequest(bucket, storeFileName, file)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+
+        if (file.delete()) {
+            log.info("Success delete file");
+        }
+        else {
+            log.error("Fail delete file");
+        }
+
         return new UploadFile(uploadFilename, storeFileName);
     }
 
@@ -54,7 +79,7 @@ public class FileStore {
 
         // 반드시 나중에 리팩토링...
         if (imageType == ImageType.MEMBER) {
-            storeFileName = "/images/member/" + createStoreFileName(uploadFilename);
+            storeFileName = "profile/" + createStoreFileName(uploadFilename);
         }
         else if (imageType == ImageType.CHANNEL) {
             storeFileName = "/images/channel/description/" + createStoreFileName(uploadFilename);
