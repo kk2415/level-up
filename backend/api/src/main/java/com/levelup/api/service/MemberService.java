@@ -164,19 +164,10 @@ public class MemberService implements UserDetailsService {
 
         Member member = memberRepository.findById(memberId);
 
-        deleteProfileImage(member.getProfileImage().getStoreFileName());
+        deleteS3Profile(member.getProfileImage().getStoreFileName());
 
         UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
         member.modifyProfileImage(uploadFile); //변경 감지의 의한 update문 쿼리 발생
-    }
-
-    private void deleteProfileImage(String storeFileName) {
-        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
-            File imageFile = new File(fileStore.getFullPath(storeFileName));
-            if (imageFile.exists()) {
-                imageFile.delete();
-            }
-        }
     }
 
 
@@ -185,6 +176,21 @@ public class MemberService implements UserDetailsService {
      * */
     public void delete(Long memberId) {
         memberRepository.delete(memberId);
+    }
+
+    private void deleteS3Profile(String storeFileName) {
+        if (!storeFileName.equals(S3FileStore.DEFAULT_IMAGE)) {
+            fileStore.deleteS3File(storeFileName);
+        }
+    }
+
+    private void deleteLocalProfile(String storeFileName) {
+        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
+            File imageFile = new File(fileStore.getFullPath(storeFileName));
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+        }
     }
 
 

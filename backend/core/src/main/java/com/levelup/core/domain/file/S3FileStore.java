@@ -62,7 +62,7 @@ public class S3FileStore {
         amazonS3Client.putObject(new PutObjectRequest(bucket, storeFileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
-        deleteFile(file);
+        deleteLocalFile(file);
 
         return new UploadFile(uploadFilename, storeFileName);
     }
@@ -92,7 +92,11 @@ public class S3FileStore {
         return fileName.substring(index + 1);
     }
 
-    public void deleteFile(File file) {
+    public void deleteS3File(String storeFileName) {
+        amazonS3Client.deleteObject(bucket, S3_FILE_DIR + storeFileName);
+    }
+
+    public void deleteLocalFile(File file) {
         if (file.exists()) {
             file.delete();
         }

@@ -248,22 +248,12 @@ public class ChannelService {
     public UploadFile modifyChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId);
 
-//        deleteThumbNailInLocal(channel.getThumbnailImage().getStoreFileName());
+        deleteS3ThumbNail(channel.getThumbnailImage().getStoreFileName());
 
         UploadFile thumbNail = fileStore.storeFile(ImageType.MEMBER, file);
         channel.modifyThumbNail(thumbNail);
         return thumbNail;
     }
-
-    private void deleteThumbNailInLocal(String storeFileName) {
-        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
-            File imageFile = new File(fileStore.getFullPath(storeFileName));
-            if (imageFile.exists()) {
-                imageFile.delete();
-            }
-        }
-    }
-
 
 
     /**
@@ -309,6 +299,21 @@ public class ChannelService {
 
         for (ChannelMember channelMember : waitingMember) {
             channelMemberRepository.delete(channelMember.getId());
+        }
+    }
+
+    private void deleteLocalThumbNail(String storeFileName) {
+        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
+            File imageFile = new File(fileStore.getFullPath(storeFileName));
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+        }
+    }
+
+    private void deleteS3ThumbNail(String storeFileName) {
+        if (!storeFileName.equals(S3FileStore.DEFAULT_IMAGE)) {
+            fileStore.deleteS3File(storeFileName);
         }
     }
 
