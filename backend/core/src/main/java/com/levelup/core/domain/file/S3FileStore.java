@@ -20,8 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3FileStore {
 
-    public final static String MEMBER_DEFAULT_IMAGE = "/images/member/AFF947XXQ-5554WSDQ12.png";
-    public final static String CHANNEL_DEFAULT_THUMBNAIL_IMAGE = "/images/channel/thumbnail/rich-g5fba4398e_640.jpg";
+    public final static String MEMBER_DEFAULT_IMAGE = "profile/AFF947XXQ-5554WSDQ12.png";
+    public final static String THUMBNAIL_DEFAULT_IMAGE = "thumbnail/fb23d674-c0ed-417c-b732-6743b8989406.png";
     private final AmazonS3Client amazonS3Client;
 
     @Value("${file.dir}")
@@ -60,16 +60,10 @@ public class S3FileStore {
         File file = new File(LOCAL_FILE_DIR + "/" + uploadFilename);
         multipartFile.transferTo(file);
 
-        System.out.println(storeFileName);
         amazonS3Client.putObject(new PutObjectRequest(bucket, storeFileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
 
-        if (file.delete()) {
-            log.info("Success delete file");
-        }
-        else {
-            log.error("Fail delete file");
-        }
+        deleteFile(file);
 
         return new UploadFile(uploadFilename, storeFileName);
     }
@@ -77,27 +71,11 @@ public class S3FileStore {
     private String getStoreFileName(ImageType imageType, String uploadFilename) {
         String storeFileName;
 
-        // 반드시 나중에 리팩토링...
         if (imageType == ImageType.MEMBER) {
             storeFileName = "profile/" + createStoreFileName(uploadFilename);
         }
-        else if (imageType == ImageType.CHANNEL) {
-            storeFileName = "/images/channel/description/" + createStoreFileName(uploadFilename);
-        }
-        else if (imageType == ImageType.CHANNEL_THUMBNAIL) {
-            storeFileName = "/images/channel/thumbnail/" + createStoreFileName(uploadFilename);
-        }
-        else if (imageType == ImageType.CHANNEL_NOTICE) {
-            storeFileName = "/images/channel_notice/" + createStoreFileName(uploadFilename);
-        }
-        else if (imageType == ImageType.NOTICE) {
-            storeFileName = "/images/notice/" + createStoreFileName(uploadFilename);
-        }
-        else if (imageType == ImageType.QNA) {
-            storeFileName = "/images/qna/" + createStoreFileName(uploadFilename);
-        }
         else {
-            storeFileName = "/images/post/" + createStoreFileName(uploadFilename);
+            storeFileName = "thumbnail/" + createStoreFileName(uploadFilename);
         }
 
         return storeFileName;
@@ -113,6 +91,12 @@ public class S3FileStore {
     public String extractExt(String fileName) {
         int index = fileName.lastIndexOf('.');
         return fileName.substring(index + 1);
+    }
+
+    public void deleteFile(File file) {
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
 }

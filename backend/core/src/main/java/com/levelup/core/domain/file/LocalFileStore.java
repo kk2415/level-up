@@ -22,16 +22,9 @@ public class LocalFileStore {
 
     public final static String MEMBER_DEFAULT_IMAGE = "/images/member/AFF947XXQ-5554WSDQ12.png";
     public final static String CHANNEL_DEFAULT_THUMBNAIL_IMAGE = "/images/channel/thumbnail/rich-g5fba4398e_640.jpg";
-    private final AmazonS3Client amazonS3Client;
 
     @Value("${file.dir}")
     private String fileDir;
-
-    @Value("${file.s3_dir}")
-    private String s3fileDir;
-
-    @Value("${cloud.aws.s3.bucket}")
-    public String bucket;  // S3 버킷 이름
 
     public String getFullPath(String filename) {
             return fileDir + filename;
@@ -47,32 +40,6 @@ public class LocalFileStore {
             }
         }
         return uploadFiles;
-    }
-
-    public UploadFile uploadToS3(ImageType imageType, MultipartFile multipartFile) throws IOException {
-        if (multipartFile == null || multipartFile.isEmpty()) {
-            return new UploadFile("default.png", MEMBER_DEFAULT_IMAGE);
-        }
-
-        String uploadFilename = multipartFile.getOriginalFilename();
-        String uuid = createStoreFileName(uploadFilename);
-        String storePath = getStoreFileName(imageType, uuid);
-        String fullPath = getFullPath(uploadFilename);
-
-        File file = new File(fullPath);
-        multipartFile.transferTo(file);
-
-        amazonS3Client.putObject(new PutObjectRequest(bucket, uuid, file)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
-
-        if (file.delete()) {
-            log.info("Success delete file");
-        }
-        else {
-            log.error("Fail delete file");
-        }
-
-        return new UploadFile(uploadFilename, storePath);
     }
 
     public UploadFile storeFile(ImageType imageType, MultipartFile multipartFile) throws IOException {
@@ -93,8 +60,7 @@ public class LocalFileStore {
 
         // 반드시 나중에 리팩토링...
         if (imageType == ImageType.MEMBER) {
-//            storeFileName = "/images/member/" + createStoreFileName(uploadFilename);
-            storeFileName = s3fileDir + "profile/" + uploadFilename;
+            storeFileName = "/images/member/" + createStoreFileName(uploadFilename);
         }
         else if (imageType == ImageType.CHANNEL) {
             storeFileName = "/images/channel/description/" + createStoreFileName(uploadFilename);

@@ -10,9 +10,10 @@ import "swiper/css/pagination";
 
 import "../css/HomeSwiper.css"
 import { BACKEND_URL } from "../api/backEndHost"
+import { S3_URL } from "../api/backEndHost"
 
 const CardSlide = ({ channel }) => {
-	const IMG_DIR = BACKEND_URL + channel.storeFileName
+	const IMG_DIR = S3_URL + channel.storeFileName
 
 	return (
 		<Card>

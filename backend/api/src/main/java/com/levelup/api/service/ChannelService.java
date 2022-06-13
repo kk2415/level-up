@@ -6,6 +6,7 @@ import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelInfo;
 import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.LocalFileStore;
@@ -49,7 +50,8 @@ public class ChannelService {
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final LocalFileStore fileStore;
+//    private final LocalFileStore fileStore;
+    private final S3FileStore fileStore;
 
     @Value("${file.dir}")
     private String fileDir;
