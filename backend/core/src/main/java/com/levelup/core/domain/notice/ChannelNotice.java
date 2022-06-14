@@ -4,11 +4,9 @@ import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,10 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "channel_notice")
-@Getter @Setter
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChannelNotice extends BaseTimeEntity {
 
     @Id
@@ -50,25 +51,25 @@ public class ChannelNotice extends BaseTimeEntity {
 
     //==생성 메서드==//
     public static ChannelNotice createChannelNotice(Channel channel, String title, String writer, String content) {
-        ChannelNotice channelNotice = new ChannelNotice();
-
-        channelNotice.setChannel(channel);
-        channelNotice.setTitle(title);
-        channelNotice.setWriter(writer);
-        channelNotice.setContent(content);
-        channelNotice.setViews(0L);
-
-        return channelNotice;
+        return ChannelNotice.builder()
+                .channel(channel)
+                .title(title)
+                .writer(writer)
+                .content(content)
+                .views(0L)
+                .comments(new ArrayList<>())
+                .files(new ArrayList<>())
+                .build();
     }
 
     //==비즈니스 로직==//
     public void change(String title, String content) {
-        this.setTitle(title);
-        this.setContent(content);
+        this.title = (title);
+        this.content = (content);
     }
 
     public void addViews() {
-        this.setViews(this.views + 1);
+        this.views = (this.views + 1);
     }
 
 }

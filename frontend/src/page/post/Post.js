@@ -128,9 +128,9 @@ const Post = () => {
                                 </span>
 
                                 <span className="d-grid gap-2 d-md-block float-end">
-                                    <span className="fs-3" id="voteCount2">{voteCount}</span>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">추천</button>
+                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">
+                                        {'추천 ' + voteCount}
+                                    </button>
                                 </span>
                             </p>
                         </div>
@@ -138,7 +138,6 @@ const Post = () => {
                         <div className="w-100"></div>
 
                         <div className="col-lg-11">
-                            <br/><br/>
                             <h1 className="display-6">
                                 <p dangerouslySetInnerHTML={{ __html: post.content }}></p>
                             </h1>
@@ -176,12 +175,12 @@ const Post = () => {
                     <CommentFrame articleId={postId} identity={'POST'} />
 
                     <div>
-                        <button onClick={handleGoChannelButton} className="btn btn-primary btn-lg float-start" type="button" id="allPostButton">목록으로
+                        <button onClick={handleGoChannelButton} className="btn btn-primary float-start" type="button" id="allPostButton">목록으로
                         </button>
                         <div className="d-grid gap-2 d-md-block float-end">
-                            <button onClick={handlePrevPostButton} className="btn btn-primary btn-lg" type="button" id="prevPostButton">이전글
+                            <button onClick={handlePrevPostButton} className="btn btn-primary" type="button" id="prevPostButton">이전글
                             </button>
-                            <button onClick={handleNextPostButton} className="btn btn-primary btn-lg" type="button" id="nextPostButton">다음글
+                            <button onClick={handleNextPostButton} className="btn btn-primary" type="button" id="nextPostButton">다음글
                             </button>
                         </div>
                     </div>

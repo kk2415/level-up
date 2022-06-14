@@ -50,9 +50,7 @@ const Comment = ({comment, articleId, identity}) => {
                         <span id="commentDate">{comment.dateCreated}</span>
                         <p id="commentContent">{comment.content}</p>
                         <span id="commentVote" className="float-end">
-                        <span id="commentVoteCount">{voteCount}</span>
-                            &nbsp;&nbsp;
-                            <button onClick={createVote} className="btn-sm btn-primary" type="button">추천</button>
+                            <button onClick={createVote} className="btn-sm btn-primary" type="button">{'추천 ' + voteCount}</button>
                         </span>
                         {
                             comment.replyCount > 0 &&
