@@ -23,7 +23,7 @@ public class S3FileStore {
     public final static String DEFAULT_IMAGE = "thumbnail/fb23d674-c0ed-417c-b732-6743b8989406.png";
     private final AmazonS3Client amazonS3Client;
 
-    @Value("${file.dir}")
+    @Value("${file.linux_local_dir}")
     private String LOCAL_FILE_DIR;
 
     @Value("${file.s3_dir}")

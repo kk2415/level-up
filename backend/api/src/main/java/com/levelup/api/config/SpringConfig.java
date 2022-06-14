@@ -8,7 +8,6 @@ import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.post.JpaPostRepository;
 import com.levelup.core.repository.post.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,9 +20,6 @@ import javax.persistence.EntityManager;
 
 @Configuration
 public class SpringConfig implements WebMvcConfigurer {
-
-    @Value("${file.dir}")
-    private String fileDir;
 
     @Autowired
     private EntityManager em;

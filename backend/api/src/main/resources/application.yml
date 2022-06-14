@@ -74,8 +74,9 @@ spring:
     password: dlxpnbkbcbaorjuh
 
 file:
-  dir: C:/Task/study/levelup
-  s3_dir: https://levelupbackends3.s3.ap-northeast-2.amazonaws.com/
+  window_local_dir: C:/Task/study/levelup
+  linux_local_dir: /tmp
+  s3_dir: https://levelupbackends3.s3.ap-northeast-2.amazonaws.com
 
 
 logging.level:

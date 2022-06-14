@@ -53,7 +53,7 @@ public class ChannelService {
 //    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
 
-    @Value("${file.dir}")
+    @Value("${file.window_local_dir}")
     private String fileDir;
 
     /**

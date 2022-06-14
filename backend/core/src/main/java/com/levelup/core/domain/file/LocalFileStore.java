@@ -23,7 +23,7 @@ public class LocalFileStore {
     public final static String MEMBER_DEFAULT_IMAGE = "/images/member/AFF947XXQ-5554WSDQ12.png";
     public final static String CHANNEL_DEFAULT_THUMBNAIL_IMAGE = "/images/channel/thumbnail/rich-g5fba4398e_640.jpg";
 
-    @Value("${file.dir}")
+    @Value("${file.linux_local_dir}")
     private String fileDir;
 
     public String getFullPath(String filename) {
