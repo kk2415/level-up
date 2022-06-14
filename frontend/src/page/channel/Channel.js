@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Link, useNavigate} from 'react-router-dom'
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelService from '../../api/ChannelService'
 import PostService from '../../api/PostService'
-import {Container, Col, Row, Form, Button, Card, FormControl} from 'react-bootstrap'
+import {Container, Form, Button, FormControl, Dropdown} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
 import {TOKEN} from "../../api/token";
 import Pager from "../../component/pager/Pager";
@@ -52,6 +52,8 @@ const Channel = () => {
             return queryString.substring(queryString.indexOf('=') + 1, queryString.indexOf('&'))
         }
 
+        console.log(queryString)
+        console.log(Number(queryString.substr(queryString.indexOf('=') + 1)))
         return Number(queryString.substr(queryString.indexOf('=') + 1))
     }
 
@@ -64,7 +66,6 @@ const Channel = () => {
     const [curPage, setCurPage] = useState(getCurrentPage())
 
     const [channelName, setChannelName] = useState(null)
-    const [posts, setPosts] = useState({})
     const [postsCount, setPostsCount] = useState(0)
 
     const loadChannelName = async (channelId) => {
@@ -87,7 +88,9 @@ const Channel = () => {
         }
     }
 
-    const handleSearch = () => {
+    const handleSearch = (event) => {
+        event.preventDefault()
+
         let searchCondition = {
             field : $('#field').val(),
             querys : $('#search').val(),
@@ -100,12 +103,12 @@ const Channel = () => {
             url = '/channel/' + channelId + '?page=' + 1
         }
 
+        console.log(url)
         window.location.href = url
     }
 
     const searchKeyDown = (event) => {
         if (event.keyCode === 13) {
-            event.preventDefault()
             handleSearch()
         }
     }
@@ -177,29 +180,28 @@ const Channel = () => {
                             <div className="col-lg-6 col-sm-12 text-lg-end text-center">
                                 <nav className="navbar navbar-expand-lg navbar-light float-end">
                                     <div className="container-fluid">
-                                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                                            <ul className="navbar-nav d-flex">
-                                                <li className="nav-item dropdown">
-                                                    <Form.Select id="field" name="field" size="sm">
-                                                        <option value="title">제목</option>
-                                                        <option value="writer">작성자</option>
-                                                    </Form.Select>
-                                                </li>
-                                            </ul>
-                                            <Form className="d-flex">
-                                                <FormControl
-                                                    onKeyDown={searchKeyDown}
-                                                    onKeyPress={searchKeyDown}
-                                                    id="search"
-                                                    name="search"
-                                                    type="search"
-                                                    placeholder="Search"
-                                                    className="me-2"
-                                                    aria-label="Search"
-                                                />
-                                                <Button onClick={handleSearch} id="searchButton" variant="outline-success">Search</Button>
-                                            </Form>
+                                        <div>
+                                            <select className="form-control form-control-sm" id="field" name="field">
+                                                <option value="title">제목</option>
+                                                <option value="writer">작성자</option>
+                                            </select>
                                         </div>
+                                        <Form className="navbar-form navbar-right">
+                                            <div className="input-group">
+                                                <input type="Search"
+                                                       onKeyDown={searchKeyDown}
+                                                       onKeyPress={searchKeyDown}
+                                                       id="search"
+                                                       name="search"
+                                                       placeholder="Search..."
+                                                       className="form-control"/>
+                                                <div className="input-group-btn">
+                                                    <button onClick={handleSearch} id="searchButton" className="btn btn-info">
+                                                        <span className="glyphicon glyphicon-search" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Form>
                                     </div>
                                 </nav>
                             </div>

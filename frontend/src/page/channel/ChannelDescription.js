@@ -113,7 +113,6 @@ const ChannelDescription = () => {
                             </p>
                         </div>
                         <div className="col">
-                            <br /><br />
                             <h1 className="display-6">
                                 <p id="description" dangerouslySetInnerHTML={{__html: description.description}}>
                                 </p>

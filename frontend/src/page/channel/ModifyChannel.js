@@ -6,7 +6,7 @@ import {uploadFile} from "../../api/FileService";
 import $ from "jquery";
 
 const CreateChannel = () => {
-    const getChannelId = () => {s
+    const getChannelId = () => {
         let pathname = decodeURI($(window.location).attr('pathname'))
 
         return Number(pathname.substr(pathname.lastIndexOf('/') + 1))
