@@ -6,7 +6,6 @@ export const ChannelNoticeTable = ({notices, channelId, page}) => {
     return (
         <>
             {
-                notices &&
                 <Table>
                     <caption className="caption-top fs-3 fw-bold">게시글</caption>
                     <thead>
@@ -21,6 +20,7 @@ export const ChannelNoticeTable = ({notices, channelId, page}) => {
                     </thead>
                     <tbody id="tableBody">
                     {
+                        notices &&
                         notices.map((info) => (
                             <ArticleTableRow
                                 info={info}
