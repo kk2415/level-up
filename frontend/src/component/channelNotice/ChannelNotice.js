@@ -55,9 +55,7 @@ const ChannelNotice = ({channelId}) => {
     return (
         <Container>
             <div className="row row-cols-1">
-                <div className="col">
-                    <h3>공지사항</h3>
-                </div>
+                <caption className="caption-top fs-3 fw-bold">공지사항</caption>
                 <div className="col">
                     <ChannelNoticeTable notices={notice} channelId={channelId} page={curNoticePage} />
                 </div>
