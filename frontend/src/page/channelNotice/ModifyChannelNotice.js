@@ -1,14 +1,9 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Link, useNavigate} from 'react-router-dom'
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelService from '../../api/ChannelService'
-import PostService from '../../api/PostService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import { ChannelTable } from '../../component/channel/ChannelTable'
-import {TOKEN} from "../../api/token";
-import Board from '../../component/Board'
-import Pager from "../../component/pager/Pager";
+import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 
 const ModifyChannel = () => {

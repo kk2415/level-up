@@ -4,9 +4,6 @@ import {Navbar, Container, Nav, Button} from 'react-bootstrap'
 
 import {TOKEN} from '../api/token'
 import { MemberService } from '../api/MemberService'
-import SignUp from "../page/member/SignUp";
-import SignIn from "../page/member/SignIn";
-
 
 const Header = () => {
 	const navigate = useNavigate();

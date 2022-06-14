@@ -1,8 +1,7 @@
-import React, { useRef, useState } from "react";
-import {Container, Col, Row, Form, Button, Card, Image} from 'react-bootstrap'
-import {Link, useNavigate} from 'react-router-dom'
+import React from "react";
+import {Container} from 'react-bootstrap'
+import {useNavigate} from 'react-router-dom'
 import { StudySwiper, ProjectSwiper } from '../../component/HomeSwiper'
-import {BACKEND_URL} from "../../api/backEndHost";
 import {TOKEN} from "../../api/token";
 
 const Home = () => {

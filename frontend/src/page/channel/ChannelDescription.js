@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
 import $ from 'jquery'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import ChannelService from '../../api/ChannelService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
+import {Container} from 'react-bootstrap'
 import {TOKEN} from "../../api/token";
 import react from "react";
 
@@ -116,7 +116,6 @@ const ChannelDescription = () => {
                             <br /><br />
                             <h1 className="display-6">
                                 <p id="description" dangerouslySetInnerHTML={{__html: description.description}}>
-
                                 </p>
                             </h1>
                             <br /><br /><br /><br />

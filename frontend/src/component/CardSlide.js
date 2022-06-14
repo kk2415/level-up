@@ -1,15 +1,12 @@
-import React, { useRef, useState } from "react";
-import {} from 'react-bootstrap'
+import React from "react";
 import {Container, Card, Row} from 'react-bootstrap'
-import {Routes, Route, Link} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
-import { Swiper, SwiperSlide } from "swiper/react"; // basic
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import "../css/HomeSwiper.css"
-import { BACKEND_URL } from "../api/backEndHost"
 import { S3_URL } from "../api/backEndHost"
 
 const CardSlide = ({ channel }) => {

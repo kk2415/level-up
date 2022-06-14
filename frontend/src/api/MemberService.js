@@ -1,6 +1,5 @@
 import { send } from "./request"
 import {TOKEN} from './token'
-import {BACKEND_URL} from './backEndHost'
 
 export const MemberService = {
     signUp : async function (member) {

@@ -1,6 +1,5 @@
 import React from 'react';
 
-// '/post/' + posts[idx].id + '?channel=' + channelId
 const ArticleTableRow = ({info, url}) => {
     return (
         <>

@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {Link, useNavigate} from 'react-router-dom'
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import PostService from '../../api/PostService'
 import {Container, Form} from 'react-bootstrap'
-import RichTextEditor from "../../component/SummerNote";
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -28,7 +27,8 @@ const CreatePost = () => {
         let post = {
             channelId : channelId,
             title : formData.get('title'),
-            content  : contents,
+            // content  : contents,
+            content  : $('#summernote').val(),
             category : formData.get('category'),
         }
         console.log(post)
@@ -75,8 +75,44 @@ const CreatePost = () => {
         $('#alert').css('display', 'none')
     }
 
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(images) {
+                        for (let i = 0; i < images.length; i++) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(images[i])
+
+                            reader.onloadend = () => {
+                                const base64 = reader.result
+                                $('#summernote').summernote('insertImage', base64)
+                            }
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
     useEffect(() => {
         hideAlertMassageBox()
+    }, [])
+
+    useLayoutEffect(() => {
+        configSummernote()
     }, [])
 
     return (
@@ -105,7 +141,8 @@ const CreatePost = () => {
 
                     <Form.Group className="mb-3">
                         <Form.Label>내용</Form.Label>
-                        <RichTextEditor setContents={setContents} contents={contents} />
+                        <textarea id='summernote' />
+                        {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
                     </Form.Group>
 
                     <div className="alert alert-danger mt-5" id="alert" role="alert">

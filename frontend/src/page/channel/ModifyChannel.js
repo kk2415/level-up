@@ -1,14 +1,12 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
 import ChannelService from '../../api/ChannelService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
+import {Container, Form} from 'react-bootstrap'
 import {uploadFile} from "../../api/FileService";
 import $ from "jquery";
-import SummerNote from '../../component/SummerNote'
-import RichTextEditor from '../../component/SummerNote'
 
 const CreateChannel = () => {
-    const getChannelId = () => {
+    const getChannelId = () => {s
         let pathname = decodeURI($(window.location).attr('pathname'))
 
         return Number(pathname.substr(pathname.lastIndexOf('/') + 1))
@@ -26,6 +24,10 @@ const CreateChannel = () => {
         setThumbnail(event.target.files[0])
     }
 
+    const handleBackButton = () => {
+        window.location.href = '/channel/description/' + channelId
+    }
+
     const handleModifyButton = async () => {
         let formData = new FormData(document.getElementById('form'));
         let thumbnailImageDir = description.thumbnailImage
@@ -39,7 +41,8 @@ const CreateChannel = () => {
         let channel = {
             name : $('#name').val(),
             limitedMemberNumber : $('#limitedMemberNumber').val(),
-            description : contents,
+            // description : contents,
+            description : $('#summernote').val(),
             category : $('#category').val(),
             thumbnailDescription : $('#thumbnailDescription').val(),
             thumbnailImage : thumbnailImageDir,
@@ -111,13 +114,50 @@ const CreateChannel = () => {
         }
     }
 
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(images) {
+                        for (let i = 0; i < images.length; i++) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(images[i])
+
+                            reader.onloadend = () => {
+                                const base64 = reader.result
+                                $('#summernote').summernote('insertImage', base64)
+                            }
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
     useEffect(() => {
         showChannel()
+
+        if (description) {
+            $('#summernote').val(description.description)
+        }
     }, [description])
 
     useLayoutEffect(() => {
         setChannelId(getChannelId())
         loadDescription(channelId)
+        configSummernote()
     }, [])
 
     return (
@@ -150,7 +190,8 @@ const CreateChannel = () => {
 
                         <Form.Group className="mb-3">
                             <Form.Label>설명</Form.Label>
-                            <RichTextEditor setContents={loadContents} contents={description.description} />
+                            <textarea id='summernote' />
+                            {/*<RichTextEditor setContents={loadContents} contents={description.description} />*/}
                         </Form.Group>
 
                         <Form.Group className="mb-3">
@@ -171,7 +212,7 @@ const CreateChannel = () => {
                                         id="modifyButton">수정</button>
                             </div>
                             <div className="col">
-                                <button className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
+                                <button onClick={handleBackButton} className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
                             </div>
                         </div>
                     </Form>

@@ -42,67 +42,67 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
-    <script type="module">
-      function uploadImage(files, editor) {
-        let form = new FormData();
-        form.append("files", files);
+<!--    <script type="module">-->
+<!--      function uploadImage(files, editor) {-->
+<!--        let form = new FormData();-->
+<!--        form.append("files", files);-->
 
-        const TOKEN = 'ACCESS_TOKEN'
-        const BACKEND_URL = "http://localhost:8080"
+<!--        const TOKEN = 'ACCESS_TOKEN'-->
+<!--        const BACKEND_URL = "http://localhost:8080"-->
 
-        let headers = {
-        }
+<!--        let headers = {-->
+<!--        }-->
 
-        const accessToken = sessionStorage.getItem(TOKEN)
-        if (accessToken && accessToken !== null) {
-          headers.Authorization = "Bearer "+ accessToken
-        }
+<!--        const accessToken = sessionStorage.getItem(TOKEN)-->
+<!--        if (accessToken && accessToken !== null) {-->
+<!--          headers.Authorization = "Bearer "+ accessToken-->
+<!--        }-->
 
-        let options = {
-          url: BACKEND_URL + '/api/channel/descriptionFiles',
-          method: 'POST',
-          headers : headers,
-          data: form,
-          async: false,
-          processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음
-          contentType: false, // - contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
-          cache: false,
-          enctype: 'multipart/form-data',
-        }
+<!--        let options = {-->
+<!--          url: BACKEND_URL + '/api/channel/descriptionFiles',-->
+<!--          method: 'POST',-->
+<!--          headers : headers,-->
+<!--          data: form,-->
+<!--          async: false,-->
+<!--          processData: false, // - processData : false로 선언 시 formData를 string으로 변환하지 않음-->
+<!--          contentType: false, // - contentType : false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함-->
+<!--          cache: false,-->
+<!--          enctype: 'multipart/form-data',-->
+<!--        }-->
 
-        $.ajax(options)
-            .done(function (response) {
-              console.log(response)
-              $(editor).summernote('insertImage', BACKEND_URL + response.fullPath)
-            })
-            .fail(function (error) {
-              console.log(error)
-            })
-      }
+<!--        $.ajax(options)-->
+<!--            .done(function (response) {-->
+<!--              console.log(response)-->
+<!--              $(editor).summernote('insertImage', BACKEND_URL + response.fullPath)-->
+<!--            })-->
+<!--            .fail(function (error) {-->
+<!--              console.log(error)-->
+<!--            })-->
+<!--      }-->
 
-      $(document).ready(function() {
-        $('#summernote').summernote({
-          height: 400,
-          minHeight: null,
-          maxHeight: null,
-          callbacks: {
-            onImageUpload : function(files) {
-              for (let i = 0; i < files.length; i++) {
-                uploadImage(files[i], this);
-              }
-            },
-            onPaste: function (e) {
-              let clipboardData = e.originalEvent.clipboardData;
-              if (clipboardData && clipboardData.items && clipboardData.items.length) {
-                let item = clipboardData.items[0];
-                if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
-                  e.preventDefault();
-                }
-              }
-            }
-          }
-        })
-      })
-    </script>
+<!--      $(document).ready(function() {-->
+<!--        $('#summernote').summernote({-->
+<!--          height: 400,-->
+<!--          minHeight: null,-->
+<!--          maxHeight: null,-->
+<!--          callbacks: {-->
+<!--            onImageUpload : function(files) {-->
+<!--              for (let i = 0; i < files.length; i++) {-->
+<!--                uploadImage(files[i], this);-->
+<!--              }-->
+<!--            },-->
+<!--            onPaste: function (e) {-->
+<!--              let clipboardData = e.originalEvent.clipboardData;-->
+<!--              if (clipboardData && clipboardData.items && clipboardData.items.length) {-->
+<!--                let item = clipboardData.items[0];-->
+<!--                if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {-->
+<!--                  e.preventDefault();-->
+<!--                }-->
+<!--              }-->
+<!--            }-->
+<!--          }-->
+<!--        })-->
+<!--      })-->
+<!--    </script>-->
   </body>
 </html>

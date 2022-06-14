@@ -1,14 +1,10 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 
-import PostService from "../../api/PostService";
 import CommentService from "../../api/CommentService";
 import VoteService from "../../api/VoteService";
 import ReplyComment from "./ReplyComment";
 import WriteReplyComment from './WriteReplyComment'
-
-import {TOKEN} from "../../api/token";
-import $ from 'jquery'
 
 const Comment = ({comment, articleId, identity}) => {
     const [onHideReplyComment, setOnHideShowReplyComment] = useState(false)

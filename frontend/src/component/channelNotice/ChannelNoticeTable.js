@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 import ArticleTableRow from '../ArticleTableRow'
-import ChannelService from '../../api/ChannelService'
 
 export const ChannelNoticeTable = ({notices, channelId, page}) => {
     return (

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
 import ChannelService from '../../api/ChannelService'
 import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
@@ -24,11 +24,13 @@ const CreateChannel = () => {
             memberEmail : context.member.email,
             name : formData.get('name'),
             limitedMemberNumber : formData.get('limitedMemberNumber'),
-            description : contents,
+            // description : contents,
+            description : $('#summernote').val(),
             category : formData.get('category'),
             thumbnailDescription : formData.get('thumbnailDescription'),
             thumbnailImage : thumbnailImageDir,
         }
+        // console.log(channel)
 
         if (validate(channel)) {
             await ChannelService.create(channel);
@@ -95,9 +97,46 @@ const CreateChannel = () => {
         $('#alert').css('display', 'none')
     }
 
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(images) {
+                        for (let i = 0; i < images.length; i++) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(images[i])
+
+                            reader.onloadend = () => {
+                                const base64 = reader.result
+                                $('#summernote').summernote('insertImage', base64)
+                            }
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
     useEffect(() => {
         hideAlertMassageBox()
     }, [])
+
+    useLayoutEffect(() => {
+        configSummernote()
+    }, [])
+
 
     return (
         <>
@@ -124,7 +163,8 @@ const CreateChannel = () => {
 
                     <Form.Group className="mb-3">
                         <Form.Label>설명</Form.Label>
-                        <RichTextEditor setContents={setContents} contents={contents} />
+                        <textarea id='summernote' />
+                        {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
                     </Form.Group>
 
                     <Form.Group className="mb-3">

@@ -1,15 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
+import React, { useState, useEffect } from "react";
+import {Container} from 'react-bootstrap'
 
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
-import SwiperCore, { Navigation, Pagination } from "swiper";
+import { Navigation, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import CardSlide from "./CardSlide";
 import { send } from "../api/request"
-import { BACKEND_URL } from "../api/backEndHost"
 
 const StudySwiper = () => {
 	const [channels, setChannels] = useState([])

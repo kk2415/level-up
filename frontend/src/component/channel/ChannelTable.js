@@ -1,11 +1,10 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
+import React, {useState, useEffect} from 'react';
+import {Table} from 'react-bootstrap'
 import ArticleTableRow from '../ArticleTableRow'
 import PostService from "../../api/PostService";
 
 export const ChannelTable = ({channelId, currentPage, searchCondition} ) => {
     const [posts, setPosts] = useState(null)
-    const [postsCount, setPostsCount] = useState(0)
 
     const loadPost = async (channelId, page, searchCondition) => {
         let result = await PostService.getAll(channelId, page, searchCondition)

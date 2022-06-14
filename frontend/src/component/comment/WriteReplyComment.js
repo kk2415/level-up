@@ -1,9 +1,7 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import PostService from "../../api/PostService";
+import React from 'react';
+import {Container} from 'react-bootstrap'
 import CommentService from "../../api/CommentService";
 
-import {TOKEN} from "../../api/token";
 import $ from 'jquery'
 
 const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, parentCommentId, articleId, identity}) => {

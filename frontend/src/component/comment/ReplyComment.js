@@ -1,7 +1,5 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import PostService from "../../api/PostService";
-import CommentService from "../../api/CommentService";
+import React, {useState} from 'react';
+import {Container} from 'react-bootstrap'
 import VoteService from "../../api/VoteService";
 
 const ReplyComment = ({reply}) => {

@@ -1,13 +1,10 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Container, Col, Row, Form, Button, Card, Alert} from 'react-bootstrap'
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {Container} from 'react-bootstrap'
 import $ from 'jquery'
-import {TOKEN} from "../../api/token";
 
 import ChannelService from '../../api/ChannelService'
-import PostService from '../../api/PostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
-import VoteService from "../../api/VoteService";
 
 const DetailChannelNotice = () => {
     const navigate = useNavigate();

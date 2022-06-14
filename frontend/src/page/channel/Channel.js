@@ -6,9 +6,7 @@ import ChannelService from '../../api/ChannelService'
 import PostService from '../../api/PostService'
 import {Container, Col, Row, Form, Button, Card, FormControl} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
-import {ChannelNoticeTable} from '../../component/channelNotice/ChannelNoticeTable'
 import {TOKEN} from "../../api/token";
-import Board from '../../component/Board'
 import Pager from "../../component/pager/Pager";
 import ChannelNotice from '../../component/channelNotice/ChannelNotice'
 

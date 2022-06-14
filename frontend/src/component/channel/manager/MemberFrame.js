@@ -1,14 +1,6 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-
-import ChannelService from "../../../api/ChannelService";
-import {MemberService} from "../../../api/MemberService";
-
+import React, {useState, useEffect} from 'react';
 import MemberRow from "../../../component/channel/manager/MemberRow"
 import Pager from "../../pager/Pager";
-
-import { BACKEND_URL } from "../../../api/backEndHost.js"
-import $ from 'jquery'
 import {send} from "../../../api/request";
 
 const PAGER_LENGTH = 5

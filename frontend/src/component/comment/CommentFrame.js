@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import PostService from "../../api/PostService";
+import React, {useState, useEffect} from 'react';
+import {Container} from 'react-bootstrap'
 import CommentService from "../../api/CommentService";
 import Comment from './Comment'
 import {TOKEN} from "../../api/token";

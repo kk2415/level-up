@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Form, Container, Row} from 'react-bootstrap';
 
-import $ from 'jquery'
-
 import {BiUserCircle} from "react-icons/bi";
 import {MemberService} from "../../api/MemberService";
 import '../../css/login.css'

@@ -1,12 +1,8 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Container, Col, Row, Form, Button, Card, FormControl} from 'react-bootstrap'
-import {Link, useNavigate} from 'react-router-dom'
 
 import ChannelService from '../../api/ChannelService'
 import {ChannelNoticeTable} from "./ChannelNoticeTable";
-
-import $ from 'jquery'
-import {TOKEN} from "../../api/token";
 
 const ChannelNotice = ({channelId}) => {
 

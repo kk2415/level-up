@@ -1,14 +1,9 @@
-import React, {Component, useState, useEffect, useContext, useLayoutEffect} from 'react';
+import React, {Component} from 'react';
 import ReactSummernote from 'react-summernote';
-import { sendMultiPart, send } from "../api/request"
-import { BACKEND_URL } from "../api/backEndHost.js"
-import $ from 'jquery' // summernote needs it
 import {} from 'react-bootstrap'
 import 'bootstrap' // ibid.
 import 'react-summernote/dist/react-summernote.css'; // import styles
 import 'react-summernote/lang/summernote-ru-RU'; // you can import any other locale
-import {uploadFile} from '../api/FileService'
-// Import bootstrap(v3 or v4) dependencies
 import 'bootstrap/dist/css/bootstrap.css';
 
 class RichTextEditor extends Component {
@@ -20,12 +15,15 @@ class RichTextEditor extends Component {
     }
 
     onChange(content, $editable) {
+        // props.setContents(content)
+        // this.setContents(content)
     }
 
     onInit = (note) => {
         note.reset()
-        note.summernote('pasteHTML', this.contents);
+        note.replace(this.props.contents)
         this.setContents(note.summernote('code'))
+        // note.summernote('pasteHTML', this.contents);
     }
 
     onFocus = () => {
@@ -36,8 +34,12 @@ class RichTextEditor extends Component {
         this.setContents(this.wysiwygEditorRef.editor.summernote('code'))
     }
 
-    onChangeCodeview = (content) => {
-        console.log(1)
+    onChangeCodeView = (content) => {
+        document.addEventListener("keydown", function(event)
+        {
+            alert('hello')
+            event.currentTarget.innerHTML = content
+        });
     }
 
     onImageUpload = (images, insertImage) => {
@@ -75,7 +77,7 @@ class RichTextEditor extends Component {
                 onFocus={this.onFocus}
                 onEnter={this.onEnter}
                 onImageUpload={this.onImageUpload}
-                onChangeCodeview={this.onChangeCodeview}
+                onChangeCodeview={this.onChangeCodeView}
                 ref={el => this.wysiwygEditorRef = el}
             />
         );

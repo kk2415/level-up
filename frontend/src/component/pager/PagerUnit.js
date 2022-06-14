@@ -1,9 +1,4 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import $ from 'jquery'
-import ChannelService from '../../api/ChannelService'
-import PostService from '../../api/PostService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import ArticleTableRow from "../ArticleTableRow";
+import React from 'react';
 
 const PagerUnit = ({num, setCurPage}) => {
 

@@ -1,9 +1,5 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import $ from 'jquery'
-import ChannelService from '../../api/ChannelService'
-import PostService from '../../api/PostService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import ArticleTableRow from "../ArticleTableRow";
+import React from 'react';
+import {Container} from 'react-bootstrap'
 import PagerUnit from "./PagerUnit";
 
 const Pager = ({currentPage, postsCount, pagerLength, searchCondition, setCurPage, onNext, onPrev}) => {

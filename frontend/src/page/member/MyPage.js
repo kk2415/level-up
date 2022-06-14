@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import {Button, Form, Container, Row, Col, Image} from 'react-bootstrap';
