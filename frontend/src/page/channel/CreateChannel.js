@@ -11,7 +11,6 @@ const CreateChannel = () => {
     const context = useContext(AuthContext);
     const [thumbnail, setThumbnail] = useState(null)
     const [contents, setContents] = useState('채널 설명')
-    const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
 
     const handleChangeThumbnail = (event) => {
         setThumbnail(event.target.files[0])
@@ -30,8 +29,6 @@ const CreateChannel = () => {
             thumbnailDescription : formData.get('thumbnailDescription'),
             thumbnailImage : thumbnailImageDir,
         }
-        console.log(channel)
-        console.log(contents)
 
         if (validate(channel)) {
             await ChannelService.create(channel);
@@ -81,7 +78,7 @@ const CreateChannel = () => {
         }
 
         if (!valid) {
-            setOnShowAlertMsg(true)
+            showAlertMassageBox()
         }
         return valid
     }
@@ -89,6 +86,18 @@ const CreateChannel = () => {
     const removeAlertMassageBox = () => {
         $('#alert').children('h5').remove();
     }
+
+    const showAlertMassageBox = () => {
+        $('#alert').css('display', 'block')
+    }
+
+    const hideAlertMassageBox = () => {
+        $('#alert').css('display', 'none')
+    }
+
+    useEffect(() => {
+        hideAlertMassageBox()
+    }, [])
 
     return (
         <>
@@ -128,13 +137,10 @@ const CreateChannel = () => {
                         <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
                     </Form.Group>
 
-                    {
-                        onShowAlertMsg &&
-                        <div className="alert alert-danger mt-5" id="alert" role="alert">
-                            <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
-                            <hr/>
-                        </div>
-                    }
+                    <div className="alert alert-danger mt-5" id="alert" role="alert">
+                        <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                        <hr/>
+                    </div>
 
                     <div className="row mt-5">
                         <div className="col">

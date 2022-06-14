@@ -1,14 +1,9 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/ChannelService'
 import PostService from '../../api/PostService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import { ChannelTable } from '../../component/channel/ChannelTable'
-import {TOKEN} from "../../api/token";
-import Board from '../../component/Board'
-import Pager from "../../component/pager/Pager";
+import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 
 const CreatePost = () => {
@@ -26,6 +21,10 @@ const CreatePost = () => {
     const handleCreatePost = async () => {
         let formData = new FormData(document.getElementById('form'));
 
+        if (!validate(formData)) {
+            return
+        }
+
         let post = {
             channelId : channelId,
             title : formData.get('title'),
@@ -37,9 +36,48 @@ const CreatePost = () => {
         await PostService.create(post)
     }
 
+    const validate = (formData) => {
+        let valid = true;
+
+        removeAlertMassageBox()
+        if (formData.get('title') === null || formData.get('title') === "") {
+            $('#alert').append('<h5>[제목] : 제목을 입력해주세요.</h5>')
+            valid = false;
+        }
+        if (formData.get('category') === 'NONE') {
+            $('#alert').append('<h5>[카테고리] : 카테고리를 선택해주세요.</h5>')
+            valid = false;
+        }
+        if (contents === null || contents === "") {
+            $('#alert').append('<h5>[내용] : 내용을 입력해주세요</h5>')
+            valid = false;
+        }
+
+        if (!valid) {
+            showAlertMassageBox()
+        }
+        return valid
+    }
+
     const handleCancel = () => {
         navigate('/channel/' + channelId + '?page=1')
     }
+
+    const removeAlertMassageBox = () => {
+        $('#alert').children('h5').remove();
+    }
+
+    const showAlertMassageBox = () => {
+        $('#alert').css('display', 'block')
+    }
+
+    const hideAlertMassageBox = () => {
+        $('#alert').css('display', 'none')
+    }
+
+    useEffect(() => {
+        hideAlertMassageBox()
+    }, [])
 
     return (
         <>
@@ -69,6 +107,11 @@ const CreatePost = () => {
                         <Form.Label>내용</Form.Label>
                         <RichTextEditor setContents={setContents} contents={contents} />
                     </Form.Group>
+
+                    <div className="alert alert-danger mt-5" id="alert" role="alert">
+                        <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                        <hr/>
+                    </div>
 
                     <div className="row">
                         <div className="col">

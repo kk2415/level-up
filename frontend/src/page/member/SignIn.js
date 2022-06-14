@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Modal, Button, Form, Container, Row, Col} from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import {Button, Form, Container, Row} from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login'
 
 import $ from 'jquery'
@@ -12,8 +12,6 @@ import '../../css/login.css'
 import {loginMemberValidation as validation} from '../../api/validation'
 
 const SignIn = ({} ) => {
-    const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
-
     async function HandleSignInButton() {
         let formData = new FormData(document.getElementById('signInForm'));
         let member = {
@@ -45,7 +43,7 @@ const SignIn = ({} ) => {
         }
 
         if (!valid) {
-            setOnShowAlertMsg(true)
+            showAlertMassageBox()
         }
         return valid
     }
@@ -53,6 +51,18 @@ const SignIn = ({} ) => {
     const removeAlertMassageBox = () => {
         $('#alert').children('h5').remove();
     }
+
+    const showAlertMassageBox = () => {
+        $('#alert').css('display', 'block')
+    }
+
+    const hideAlertMassageBox = () => {
+        $('#alert').css('display', 'none')
+    }
+
+    useEffect(() => {
+        hideAlertMassageBox()
+    }, [])
 
     return (
         <Container className='mt-5'>
@@ -67,13 +77,10 @@ const SignIn = ({} ) => {
                         <Form.Control name="password" type="password" placeholder="비밀번호를 입력해주세요" />
                     </Form.Group>
 
-                    {
-                        onShowAlertMsg &&
-                        <div className="alert alert-danger mt-5" id="alert" role="alert">
-                            <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
-                            <hr/>
-                        </div>
-                    }
+                    <div className="alert alert-danger mt-5" id="alert" role="alert">
+                        <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                        <hr/>
+                    </div>
 
                     <Container className="d-grid gap-2">
                         <Button onClick={HandleSignInButton} className='my-3' variant='info' type='button' >

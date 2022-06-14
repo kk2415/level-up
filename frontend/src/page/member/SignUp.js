@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form, Container } from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import { Button, Form, Container } from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login'
 
 import $ from 'jquery'
@@ -78,6 +78,7 @@ const SignUp = () => {
         }
 
         if (!valid) {
+            showAlertMassageBox()
             setOnShowAlertMsg(true)
         }
         return valid
@@ -86,6 +87,18 @@ const SignUp = () => {
     const removeAlertMassageBox = () => {
         $('#alert').children('h5').remove();
     }
+
+    const showAlertMassageBox = () => {
+        $('#alert').css('display', 'block')
+    }
+
+    const hideAlertMassageBox = () => {
+        $('#alert').css('display', 'none')
+    }
+
+    useEffect(() => {
+        hideAlertMassageBox()
+    }, [])
 
     return (
         <Form id='signUpForm'>
@@ -132,13 +145,10 @@ const SignUp = () => {
                 <Form.Control onChange={handleChangeFile} id='file' type='file' />
             </Form.Group>
 
-            {
-                onShowAlertMsg &&
-                <div className="alert alert-danger mt-5" id="alert" role="alert">
-                    <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
-                    <hr/>
-                </div>
-            }
+            <div className="alert alert-danger mt-5" id="alert" role="alert">
+                <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                <hr/>
+            </div>
 
             <Container className="d-grid gap-2">
                 <Button className='my-3' variant='info' type='button' onClick={() => {HandleSignUpButton()}} >
