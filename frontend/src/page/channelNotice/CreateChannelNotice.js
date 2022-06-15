@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
@@ -16,24 +16,60 @@ const CreateChannelNotice = () => {
     }
 
     const [channelId, setChannelId] = useState(getChannelId())
-    const [contents, setContents] = useState('내용')
+    // const [contents, setContents] = useState('내용')
 
     const handleCreateNotice = async () => {
         let formData = new FormData(document.getElementById('form'));
 
         let notice = {
             title : formData.get('title'),
-            content  : contents,
+            content  : $('#summernote').val(),
+            // content  : contents,
         }
-        console.log(notice)
-        console.log(channelId)
 
+        console.log(notice)
         await ChannelService.createNotice(notice, channelId)
     }
 
     const handleCancel = () => {
         navigate('/channel/' + channelId + '?page=1')
     }
+
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(images) {
+                        for (let i = 0; i < images.length; i++) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(images[i])
+
+                            reader.onloadend = () => {
+                                const base64 = reader.result
+                                $('#summernote').summernote('insertImage', base64)
+                            }
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
+    useLayoutEffect(() => {
+        configSummernote()
+    }, [])
 
     return (
         <>
@@ -48,7 +84,8 @@ const CreateChannelNotice = () => {
 
                     <Form.Group className="mb-3">
                         <Form.Label>내용</Form.Label>
-                        <RichTextEditor setContents={setContents} contents={contents} />
+                        <textarea id='summernote' />
+                        {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
                     </Form.Group>
 
                     <div className="row">
