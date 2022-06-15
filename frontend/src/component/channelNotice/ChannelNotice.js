@@ -34,6 +34,10 @@ const ChannelNotice = ({channelId}) => {
         }
     }
 
+    const handleManageChannel = () => {
+        window.location.href = '/channel/' + channelId + '/manager'
+    }
+
     const loadNotice = async (channelId) => {
         let result = await ChannelService.getAllNotice(channelId, curNoticePage)
 
@@ -60,12 +64,16 @@ const ChannelNotice = ({channelId}) => {
                     <ChannelNoticeTable notices={notice} channelId={channelId} page={curNoticePage} />
                 </div>
                 <div className="col">
-                    <button className="btn btn-primary btn-sm float-start" type="button" id="manager">채널 관리
+                    <button onClick={handleManageChannel} className="btn btn-primary btn-sm float-start" type="button" id="manager">
+                        채널 관리
                     </button>
                     <div className="d-grid gap-2 d-md-block float-end">
-                        <button className="btn btn-primary btn-sm" type="button" id="deleteNoticeAll">일괄삭제
+                        <button className="btn btn-primary btn-sm" type="button" id="deleteNoticeAll">
+                            일괄삭제
                         </button>
-                        <button onClick={handleCreateNotice} className="btn btn-primary btn-sm" type="button" id="createNotice">글쓰기</button>
+                        <button onClick={handleCreateNotice} className="btn btn-primary btn-sm" type="button" id="createNotice">
+                            글쓰기
+                        </button>
                     </div>
                     <br/><br/><br/><br/>
                 </div>

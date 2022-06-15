@@ -25,7 +25,7 @@ const CreateChannel = () => {
     }
 
     const handleBackButton = () => {
-        window.location.href = '/channel/description/' + channelId
+        window.history.back();
     }
 
     const handleModifyButton = async () => {

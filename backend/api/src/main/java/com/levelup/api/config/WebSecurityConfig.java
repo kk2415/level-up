@@ -46,7 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**", "/channel/{\\d+}/waiting-member/**")
-                .access("hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .hasAnyRole("CHANNEL_MANAGER", "ADMIN")
+//                .access("hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
 
                 .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
                 .antMatchers("/api/channel/**")

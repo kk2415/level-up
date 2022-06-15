@@ -52,14 +52,12 @@ const WaitingMemberFrame = ({channelId, waitingMemberCount}) => {
                 <div className="col">
                     <div className="card">
                         <h5 className="card-header">신청 회원</h5>
-                        <div className="card-body">
-                            <ul id="waitingMemberList" className="list-group list-group-flush">
-                                {
-                                    waitingMembers.map((waitingMember) => (
-                                        <WaitingMemberRow info={waitingMember} channelId={channelId} />
-                                    ))
-                                }
-                            </ul>
+                        <div id="waitingMemberList" className="card-body list-group list-group-flush">
+                            {
+                                waitingMembers.map((waitingMember) => (
+                                    <WaitingMemberRow info={waitingMember} channelId={channelId} />
+                                ))
+                            }
                         </div>
                         <div className="card-footer">
                             <Pager setCurPage={setCurPage} currentPage={curPage}

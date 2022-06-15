@@ -51,10 +51,10 @@ const PostService = {
         return result;
     },
 
-    getNext: async (postId) => {
+    getNext: async (postId, channelId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '/nextPost')
+        await send('/api/post/' + postId + '/nextPost?channelId=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -66,10 +66,10 @@ const PostService = {
         return post
     },
 
-    getPrev: async (postId) => {
+    getPrev: async (postId, channelId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '/prevPost')
+        await send('/api/post/' + postId + '/prevPost?channelId=' + channelId)
             .then((data) => {
                 post = data
             })

@@ -56,15 +56,13 @@ const MemberFrame = ({channelId, memberCount}) => {
                 members &&
                 <div className="col">
                     <div className="card">
-                        <h5 className="card-header">신청 회원</h5>
-                        <div className="card-body">
-                            <ul id="waitingMemberList" className="list-group list-group-flush">
-                                {
-                                    members.map((member) => (
-                                        <MemberRow info={member} channelId={channelId} />
-                                    ))
-                                }
-                            </ul>
+                        <h5 className="card-header">가입 회원</h5>
+                        <div id="waitingMemberList" className=" card-body list-group list-group-flush">
+                            {
+                                members.map((member) => (
+                                    <MemberRow info={member} channelId={channelId} />
+                                ))
+                            }
                         </div>
                         <div className="card-footer">
                             <Pager setCurPage={setCurPage} currentPage={curPage}

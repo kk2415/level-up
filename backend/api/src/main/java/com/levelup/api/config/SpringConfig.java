@@ -5,8 +5,6 @@ import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.comment.JpaCommentRepository;
 import com.levelup.core.repository.member.JpaMemberRepository;
 import com.levelup.core.repository.member.MemberRepository;
-import com.levelup.core.repository.post.JpaPostRepository;
-import com.levelup.core.repository.post.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,10 +32,10 @@ public class SpringConfig implements WebMvcConfigurer {
         return new JpaMemberRepository(em);
     }
 
-    @Bean
-    public PostRepository postRepository() {
-        return new JpaPostRepository(em);
-    }
+//    @Bean
+//    public PostRepository postRepository() {
+//        return new JpaPostRepository(em);
+//    }
 
     @Bean
     public CommentRepository commentRepository() {

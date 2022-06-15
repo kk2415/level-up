@@ -1,7 +1,7 @@
 package com.levelup.api.service;
 
 
-import com.levelup.api.config.DateFormat;
+import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelInfo;

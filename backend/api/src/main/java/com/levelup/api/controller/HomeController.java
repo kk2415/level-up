@@ -1,6 +1,6 @@
 //package com.levelup.api.controller;
 //
-//import com.levelup.api.config.SessionName;
+//import com.levelup.core.SessionName;
 //import com.levelup.core.domain.member.Member;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Controller;
