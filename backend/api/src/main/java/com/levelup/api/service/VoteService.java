@@ -69,7 +69,7 @@ public class VoteService {
 
     private void addVoteCount (Object article, Long articleId) {
         if (article instanceof Post) {
-            postRepository.findById(articleId).addVoteCount();
+            postRepository.findById(articleId).get().addVoteCount();
         }
         else if (article instanceof Qna) {
             qnaRepository.findById(articleId).addVoteCount();

@@ -31,7 +31,7 @@ const Post = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await PostService.getPrev(postId)
+        let prev = await PostService.getPrev(postId, channelId)
 
         if (prev != null) {
             window.location.href = '/post/' + prev.id + '?channel=' + channelId
@@ -42,7 +42,7 @@ const Post = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await PostService.getNext(postId)
+        let next = await PostService.getNext(postId, channelId)
 
         if (next != null) {
             window.location.href = '/post/' + next.id + '?channel=' + channelId
@@ -178,9 +178,11 @@ const Post = () => {
                         <button onClick={handleGoChannelButton} className="btn btn-primary float-start" type="button" id="allPostButton">목록으로
                         </button>
                         <div className="d-grid gap-2 d-md-block float-end">
-                            <button onClick={handlePrevPostButton} className="btn btn-primary" type="button" id="prevPostButton">이전글
+                            <button onClick={handleNextPostButton} className="btn btn-primary" type="button" id="nextPostButton">
+                                다음글
                             </button>
-                            <button onClick={handleNextPostButton} className="btn btn-primary" type="button" id="nextPostButton">다음글
+                            <button onClick={handlePrevPostButton} className="btn btn-primary" type="button" id="prevPostButton">
+                                이전글
                             </button>
                         </div>
                     </div>

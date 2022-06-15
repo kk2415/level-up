@@ -1,6 +1,6 @@
 package com.levelup.api.intercepter;
 
-import com.levelup.api.config.SessionName;
+import com.levelup.core.SessionName;
 import com.levelup.core.exception.NotLoggedInException;
 import org.springframework.web.servlet.HandlerInterceptor;
 
