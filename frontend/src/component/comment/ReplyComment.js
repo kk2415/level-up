@@ -34,7 +34,7 @@ const ReplyComment = ({reply}) => {
                 </div>
 
                 <div className="col bg-secondary text-dark bg-opacity-10" id="replyVote">
-                    <span onClick={createVote} id="replyVoteButton" className="btn-sm btn btn-primary" type="button">{'추천 ' + voteCount}</span>
+                    <span onClick={createVote} id="replyVoteButton" className="btn-sm btn btn-info" type="button">{'추천 ' + voteCount}</span>
                     <br/><br/>
                 </div>
                 <hr/>

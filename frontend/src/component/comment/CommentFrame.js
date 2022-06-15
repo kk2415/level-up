@@ -53,7 +53,7 @@ const CommentFrame = ({articleId, identity}) => {
                 <Container className='mb-5 mt-5'>
                     <textarea id="contentOfWritingComment" className="form-control" rows="3" placeholder="댓글을 입력해주세요" />
                     <br/>
-                    <button onClick={createComment} className="btn btn-primary float-end" type="button">
+                    <button onClick={createComment} className="btn btn btn-success float-end" type="button">
                         등록
                     </button>
                 </Container>

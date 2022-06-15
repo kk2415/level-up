@@ -56,12 +56,13 @@ const Header = () => {
 	return (
 		<>
 			<header>
-				<Navbar bg="light" expand="lg">
-					<Container>
-						<Navbar.Brand href="/">Level Up</Navbar.Brand>
-						<Navbar.Toggle aria-controls="basic-navbar-nav" />
-						<Navbar.Collapse className="justify-content-end">
-							<Nav className="ml-auto">
+				<Container>
+					<Navbar expand="lg" className="ml-auto border-bottom">
+						<Navbar.Brand href="/" className=''>
+							Level Up
+						</Navbar.Brand>
+						<Navbar.Collapse className="ml-auto">
+							<Nav className="ml-auto float-end ">
 								{
 									signUpShow &&
 									<Nav.Link>
@@ -115,8 +116,8 @@ const Header = () => {
 								}
 							</Nav>
 						</Navbar.Collapse>
-					</Container>
-				</Navbar>
+					</Navbar>
+				</Container>
 			</header>
 		</>
 	)

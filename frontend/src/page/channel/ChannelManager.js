@@ -42,6 +42,10 @@ const ChannelManager = () => {
         window.location.href = '/channel/modify/' + channelId
     }
 
+    const handleBack = () => {
+        window.location.href = ('/channel/' + channelId + '?page=1')
+    }
+
     const [channelId, setChannelId] = useState(getChannelId())
     const [manager, setManager] = useState(null)
 
@@ -131,13 +135,14 @@ const ChannelManager = () => {
                 //     <MemberFrame channelId={channelId} memberCount={manager.channelInfo.memberCount} />
                 //     <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
                 // </div>
-                <Container className="row row-cols-1 row-cols-md-3 g-4">
+                <Container className="row row-cols-1 row-cols-md-3 g-4 mb-5">
                     <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.channelInfo.waitingMemberCount} />
                     <MemberFrame channelId={channelId} memberCount={manager.channelInfo.memberCount} />
                     <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
                 </Container>
             }
 
+            <button onClick={handleBack} type="button" className="btn btn-lg btn-secondary mt-5" id="backButton">뒤로가기</button>
         </>
     );
 };
