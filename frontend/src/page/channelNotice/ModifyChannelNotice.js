@@ -31,7 +31,8 @@ const ModifyChannel = () => {
 
         let channelNotice = {
             title : formData.get('title'),
-            content  : contents,
+            content  : $('#summernote').val(),
+            // content  : contents,
         }
 
         console.log(channelNotice)
@@ -55,14 +56,51 @@ const ModifyChannel = () => {
         }
     }
 
+    function configSummernote() {
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                height: 400,
+                minHeight: null,
+                maxHeight: null,
+                callbacks: {
+                    onImageUpload : function(images) {
+                        for (let i = 0; i < images.length; i++) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(images[i])
+
+                            reader.onloadend = () => {
+                                const base64 = reader.result
+                                $('#summernote').summernote('insertImage', base64)
+                            }
+                        }
+                    },
+                    onPaste: function (e) {
+                        let clipboardData = e.originalEvent.clipboardData;
+                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
+                            let item = clipboardData.items[0];
+                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                }
+            })
+        })
+    }
+
     useEffect(() => {
         showChannelNotice()
+
+        if (channelNotice) {
+            $('#summernote').val(channelNotice.content)
+        }
     }, [channelNotice])
 
     useLayoutEffect(() => {
         setChannelId(getChannelId())
         setChannelNoticeId(getChannelNoticeId())
         loadChannelNotice(channelNoticeId)
+        configSummernote()
     }, [])
 
     return (
@@ -80,7 +118,8 @@ const ModifyChannel = () => {
 
                         <Form.Group className="mb-3">
                             <Form.Label>내용</Form.Label>
-                            <RichTextEditor setContents={setContents} contents={channelNotice.content} />
+                            <textarea id='summernote' />
+                            {/*<RichTextEditor setContents={setContents} contents={channelNotice.content} />*/}
                         </Form.Group>
 
                         <div className="row">
