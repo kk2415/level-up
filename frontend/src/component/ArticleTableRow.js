@@ -9,7 +9,7 @@ const ArticleTableRow = ({info, url}) => {
                     <td>{info.id}</td>
                     <td>{info.writer}</td>
                     <td>
-                        <a href={url}>{info.title}</a>
+                        <a href={url}>{info.title + ' [' + info.commentCount + ']'}</a>
                     </td>
                     <td>{info.views}</td>
                     <td>{info.voteCount}</td>
