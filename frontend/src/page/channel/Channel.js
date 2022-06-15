@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import $ from 'jquery'
 import ChannelService from '../../api/ChannelService'
 import PostService from '../../api/PostService'
-import {Container, Form, Button, FormControl, Dropdown} from 'react-bootstrap'
+import {Container, Form, Button, FormControl, Dropdown, Row} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
 import {TOKEN} from "../../api/token";
 import Pager from "../../component/pager/Pager";
@@ -155,6 +155,10 @@ const Channel = () => {
         }
     }
 
+    const handleManageChannel = () => {
+        window.location.href = '/channel/' + channelId + '/manager'
+    }
+
     useEffect(() => {
         loadChannelName(channelId)
         loadPostCount(channelId, searchCondition)
@@ -166,12 +170,19 @@ const Channel = () => {
             {
                 channelName &&
                 <Container>
-                    <h2 className="page-section-heading text-center text-uppercase text-secondary mb-0" id="channelName">
-                        {channelName}
-                    </h2>
 
-                    <ChannelNotice channelId={channelId} />
-                    <hr />
+                    <Container>
+                        <Row className='d-flex justify-content-center align-items-center'>
+                            <h2 className="page-section-heading text-center text-uppercase text-secondary mb-3" id="channelName">
+                                {channelName}
+                            </h2>
+                            <button onClick={handleManageChannel} className="w-25 btn btn-info btn-md float-start" type="button" id="manager">
+                                채널 관리
+                            </button>
+                        </Row>
+                    </Container>
+
+                    <hr/>
 
                     <Container>
                         <div className="row">
@@ -211,14 +222,12 @@ const Channel = () => {
 
                         <div className="row">
                             <div className="col-lg-6 col-sm-12 text-lg-start text-center">
-                                <button onClick={handleGoHome} type="button" className="btn btn-primary btn-sm" id="backButton">홈으로</button>
+                                <button onClick={handleGoHome} type="button" className="btn btn-secondary btn-sm" id="backButton">홈으로</button>
                             </div>
                             <div className="col-lg-6 col-sm-12 text-lg-end text-center">
-                                <button onClick={handleWriting} type="button" className="btn btn-primary btn-sm" id="postingButton">글쓰기</button>
+                                <button onClick={handleWriting} type="button" className="btn btn-secondary btn-sm" id="postingButton">글쓰기</button>
                             </div>
                         </div>
-
-                        <br/><br/>
 
                         <Pager
                             currentPage={curPage}
@@ -230,13 +239,10 @@ const Channel = () => {
                             onPrev={onPagerPrevButton}
                         />
                     </Container>
+                    <br/><br/><br/><br/><br/>
 
-                    <div>
-                        <span className="text-orange text-strong" id="currentPage">1</span>
-                        /
-                        <span className="text-orange text-strong" id="lastPage">1</span>
-                        pages
-                    </div>
+                    <ChannelNotice channelId={channelId} />
+                    <hr />
                 </Container>
             }
         </>
