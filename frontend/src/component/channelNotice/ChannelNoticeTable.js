@@ -7,7 +7,7 @@ export const ChannelNoticeTable = ({notices, channelId, page}) => {
         <>
             {
                 <Table>
-                    <caption className="caption-top fs-3 fw-bold">게시글</caption>
+                    <caption className="caption-top fs-3 fw-bold">채널 공지</caption>
                     <thead>
                     <tr className="table-active">
                         <th scope="col">번호</th>

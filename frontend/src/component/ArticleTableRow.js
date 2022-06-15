@@ -1,6 +1,9 @@
 import React from 'react';
 
 const ArticleTableRow = ({info, url}) => {
+
+    console.log(info)
+
     return (
         <>
             {

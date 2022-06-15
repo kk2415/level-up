@@ -21,7 +21,7 @@ export const ChannelTable = ({channelId, currentPage, searchCondition} ) => {
             {
                 posts &&
                 <Table>
-                    <caption className="caption-top fs-3 fw-bold">게시글</caption>
+                    <caption className="caption-top fs-3 fw-bold">소통</caption>
                     <thead>
                     <tr className="table-active">
                         <th scope="col">번호</th>

@@ -5,6 +5,8 @@ import ChannelService from '../../api/ChannelService'
 import {Container} from 'react-bootstrap'
 import {TOKEN} from "../../api/token";
 import react from "react";
+import {AiOutlineImport} from "react-icons/ai";
+import '../../css/channel.css'
 
 const getChannelId = () => {
     let pathname = decodeURI($(window.location).attr('pathname'))
@@ -122,14 +124,14 @@ const ChannelDescription = () => {
                         <div className="float-end">
                             {
                                 showModify &&
-                                <button onClick={handleModifyChannel} className="btn btn-primary col-sm-1" type="button" id="modifyButton">
-                                    수정
+                                <button onClick={handleModifyChannel} className="btn btn-sm btn-secondary" type="button" id="modifyButton">
+                                    채널 수정
                                 </button>
                             }
                             {
                                 showDelete &&
-                                <button onClick={handleDeleteChannel} className="btn btn-primary col-sm-1" type="button" id="deleteButton">
-                                    삭제
+                                <button onClick={handleDeleteChannel} className="btn btn-sm btn-danger" type="button" id="deleteButton">
+                                    채널 삭제
                                 </button>
                             }
                         </div>
@@ -138,8 +140,8 @@ const ChannelDescription = () => {
 
                     {
                         !isManager &&
-                        <button onClick={handleRegisterChannel} className="btn btn-primary btn-lg form-control" type="button" id="registerStudyButton">
-                            신청하기
+                        <button onClick={handleRegisterChannel} className="btn btn-lg btn-success" type="button" id="registerStudyButton">
+                            가입 신청
                         </button>
                     }
 
@@ -148,9 +150,12 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     <div>
-                        <button onClick={handleBack} className="btn btn-primary float-start" type="button" id="toAllStudyChannelButton">목록으로
+                        <button onClick={handleBack} className="btn btn-secondary float-start" type="button" id="toAllStudyChannelButton">목록으로
                         </button>
-                        <button onClick={handleEnterChannel} className="btn btn-primary float-end" type="button" id="enterStudyButton">채널 접속</button>
+                        <button onClick={handleEnterChannel} className="btn btn-info float-end" type="button" id="enterStudyButton">
+                            <AiOutlineImport className='enterChannel' />
+                            <span className='fs-3 fw-bold mx-2 '>접속</span>
+                        </button>
                     </div>
                 </Container>
             }

@@ -1,11 +1,12 @@
 import React, {useEffect, useLayoutEffect} from 'react';
 import {Button, Form, Container, Row} from 'react-bootstrap';
-import { GoogleLogin } from 'react-google-login'
 
 import $ from 'jquery'
 
 import HorizonLine from "../../component/HorizonLine";
+import { GoogleLogin } from 'react-google-login'
 import {BiUserCircle} from "react-icons/bi";
+
 import {Link} from "react-router-dom";
 import {MemberService} from "../../api/MemberService";
 import '../../css/login.css'
@@ -60,45 +61,9 @@ const SignIn = ({} ) => {
         $('#alert').css('display', 'none')
     }
 
-    function configSummernote() {
-        $(document).ready(function() {
-            $('#summernote').summernote({
-                height: 400,
-                minHeight: null,
-                maxHeight: null,
-                callbacks: {
-                    onImageUpload : function(images) {
-                        for (let i = 0; i < images.length; i++) {
-                            let reader = new FileReader();
-                            reader.readAsDataURL(images[i])
-
-                            reader.onloadend = () => {
-                                const base64 = reader.result
-                                $('#summernote').summernote('insertImage', base64)
-                            }
-                        }
-                    },
-                    onPaste: function (e) {
-                        let clipboardData = e.originalEvent.clipboardData;
-                        if (clipboardData && clipboardData.items && clipboardData.items.length) {
-                            let item = clipboardData.items[0];
-                            if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
-                                e.preventDefault();
-                            }
-                        }
-                    }
-                }
-            })
-        })
-    }
-
     useEffect(() => {
         hideAlertMassageBox()
         // useScript('')
-    }, [])
-
-    useLayoutEffect(() => {
-        configSummernote()
     }, [])
 
     return (
@@ -106,8 +71,6 @@ const SignIn = ({} ) => {
             <Row className='d-flex justify-content-center align-items-center'>
                 <BiUserCircle className='loginIcon' />
                 <Form id='signInForm'>
-                    {/*<textarea id='summernote' />*/}
-
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Control name="email" type="email" placeholder="이메일을 입력해주세요" />
                     </Form.Group>

@@ -50,15 +50,15 @@ const Comment = ({comment, articleId, identity}) => {
                         <span id="commentDate">{comment.dateCreated}</span>
                         <p id="commentContent">{comment.content}</p>
                         <span id="commentVote" className="float-end">
-                            <button onClick={createVote} className="btn-sm btn-primary" type="button">{'추천 ' + voteCount}</button>
+                            <button onClick={createVote} className="btn-sm btn-info" type="button">{'추천 ' + voteCount}</button>
                         </span>
                         {
                             comment.replyCount > 0 &&
-                            <button onClick={showReplyCommentList} className="btn-sm btn-primary" id="replyButton">답글 {replyCount}</button>
+                            <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글 {replyCount}</button>
                         }
                         {
                             comment.replyCount <= 0 &&
-                            <button onClick={showReplyCommentList} className="btn-sm btn-primary" id="replyButton">답글쓰기</button>
+                            <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글쓰기</button>
                         }
                     </Container>
                     {
