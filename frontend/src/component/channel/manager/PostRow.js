@@ -1,5 +1,7 @@
 import React from 'react';
 import {send} from "../../../api/request";
+import {Button} from "@mui/material";
+import {Container} from "react-bootstrap";
 
 const PostRow = ({info, channelId}) => {
 
@@ -15,11 +17,11 @@ const PostRow = ({info, channelId}) => {
     }
 
     return (
-        <li id="post" className="list-group-item">
-            <span className="float-start">{info.writer}</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            <span><a href="">{info.title}</a></span>
-            <span onClick={deletePost} className="btn-sm btn-primary btn float-end">삭제 버튼</span>
-        </li>
+            <li className="list-group-item">
+                <span className="float-start">{info.writer}</span>
+                <span className='mx-5'><a href="">{info.title}</a></span>
+                <button onClick={deletePost} className="btn-sm btn-primary btn float-end">삭제</button>
+            </li>
     );
 };
 

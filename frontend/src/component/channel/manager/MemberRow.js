@@ -1,5 +1,6 @@
 import React from 'react';
 import {send} from "../../../api/request";
+import {Container} from "react-bootstrap";
 
 const MemberRow = ({info, channelId}) => {
     console.log(info)
