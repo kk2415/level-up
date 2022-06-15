@@ -63,7 +63,6 @@ const Post = () => {
     const loadPost = async (postId) => {
         let post = await PostService.get(postId)
 
-        console.log(post)
         setPost(post)
         setVoteCount(post.voteCount)
     }

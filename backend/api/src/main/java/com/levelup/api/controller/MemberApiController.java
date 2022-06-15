@@ -1,6 +1,5 @@
-package com.levelup.api.api;
+package com.levelup.api.controller;
 
-import com.levelup.api.service.EmailService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -11,7 +10,6 @@ import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.exception.MemberNotFoundException;
-import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Map;
 
 @Tag(name = "회원 API")
 @Slf4j

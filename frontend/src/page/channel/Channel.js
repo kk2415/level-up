@@ -62,14 +62,20 @@ const Channel = () => {
     const PAGER_LENGTH = 5
 
     const [channelId, setChannelId] = useState(getChannelId())
+    const [isManager, setIsManager] = useState(false)
     const [searchCondition, setSearchCondition] = useState(getSearchCondition())
-    const [curPage, setCurPage] = useState(getCurrentPage())
 
+    const [curPage, setCurPage] = useState(getCurrentPage())
     const [channelName, setChannelName] = useState(null)
     const [postsCount, setPostsCount] = useState(0)
 
-    const loadChannelName = async (channelId) => {
+    const loadChannelInfo = async (channelId) => {
         let result = await ChannelService.get(channelId)
+
+        if (result.managerId === Number(sessionStorage.getItem('id'))) {
+            setIsManager(true)
+        }
+
         setChannelName(result.name)
     }
 
@@ -160,7 +166,7 @@ const Channel = () => {
     }
 
     useEffect(() => {
-        loadChannelName(channelId)
+        loadChannelInfo(channelId)
         loadPostCount(channelId, searchCondition)
 
     }, [channelName, curPage])
@@ -176,9 +182,12 @@ const Channel = () => {
                             <h2 className="page-section-heading text-center text-uppercase text-secondary mb-3" id="channelName">
                                 {channelName}
                             </h2>
-                            <button onClick={handleManageChannel} className="w-25 btn btn-info btn-md float-start" type="button" id="manager">
-                                채널 관리
-                            </button>
+                            {
+                                isManager &&
+                                <button onClick={handleManageChannel} className="w-25 btn btn-info btn-md float-start" type="button" id="manager">
+                                    채널 관리
+                                </button>
+                            }
                         </Row>
                     </Container>
 

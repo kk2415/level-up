@@ -67,7 +67,7 @@ public class CommentService {
 
     private Object identifyArticle(ArticleCategory identity, Long articleId) {
         switch (identity) {
-            case POST: return postRepository.findById(articleId);
+            case POST: return postRepository.findById(articleId).get();
             case CHANNEL_NOTICE: return channelNoticeRepository.findById(articleId);
             case NOTICE: return noticeRepository.findById(articleId);
             case QNA: return qnaRepository.findById(articleId);

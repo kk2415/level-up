@@ -62,36 +62,6 @@ public class PostService {
 
 
     /**
-     * 게시글 수정
-     * */
-    public UpdatePostResponse updatePost(Long postId, Long memberId, String title, String content, PostCategory category) {
-        /**
-         * @Transactional에 의해서 commit이 진행됨
-         * 커밋이 되면 jpa가 플러쉬를 날린다.
-         * 그러면 엔티티 중에서 변경감지가 일어난 애를 다 찾는다.
-         * 그러면 UPDATE 쿼리를 바뀐 엔티티에 맞게 DB에 알아서 날려준다
-         * */
-
-        List<Post> findPosts = postRepository.findByMemberId(memberId).orElseThrow(() -> {
-            throw new PostNotFoundException("작성한 게시글이 없습니다");
-        });
-
-        Post findPost = Optional.ofNullable(findPosts.stream()
-                        .filter(p -> p.getId().equals(postId))
-                        .findAny()
-                        .orElse(null))
-                .orElseThrow(() -> {
-                    throw new PostNotFoundException("작성한 게시글이 없습니다");
-                });
-
-        findPost.changePost(title, content, category);
-
-        return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(),
-                findPost.getPostCategory());
-    }
-
-
-    /**
      * 게시글 조회
      * */
     public PostResponse getPost(Long postId, String view) {
@@ -152,6 +122,36 @@ public class PostService {
         return posts.stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
+    }
+
+
+    /**
+     * 게시글 수정
+     * */
+    public UpdatePostResponse updatePost(Long postId, Long memberId, String title, String content, PostCategory category) {
+        /**
+         * @Transactional에 의해서 commit이 진행됨
+         * 커밋이 되면 jpa가 플러쉬를 날린다.
+         * 그러면 엔티티 중에서 변경감지가 일어난 애를 다 찾는다.
+         * 그러면 UPDATE 쿼리를 바뀐 엔티티에 맞게 DB에 알아서 날려준다
+         * */
+
+        List<Post> findPosts = postRepository.findByMemberId(memberId).orElseThrow(() -> {
+            throw new PostNotFoundException("작성한 게시글이 없습니다");
+        });
+
+        Post findPost = Optional.ofNullable(findPosts.stream()
+                        .filter(p -> p.getId().equals(postId))
+                        .findAny()
+                        .orElse(null))
+                .orElseThrow(() -> {
+                    throw new PostNotFoundException("작성한 게시글이 없습니다");
+                });
+
+        findPost.changePost(title, content, category);
+
+        return new UpdatePostResponse(findPost.getTitle(), findPost.getWriter(), findPost.getContent(),
+                findPost.getPostCategory());
     }
 
 
