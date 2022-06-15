@@ -11,8 +11,6 @@ import com.levelup.core.domain.vote.Vote;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -57,14 +55,14 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "qna_id")
     private Qna qna;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<Vote> votes;
 
     @ManyToOne
     @JoinColumn(name = "parent")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     private List<Comment> child;
 
 
