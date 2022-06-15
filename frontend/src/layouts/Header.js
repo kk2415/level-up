@@ -53,6 +53,14 @@ const Header = () => {
 		}
 	}
 
+	const qnaHandler = () => {
+		alert('서비스 준비중입니다.')
+	}
+
+	const noticeHandler = () => {
+		alert('서비스 준비중입니다.')
+	}
+
 	return (
 		<>
 			<header>
@@ -97,12 +105,12 @@ const Header = () => {
 									</Button>
 								</Nav.Link>
 								<Nav.Link>
-									<Button size="md">
+									<Button onClick={qnaHandler} size="md">
 										QNA
 									</Button>
 								</Nav.Link>
 								<Nav.Link>
-									<Button size="md">
+									<Button onClick={noticeHandler} size="md">
 										공지사항
 									</Button>
 								</Nav.Link>

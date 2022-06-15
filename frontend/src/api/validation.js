@@ -15,5 +15,5 @@ export let loginMemberValidation =  {
 export let createChannelValidation =  {
     name : /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]{1,20}$/,
     limitedMemberNumber : /^[0-9]{1,3}$/,
-    thumbnailDescription : /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]{1,30}$/,
+    thumbnailDescription : /^[ㄱ-ㅎ가-힣a-zA-Z0-9\s!?@#$%^&*():;+-=~{}<>\_\[\]\|\\\"\'\,\.\/\`\₩]{1,40}$/,
 }
