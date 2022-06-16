@@ -41,6 +41,10 @@ public class EmailAuth extends BaseTimeEntity {
         isConfirmed = confirmed;
     }
 
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
+
     public static EmailAuth createAuthEmail(String email) {
         EmailAuth emailAuth = EmailAuth.builder()
                 .email(email)

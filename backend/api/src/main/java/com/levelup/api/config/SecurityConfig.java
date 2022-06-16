@@ -62,10 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
                         "/api/{\\d+}/posts/{\\d+}").permitAll()
                 .antMatchers("/api/post/**")
-                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .antMatchers("/api/notice/**").hasRole("ADMIN")
+
                 .anyRequest().permitAll();
 
 
