@@ -13,5 +13,6 @@ public class ExceptionResponse {
     private String message;
     private String exception;
     private String path;
+    private String category;
 
 }

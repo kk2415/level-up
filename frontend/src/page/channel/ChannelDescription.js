@@ -60,8 +60,7 @@ const ChannelDescription = () => {
 
     const handleRegisterChannel = async () => {
         if (sessionStorage.getItem(TOKEN)) {
-            await ChannelService.addWaitingMember(channelId)
-            alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
+            await ChannelService.addWaitingMember(channelId);
         }
         else {
             alert('로그인해야합니다.')

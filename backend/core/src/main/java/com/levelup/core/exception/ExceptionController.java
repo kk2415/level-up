@@ -133,4 +133,19 @@ public class ExceptionController {
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(NoPlaceChnnelException.class)
+    public ResponseEntity<ExceptionResponse> notLoggedInException(NoPlaceChnnelException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
+        exceptionResponse.setPath(request.getRequestURI());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
 }
