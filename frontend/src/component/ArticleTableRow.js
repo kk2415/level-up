@@ -2,7 +2,9 @@ import React from 'react';
 
 const ArticleTableRow = ({info, url}) => {
 
-    console.log(info)
+    const titleHandler = () => {
+        window.location.href = url
+    }
 
     return (
         <>
@@ -10,10 +12,11 @@ const ArticleTableRow = ({info, url}) => {
                 info &&
                 <tr id="articleRow">
                     <td>{info.id}</td>
+                    <td className='text-decoration-underline' onClick={titleHandler}>{info.title + ' [' + info.commentCount + ']'}</td>
+                    {/*<td>*/}
+                    {/*    <a href={url}>{info.title + ' [' + info.commentCount + ']'}</a>*/}
+                    {/*</td>*/}
                     <td>{info.writer}</td>
-                    <td>
-                        <a href={url}>{info.title + ' [' + info.commentCount + ']'}</a>
-                    </td>
                     <td>{info.views}</td>
                     <td>{info.voteCount}</td>
                     <td>{info.dateCreated}</td>
