@@ -17,6 +17,8 @@ import com.levelup.core.domain.post.Post;
 import com.levelup.core.dto.channel.*;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.post.SearchCondition;
+import com.levelup.core.exception.DuplicateChannelMemberException;
+import com.levelup.core.exception.DuplicateVoteException;
 import com.levelup.core.exception.ImageNotFoundException;
 import com.levelup.core.repository.channel.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
@@ -84,19 +86,6 @@ public class ChannelService {
         }
     }
 
-    public void addMember(Long channelId, List<Long> memberIds) {
-        Channel channel = channelRepository.findById(channelId);
-        List<ChannelMember> channelMembers = new ArrayList<>();
-
-        for (Long id : memberIds) {
-            Member findMember = memberRepository.findById(id);
-            ChannelMember channelMember = ChannelMember.createChannelMember(findMember);
-            channelMembers.add(channelMember);
-        }
-
-        channel.addMember(channelMembers);
-    }
-
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void addMember(Long channelId, Long... memberIds) {
         Channel channel = channelRepository.findById(channelId);
@@ -122,6 +111,9 @@ public class ChannelService {
             if (waitingMembers.isEmpty()) {
                 ChannelMember channelMember = ChannelMember.createChannelWaitingMember(findMember);
                 channelMembers.add(channelMember);
+            }
+            else {
+                throw new DuplicateChannelMemberException("이미 신청하셨습니다.");
             }
         }
         channel.addWaitingMember(channelMembers);

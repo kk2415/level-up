@@ -189,10 +189,12 @@ const ChannelService = {
 
     addWaitingMember: async (channelId) => {
         await send('/api/channel/' + channelId + '/waiting-member', 'POST')
-            .then((data) => {
+            .then(() => {
+                alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
             })
             .catch((error) => {
                 console.log(error)
+                alert(error.responseJSON.message)
             })
     },
 

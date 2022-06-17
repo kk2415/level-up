@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import $ from 'jquery'
 import ChannelService from '../../api/ChannelService'
 import PostService from '../../api/PostService'
-import {Container, Form, Button, FormControl, Dropdown, Row} from 'react-bootstrap'
+import {Container, Form, Tabs, Tab, Row} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
 import {TOKEN} from "../../api/token";
 import Pager from "../../component/pager/Pager";
@@ -176,7 +176,6 @@ const Channel = () => {
             {
                 channelName &&
                 <Container>
-
                     <Container>
                         <Row className='d-flex justify-content-center align-items-center'>
                             <h2 className="page-section-heading text-center text-uppercase text-secondary mb-3" id="channelName">
@@ -191,67 +190,73 @@ const Channel = () => {
                         </Row>
                     </Container>
 
-                    <hr/>
-
-                    <Container>
-                        <div className="row">
-                            <div className="col-lg-6 col-sm-12 text-lg-start text-center">
-                            </div>
-                            <div className="col-lg-6 col-sm-12 text-lg-end text-center">
-                                <nav className="navbar navbar-expand-lg navbar-light float-end">
-                                    <div className="container-fluid">
-                                        <div>
-                                            <select className="form-control form-control-sm" id="field" name="field">
-                                                <option value="title">제목</option>
-                                                <option value="writer">작성자</option>
-                                            </select>
-                                        </div>
-                                        <Form className="navbar-form navbar-right">
-                                            <div className="input-group">
-                                                <input type="Search"
-                                                       onKeyDown={searchKeyDown}
-                                                       onKeyPress={searchKeyDown}
-                                                       id="search"
-                                                       name="search"
-                                                       placeholder="Search..."
-                                                       className="form-control"/>
-                                                <div className="input-group-btn">
-                                                    <button onClick={handleSearch} id="searchButton" className="btn btn-info">
-                                                        <span className="glyphicon glyphicon-search" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </Form>
+                    <Tabs
+                        defaultActiveKey="home"
+                        transition={false}
+                        id="noanim-tab-example"
+                        className="mb-3"
+                    >
+                        <Tab eventKey="home" title="전체글">
+                            <Container>
+                                <div className="row">
+                                    <div className="col-lg-6 col-sm-12 text-lg-start text-center">
                                     </div>
-                                </nav>
-                            </div>
-                        </div>
+                                    <div className="col-lg-6 col-sm-12 text-lg-end text-center">
+                                        <nav className="navbar navbar-expand-lg navbar-light float-end">
+                                            <div className="container-fluid">
+                                                <div>
+                                                    <select className="form-control form-control-sm" id="field" name="field">
+                                                        <option value="title">제목</option>
+                                                        <option value="writer">작성자</option>
+                                                    </select>
+                                                </div>
+                                                <Form className="navbar-form navbar-right">
+                                                    <div className="input-group">
+                                                        <input type="Search"
+                                                               onKeyDown={searchKeyDown}
+                                                               onKeyPress={searchKeyDown}
+                                                               id="search"
+                                                               name="search"
+                                                               placeholder="Search..."
+                                                               className="form-control"/>
+                                                        <div className="input-group-btn">
+                                                            <button onClick={handleSearch} id="searchButton" className="btn btn-info">
+                                                                <span className="glyphicon glyphicon-search" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </Form>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                </div>
 
-                        <ChannelTable channelId={channelId} currentPage={curPage} searchCondition={searchCondition} />
+                                <ChannelTable channelId={channelId} currentPage={curPage} searchCondition={searchCondition} />
 
-                        <div className="row">
-                            <div className="col-lg-6 col-sm-12 text-lg-start text-center">
-                                <button onClick={handleGoHome} type="button" className="btn btn-secondary btn-sm" id="backButton">홈으로</button>
-                            </div>
-                            <div className="col-lg-6 col-sm-12 text-lg-end text-center">
-                                <button onClick={handleWriting} type="button" className="btn btn-secondary btn-sm" id="postingButton">글쓰기</button>
-                            </div>
-                        </div>
+                                <div className="row">
+                                    <div className="col-lg-6 col-sm-12 text-lg-start text-center">
+                                        <button onClick={handleGoHome} type="button" className="btn btn-secondary btn-sm" id="backButton">홈으로</button>
+                                    </div>
+                                    <div className="col-lg-6 col-sm-12 text-lg-end text-center">
+                                        <button onClick={handleWriting} type="button" className="btn btn-secondary btn-sm" id="postingButton">글쓰기</button>
+                                    </div>
+                                </div>
 
-                        <Pager
-                            currentPage={curPage}
-                            postsCount={postsCount}
-                            pagerLength={PAGER_LENGTH}
-                            searchCondition={searchCondition}
-                            setCurPage={setCurPage}
-                            onNext={onPagerNextButton}
-                            onPrev={onPagerPrevButton}
-                        />
-                    </Container>
-                    <br/><br/><br/><br/><br/>
-
-                    <ChannelNotice channelId={channelId} />
-                    <hr />
+                                <Pager
+                                    currentPage={curPage}
+                                    postsCount={postsCount}
+                                    pagerLength={PAGER_LENGTH}
+                                    searchCondition={searchCondition}
+                                    setCurPage={setCurPage}
+                                    onNext={onPagerNextButton}
+                                    onPrev={onPagerPrevButton}
+                                />
+                            </Container>
+                        </Tab>
+                        <Tab eventKey="profile" title="공지사항">
+                            <ChannelNotice channelId={channelId} />
+                        </Tab>
+                    </Tabs>
                 </Container>
             }
         </>

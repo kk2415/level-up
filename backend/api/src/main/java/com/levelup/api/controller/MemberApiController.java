@@ -100,12 +100,19 @@ public class MemberApiController {
      * 이메일 인증
      * */
     @PostMapping("/confirm-email")
-    public ResponseEntity emailTest(@RequestBody EmailAuthRequest request,
+    public ResponseEntity confirmEmail(@RequestBody EmailAuthRequest request,
                           @AuthenticationPrincipal Long memberId) {
-        System.out.println(request.getSecurityCode());
         EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), memberId);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    /**
+     * 인증번호 전송
+     * */
+    @GetMapping("/send/auth-email")
+    public void sendSecurityCode(@AuthenticationPrincipal Long memberId) {
+        memberService.sendSecurityCode(memberId);
     }
 
 }
