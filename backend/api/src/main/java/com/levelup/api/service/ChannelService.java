@@ -242,7 +242,7 @@ public class ChannelService {
 
         deleteS3ThumbNail(channel.getThumbnailImage().getStoreFileName());
 
-        UploadFile thumbNail = fileStore.storeFile(ImageType.MEMBER, file);
+        UploadFile thumbNail = fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
         channel.modifyThumbNail(thumbNail);
         return thumbNail;
     }

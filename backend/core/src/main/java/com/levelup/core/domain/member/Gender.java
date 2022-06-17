@@ -14,5 +14,4 @@ public enum Gender {
         }
         return Gender.MALE;
     }
-
 }

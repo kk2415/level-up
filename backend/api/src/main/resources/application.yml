@@ -8,10 +8,10 @@ server:
 cloud:
   aws:
     credentials:
-      access-key: AKIA5VCSTWTNH5VSDBMM
-      secret-key: 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
+      access-key: AKIA4OX6D56HNMPGBUZP
+      secret-key: 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
     s3:
-      bucket: levelupbackends3
+      bucket: levelupbuckets3
     region:
       static: ap-northeast-2
     stack:
@@ -22,14 +22,11 @@ spring:
     name: levelup
 
   datasource:
-    #    driver-class-name: org.h2.Driver
-    #    url: jdbc:h2:tcp://localhost/~/h2/test-level-up
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/level_up?serverTimezone=Asia/Seoul
     username: root
     password: Dudrhkd10ck!
     schema: classpath:schema.sql
-#    initialization-mode: always
 
   jpa:
     hibernate:
@@ -76,7 +73,7 @@ spring:
 file:
   window_local_dir: C:/Task/study/levelup
   linux_local_dir: /tmp
-  s3_dir: https://levelupbackends3.s3.ap-northeast-2.amazonaws.com
+  s3_dir: https://levelupbuckets3.s3.ap-northeast-2.amazonaws.com
 
 
 logging.level:
