@@ -75,7 +75,7 @@ const Header = () => {
 									signUpShow &&
 									<Nav.Link>
 										<Link to='/signup'>
-											<Button size="md">
+											<Button size="md" className='btn-info'>
 												회원가입
 											</Button>
 										</Link>
@@ -85,7 +85,7 @@ const Header = () => {
 									signInShow &&
 									<Nav.Link>
 										<Link to='/signin'>
-											<Button size="md">
+											<Button size="md" className='btn-info'>
 												로그인
 											</Button>
 										</Link>
@@ -94,30 +94,30 @@ const Header = () => {
 								{
 									signOutShow &&
 									<Nav.Link>
-										<Button onClick={signOutButtonHandler} size="md">
+										<Button onClick={signOutButtonHandler} size="md" className='btn-info'>
 											로그아웃
 										</Button>
 									</Nav.Link>
 								}
 								<Nav.Link>
-									<Button onClick={myPageHanlder} size="md">
+									<Button onClick={myPageHanlder} size="md" className='btn-info'>
 										마이페이지
 									</Button>
 								</Nav.Link>
 								<Nav.Link>
-									<Button onClick={qnaHandler} size="md">
+									<Button onClick={qnaHandler} size="md" className='btn-info'>
 										QNA
 									</Button>
 								</Nav.Link>
 								<Nav.Link>
-									<Button onClick={noticeHandler} size="md">
+									<Button onClick={noticeHandler} size="md" className='btn-info'>
 										공지사항
 									</Button>
 								</Nav.Link>
 								{
 									onShowAdmin &&
 									<Nav.Link>
-										<Button size="md">
+										<Button size="md" className='btn-info'>
 											관리자홈
 										</Button>
 									</Nav.Link>

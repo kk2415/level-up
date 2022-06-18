@@ -116,21 +116,21 @@ const DetailChannelNotice = () => {
                                     <span id="views">{channelNotice.views}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;
-                                <span>추천
-                                    &nbsp;
-                                    <span id="voteCount">0</span>
-                                </span>
+                                {/*<span>추천*/}
+                                {/*    &nbsp;*/}
+                                {/*    <span id="voteCount">0</span>*/}
+                                {/*</span>*/}
                                 &nbsp;&nbsp;&nbsp;
                                 <span>
                                     댓글&nbsp;
                                     <span id="commentCount">{channelNotice.commentCount}</span>
                                 </span>
 
-                                <span className="d-grid gap-2 d-md-block float-end">
-                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">
-                                        {'추천 ' + voteCount}
-                                    </button>
-                                </span>
+                                {/*<span className="d-grid gap-2 d-md-block float-end">*/}
+                                {/*    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">*/}
+                                {/*        {'추천 ' + voteCount}*/}
+                                {/*    </button>*/}
+                                {/*</span>*/}
                             </p>
                         </div>
 
