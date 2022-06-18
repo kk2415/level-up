@@ -23,7 +23,9 @@ const Home = () => {
         <Container>
           <h2 class="page-section-heading text-center text-uppercase text-secondary my-4">등록된 스터디</h2>
           <div className='w-100' style={{ textAlign: "center" }}>
-            <button onClick={handleCreateChannel} className="btn btn-primary btn-lg" type="button" id="createProjectButton">스터디 모집하기</button>
+            <button onClick={handleCreateChannel} className="btn btn-info" type="button" id="createProjectButton">
+              스터디 모집하기
+            </button>
           </div>
           <StudySwiper />
 
@@ -33,7 +35,7 @@ const Home = () => {
 
           <h2 class="page-section-heading text-center text-uppercase text-secondary my-4">등록된 프로젝트</h2>
           <div className='w-100' style={{ textAlign: "center" }}>
-            <button onClick={handleCreateChannel} className="btn btn-primary btn-lg" type="button" id="createProjectButton">프로젝트 모집하기</button>
+            <button onClick={handleCreateChannel} className="btn btn-info" type="button" id="createProjectButton">프로젝트 모집하기</button>
           </div>
           <ProjectSwiper />
         </Container>
