@@ -1,4 +1,4 @@
-package com.levelup.api.api;
+package com.levelup.api.controller;
 
 import com.levelup.api.service.*;
 import com.levelup.core.domain.Article.ArticleCategory;

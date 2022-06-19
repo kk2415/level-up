@@ -6,7 +6,7 @@ import {uploadFile} from "../../api/FileService";
 import $ from "jquery";
 
 const CreateChannel = () => {
-    const getChannelId = () => {s
+    const getChannelId = () => {
         let pathname = decodeURI($(window.location).attr('pathname'))
 
         return Number(pathname.substr(pathname.lastIndexOf('/') + 1))
@@ -25,7 +25,7 @@ const CreateChannel = () => {
     }
 
     const handleBackButton = () => {
-        window.location.href = '/channel/description/' + channelId
+        window.history.back();
     }
 
     const handleModifyButton = async () => {

@@ -19,7 +19,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -46,26 +46,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**", "/channel/{\\d+}/waiting-member/**")
-                .access("hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .hasAnyRole("CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
                 .antMatchers("/api/channel/**")
-                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers( HttpMethod.POST,"/api/member").permitAll()
                 .antMatchers("/api/member").authenticated()
 
                 .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
                 .antMatchers("/api/comment/**")
-                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
                         "/api/{\\d+}/posts/{\\d+}").permitAll()
                 .antMatchers("/api/post/**")
-                .access("hasRole('MEMBER') or hasRole('CHANNEL_MANAGER') or hasRole('ADMIN')")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
                 .antMatchers("/api/notice/**").hasRole("ADMIN")
+
                 .anyRequest().permitAll();
 
 

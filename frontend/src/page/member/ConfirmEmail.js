@@ -3,13 +3,18 @@ import {Button, Form, Container, Row} from 'react-bootstrap';
 
 import {BiUserCircle} from "react-icons/bi";
 import {MemberService} from "../../api/MemberService";
+import {AuthEmailService} from "../../api/AuthEmailService";
 import '../../css/login.css'
 
 const SignIn = ({} ) => {
     const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
     const [memberId, setMemberId] = useState(null)
 
-    async function HandleConfirmButton() {
+    const HandleReConfirmButton = async () => {
+        await AuthEmailService.sendSecurityCode()
+    }
+
+    const HandleConfirmButton = async () => {
         let formData = new FormData(document.getElementById('form'));
 
         let auth = {
@@ -49,6 +54,11 @@ const SignIn = ({} ) => {
                             <Button onClick={HandleConfirmButton} className='my-3' variant='info' type='button'
                                     style={{width: "100%"}}>
                                 인증
+                            </Button>
+
+                            <Button onClick={HandleReConfirmButton} className='my-3' variant='info' type='button'
+                                    style={{width: "100%"}}>
+                                인증번호 다시받기
                             </Button>
                         </Form>
                     </Row>

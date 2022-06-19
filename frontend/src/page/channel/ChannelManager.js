@@ -1,16 +1,14 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 
 import ChannelService from "../../api/ChannelService";
 
-import WaitingMemberRow from "../../component/channel/manager/WaitingMemberRow";
-import MemberRow from "../../component/channel/manager/MemberRow";
-import PostRow from "../../component/channel/manager/PostRow";
 import WaitingMemberFrame from "../../component/channel/manager/WaitingMemberFrame";
 import PostFrame from "../../component/channel/manager/PostFrame";
 import MemberFrame from "../../component/channel/manager/MemberFrame";
 
-import { BACKEND_URL } from "../../api/backEndHost.js"
+import {Container} from 'react-bootstrap'
+
+import { S3_URL } from "../../api/backEndHost.js"
 import $ from 'jquery'
 
 const NUM_ON_SCREEN = 5
@@ -42,6 +40,10 @@ const ChannelManager = () => {
 
     const handleChannelModify = () => {
         window.location.href = '/channel/modify/' + channelId
+    }
+
+    const handleBack = () => {
+        window.location.href = ('/channel/' + channelId + '?page=1')
     }
 
     const [channelId, setChannelId] = useState(getChannelId())
@@ -76,7 +78,7 @@ const ChannelManager = () => {
                             <h5 className="card-header">채널정보</h5>
                             <div className="card-body">
                                 <div className="justify-content-center">
-                                    <img src={BACKEND_URL + manager.channelInfo.thumbnail} id="thumbnail" className="img-thumbnail img-fluid rounded-circle"
+                                    <img src={S3_URL + manager.channelInfo.thumbnail} id="thumbnail" className="img-thumbnail img-fluid rounded-circle"
                                          width="200px" height="200px"/>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="inputGroup-sizing-default1">채널명</span>
@@ -128,12 +130,19 @@ const ChannelManager = () => {
 
             {
                 manager &&
-                <div className="row row-cols-1 row-cols-md-3 g-4">
+                // <div className="row row-cols-1 row-cols-md-3 g-4">
+                //     <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.channelInfo.waitingMemberCount} />
+                //     <MemberFrame channelId={channelId} memberCount={manager.channelInfo.memberCount} />
+                //     <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
+                // </div>
+                <Container className="row row-cols-1 row-cols-md-3 g-4 mb-5">
                     <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.channelInfo.waitingMemberCount} />
                     <MemberFrame channelId={channelId} memberCount={manager.channelInfo.memberCount} />
                     <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
-                </div>
+                </Container>
             }
+
+            <button onClick={handleBack} type="button" className="btn btn-lg btn-secondary mt-5" id="backButton">뒤로가기</button>
         </>
     );
 };

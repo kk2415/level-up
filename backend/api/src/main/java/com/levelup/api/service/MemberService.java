@@ -7,6 +7,7 @@ import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.dto.auth.EmailAuthRequest;
 import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
@@ -17,7 +18,9 @@ import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -228,6 +232,21 @@ public class MemberService implements UserDetailsService {
         return new EmailAuthResponse(securityCode, true);
     }
 
+    public void sendSecurityCode(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+
+        emailAuthRepository.findByMemberId(memberId).ifPresentOrElse((authEmail) -> {
+            String securityCode = EmailAuth.createSecurityCode();
+            authEmail.setSecurityCode(securityCode);
+
+            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
+        }, () -> {
+            EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
+            member.setEmailAuth(authEmail);
+
+            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
+        });
+    }
 
 
     /**

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+    import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
@@ -116,28 +116,27 @@ const DetailChannelNotice = () => {
                                     <span id="views">{channelNotice.views}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;
-                                <span>추천
-                                    &nbsp;
-                                    <span id="voteCount">0</span>
-                                </span>
+                                {/*<span>추천*/}
+                                {/*    &nbsp;*/}
+                                {/*    <span id="voteCount">0</span>*/}
+                                {/*</span>*/}
                                 &nbsp;&nbsp;&nbsp;
                                 <span>
                                     댓글&nbsp;
                                     <span id="commentCount">{channelNotice.commentCount}</span>
                                 </span>
 
-                                <span className="d-grid gap-2 d-md-block float-end">
-                                    <span className="fs-3" id="voteCount2">0</span>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">추천</button>
-                                </span>
+                                {/*<span className="d-grid gap-2 d-md-block float-end">*/}
+                                {/*    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">*/}
+                                {/*        {'추천 ' + voteCount}*/}
+                                {/*    </button>*/}
+                                {/*</span>*/}
                             </p>
                         </div>
 
                         <div className="w-100"/>
 
                         <div className="col-lg-11">
-                            <br/><br/>
                             <h1 className="display-6">
                                 <p dangerouslySetInnerHTML={{ __html: channelNotice.content }}/>
                             </h1>
@@ -149,13 +148,13 @@ const DetailChannelNotice = () => {
                         <div className="d-grid gap-2 d-md-block float-end">
                             {
                                 authentication &&
-                                <button onClick={handleModifyButton} className="btn btn-primary btn-sm" type="button" id="modifyButton">
+                                <button onClick={handleModifyButton} className="btn btn-secondary btn-sm" type="button" id="modifyButton">
                                     수정
                                 </button>
                             }
                             {
                                 authentication &&
-                                <button onClick={handleDeleteButton} className="btn btn-primary btn-sm" type="button" id="deleteButton">
+                                <button onClick={handleDeleteButton} className="btn btn-danger btn-sm" type="button" id="deleteButton">
                                     삭제
                                 </button>
                             }
@@ -175,12 +174,13 @@ const DetailChannelNotice = () => {
                     <CommentFrame articleId={channelNoticeId} identity={'CHANNEL_NOTICE'} />
 
                     <div>
-                        <button onClick={handleGoChannelButton} className="btn btn-primary btn-lg float-start" type="button" id="allPostButton">목록으로
+                        <button onClick={handleGoChannelButton} className="btn btn-dark float-start" type="button" id="allPostButton">
+                            목록으로
                         </button>
                         <div className="d-grid gap-2 d-md-block float-end">
-                            <button onClick={handlePrevPostButton} className="btn btn-primary btn-lg" type="button" id="prevPostButton">이전글
+                            <button onClick={handlePrevPostButton} className="btn btn-dark" type="button" id="prevPostButton">이전글
                             </button>
-                            <button onClick={handleNextPostButton} className="btn btn-primary btn-lg" type="button" id="nextPostButton">다음글
+                            <button onClick={handleNextPostButton} className="btn btn-dark" type="button" id="nextPostButton">다음글
                             </button>
                         </div>
                     </div>

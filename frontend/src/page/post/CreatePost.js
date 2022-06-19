@@ -77,10 +77,19 @@ const CreatePost = () => {
 
     function configSummernote() {
         $(document).ready(function() {
+            let fontList = ['맑은 고딕','굴림','돋움','바탕','궁서','NotoSansKR','Arial','Courier New','Verdana','Tahoma','Times New Roamn'];
+
             $('#summernote').summernote({
+                lang: 'ko-KR',
                 height: 400,
                 minHeight: null,
                 maxHeight: null,
+                toolbar: [
+                    ['fontstyle', ['bold','italic','underline','strikethrough','forecolor','backcolor','superscript','subscript','clear']],
+                    ['paragraph', ['ul','ol']],
+                    ['insert', ['hr','link','picture']],
+                    ['codeview'],
+                ],
                 callbacks: {
                     onImageUpload : function(images) {
                         for (let i = 0; i < images.length; i++) {

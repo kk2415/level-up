@@ -53,20 +53,29 @@ const Header = () => {
 		}
 	}
 
+	const qnaHandler = () => {
+		alert('서비스 준비중입니다.')
+	}
+
+	const noticeHandler = () => {
+		alert('서비스 준비중입니다.')
+	}
+
 	return (
 		<>
 			<header>
-				<Navbar bg="light" expand="lg">
-					<Container>
-						<Navbar.Brand href="/">Level Up</Navbar.Brand>
-						<Navbar.Toggle aria-controls="basic-navbar-nav" />
-						<Navbar.Collapse className="justify-content-end">
-							<Nav className="ml-auto">
+				<Container>
+					<Navbar expand="lg" className="ml-auto border-bottom">
+						<Navbar.Brand href="/" className=''>
+							Level Up
+						</Navbar.Brand>
+						<Navbar.Collapse className="ml-auto">
+							<Nav className="ml-auto float-end ">
 								{
 									signUpShow &&
 									<Nav.Link>
 										<Link to='/signup'>
-											<Button size="md">
+											<Button size="md" className='btn-info'>
 												회원가입
 											</Button>
 										</Link>
@@ -76,7 +85,7 @@ const Header = () => {
 									signInShow &&
 									<Nav.Link>
 										<Link to='/signin'>
-											<Button size="md">
+											<Button size="md" className='btn-info'>
 												로그인
 											</Button>
 										</Link>
@@ -85,38 +94,38 @@ const Header = () => {
 								{
 									signOutShow &&
 									<Nav.Link>
-										<Button onClick={signOutButtonHandler} size="md">
+										<Button onClick={signOutButtonHandler} size="md" className='btn-info'>
 											로그아웃
 										</Button>
 									</Nav.Link>
 								}
 								<Nav.Link>
-									<Button onClick={myPageHanlder} size="md">
+									<Button onClick={myPageHanlder} size="md" className='btn-info'>
 										마이페이지
 									</Button>
 								</Nav.Link>
 								<Nav.Link>
-									<Button size="md">
+									<Button onClick={qnaHandler} size="md" className='btn-info'>
 										QNA
 									</Button>
 								</Nav.Link>
 								<Nav.Link>
-									<Button size="md">
+									<Button onClick={noticeHandler} size="md" className='btn-info'>
 										공지사항
 									</Button>
 								</Nav.Link>
 								{
 									onShowAdmin &&
 									<Nav.Link>
-										<Button size="md">
+										<Button size="md" className='btn-info'>
 											관리자홈
 										</Button>
 									</Nav.Link>
 								}
 							</Nav>
 						</Navbar.Collapse>
-					</Container>
-				</Navbar>
+					</Navbar>
+				</Container>
 			</header>
 		</>
 	)

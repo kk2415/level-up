@@ -1,8 +1,9 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Container, Col, Row, Form, Button, Card, FormControl} from 'react-bootstrap'
+import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {Container} from 'react-bootstrap'
 
 import ChannelService from '../../api/ChannelService'
 import {ChannelNoticeTable} from "./ChannelNoticeTable";
+import {AiFillCaretRight, AiFillCaretLeft} from "react-icons/ai";
 
 const ChannelNotice = ({channelId}) => {
 
@@ -34,6 +35,10 @@ const ChannelNotice = ({channelId}) => {
         }
     }
 
+    const handleManageChannel = () => {
+        window.location.href = '/channel/' + channelId + '/manager'
+    }
+
     const loadNotice = async (channelId) => {
         let result = await ChannelService.getAllNotice(channelId, curNoticePage)
 
@@ -54,31 +59,35 @@ const ChannelNotice = ({channelId}) => {
 
     return (
         <Container>
-            <div className="row row-cols-1">
-                <div className="col">
-                    <h3>공지사항</h3>
-                </div>
+            <Container className="row row-cols-1">
                 <div className="col">
                     <ChannelNoticeTable notices={notice} channelId={channelId} page={curNoticePage} />
                 </div>
                 <div className="col">
-                    <button className="btn btn-primary btn-sm float-start" type="button" id="manager">채널 관리
-                    </button>
+                    {/*<button onClick={handleManageChannel} className="btn btn-primary btn-sm float-start" type="button" id="manager">*/}
+                    {/*    채널 관리*/}
+                    {/*</button>*/}
                     <div className="d-grid gap-2 d-md-block float-end">
-                        <button className="btn btn-primary btn-sm" type="button" id="deleteNoticeAll">일괄삭제
+                        {/*<button className="btn btn-secondary btn-sm" type="button" id="deleteNoticeAll">*/}
+                        {/*    일괄삭제*/}
+                        {/*</button>*/}
+                        <button onClick={handleCreateNotice} className="btn btn-secondary btn-sm" type="button" id="createNotice">
+                            글쓰기
                         </button>
-                        <button onClick={handleCreateNotice} className="btn btn-primary btn-sm" type="button" id="createNotice">글쓰기</button>
                     </div>
                     <br/><br/><br/><br/>
                 </div>
-
                 <div className="col">
                     <div className="d-grid gap-2 d-md-block float-end">
-                        <button onClick={handlePrevNoticeList} className="btn btn-primary btn-sm" type="button" id="prevNoticeList">왼쪽</button>
-                        <button onClick={handleNextNoticeList} className="btn btn-primary btn-sm" type="button" id="nextNoticeList">오른쪽</button>
+                        <button onClick={handlePrevNoticeList} className="btn btn-secondary btn-sm" type="button" id="prevNoticeList">
+                            <AiFillCaretLeft/>
+                        </button>
+                        <button onClick={handleNextNoticeList} className="btn btn-secondary btn-sm" type="button" id="nextNoticeList">
+                            <AiFillCaretRight/>
+                        </button>
                     </div>
                 </div>
-            </div>
+            </Container>
         </Container>
     );
 };

@@ -31,7 +31,7 @@ const Post = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await PostService.getPrev(postId)
+        let prev = await PostService.getPrev(postId, channelId)
 
         if (prev != null) {
             window.location.href = '/post/' + prev.id + '?channel=' + channelId
@@ -42,7 +42,7 @@ const Post = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await PostService.getNext(postId)
+        let next = await PostService.getNext(postId, channelId)
 
         if (next != null) {
             window.location.href = '/post/' + next.id + '?channel=' + channelId
@@ -63,7 +63,6 @@ const Post = () => {
     const loadPost = async (postId) => {
         let post = await PostService.get(postId)
 
-        console.log(post)
         setPost(post)
         setVoteCount(post.voteCount)
     }
@@ -128,9 +127,9 @@ const Post = () => {
                                 </span>
 
                                 <span className="d-grid gap-2 d-md-block float-end">
-                                    <span className="fs-3" id="voteCount2">{voteCount}</span>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">추천</button>
+                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-info">
+                                        {'추천 ' + voteCount}
+                                    </button>
                                 </span>
                             </p>
                         </div>
@@ -138,7 +137,6 @@ const Post = () => {
                         <div className="w-100"></div>
 
                         <div className="col-lg-11">
-                            <br/><br/>
                             <h1 className="display-6">
                                 <p dangerouslySetInnerHTML={{ __html: post.content }}></p>
                             </h1>
@@ -150,13 +148,13 @@ const Post = () => {
                         <div className="d-grid gap-2 d-md-block float-end">
                             {
                                 authentication &&
-                                <button onClick={handleModifyButton} className="btn btn-primary btn-sm" type="button" id="modifyButton">
+                                <button onClick={handleModifyButton} className="btn btn-secondary btn-sm" type="button" id="modifyButton">
                                     수정
                                 </button>
                             }
                             {
                                 authentication &&
-                                <button onClick={handleDeleteButton} className="btn btn-primary btn-sm" type="button" id="deleteButton">
+                                <button onClick={handleDeleteButton} className="btn btn-danger btn-sm" type="button" id="deleteButton">
                                     삭제
                                 </button>
                             }
@@ -176,12 +174,14 @@ const Post = () => {
                     <CommentFrame articleId={postId} identity={'POST'} />
 
                     <div>
-                        <button onClick={handleGoChannelButton} className="btn btn-primary btn-lg float-start" type="button" id="allPostButton">목록으로
+                        <button onClick={handleGoChannelButton} className="btn btn-dark float-start" type="button" id="allPostButton">목록으로
                         </button>
                         <div className="d-grid gap-2 d-md-block float-end">
-                            <button onClick={handlePrevPostButton} className="btn btn-primary btn-lg" type="button" id="prevPostButton">이전글
+                            <button onClick={handleNextPostButton} className="btn btn-dark" type="button" id="nextPostButton">
+                                다음글
                             </button>
-                            <button onClick={handleNextPostButton} className="btn btn-primary btn-lg" type="button" id="nextPostButton">다음글
+                            <button onClick={handlePrevPostButton} className="btn btn-dark" type="button" id="prevPostButton">
+                                이전글
                             </button>
                         </div>
                     </div>

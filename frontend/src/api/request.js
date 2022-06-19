@@ -24,6 +24,8 @@ export async function send(url, method, requestBody) {
 		// options.data = requestBody
 	}
 
+	console.log(url)
+
 	return await new Promise((resolve, reject) => {
 		$.ajax(options)
 		.done(function (response, textStatus, request) {

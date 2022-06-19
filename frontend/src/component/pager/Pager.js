@@ -6,7 +6,11 @@ const Pager = ({currentPage, postsCount, pagerLength, searchCondition, setCurPag
     let numArr = []
     let startNum = currentPage - (currentPage - 1) % pagerLength
     let loopCount = pagerLength
-    let lastPagerNum = Math.floor(postsCount / pagerLength) + 1;
+    let lastPagerNum = Math.floor(postsCount / 10) + 1;
+
+    if ((postsCount % 10) === 0 && (postsCount / 10) > 0) {
+        lastPagerNum--
+    }
 
     if (lastPagerNum - startNum < pagerLength) {
         loopCount = lastPagerNum - startNum + 1

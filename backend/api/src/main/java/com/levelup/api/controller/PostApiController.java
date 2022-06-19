@@ -1,4 +1,4 @@
-package com.levelup.api.api;
+package com.levelup.api.controller;
 
 import com.levelup.api.service.PostService;
 import com.levelup.core.domain.file.UploadFile;
@@ -77,15 +77,17 @@ public class PostApiController {
     }
 
     @GetMapping("/post/{postId}/nextPost")
-    public ResponseEntity findNextPost(@PathVariable Long postId) {
-        PostResponse post = postService.findNextPage(postId);
+    public ResponseEntity findNextPost(@PathVariable Long postId,
+                                       @RequestParam Long channelId) {
+        PostResponse post = postService.findNextPage(postId, channelId);
 
         return ResponseEntity.ok().body(post);
     }
 
     @GetMapping("/post/{postId}/prevPost")
-    public ResponseEntity findPrevPost(@PathVariable Long postId) {
-        PostResponse post = postService.findPrevPage(postId);
+    public ResponseEntity findPrevPost(@PathVariable Long postId,
+                                       @RequestParam Long channelId) {
+        PostResponse post = postService.findPrevPage(postId, channelId);
 
         return ResponseEntity.ok().body(post);
     }

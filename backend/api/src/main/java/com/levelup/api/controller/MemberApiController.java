@@ -1,6 +1,5 @@
-package com.levelup.api.api;
+package com.levelup.api.controller;
 
-import com.levelup.api.service.EmailService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -11,7 +10,6 @@ import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.exception.MemberNotFoundException;
-import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Map;
 
 @Tag(name = "회원 API")
 @Slf4j
@@ -103,12 +100,19 @@ public class MemberApiController {
      * 이메일 인증
      * */
     @PostMapping("/confirm-email")
-    public ResponseEntity emailTest(@RequestBody EmailAuthRequest request,
+    public ResponseEntity confirmEmail(@RequestBody EmailAuthRequest request,
                           @AuthenticationPrincipal Long memberId) {
-        System.out.println(request.getSecurityCode());
         EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), memberId);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    /**
+     * 인증번호 전송
+     * */
+    @GetMapping("/send/auth-email")
+    public void sendSecurityCode(@AuthenticationPrincipal Long memberId) {
+        memberService.sendSecurityCode(memberId);
     }
 
 }

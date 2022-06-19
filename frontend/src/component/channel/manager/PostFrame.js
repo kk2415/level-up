@@ -3,6 +3,7 @@ import PostRow from "../../../component/channel/manager/PostRow";
 import Pager from "../../pager/Pager";
 
 import {send} from "../../../api/request";
+import {Container} from 'react-bootstrap'
 
 const PAGER_LENGTH = 5
 
@@ -58,20 +59,18 @@ const PostFrame = ({channelId, postCount}) => {
                 <div className="col">
                     <div className="card">
                         <h5 className="card-header">등록된 게시물</h5>
-                        <div className="card-body">
-                            <ul id="waitingMemberList" className="list-group list-group-flush">
-                                {
-                                    posts.map((post) => (
-                                        <PostRow info={post} channelId={channelId} />
-                                    ))
-                                }
-                            </ul>
+                        <div id="waitingMemberList" className="card-body list-group list-group-flush">
+                            {
+                                posts.map((post) => (
+                                    <PostRow info={post} channelId={channelId} />
+                                ))
+                            }
                         </div>
                         <div className="card-footer">
                             <Pager setCurPage={setCurPage} currentPage={curPage}
                                    pagerLength={PAGER_LENGTH} postsCount={postCount}
                                    searchCondition={{}} onNext={onNext} onPrev={onPrev}
-                             />
+                            />
                         </div>
                     </div>
                 </div>

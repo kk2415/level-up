@@ -96,22 +96,6 @@ public class Channel extends BaseTimeEntity {
 
 
     //==비즈니스 로직==//
-    public void addMember(ChannelMember... channelMembers) {
-        if (memberCount >= limitedMemberNumber ) {
-            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
-        }
-
-        for (ChannelMember channelMember : channelMembers) {
-            if (memberCount >= limitedMemberNumber ) {
-                break;
-            }
-
-            this.getChannelMembers().add(channelMember);
-            channelMember.setChannel(this);
-            memberCount++;
-        }
-    }
-
     public void addMember(List<ChannelMember> channelMembers) {
         if (memberCount >= limitedMemberNumber ) {
             throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
@@ -128,20 +112,8 @@ public class Channel extends BaseTimeEntity {
         }
     }
 
-    public void addWaitingMember(ChannelMember... channelMembers) {
-        if (memberCount >= limitedMemberNumber ) {
-            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
-        }
-
-        for (ChannelMember channelMember : channelMembers) {
-            this.getChannelMembers().add(channelMember);
-            channelMember.setChannel(this);
-            waitingMemberCount++;
-        }
-    }
-
     public void addWaitingMember(List<ChannelMember> channelMembers) {
-        if (memberCount >= limitedMemberNumber ) {
+        if (waitingMemberCount >= limitedMemberNumber ) {
             throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
         }
 
@@ -149,21 +121,6 @@ public class Channel extends BaseTimeEntity {
             this.getChannelMembers().add(channelMember);
             channelMember.setChannel(this);
             waitingMemberCount++;
-        }
-    }
-
-    public void removeMember(ChannelMember... channelMembers) {
-        if (memberCount <= 0 ) {
-            throw new IllegalStateException("더이상 제거할 수 없습니다.");
-        }
-
-        for (ChannelMember channelMember : channelMembers) {
-            this.getChannelMembers().remove(channelMember);
-            channelMember.setChannel(null);
-
-            channelMember.getMember().getChannelMembers().remove(channelMember);
-            channelMember.setMember(null);
-            memberCount--;
         }
     }
 
@@ -176,18 +133,6 @@ public class Channel extends BaseTimeEntity {
             this.getChannelMembers().remove(channelMember);
             channelMember.getMember().getChannelMembers().remove(channelMember);
             memberCount--;
-        }
-    }
-
-    public void removeWaitingMember(ChannelMember... channelMembers) {
-        if (waitingMemberCount <= 0 ) {
-            throw new IllegalStateException("더이상 제거할 수 없습니다.");
-        }
-
-        for (ChannelMember channelMember : channelMembers) {
-            this.getChannelMembers().remove(channelMember);
-            channelMember.getWaitingMember().getChannelMembers().remove(channelMember);
-            waitingMemberCount--;
         }
     }
 

@@ -24,16 +24,14 @@ const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, p
 
     return (
         <>
-            <Container id="createReplyForm" className="createReplyForm mt-5">
-                <Container>
-                    <span id="createReplyWriter">댓글작성자</span>
-                </Container>
-                <Container>
-                    <textarea id="createReplyContent" minLength="1" maxLength="200" className="form-control" rows="3" placeholder="댓글을 입력해주세요"/>
-                </Container>
-                <Container className='mt-4'>
-                    <button onClick={createReplyComment} className="btn btn-primary btn-sm btn float-end" type="button" id="createReply">등록</button>
-                </Container>
+            <Container>
+                <span id="createReplyWriter">댓글작성자</span>
+            </Container>
+            <Container>
+                <textarea id="createReplyContent" minLength="1" maxLength="200" className="form-control" rows="3" placeholder="댓글을 입력해주세요"/>
+            </Container>
+            <Container className='mt-4'>
+                <button onClick={createReplyComment} className="btn btn btn-success btn-sm btn float-end" type="button" id="createReply">등록</button>
             </Container>
         </>
     );

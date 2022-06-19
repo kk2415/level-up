@@ -40,7 +40,7 @@ const ModifyChannel = () => {
     }
 
     const handleCancel = () => {
-        window.location.href = '/post/' + postId + '?' + channelId
+        window.location.href = '/post/' + postId + '?channel=' + channelId
     }
 
     const loadPost = async () => {
