@@ -109,9 +109,9 @@ const SignIn = ({} ) => {
 
                     <Container className='d-flex justify-content-center align-items-center'>
                         <div className='text-left mt-3'>
-                            <Link to=""><small className='reset mx-2'>Password Reset</small></Link>
+                            <Link to="/signup"><small className='reset mx-2'>회원가입</small></Link>
                             ||
-                            <Link to=""><small className='reset mx-2'>Quick Recover</small></Link>
+                            <Link to=""><small className='reset mx-2'>아이디/비밀번호 찾기</small></Link>
                         </div>
                     </Container>
                 </Form>
