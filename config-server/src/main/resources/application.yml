@@ -1,0 +1,20 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        git:
+          uri: git@github.com:kk2415/spring-cloud-config.git
+          ignoreLocalSshSettings: true
+          default-label: master
+          private-key: |
+            -----BEGIN EC PRIVATE KEY-----
+            MHcCAQEEIMmChC2LzPxQuilkXsIgc0JCOUZzJ3Q7A3V2Lr0PwGj1oAoGCCqGSM49
+            AwEHoUQDQgAEu4mZ0fFIBMm7gBvQ6IOBdm4gG/GEjbzts49Js/9qb0oWRrmbcKhd
+            7kIeB4mOM2lMIrdgTeulZyB33eNKsS4/LA==
+            -----END EC PRIVATE KEY-----

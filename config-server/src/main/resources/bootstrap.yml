@@ -1,0 +1,6 @@
+encrypt:
+  key-store:
+    location: file:///C:\Task\study\infrun\DowonLee-MSA\keytool\apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey
+  #key: B465z8Qjj2hgAZgez484414HJGIOHWJKLHJD4 #대칭키 사용
