@@ -59,7 +59,7 @@ public class Channel extends BaseTimeEntity {
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers;
 
-    @OneToMany(mappedBy = "channel")
+    @OneToMany(mappedBy = "channel",  cascade = CascadeType.REMOVE)
     private List<Post> posts;
 
     @ManyToOne(fetch = FetchType.LAZY)
