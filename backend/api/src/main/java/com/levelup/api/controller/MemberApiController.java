@@ -76,13 +76,12 @@ public class MemberApiController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity confirmLogin(@AuthenticationPrincipal Long memberId) {
-        if (memberId == null) {
+    public ResponseEntity confirmLogin(@AuthenticationPrincipal Member member) {
+        if (member == null) {
             throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
         }
 
-        MemberResponse member = memberService.findOne(memberId);
-        return ResponseEntity.ok().body(member);
+        return ResponseEntity.ok().body(new MemberResponse(member));
     }
 
     /**
@@ -101,8 +100,8 @@ public class MemberApiController {
      * */
     @PostMapping("/confirm-email")
     public ResponseEntity confirmEmail(@RequestBody EmailAuthRequest request,
-                          @AuthenticationPrincipal Long memberId) {
-        EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), memberId);
+                                       @AuthenticationPrincipal Member member) {
+        EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), member.getId());
 
         return ResponseEntity.ok().body(response);
     }
@@ -111,8 +110,8 @@ public class MemberApiController {
      * 인증번호 전송
      * */
     @GetMapping("/send/auth-email")
-    public void sendSecurityCode(@AuthenticationPrincipal Long memberId) {
-        memberService.sendSecurityCode(memberId);
+    public void sendSecurityCode(@AuthenticationPrincipal Member member) {
+        memberService.sendSecurityCode(member.getId());
     }
 
 }

@@ -5,6 +5,7 @@ import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.dto.Result;
@@ -60,17 +61,18 @@ public class ChannelApiController {
     }
 
     @PostMapping("/channel/{channelId}/waiting-member")
-    public ResponseEntity addWaitingMember(@PathVariable Long channelId, @AuthenticationPrincipal Long id) {
-        channelService.addWaitingMember(channelId, id);
+    public ResponseEntity addWaitingMember(@PathVariable Long channelId,
+                                           @AuthenticationPrincipal Member member) {
+        channelService.addWaitingMember(channelId, member.getId());
         return new ResponseEntity(new Result("멤버 등록 성공", 1), HttpStatus.CREATED);
     }
 
     @PostMapping("/channel/{channelId}/member/{email}")
     public ResponseEntity addMember(@PathVariable Long channelId,
                                     @PathVariable String email,
-                                    @AuthenticationPrincipal Long id) {
+                                    @AuthenticationPrincipal Member member) {
         channelService.deleteWaitingMember(channelId, email);
-        channelService.addMember(channelId, Long.valueOf(id));
+        channelService.addMember(channelId, member.getId());
         return new ResponseEntity(new Result<>("멤버 등록 성공", 1), HttpStatus.CREATED);
     }
 
@@ -133,8 +135,8 @@ public class ChannelApiController {
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
     @GetMapping("/channel/{channelId}/manager")
     public ResponseEntity getChannelAllInfo(@PathVariable Long channelId,
-                                   @AuthenticationPrincipal Long memberId) {
-        ChannelManagerResponse channelAllInfo = channelService.getChannelAllInfo(channelId, memberId);
+                                   @AuthenticationPrincipal Member member) {
+        ChannelManagerResponse channelAllInfo = channelService.getChannelAllInfo(channelId, member.getId());
 
         return ResponseEntity.ok().body(channelAllInfo);
     }

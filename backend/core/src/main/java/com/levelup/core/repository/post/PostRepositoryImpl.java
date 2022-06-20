@@ -1,5 +1,6 @@
 package com.levelup.core.repository.post;
 
+import com.levelup.core.domain.comment.QComment;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.QPost;
 import com.levelup.core.dto.post.SearchCondition;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

@@ -2,6 +2,7 @@ package com.levelup.api.controller;
 
 import com.levelup.api.service.PostService;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.post.*;
 
@@ -31,8 +32,8 @@ public class PostApiController {
      * */
     @PostMapping("/post")
     public ResponseEntity<PostResponse> create(@Validated @RequestBody CreatePostRequest postRequest,
-                                 @AuthenticationPrincipal Long memberId) {
-        PostResponse post = postService.create(postRequest, memberId);
+                                 @AuthenticationPrincipal Member member) {
+        PostResponse post = postService.create(postRequest, member.getId());
 
         return ResponseEntity.ok().body(post);
     }
@@ -105,8 +106,8 @@ public class PostApiController {
      * */
     @PatchMapping("/post/{postId}")
     public ResponseEntity updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest postRequest,
-                                         @AuthenticationPrincipal Long memberId) {
-        UpdatePostResponse post = postService.updatePost(postId, memberId, postRequest.getTitle(),
+                                     @AuthenticationPrincipal Member member) {
+        UpdatePostResponse post = postService.updatePost(postId, member.getId(), postRequest.getTitle(),
                 postRequest.getContent(), postRequest.getCategory());
 
         return ResponseEntity.ok().body(post);

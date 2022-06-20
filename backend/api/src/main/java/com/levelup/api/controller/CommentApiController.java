@@ -2,6 +2,7 @@ package com.levelup.api.controller;
 
 import com.levelup.api.service.*;
 import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.comment.CommentResponse;
 import com.levelup.core.dto.comment.CreateCommentRequest;
@@ -33,16 +34,16 @@ public class CommentApiController {
      */
     @PostMapping("/comment")
     public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
-                                 @AuthenticationPrincipal Long memberId) {
-        CommentResponse comment = commentService.create(commentRequest, memberId);
+                                                  @AuthenticationPrincipal Member member) {
+        CommentResponse comment = commentService.create(commentRequest, member.getId());
 
         return ResponseEntity.ok().body(comment);
     }
 
     @PostMapping("/comment/reply")
     public ResponseEntity<CommentResponse> createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
-                                              @AuthenticationPrincipal Long memberId) {
-        CommentResponse replyComment = commentService.createReplyComment(commentRequest, memberId);
+                                                              @AuthenticationPrincipal Member member) {
+        CommentResponse replyComment = commentService.createReplyComment(commentRequest, member.getId());
 
         return ResponseEntity.ok().body(replyComment);
     }

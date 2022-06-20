@@ -23,7 +23,7 @@ public class PostResponse {
         this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(post.getCreatedDate());
         this.voteCount = post.getVoteCount();
         this.views = post.getViews();
-        this.commentCount = (int) post.getComments().stream().filter(c -> c.getParent() == null).count();
+        this.commentCount = post.getCommentCount();
         this.category = post.getPostCategory();
     }
 
@@ -35,6 +35,6 @@ public class PostResponse {
     private String dateCreated;
     private Long voteCount;
     private Long views;
-    private int commentCount;
+    private Long commentCount;
     private PostCategory category;
 }

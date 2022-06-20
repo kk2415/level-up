@@ -3,6 +3,7 @@ package com.levelup.api.controller;
 
 import com.levelup.api.service.NoticeService;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.notice.NoticeRequest;
 import com.levelup.core.dto.notice.NoticeResponse;
@@ -33,8 +34,8 @@ public class NoticeApiController {
      * */
     @PostMapping("/notice")
     public ResponseEntity<NoticeResponse> create(@RequestBody @Validated NoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal Long memberId) {
-        NoticeResponse findNotice = noticeService.create(noticeRequest, memberId);
+                                                 @AuthenticationPrincipal Member member) {
+        NoticeResponse findNotice = noticeService.create(noticeRequest, member.getId());
 
         return ResponseEntity.ok().body(findNotice);
     }

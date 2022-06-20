@@ -3,6 +3,7 @@ package com.levelup.api.controller;
 import com.levelup.api.service.ChannelNoticeService;
 import com.levelup.api.service.ChannelService;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.channelNotice.ChannelNoticeRequest;
 import com.levelup.core.dto.channelNotice.ChannelNoticeResponse;
@@ -36,8 +37,8 @@ public class ChannelNoticeApiController {
     @PostMapping("/channel-notice")
     public ResponseEntity<ChannelNoticeResponse> create(@RequestParam Long channel,
                                  @RequestBody @Validated ChannelNoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal Long memberId) {
-        ChannelNoticeResponse notice = channelNoticeService.create(noticeRequest, channel, memberId);
+                                 @AuthenticationPrincipal Member member) {
+        ChannelNoticeResponse notice = channelNoticeService.create(noticeRequest, channel, member.getId());
 
         return ResponseEntity.ok().body(notice);
     }
@@ -91,9 +92,9 @@ public class ChannelNoticeApiController {
     public ResponseEntity modifyChannelNotice(@PathVariable Long id,
                                               @RequestParam Long channel,
                                               @RequestBody @Validated ChannelNoticeRequest noticeRequest,
-                                              @AuthenticationPrincipal Long memberId) {
+                                              @AuthenticationPrincipal Member member) {
         ChannelNoticeResponse channelNotice = channelNoticeService.modifyChannelNotice(noticeRequest, id,
-                channel, memberId);
+                channel, member.getId());
 
         return ResponseEntity.ok().body(channelNotice);
     }
@@ -105,10 +106,10 @@ public class ChannelNoticeApiController {
     @DeleteMapping("/channel-notice")
     public ResponseEntity deleteAll(@RequestParam Long channel,
                                  @RequestBody @Validated DeleteChannelNoticeRequest noticeRequest,
-                                 @AuthenticationPrincipal Long memberId) {
+                                    @AuthenticationPrincipal Member member) {
         Long managerId = channelService.getById(channel).getManagerId();
 
-        if (memberId.equals(managerId)) {
+        if (member.getId().equals(managerId)) {
             channelNoticeService.deleteAll(noticeRequest.getIds());
             return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
         }
@@ -119,8 +120,8 @@ public class ChannelNoticeApiController {
     @DeleteMapping("/channel-notice/{channelNoticeId}")
     public ResponseEntity deleteChannelNotice(@PathVariable Long channelNoticeId,
                                               @RequestParam Long channel,
-                                              @AuthenticationPrincipal Long memberId) {
-        channelNoticeService.delete(channelNoticeId, channel, memberId);
+                                              @AuthenticationPrincipal Member member) {
+        channelNoticeService.delete(channelNoticeId, channel, member.getId());
 
         return new ResponseEntity(new Result("삭제되었습니다", 0), HttpStatus.OK);
     }

@@ -2,6 +2,7 @@ package com.levelup.api.controller;
 
 
 import com.levelup.api.service.VoteService;
+import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.vote.CreateVoteRequest;
 import com.levelup.core.dto.Result;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,8 +26,8 @@ public class VoteApiController {
 
     @PostMapping("/vote")
     public ResponseEntity create(@RequestBody @Validated CreateVoteRequest voteRequest,
-                                 @AuthenticationPrincipal Long memberId) {
-        voteService.create(voteRequest.getIdentity(), voteRequest.getArticleId(), memberId);
+                                 @AuthenticationPrincipal Member member) {
+        voteService.create(voteRequest.getIdentity(), voteRequest.getArticleId(), member.getId());
 
         return new ResponseEntity(new Result<>("추천되었습니다", 0), HttpStatus.CREATED);
     }

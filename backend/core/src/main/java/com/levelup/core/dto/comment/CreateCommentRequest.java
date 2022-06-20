@@ -6,7 +6,6 @@ import com.levelup.core.domain.member.Member;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Data

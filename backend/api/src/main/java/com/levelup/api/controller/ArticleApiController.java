@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ArticleApiController {
 
-    private final ArticleService articleService;
-
-    @PostMapping("/article")
-    public ResponseEntity create(@RequestBody CreateArticleRequest request,
-                                 @AuthenticationPrincipal Long memberId) {
-        ArticleResponse articleResponse = articleService.create(request, memberId);
-
-        return ResponseEntity.ok().body(articleResponse);
-    }
+//    private final ArticleService articleService;
+//
+//    @PostMapping("/article")
+//    public ResponseEntity create(@RequestBody CreateArticleRequest request,
+//                                 @AuthenticationPrincipal Long memberId) {
+//        ArticleResponse articleResponse = articleService.create(request, memberId);
+//
+//        return ResponseEntity.ok().body(articleResponse);
+//    }
 
 }

@@ -5,6 +5,7 @@ import com.levelup.core.DateFormat;
 import com.levelup.core.domain.Article.ArticleCategory;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.domain.post.Post;
 import com.levelup.core.dto.comment.CommentResponse;
 import com.levelup.core.dto.comment.CreateCommentRequest;
 import com.levelup.core.dto.comment.CreateReplyCommentRequest;
@@ -23,8 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CommentService {
 
     private final MemberRepository memberRepository;
@@ -67,7 +68,11 @@ public class CommentService {
 
     private Object identifyArticle(ArticleCategory identity, Long articleId) {
         switch (identity) {
-            case POST: return postRepository.findById(articleId).get();
+            case POST:
+                Post post = postRepository.findById(articleId).get();
+                post.addCommentCount();;
+
+                return post;
             case CHANNEL_NOTICE: return channelNoticeRepository.findById(articleId);
             case NOTICE: return noticeRepository.findById(articleId);
             case QNA: return qnaRepository.findById(articleId);

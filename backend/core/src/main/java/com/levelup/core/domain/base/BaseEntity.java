@@ -8,8 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
-@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public class BaseEntity extends BaseTimeEntity {
 
     /**
@@ -20,6 +20,6 @@ public class BaseEntity extends BaseTimeEntity {
     private String createdBy;
 
     @LastModifiedBy
-    private String lastModifiedBy;
+    private String modifiedBy;
 
 }

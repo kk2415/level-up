@@ -6,6 +6,7 @@ import com.levelup.core.domain.post.Post;
 import com.levelup.core.dto.post.SearchCondition;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostQueryRepository {
 

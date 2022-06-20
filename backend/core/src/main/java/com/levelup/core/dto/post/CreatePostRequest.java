@@ -37,6 +37,7 @@ public class CreatePostRequest {
                 .title(title)
                 .content(content)
                 .voteCount(0L)
+                .commentCount(0L)
                 .views(0L)
                 .postCategory(category)
                 .comments(new ArrayList<>())

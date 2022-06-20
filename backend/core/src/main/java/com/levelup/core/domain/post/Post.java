@@ -1,5 +1,6 @@
 package com.levelup.core.domain.post;
 
+import com.levelup.core.domain.base.BaseEntity;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.comment.Comment;
@@ -9,8 +10,6 @@ import com.levelup.core.domain.vote.Vote;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -20,7 +19,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post extends BaseTimeEntity {
+public class Post extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "post_id")
@@ -34,6 +33,9 @@ public class Post extends BaseTimeEntity {
 
     @Column(name = "vote_count")
     private Long voteCount;
+
+    @Column(name = "comment_count")
+    private Long commentCount;
 
     @Column(name = "views")
     private Long views;
@@ -86,11 +88,16 @@ public class Post extends BaseTimeEntity {
     }
 
     public void addViews() {
-        this.views = (this.views + 1);
+        this.views += 1;
     }
 
     public void addVoteCount() {
-        this.voteCount = (this.voteCount + 1);
+        this.voteCount += 1;
     }
+
+    public void addCommentCount() {
+        this.commentCount += 1;
+    }
+
 
 }
