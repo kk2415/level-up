@@ -2,7 +2,7 @@ package com.levelup.api.service;
 
 
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.post.Post;
@@ -47,7 +47,7 @@ public class CommentService {
         commentRepository.save(findComment);
 
         return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getCreateAt()),
                 findComment.getVoteCount(), (long) findComment.getChild().size());
     }
 
@@ -62,11 +62,11 @@ public class CommentService {
         parent.addChildComment(child);
 
         return new CommentResponse(child.getId(), child.getWriter(), child.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getCreateAt()),
                 child.getVoteCount(), (long) child.getChild().size());
     }
 
-    private Object identifyArticle(ArticleCategory identity, Long articleId) {
+    private Object identifyArticle(ArticleType identity, Long articleId) {
         switch (identity) {
             case POST:
                 Post post = postRepository.findById(articleId).get();
@@ -84,7 +84,7 @@ public class CommentService {
     /**
      * 댓글 조회
      * */
-    public List<CommentResponse> getAllByIdentityAndArticleId(ArticleCategory identity, Long articleId) {
+    public List<CommentResponse> getAllByIdentityAndArticleId(ArticleType identity, Long articleId) {
         List<Comment> comments;
 
         switch (identity) {
@@ -107,7 +107,7 @@ public class CommentService {
         return comments.stream()
                 .filter(c -> c.getParent() == null)
                 .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreatedDate()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreateAt()),
                         c.getVoteCount(), (long) c.getChild().size()))
                 .collect(Collectors.toList());
     }
@@ -117,7 +117,7 @@ public class CommentService {
 
         return reply.stream()
                 .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreatedDate()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreateAt()),
                         c.getVoteCount(), (long) c.getChild().size()))
                 .collect(Collectors.toList());
     }

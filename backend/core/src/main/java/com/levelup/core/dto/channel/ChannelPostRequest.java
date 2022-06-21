@@ -1,6 +1,6 @@
 package com.levelup.core.dto.channel;
 
-import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.Article.ArticleType;
 import lombok.Data;
 
 @Data
@@ -10,6 +10,6 @@ public class ChannelPostRequest {
     private String title;
     private String writer;
     private String content;
-    private ArticleCategory category;
+    private ArticleType category;
 
 }

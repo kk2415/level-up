@@ -1,7 +1,7 @@
 package com.levelup.api.controller;
 
 import com.levelup.api.service.*;
-import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.comment.CommentResponse;
@@ -54,7 +54,7 @@ public class CommentApiController {
      */
     @GetMapping("/comment/{articleId}")
     public ResponseEntity<Result<CommentResponse>> find(@PathVariable Long articleId,
-                       @RequestParam ArticleCategory identity) {
+                       @RequestParam ArticleType identity) {
         List<CommentResponse> comments = commentService.getAllByIdentityAndArticleId(identity, articleId);
 
         return ResponseEntity.ok().body(new Result(comments, comments.size()));

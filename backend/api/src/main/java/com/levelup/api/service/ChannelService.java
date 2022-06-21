@@ -201,7 +201,7 @@ public class ChannelService {
         List<Post> posts = postRepository.findByChannelId(channelId, new SearchCondition(null, null));
 
         ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt()),
                 channel.getMemberCount(), (long)waitingMembers.size(), (long) posts.size(),
                 channel.getThumbnailImage().getStoreFileName());
 

@@ -1,6 +1,7 @@
-package com.levelup.core.repository.post;
+package com.levelup.core.repository.article;
 
-import com.levelup.core.domain.comment.QComment;
+import com.levelup.core.domain.Article.ChannelPost;
+import com.levelup.core.domain.Article.QChannelPost;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.QPost;
 import com.levelup.core.dto.post.SearchCondition;
@@ -11,11 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class PostRepositoryImpl implements PostQueryRepository {
+public class ChannelPostRepositoryImpl implements ArticleQueryRepository {
 
     private final EntityManager em;
 
@@ -44,28 +44,28 @@ public class PostRepositoryImpl implements PostQueryRepository {
     }
 
     @Override
-    public List<Post> findByChannelId(Long channelId, SearchCondition postSearch) {
+    public List<ChannelPost> findByChannelId(Long channelId, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        return queryFactory.select(QPost.post)
-                .from(QPost.post)
-                .join(QPost.post.channel)
-                .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QPost.post.createAt.desc())
+        return queryFactory.select(QChannelPost.channelPost)
+                .from(QChannelPost.channelPost)
+                .join(QChannelPost.channelPost.channel)
+                .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
+                .orderBy(QChannelPost.channelPost.createAt.desc())
                 .fetch();
     }
 
     @Override
-    public List<Post> findByChannelId(Long channelId, int page, int postCount, SearchCondition postSearch) {
+    public List<ChannelPost> findByChannelId(Long channelId, int page, int postCount, SearchCondition postSearch) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         int firstPage = (page - 1) * postCount; //0, 10, 20, 30
 
-        return queryFactory.select(QPost.post)
-                .from(QPost.post)
-                .join(QPost.post.channel)
-                .where(QPost.post.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QPost.post.createAt.desc())
+        return queryFactory.select(QChannelPost.channelPost)
+                .from(QChannelPost.channelPost)
+                .join(QChannelPost.channelPost.channel)
+                .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
+                .orderBy(QChannelPost.channelPost.createAt.desc())
                 .offset(firstPage)
                 .limit(postCount)
                 .fetch();

@@ -1,6 +1,5 @@
 package com.levelup.core.domain.channel;
 
-import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
@@ -11,7 +10,6 @@ import com.levelup.core.exception.NoPlaceChnnelException;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -52,9 +50,6 @@ public class Channel extends BaseTimeEntity {
 
     @Embedded
     private UploadFile thumbnailImage;
-
-    @OneToMany(mappedBy = "channel")
-    private List<Article> articles;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers;
@@ -164,10 +159,4 @@ public class Channel extends BaseTimeEntity {
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
-
-    public void addArticle(Article article) {
-        this.articles.add(article);
-        article.setChannel(this);
-    }
-
 }

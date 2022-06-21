@@ -20,7 +20,7 @@ public class PostResponse {
         this.title = post.getTitle();
         this.writer = post.getWriter();
         this.content = post.getContent();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(post.getCreatedDate());
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(post.getCreateAt());
         this.voteCount = post.getVoteCount();
         this.views = post.getViews();
         this.commentCount = post.getCommentCount();
@@ -37,4 +37,5 @@ public class PostResponse {
     private Long views;
     private Long commentCount;
     private PostCategory category;
+
 }

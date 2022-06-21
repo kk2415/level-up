@@ -1,7 +1,8 @@
 package com.levelup.core.repository.article;
 
 import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.Article.ChannelPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,18 +12,26 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ArticleRepository extends JpaRepository<Article, Long> {
+public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleQueryRepository {
 
-    Optional<List<Article>> findByCategory(ArticleCategory category);
-    Optional<List<Article>> findByIdAndCategory(Long articleId, ArticleCategory category);
+    Optional<List<Article>> findByMemberId(Long memberId);
 
-    @Query("select a from Article a inner join a.channel c " +
-            "where c.id = :channelId")
-    Optional<List<Article>> findByChannelId(@Param("channelId") Long channelId);
+    Optional<List<Article>> findByArticleIdAndArticleType(Long articleId, ArticleType articleType);
 
+    @Query("select cp from ChannelPost cp where cp.articleId = :articleId")
+    Optional<ChannelPost> findChannelPostById(@Param("articleId") Long articleId);
 
-    @Query("select a from Article a inner join a.channel c " +
-            "where c.id = :channelId")
-    Optional<Page<Article>> findByChannelId(@Param("channelId") Long channelId, Pageable pageable);
+//    @Query(value = "select cp from ChannelPost cp", countQuery = "select count(cp) from ChannelPost cp")
+    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId")
+    Page<ChannelPost> findByChannelId(@Param("channelId") Long channelId, Pageable pageable);
 
+    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.title like %:title%")
+    Page<ChannelPost> findByChannelIdAndTitle(@Param("channelId") Long channelId,
+                                              @Param("title") String title,
+                                              Pageable pageable);
+
+    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.writer like %:writer%")
+    Page<ChannelPost> findByChannelIdAndWriter(@Param("channelId") Long channelId,
+                                              @Param("writer") String writer,
+                                              Pageable pageable);
 }

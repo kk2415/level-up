@@ -97,7 +97,7 @@ public class ChannelApiController {
         Channel findChannel = channelRepository.findById(channelId);
 
         return new ChannelDescriptionResponse(findChannel.getName(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findChannel.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findChannel.getCreateAt()),
                 findChannel.getManagerName(), findChannel.getMemberCount(), findChannel.getLimitedMemberNumber(),
                 findChannel.getCategory(), findChannel.getThumbnailImage());
     }

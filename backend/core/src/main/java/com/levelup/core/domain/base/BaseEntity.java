@@ -20,6 +20,6 @@ public class BaseEntity extends BaseTimeEntity {
     private String createdBy;
 
     @LastModifiedBy
-    private String modifiedBy;
+    private String updateBy;
 
 }

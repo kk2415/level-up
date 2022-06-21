@@ -77,7 +77,6 @@ public class PostRepositoryTest {
                 .waitingMemberCount(0L)
                 .category(ChannelCategory.STUDY)
                 .thumbnailImage(new UploadFile("a", "a"))
-                .articles(new ArrayList<>())
                 .channelMembers(new ArrayList<>())
                 .posts(new ArrayList<>())
                 .files(new ArrayList<>())

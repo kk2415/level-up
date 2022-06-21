@@ -1,6 +1,6 @@
 package com.levelup.core.dto.comment;
 
-import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class CreateCommentRequest {
     private String content;
 
     @NotNull
-    private ArticleCategory identity;
+    private ArticleType identity;
 
     public Comment toEntity(Member member, Object article) {
         Comment comment = Comment.builder()

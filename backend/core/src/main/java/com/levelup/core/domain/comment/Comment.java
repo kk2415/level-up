@@ -113,6 +113,11 @@ public class Comment extends BaseTimeEntity {
         else if (object instanceof Qna) {
             this.qna = ((Qna) object);
         }
+        else {
+            Article article = (Article) object;
+            this.article = article;
+            article.getComments().add(this);
+        }
     }
 
 

@@ -1,6 +1,6 @@
 package com.levelup.core.dto.vote;
 
-import com.levelup.core.domain.Article.ArticleCategory;
+import com.levelup.core.domain.Article.ArticleType;
 import lombok.Data;
 import javax.validation.constraints.NotNull;
 
@@ -11,6 +11,6 @@ public class CreateVoteRequest {
     private Long articleId;
 
     @NotNull
-    private ArticleCategory identity;
+    private ArticleType identity;
 
 }

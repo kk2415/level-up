@@ -56,7 +56,7 @@ public class ChannelNoticeService {
             return new ChannelNoticeResponse(channelNotice.getId(),
                     channelNotice.getChannel().getManager().getId(), channelNotice.getTitle(),
                     channelNotice.getWriter(), channelNotice.getContent(), channelNotice.getViews(), 0L,
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getCreatedDate()),
+                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelNotice.getCreateAt()),
                     channelNotice.getComments().size());
         }
 
@@ -84,7 +84,7 @@ public class ChannelNoticeService {
 
         return new ChannelNoticeResponse(id, findNotice.getChannel().getManager().getId(), findNotice.getTitle(),
                 findNotice.getWriter(), findNotice.getContent(), findNotice.getViews(), 0L,
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findNotice.getCreateAt()),
                 (int)findNotice.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -95,7 +95,7 @@ public class ChannelNoticeService {
 
         return findNotices.stream()
                 .map(n -> new PagingChannelNoticeResponse(n.getId(), n.getTitle(), n.getWriter(), n.getContent(), n.getViews(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getCreatedDate()),
+                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(n.getCreateAt()),
                         (int)n.getComments().stream().filter(c -> c.getParent() == null).count(),
                         noticeCount))
                 .collect(Collectors.toList());
@@ -110,7 +110,7 @@ public class ChannelNoticeService {
 
         return new ChannelNoticeResponse(nextPage.getId(), nextPage.getChannel().getManager().getId(),
                 nextPage.getTitle(), nextPage.getWriter(), nextPage.getContent(), nextPage.getViews(), 0L,
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(nextPage.getCreateAt()),
                 (int)nextPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -120,7 +120,7 @@ public class ChannelNoticeService {
         return new ChannelNoticeResponse(prevPage.getId(), prevPage.getChannel().getManager().getId(),
                 prevPage.getTitle(),
                 prevPage.getWriter(), prevPage.getContent(), prevPage.getViews(), 0L,
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getCreatedDate()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(prevPage.getCreateAt()),
                 (int)prevPage.getComments().stream().filter(c -> c.getParent() == null).count());
     }
 
@@ -140,7 +140,7 @@ public class ChannelNoticeService {
             return new ChannelNoticeResponse(notice.getId(), notice.getChannel().getManager().getId(),
                     notice.getTitle(),
                     notice.getWriter(), notice.getContent(), notice.getViews(), 0L,
-                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getCreatedDate()),
+                    DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(notice.getCreateAt()),
                     (int)notice.getComments().stream().filter(c -> c.getParent() == null).count());
         }
 
