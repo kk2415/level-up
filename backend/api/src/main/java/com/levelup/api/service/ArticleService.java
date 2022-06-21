@@ -95,7 +95,7 @@ public class ArticleService {
         return new ArticleResponse(channelPost);
     }
 
-    public List<ChannelPostResponse> getChannelPosts(Long channelId, String field, String query, Pageable pageable) {
+    public Page<ChannelPostResponse> getChannelPosts(Long channelId, String field, String query, Pageable pageable) {
         Page<ChannelPost> pages = null;
 
         if (field.equals("title")) {
@@ -105,11 +105,7 @@ public class ArticleService {
             pages = articleRepository.findByChannelIdAndWriter(channelId, query, pageable);
         }
 
-        List<ChannelPost> channelPosts = pages.getContent();
-
-        return channelPosts.stream()
-                .map(ChannelPostResponse::new)
-                .collect(Collectors.toList());
+        return pages.map(ChannelPostResponse::new);
     }
 
     public void getChannelPostsCount(Long channelId, String field, String query) {
@@ -143,7 +139,7 @@ public class ArticleService {
     /**
      * 게시글 수정
      * */
-    public ChannelPostResponse updateChannelPost(Long articleId, Long memberId, ChannelPostRequest request) {
+    public ChannelPostResponse modifyChannelPost(Long articleId, Long memberId, ChannelPostRequest request) {
         ChannelPost channelPost = articleRepository.findChannelPostById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
 
@@ -156,7 +152,7 @@ public class ArticleService {
     /**
      * 게시글 삭제
      * */
-    public void deletePost(Long articleId) {
+    public void deleteArticle(Long articleId) {
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
 
