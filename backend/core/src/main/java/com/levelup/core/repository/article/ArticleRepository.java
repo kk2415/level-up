@@ -22,6 +22,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
     @Query("select cp from ChannelPost cp where cp.articleId = :articleId")
     Optional<ChannelPost> findChannelPostById(@Param("articleId") Long articleId);
 
+    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId order by cp.articleId desc")
+    List<ChannelPost> findByChannelId(@Param("channelId") Long channelId);
+
 //    @Query(value = "select cp from ChannelPost cp", countQuery = "select count(cp) from ChannelPost cp")
     @Query("select cp from ChannelPost cp where cp.channel.id = :channelId")
     Page<ChannelPost> findByChannelId(@Param("channelId") Long channelId, Pageable pageable);

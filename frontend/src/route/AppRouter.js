@@ -39,8 +39,10 @@ const AppRouter = () => {
 		<Route path="/channel-notice/modify/:channelNoticeId" element={<ModifyChannelNotice />}></Route>
 
 		<Route path="/post/:postId" element={<Post />}></Route>
+		<Route path="/channel-post/:postId" element={<Post />}></Route>
 		<Route path="/post/create" element={<CreatePost />}></Route>
 		<Route path="/post/modify/:postId" element={<ModifyPost />}></Route>
+		<Route path="/channel-post/modify/:postId" element={<ModifyPost />}></Route>
 
 	</Routes>
   )
