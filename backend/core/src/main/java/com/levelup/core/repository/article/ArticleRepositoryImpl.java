@@ -1,7 +1,6 @@
 package com.levelup.core.repository.article;
 
-import com.levelup.core.domain.Article.ChannelPost;
-import com.levelup.core.domain.Article.QChannelPost;
+import com.levelup.core.domain.Article.*;
 import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.QPost;
 import com.levelup.core.dto.post.SearchCondition;
@@ -19,6 +18,34 @@ import java.util.Optional;
 public class ArticleRepositoryImpl implements ArticleQueryRepository {
 
     private final EntityManager em;
+
+    @Override
+    public Optional<Article> findNextPageByArticleType(Long articleId, ArticleType articleType) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        Article article = queryFactory.select(QArticle.article)
+                .from(QArticle.article)
+                .where(QArticle.article.articleType.eq(articleType))
+                .where(QArticle.article.articleId.gt(articleId))
+                .orderBy(QArticle.article.articleId.asc())
+                .fetchFirst();
+
+        return Optional.ofNullable(article);
+    }
+
+    @Override
+    public Optional<Article> findPrevPageArticleType(Long articleId, ArticleType articleType) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        Article article = queryFactory.select(QArticle.article)
+                .from(QArticle.article)
+                .where(QArticle.article.articleType.eq(articleType))
+                .where(QArticle.article.articleId.lt(articleId))
+                .orderBy(QArticle.article.articleId.desc())
+                .fetchFirst();
+
+        return Optional.ofNullable(article);
+    }
 
     @Override
     public Optional<ChannelPost> findNextPageByChannelId(Long articleId, Long channelId) {
