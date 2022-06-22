@@ -49,7 +49,7 @@ public class ArticleApiController {
     }
 
     @GetMapping("/articles")
-    public ResponseEntity<Page<ArticleResponse>> getPosts(@RequestParam("articleType") ArticleType articleType,
+    public ResponseEntity<Page<ArticleResponse>> getPosts(@RequestParam ArticleType articleType,
                                                           Pageable pageable,
                                                           @RequestParam(required = false) String field,
                                                           @RequestParam(required = false) String query) {
@@ -87,8 +87,8 @@ public class ArticleApiController {
      * */
     @PatchMapping("/article/{articleId}")
     public ResponseEntity<ArticleResponse> mopdify(@PathVariable Long articleId,
-                                                       @RequestBody ChannelPostRequest request,
-                                                       @AuthenticationPrincipal Member member) {
+                                                   @RequestBody ChannelPostRequest request,
+                                                   @AuthenticationPrincipal Member member) {
         ArticleResponse articleResponse = articleService.modifyArticle(articleId, member.getId(), request);
 
         return ResponseEntity.ok().body(articleResponse);
