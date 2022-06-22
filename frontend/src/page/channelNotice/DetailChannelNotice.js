@@ -2,7 +2,7 @@
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import ChannelService from '../../api/ChannelService'
+import ChannelService from '../../api/service/ChannelService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 

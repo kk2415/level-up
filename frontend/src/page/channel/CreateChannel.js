@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
-import ChannelService from '../../api/ChannelService'
+import ChannelService from '../../api/service/ChannelService'
 import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import {uploadFile} from "../../api/FileService";
+import {uploadFile} from "../../api/service/FileService";
 import RichTextEditor from '../../component/SummerNote'
 import {createChannelValidation as validation} from "../../api/validation";
 import $ from "jquery";

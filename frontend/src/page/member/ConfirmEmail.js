@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button, Form, Container, Row} from 'react-bootstrap';
 
 import {BiUserCircle} from "react-icons/bi";
-import {MemberService} from "../../api/MemberService";
+import {MemberService} from "../../api/service/MemberService";
 import {AuthEmailService} from "../../api/AuthEmailService";
 import '../../css/login.css'
 

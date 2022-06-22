@@ -2,7 +2,7 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import PostService from '../../api/PostService'
+import PostService from '../../api/service/PostService'
 import {Container, Form} from 'react-bootstrap'
 
 const CreatePost = () => {

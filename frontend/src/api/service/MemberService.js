@@ -1,5 +1,5 @@
-import { send } from "./request"
-import {TOKEN} from './token'
+import { send } from "../request"
+import {TOKEN} from '../token'
 
 export const MemberService = {
     signUp : async function (member) {

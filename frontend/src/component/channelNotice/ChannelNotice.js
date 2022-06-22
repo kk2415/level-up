@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 
-import ChannelService from '../../api/ChannelService'
+import ChannelService from '../../api/service/ChannelService'
 import {ChannelNoticeTable} from "./ChannelNoticeTable";
 import {AiFillCaretRight, AiFillCaretLeft} from "react-icons/ai";
 

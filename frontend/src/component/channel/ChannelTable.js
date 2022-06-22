@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Table} from 'react-bootstrap'
 import ArticleTableRow from '../ArticleTableRow'
-import PostService from "../../api/PostService";
+import PostService from "../../api/service/PostService";
 
 export const ChannelTable = ({channelId, currentPage, searchCondition} ) => {
     const [posts, setPosts] = useState(null)

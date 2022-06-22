@@ -1,4 +1,4 @@
-import { send } from "./request"
+import { send } from "../request"
 
 const CommentService = {
 

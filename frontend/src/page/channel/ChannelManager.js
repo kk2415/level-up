@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 
-import ChannelService from "../../api/ChannelService";
+import ChannelService from "../../api/service/ChannelService";
 
 import WaitingMemberFrame from "../../component/channel/manager/WaitingMemberFrame";
 import PostFrame from "../../component/channel/manager/PostFrame";

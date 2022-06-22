@@ -2,7 +2,7 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import PostService from '../../api/PostService'
+import PostService from '../../api/service/PostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 import VoteService from "../../api/VoteService";

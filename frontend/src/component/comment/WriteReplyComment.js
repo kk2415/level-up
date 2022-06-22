@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container} from 'react-bootstrap'
-import CommentService from "../../api/CommentService";
+import CommentService from "../../api/service/CommentService";
 
 import $ from 'jquery'
 

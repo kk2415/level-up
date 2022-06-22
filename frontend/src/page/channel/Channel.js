@@ -2,8 +2,8 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/ChannelService'
-import PostService from '../../api/PostService'
+import ChannelService from '../../api/service/ChannelService'
+import PostService from '../../api/service/PostService'
 import {Container, Form, Tabs, Tab, Row} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
 import {TOKEN} from "../../api/token";

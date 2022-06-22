@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ChannelPostRepositoryImpl implements ArticleQueryRepository {
+public class ChannelPostRepositoryImpl implements ChannelPostQueryRepository {
 
     private final EntityManager em;
 
