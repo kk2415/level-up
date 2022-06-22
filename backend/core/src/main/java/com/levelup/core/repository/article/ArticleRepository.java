@@ -19,6 +19,22 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
 
     Optional<List<Article>> findByArticleIdAndArticleType(Long articleId, ArticleType articleType);
 
+    @Query("select a from Article a where a.articleType = :articleType order by a.articleId desc")
+    Optional<Article> findByArticleType(@Param("articleType") ArticleType articleType);
+
+    @Query("select a from Article a where a.articleType = :articleType")
+    Page<Article> findByArticleType(@Param("articleType") ArticleType articleType, Pageable pageable);
+
+    @Query("select a from Article a where a.articleType = :articleType and a.title like %:title%")
+    Page<Article> findByArticleTypeAndTitle(@Param("articleType") ArticleType articleType,
+                                    @Param("title") String title,
+                                    Pageable pageable);
+
+    @Query("select a from Article a where a.articleType = :articleType and a.writer like %:writer%")
+    Page<Article> findByArticleTypeAndWriter(@Param("articleType") ArticleType articleType,
+                                    @Param("writer") String writer,
+                                    Pageable pageable);
+
     @Query("select cp from ChannelPost cp where cp.articleId = :articleId")
     Optional<ChannelPost> findChannelPostById(@Param("articleId") Long articleId);
 
