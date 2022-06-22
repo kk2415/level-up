@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
-import ChannelService from '../../api/ChannelService'
+import ChannelService from '../../api/service/ChannelService'
 import {Container, Form} from 'react-bootstrap'
-import {uploadFile} from "../../api/FileService";
+import {uploadFile} from "../../api/service/FileService";
 import $ from "jquery";
 
 const CreateChannel = () => {

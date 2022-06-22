@@ -2,7 +2,8 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import PostService from '../../api/PostService'
+import PostService from '../../api/service/PostService'
+import ChannelPostService from '../../api/service/ChannelPostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 import VoteService from "../../api/VoteService";
@@ -21,6 +22,7 @@ const Post = () => {
     }
 
     const [post, setPost] = useState(null)
+    const [channelPost, setChannelPost] = useState(null)
     const [postId, setPostId] = useState(getPostId())
     const [channelId, setChannelId] = useState(getChannelId())
     const [authentication, setAuthentication] = useState(false)
@@ -31,10 +33,10 @@ const Post = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await PostService.getPrev(postId, channelId)
+        let prev = await ChannelPostService.getPrev(postId, channelId)
 
         if (prev != null) {
-            window.location.href = '/post/' + prev.id + '?channel=' + channelId
+            window.location.href = '/channel-post/' + prev.id + '?channel=' + channelId
         }
         else {
             alert("이전 페이지가 없습니다.")
@@ -42,26 +44,26 @@ const Post = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await PostService.getNext(postId, channelId)
+        let next = await ChannelPostService.getNext(postId, channelId)
 
         if (next != null) {
-            window.location.href = '/post/' + next.id + '?channel=' + channelId
+            window.location.href = '/channel-post/' + next.id + '?channel=' + channelId
         }
         else {
-            alert("이전 페이지가 없습니다.")
+            alert("다음 페이지가 없습니다.")
         }
     }
 
     const handleModifyButton = () => {
-        navigate('/post/modify/' + postId + '?channel=' + channelId)
+        navigate('/channel-post/modify/' + postId + '?channel=' + channelId)
     }
 
     const handleDeleteButton = async () => {
-        await PostService.delete(postId, channelId)
+        await ChannelPostService.delete(postId, channelId)
     }
 
     const loadPost = async (postId) => {
-        let post = await PostService.get(postId)
+        let post = await ChannelPostService.get(postId)
 
         setPost(post)
         setVoteCount(post.voteCount)
@@ -78,7 +80,7 @@ const Post = () => {
     const createVote = async () => {
         let voteRequest = {
             'articleId' : post.id,
-            'identity' : 'POST',
+            'identity' : 'CHANNEL_POST',
         }
 
         let result = await VoteService.create(voteRequest)

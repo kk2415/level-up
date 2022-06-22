@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long> {
+public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>, ChannelPostQueryRepository {
 
     @Query("select cp from ChannelPost cp where cp.channel.id = :channelId")
     Page<ChannelPost> findByChannelId(@Param("channelId") Long channelId, Pageable pageable);

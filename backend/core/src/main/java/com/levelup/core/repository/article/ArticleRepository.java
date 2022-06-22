@@ -3,6 +3,7 @@ package com.levelup.core.repository.article;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,6 +21,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
 
     @Query("select cp from ChannelPost cp where cp.articleId = :articleId")
     Optional<ChannelPost> findChannelPostById(@Param("articleId") Long articleId);
+
+    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId order by cp.articleId desc")
+    List<ChannelPost> findByChannelId(@Param("channelId") Long channelId);
 
 //    @Query(value = "select cp from ChannelPost cp", countQuery = "select count(cp) from ChannelPost cp")
     @Query("select cp from ChannelPost cp where cp.channel.id = :channelId")

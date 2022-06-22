@@ -5,8 +5,8 @@ import { GoogleLogin } from 'react-google-login'
 import $ from 'jquery'
 
 import HorizonLine from "../../component/HorizonLine";
-import { MemberService } from '../../api/MemberService'
-import { uploadFile } from '../../api/FileService'
+import { MemberService } from '../../api/service/MemberService'
+import { uploadFile } from '../../api/service/FileService'
 import {createMemberValidation as validation} from '../../api/validation'
 
 const SignUp = () => {

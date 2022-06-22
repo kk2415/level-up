@@ -27,8 +27,8 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         ChannelPost channelPost = queryFactory.select(QChannelPost.channelPost)
                 .from(QChannelPost.channelPost)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId))
-                .where(QChannelPost.channelPost.id.gt(articleId))
-                .orderBy(QChannelPost.channelPost.id.asc())
+                .where(QChannelPost.channelPost.articleId.gt(articleId))
+                .orderBy(QChannelPost.channelPost.articleId.asc())
                 .fetchFirst();
 
         return Optional.ofNullable(channelPost);
@@ -41,8 +41,8 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         ChannelPost channelPost = queryFactory.select(QChannelPost.channelPost)
                 .from(QChannelPost.channelPost)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId))
-                .where(QChannelPost.channelPost.id.lt(articleId))
-                .orderBy(QChannelPost.channelPost.id.desc())
+                .where(QChannelPost.channelPost.articleId.lt(articleId))
+                .orderBy(QChannelPost.channelPost.articleId.desc())
                 .fetchFirst();
 
         return Optional.ofNullable(channelPost);

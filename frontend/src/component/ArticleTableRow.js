@@ -25,6 +25,7 @@ const ArticleTableRow = ({info, url}) => {
                     <td id={info.id} onMouseOver={onMouseEnter} onMouseOut={onMouseLeave} onClick={titleHandler}>{info.title + ' [' + info.commentCount + ']'}</td>
                     <td>{info.writer}</td>
                     <td>{info.views}</td>
+                    <td>{info.voteCount}</td>
                     <td>{info.dateCreated}</td>
                 </tr>
             }

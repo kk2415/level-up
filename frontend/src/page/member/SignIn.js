@@ -8,7 +8,7 @@ import { GoogleLogin } from 'react-google-login'
 import {BiUserCircle} from "react-icons/bi";
 
 import {Link} from "react-router-dom";
-import {MemberService} from "../../api/MemberService";
+import {MemberService} from "../../api/service/MemberService";
 import '../../css/login.css'
 import {loginMemberValidation as validation} from '../../api/validation'
 

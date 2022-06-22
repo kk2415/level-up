@@ -2,7 +2,8 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import PostService from '../../api/PostService'
+import PostService from '../../api/service/PostService'
+import ChannelPostService from '../../api/service/ChannelPostService'
 import {Container, Form} from 'react-bootstrap'
 
 const ModifyChannel = () => {
@@ -44,16 +45,15 @@ const ModifyChannel = () => {
     }
 
     const loadPost = async () => {
-        let post = await PostService.get(postId)
+        let post = await ChannelPostService.get(postId)
 
-        console.log(post)
         setPost(post)
     }
 
     const showPost = () => {
         if (post) {
             $('#title').val(post.title)
-            $('#category').val(post.category)
+            $('#category').val(post.postCategory)
         }
     }
 

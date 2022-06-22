@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Container} from 'react-bootstrap'
-import CommentService from "../../api/CommentService";
+import CommentService from "../../api/service/CommentService";
 import Comment from './Comment'
 import {TOKEN} from "../../api/token";
 

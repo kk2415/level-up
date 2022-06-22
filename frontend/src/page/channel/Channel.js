@@ -2,13 +2,14 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/ChannelService'
-import PostService from '../../api/PostService'
+import ChannelService from '../../api/service/ChannelService'
+import PostService from '../../api/service/PostService'
 import {Container, Form, Tabs, Tab, Row} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
 import {TOKEN} from "../../api/token";
 import Pager from "../../component/pager/Pager";
 import ChannelNotice from '../../component/channelNotice/ChannelNotice'
+import ChannelPostService from "../../api/service/ChannelPostService";
 
 const Channel = () => {
     const navigate = useNavigate();
@@ -52,22 +53,16 @@ const Channel = () => {
             return queryString.substring(queryString.indexOf('=') + 1, queryString.indexOf('&'))
         }
 
-        console.log(queryString)
-        console.log(Number(queryString.substr(queryString.indexOf('=') + 1)))
         return Number(queryString.substr(queryString.indexOf('=') + 1))
     }
 
-    const POST_NUM_ON_SCREEN = 10
-    const NOTICE_NUM_ON_SCREEN = 5
-    const PAGER_LENGTH = 5
+    const loadChannelPosts = async (channelId, searchCondition) => {
+        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
+        let result = await ChannelPostService.getAll(channelId, pageable, searchCondition)
 
-    const [channelId, setChannelId] = useState(getChannelId())
-    const [isManager, setIsManager] = useState(false)
-    const [searchCondition, setSearchCondition] = useState(getSearchCondition())
-
-    const [curPage, setCurPage] = useState(getCurrentPage())
-    const [channelName, setChannelName] = useState(null)
-    const [postsCount, setPostsCount] = useState(0)
+        setChannelPosts(result.content)
+        setChannelPostsCount(result.totalElements)
+    }
 
     const loadChannelInfo = async (channelId) => {
         let result = await ChannelService.get(channelId)
@@ -109,18 +104,7 @@ const Channel = () => {
             url = '/channel/' + channelId + '?page=' + 1
         }
 
-        console.log(url)
         window.location.href = url
-    }
-
-    const searchKeyDown = (event) => {
-        if (event.keyCode === 13) {
-            handleSearch()
-        }
-    }
-
-    const handleGoHome = () => {
-        navigate('/')
     }
 
     const onPagerNextButton = async (currentPage, lastPagerNum, pagerLength, searchCondition) => {
@@ -165,16 +149,40 @@ const Channel = () => {
         window.location.href = '/channel/' + channelId + '/manager'
     }
 
+    const searchKeyDown = (event) => {
+        if (event.keyCode === 13) {
+            handleSearch()
+        }
+    }
+
+    const handleGoHome = () => {
+        navigate('/')
+    }
+
+    const POST_NUM_ON_SCREEN = 10
+    const NOTICE_NUM_ON_SCREEN = 5
+    const PAGER_LENGTH = 5
+
+    const [channelId, setChannelId] = useState(getChannelId())
+    const [isManager, setIsManager] = useState(false)
+    const [searchCondition, setSearchCondition] = useState(getSearchCondition())
+
+    const [curPage, setCurPage] = useState(getCurrentPage())
+    const [channelName, setChannelName] = useState(null)
+    const [postsCount, setPostsCount] = useState(0)
+    const [channelPostsCount, setChannelPostsCount] = useState(0)
+    const [channelPosts, setChannelPosts] = useState(null)
+
     useEffect(() => {
         loadChannelInfo(channelId)
-        loadPostCount(channelId, searchCondition)
+        loadChannelPosts(channelId, searchCondition)
 
     }, [channelName, curPage])
 
     return (
         <>
             {
-                channelName &&
+                channelName && channelPosts &&
                 <Container>
                     <Container>
                         <Row className='d-flex justify-content-center align-items-center'>
@@ -231,7 +239,7 @@ const Channel = () => {
                                     </div>
                                 </div>
 
-                                <ChannelTable channelId={channelId} currentPage={curPage} searchCondition={searchCondition} />
+                                <ChannelTable channelPost={channelPosts} channelId={channelId} />
 
                                 <div className="row">
                                     <div className="col-lg-6 col-sm-12 text-lg-start text-center">
@@ -244,7 +252,7 @@ const Channel = () => {
 
                                 <Pager
                                     currentPage={curPage}
-                                    postsCount={postsCount}
+                                    postsCount={channelPostsCount}
                                     pagerLength={PAGER_LENGTH}
                                     searchCondition={searchCondition}
                                     setCurPage={setCurPage}

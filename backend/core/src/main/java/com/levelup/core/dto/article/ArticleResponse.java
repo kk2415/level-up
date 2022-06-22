@@ -11,6 +11,7 @@ public class ArticleResponse {
 
     public ArticleResponse(Article article) {
         this.id = article.getArticleId();
+        this.memberId = article.getMember().getId();
         this.title = article.getTitle();
         this.writer = article.getWriter();
         this.content = article.getContent();
@@ -21,6 +22,7 @@ public class ArticleResponse {
     }
 
     private Long id;
+    private Long memberId;
     private String title;
     private String writer;
     private String content;

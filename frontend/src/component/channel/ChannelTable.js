@@ -1,25 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {Table} from 'react-bootstrap'
 import ArticleTableRow from '../ArticleTableRow'
-import PostService from "../../api/PostService";
 
-export const ChannelTable = ({channelId, currentPage, searchCondition} ) => {
-    const [posts, setPosts] = useState(null)
-
-    const loadPost = async (channelId, page, searchCondition) => {
-        let result = await PostService.getAll(channelId, page, searchCondition)
-
-        setPosts(result.data)
-    }
-
-    useEffect(() => {
-        loadPost(channelId, currentPage, searchCondition)
-    }, [currentPage]);
-
+export const ChannelTable = ({channelPost, channelId} ) => {
     return (
         <>
             {
-                posts &&
+                channelPost &&
                 <Table>
                     <caption className="caption-top fs-3 fw-bold">전체글</caption>
                     <thead>
@@ -34,9 +21,9 @@ export const ChannelTable = ({channelId, currentPage, searchCondition} ) => {
                     </thead>
                     <tbody id="tableBody">
                     {
-                        posts.map((info) => (
+                        channelPost.map((info) => (
                             <ArticleTableRow info={info}
-                                             url={'/post/' + info.id + '?channel=' + channelId} />
+                                             url={'/channel-post/' + info.id + '?channel=' + channelId} />
                         ))
                     }
                     </tbody>

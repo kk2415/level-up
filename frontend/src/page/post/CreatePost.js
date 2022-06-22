@@ -2,7 +2,8 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import PostService from '../../api/PostService'
+import PostService from '../../api/service/PostService'
+import ChannelPostService from '../../api/service/ChannelPostService'
 import {Container, Form} from 'react-bootstrap'
 
 const CreatePost = () => {
@@ -27,13 +28,14 @@ const CreatePost = () => {
         let post = {
             channelId : channelId,
             title : formData.get('title'),
-            // content  : contents,
             content  : $('#summernote').val(),
             category : formData.get('category'),
+            postCategory : formData.get('category'),
+            articleType : 'CHANNEL_POST',
         }
-        console.log(post)
 
-        await PostService.create(post)
+        // await PostService.create(post)
+        await ChannelPostService.create(post, channelId)
     }
 
     const validate = (formData) => {

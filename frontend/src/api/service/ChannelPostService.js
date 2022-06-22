@@ -1,10 +1,10 @@
-import { send } from "./request"
+import { send } from "../request"
 
-const PostService = {
+const ChannelPostService = {
 
-    create: async (post) => {
-        await send('/api/post', 'POST', post)
-            .then((data) => {
+    create: async (channelPost, channelId) => {
+        await send('/api/channel-post?channel=' + channelId, 'POST', channelPost)
+            .then(() => {
                 window.history.back()
             })
             .catch((error) => {
@@ -16,10 +16,10 @@ const PostService = {
             })
     },
 
-    get: async (postId) => {
+    get: async (articleId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '?view=true')
+        await send('/api/channel-post/' + articleId + '?view=true', 'GET')
             .then((data) => {
                 post = data
             })
@@ -31,13 +31,12 @@ const PostService = {
         return post
     },
 
-    getAll: async (channelId, page, searchCondition) => {
+    getAll: async (channelId, pageable, searchCondition) => {
         let result = {}
-        let url = '/api/' + channelId + '/posts/' + page
 
+        let url = '/api/channel-posts?channel=' + channelId + '&' + pageable;
         if (searchCondition !== undefined && searchCondition.field !== undefined) {
-            url = '/api/' + channelId + '/posts/' + page +
-                '?' + 'field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
+            url += '&field=' + searchCondition.field + '&query=' + searchCondition.querys
         }
 
         await send(url, 'GET')
@@ -51,10 +50,10 @@ const PostService = {
         return result;
     },
 
-    getNext: async (postId, channelId) => {
+    getNext: async (articleId, channelId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '/nextPost?channelId=' + channelId)
+        await send('/api/channel-posts/' + articleId + '/nextPost?channel=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -66,10 +65,10 @@ const PostService = {
         return post
     },
 
-    getPrev: async (postId, channelId) => {
+    getPrev: async (articleId, channelId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '/prevPost?channelId=' + channelId)
+        await send('/api/channel-posts/' + articleId + '/prevPost?channel=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -81,37 +80,23 @@ const PostService = {
         return post
     },
 
-    count: async (channelId, searchCondition) => {
-        let count = 0
+    count: async () => {
 
-        let url = '/api/' + channelId + '/search/count'
-
-        if (searchCondition !== undefined && searchCondition.field !== undefined) {
-            url = '/api/' + channelId + '/search/count?field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
-        }
-
-        await send(url, 'GET')
-            .then((data) => {
-                count = data
-            })
-            .catch((error) => {console.log(error)})
-
-        return count
     },
 
-    modify: async (post, postId, channelId) => {
-        await send('/api/post/' + postId, 'PATCH', post)
+    modify: async (channelPost, articleId, channelId) => {
+        await send('/api/channel-posts/' + articleId, 'PATCH', channelPost)
             .then(() => {
                 alert('수정되었습니다.')
-                window.location.href = '/post/' + postId + '?channel=' + channelId
+                window.location.href = '/post/' + articleId + '?channel=' + channelId
             })
             .catch((error) => {
                 console.log(error)
             })
     },
 
-    delete: async (postId, channelId) => {
-        await send('/api/post/' + postId, 'DELETE')
+    delete: async (articleId, channelId) => {
+        await send('/api/channel-posts/' + articleId, 'DELETE')
             .then(() => {
                 alert('삭제되었습니다.')
                 window.location.href = '/channel/' + channelId + '?page=1'
@@ -123,4 +108,4 @@ const PostService = {
 }
 
 
-export default PostService;
+export default ChannelPostService;

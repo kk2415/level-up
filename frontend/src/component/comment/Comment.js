@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 
-import CommentService from "../../api/CommentService";
+import CommentService from "../../api/service/CommentService";
 import VoteService from "../../api/VoteService";
 import ReplyComment from "./ReplyComment";
 import WriteReplyComment from './WriteReplyComment'

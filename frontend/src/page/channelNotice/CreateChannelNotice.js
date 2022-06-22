@@ -2,7 +2,7 @@ import React, {useState, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/ChannelService'
+import ChannelService from '../../api/service/ChannelService'
 import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 

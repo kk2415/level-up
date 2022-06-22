@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {Navbar, Container, Nav, Button} from 'react-bootstrap'
 
 import {TOKEN} from '../api/token'
-import { MemberService } from '../api/MemberService'
+import { MemberService } from '../api/service/MemberService'
 
 const Header = () => {
 	const navigate = useNavigate();
