@@ -6,7 +6,7 @@ import PostService from '../../api/service/PostService'
 import ChannelPostService from '../../api/service/ChannelPostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
-import VoteService from "../../api/VoteService";
+import VoteService from "../../api/service/VoteService";
 
 const Post = () => {
     const navigate = useNavigate();
@@ -79,8 +79,8 @@ const Post = () => {
 
     const createVote = async () => {
         let voteRequest = {
-            'articleId' : post.id,
-            'identity' : 'CHANNEL_POST',
+            'ownerId' : post.id,
+            'voteType' : 'ARTICLE',
         }
 
         let result = await VoteService.create(voteRequest)

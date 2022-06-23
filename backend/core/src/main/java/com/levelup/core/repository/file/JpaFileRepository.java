@@ -55,15 +55,6 @@ public class JpaFileRepository implements FileRepository {
     }
 
     @Override
-    public List<File> findByChannelNoticeId(Long channelNoticeId) {
-        String query = "select f from File f join fetch f.channelNotice cn where cn.id = :channelNoticeId";
-
-        return em.createQuery(query, File.class)
-                .setParameter("channelNoticeId", channelNoticeId)
-                .getResultList();
-    }
-
-    @Override
     public List<File> findByQnaId(Long qnaId) {
         String query = "select f from File f join fetch f.qna q where q.id = :qnaId";
 

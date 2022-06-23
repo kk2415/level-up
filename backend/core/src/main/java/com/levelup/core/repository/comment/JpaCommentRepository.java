@@ -13,6 +13,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     private final EntityManager em;
 
+
     /***
      * 생성
      */
@@ -49,33 +50,6 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findByPostId(Long postId) {
-        String query = "select c from Comment c join fetch c.post p where p.id = :postId order by c.createAt";
-
-        return em.createQuery(query, Comment.class)
-                .setParameter("postId", postId)
-                .getResultList();
-    }
-
-    @Override
-    public List<Comment> findByNoticeId(Long noticeId) {
-        String query = "select c from Comment c join fetch c.notice n where n.id = :noticeId order by c.createAt";
-
-        return em.createQuery(query, Comment.class)
-                .setParameter("noticeId", noticeId)
-                .getResultList();
-    }
-
-    @Override
-    public List<Comment> findByChannelNoticeId(Long channelNoticeId) {
-        String query = "select c from Comment c join fetch c.channelNotice cn where cn.id = :channelNoticeId order by c.createAt";
-
-        return em.createQuery(query, Comment.class)
-                .setParameter("channelNoticeId", channelNoticeId)
-                .getResultList();
-    }
-
-    @Override
     public List<Comment> findByArticleId(Long articleId) {
         String query = "select c from Comment c join fetch c.article a where a.articleId = :articleId order by c.id asc";
 
@@ -85,28 +59,13 @@ public class JpaCommentRepository implements CommentRepository {
     }
 
     @Override
-    public List<Comment> findByQnaId(Long qnaId) {
-        String query = "select c from Comment c join fetch c.qna q where q.id = :qnaId order by c.createAt";
-
-        return em.createQuery(query, Comment.class)
-                .setParameter("qnaId", qnaId)
-                .getResultList();
-    }
-
-    @Override
     public List<Comment> findAll() {
         return em.createQuery("select c from Comment c", Comment.class)
                 .getResultList();
     }
 
-    @Override
-    public Long countAll() {
-        String query = "select count(c.id) from Comment c";
 
-        return em.createQuery(query, Long.class).getResultList().get(0);
-    }
-
-    /***
+    /**
      * 삭제
      */
     @Override

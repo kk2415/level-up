@@ -12,7 +12,6 @@ public interface FileRepository {
     List<File> findAll();
     List<File> findByPostId(Long postId);
     List<File> findByNoticeId(Long noticeId);
-    List<File> findByChannelNoticeId(Long channelNoticeId);
     List<File> findByQnaId(Long qnaId);
     void delete(Long id);
 

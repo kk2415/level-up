@@ -1,9 +1,6 @@
 package com.levelup.core.repository.article;
 
 import com.levelup.core.domain.Article.*;
-import com.levelup.core.domain.post.Post;
-import com.levelup.core.domain.post.QPost;
-import com.levelup.core.dto.post.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -109,9 +106,9 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         }
 
         if (postSearch.getField().equals("title")) {
-            return QPost.post.title.contains(postSearch.getQuery());
+            return QChannelPost.channelPost.title.contains(postSearch.getQuery());
         }
-        return QPost.post.writer.contains(postSearch.getQuery());
+        return QChannelPost.channelPost.writer.contains(postSearch.getQuery());
     }
 
 }

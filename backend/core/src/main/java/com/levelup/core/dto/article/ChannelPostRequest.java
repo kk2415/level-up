@@ -4,7 +4,7 @@ import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.post.PostCategory;
+import com.levelup.core.domain.Article.PostCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

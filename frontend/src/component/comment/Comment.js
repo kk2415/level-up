@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 
 import CommentService from "../../api/service/CommentService";
-import VoteService from "../../api/VoteService";
+import VoteService from "../../api/service/VoteService";
 import ReplyComment from "./ReplyComment";
 import WriteReplyComment from './WriteReplyComment'
 
@@ -15,8 +15,8 @@ const Comment = ({comment, articleId, identity}) => {
 
     const createVote = async () => {
         let voteRequest = {
-            'articleId' : comment.id,
-            'identity' : 'COMMENT',
+            'ownerId' : comment.id,
+            'voteType' : 'COMMENT',
         }
 
         let result = await VoteService.create(voteRequest)

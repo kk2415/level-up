@@ -11,13 +11,8 @@ public interface CommentRepository {
     Comment findById(Long id);
     List<Comment> findReplyById(Long id);
     List<Comment> findByMemberId(Long memberId);
-    List<Comment> findByPostId(Long postId);
-    List<Comment> findByNoticeId(Long noticeId);
-    List<Comment> findByChannelNoticeId(Long channelNoticeId);
-    List<Comment> findByQnaId(Long qnaId);
     List<Comment> findByArticleId(Long articleId);
     List<Comment> findAll();
     void delete(Long id);
-    Long countAll();
 
 }

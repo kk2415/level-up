@@ -3,10 +3,6 @@ package com.levelup.core.domain.comment;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.notice.ChannelNotice;
-import com.levelup.core.domain.notice.Notice;
-import com.levelup.core.domain.post.Post;
-import com.levelup.core.domain.qna.Qna;
 import com.levelup.core.domain.vote.Vote;
 import lombok.*;
 
@@ -36,24 +32,8 @@ public class Comment extends BaseTimeEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     private Article article;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notice_id")
-    private Notice notice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "channel_notice_id")
-    private ChannelNotice channelNotice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "qna_id")
-    private Qna qna;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<Vote> votes;
@@ -72,34 +52,6 @@ public class Comment extends BaseTimeEntity {
         member.getComments().add(this);
     }
 
-    public void setPost(Post post) {
-        this.post = post;
-        post.getComments().add(this);
-    }
-
-    public void setNotice(Notice notice) {
-        this.notice = notice;
-        notice.getComments().add(this);
-    }
-
-    public void setPost(ChannelNotice channelNotice) {
-        this.channelNotice = channelNotice;
-        channelNotice.getComments().add(this);
-    }
-
-    public void setPost(Qna qna) {
-        this.qna = qna;
-        qna.getComments().add(this);
-    }
-
-    public void setChannelNotice(ChannelNotice channelNotice) {
-        this.channelNotice = channelNotice;
-    }
-
-    public void setQna(Qna qna) {
-        this.qna = qna;
-    }
-
     public void setArticle(Article article) {
             this.article = article;
             article.getComments().add(this);
@@ -112,6 +64,10 @@ public class Comment extends BaseTimeEntity {
         this.addReplyCount();
     }
 
+    public void addVote(Vote vote) {
+        vote.setComment(this);
+        addVoteCount();
+    }
 
     //==비즈니스 로직==//
     public void changeComment(String content) {

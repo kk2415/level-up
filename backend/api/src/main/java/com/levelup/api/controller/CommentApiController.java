@@ -21,13 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class CommentApiController {
+
     private final CommentService commentService;
-    private final MemberService memberService;
-
-    private final PostService postService;
-    private final ChannelNoticeService channelNoticeService;
-    private final NoticeService noticeService;
-
 
     /***
      * 댓글 생성

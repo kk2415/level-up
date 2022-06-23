@@ -3,15 +3,15 @@ package com.levelup.core.domain.vote;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.post.Post;
-import com.levelup.core.domain.qna.Qna;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Vote {
 
     @Id
@@ -26,57 +26,45 @@ public class Vote {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @JoinColumn(name = "post_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
-
-    @JoinColumn(name = "qna_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Qna qna;
-
     @JoinColumn(name = "comment_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
+
     //==연관관계 메서드==//
     public void setMember(Member member) {
+        if (this.member != null) {
+            this.member.getVotes().remove(this);
+        }
+
         this.member = member;
         member.getVotes().add(this);
     }
 
-    public void setPost(Post post) {
-        this.post = post;
-        post.getVotes().add(this);
-    }
+    public void setArticle(Article article) {
+        if (this.article != null) {
+            this.article.getVotes().remove(this);
+        }
 
-    public void setQna(Qna qna) {
-        this.qna = qna;
-        qna.getVotes().add(this);
+        this.article = article;
+        article.getVotes().add(this);
     }
 
     public void setComment(Comment comment) {
+        if (this.comment != null) {
+            this.comment.getVotes().remove(this);
+        }
+
         this.comment = comment;
         comment.getVotes().add(this);
     }
 
-    //==생성 메서드==//
-    public static Vote createVote(Member member, Object object) {
-        Vote vote = new Vote();
-        vote.setMember(member);
-        setArticle(object, vote);
-        return vote;
-    }
 
-    private static void setArticle(Object object, Vote vote) {
-        if (object instanceof Post) {
-            vote.setPost((Post) object);
-        }
-        else if (object instanceof Qna) {
-            vote.setQna((Qna) object);
-        }
-        else if (object instanceof Comment) {
-            vote.setComment((Comment) object);
-        }
+    //==생성 메서드==//
+    public static Vote createVote(Member member) {
+        return Vote.builder()
+                .member(member)
+                .build();
     }
 
 }

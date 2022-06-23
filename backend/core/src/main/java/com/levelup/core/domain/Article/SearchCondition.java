@@ -1,10 +1,8 @@
-package com.levelup.core.dto.post;
+package com.levelup.core.domain.Article;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class SearchCondition {
 
     private String field;
