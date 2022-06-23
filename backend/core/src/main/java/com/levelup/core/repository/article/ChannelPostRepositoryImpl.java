@@ -1,8 +1,8 @@
 package com.levelup.core.repository.article;
 
+import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.Article.QChannelPost;
-import com.levelup.core.domain.post.Post;
 import com.levelup.core.domain.post.QPost;
 import com.levelup.core.dto.post.SearchCondition;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,66 +21,33 @@ public class ChannelPostRepositoryImpl implements ChannelPostQueryRepository {
     private final EntityManager em;
 
     @Override
-    public Post findNextPage(Long postId, Long channelId) {
+    public Optional<ChannelPost> findNextByChannelIdAndArticleType(Long articleId, Long channelId, ArticleType articleType) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        return queryFactory.select(QPost.post)
-                .from(QPost.post)
-                .where(QPost.post.channel.id.eq(channelId))
-                .where(QPost.post.id.gt(postId))
-                .orderBy(QPost.post.id.asc())
-                .fetchFirst();
-    }
-
-    @Override
-    public Post findPrevPage(Long postId, Long channelId) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        return queryFactory.select(QPost.post)
-                .from(QPost.post)
-                .where(QPost.post.channel.id.eq(channelId))
-                .where(QPost.post.id.lt(postId))
-                .orderBy(QPost.post.id.desc())
-                .fetchFirst();
-    }
-
-    @Override
-    public List<ChannelPost> findByChannelId(Long channelId, SearchCondition postSearch) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        return queryFactory.select(QChannelPost.channelPost)
+        ChannelPost channelPost = queryFactory.select(QChannelPost.channelPost)
                 .from(QChannelPost.channelPost)
-                .join(QChannelPost.channelPost.channel)
-                .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QChannelPost.channelPost.createAt.desc())
-                .fetch();
+                .where(QChannelPost.channelPost.channel.id.eq(channelId))
+                .where(QChannelPost.channelPost.articleType.eq(articleType))
+                .where(QChannelPost.channelPost.articleId.gt(articleId))
+                .orderBy(QChannelPost.channelPost.articleId.asc())
+                .fetchFirst();
+
+        return Optional.ofNullable(channelPost);
     }
 
     @Override
-    public List<ChannelPost> findByChannelId(Long channelId, int page, int postCount, SearchCondition postSearch) {
+    public Optional<ChannelPost> findPrevChannelIdAndArticleType(Long articleId, Long channelId, ArticleType articleType) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        int firstPage = (page - 1) * postCount; //0, 10, 20, 30
-
-        return queryFactory.select(QChannelPost.channelPost)
+        ChannelPost channelPost = queryFactory.select(QChannelPost.channelPost)
                 .from(QChannelPost.channelPost)
-                .join(QChannelPost.channelPost.channel)
-                .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QChannelPost.channelPost.createAt.desc())
-                .offset(firstPage)
-                .limit(postCount)
-                .fetch();
-    }
+                .where(QChannelPost.channelPost.channel.id.eq(channelId))
+                .where(QChannelPost.channelPost.articleType.eq(articleType))
+                .where(QChannelPost.channelPost.articleId.lt(articleId))
+                .orderBy(QChannelPost.channelPost.articleId.desc())
+                .fetchFirst();
 
-    private BooleanExpression equalQuery(SearchCondition postSearch) {
-        if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
-            return null;
-        }
-
-        if (postSearch.getField().equals("title")) {
-            return QPost.post.title.contains(postSearch.getQuery());
-        }
-        return QPost.post.writer.contains(postSearch.getQuery());
+        return Optional.ofNullable(channelPost);
     }
 
 }

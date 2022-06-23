@@ -25,7 +25,7 @@ const ChannelService = {
     createNotice: async (notice, channelId) => {
         await send('/api/channel-notice?channel=' + channelId, 'POST', notice)
             .then(() => {
-                window.location.href = '/channel/' + channelId + '?page=1'
+                // window.location.href = '/channel/' + channelId + '?page=1'
             })
             .catch((error) => {
                 console.log(error)

@@ -7,7 +7,6 @@ import lombok.Data;
 public class ArticleRequest {
 
     private String title;
-    private String writer;
     private String content;
     private ArticleType articleType;
 

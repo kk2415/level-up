@@ -2,6 +2,7 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 
 import ChannelService from '../../api/service/ChannelService'
+import ArticleService from '../../api/service/ArticleService'
 import {ChannelNoticeTable} from "./ChannelNoticeTable";
 import {AiFillCaretRight, AiFillCaretLeft} from "react-icons/ai";
 
@@ -40,13 +41,22 @@ const ChannelNotice = ({channelId}) => {
     }
 
     const loadNotice = async (channelId) => {
-        let result = await ChannelService.getAllNotice(channelId, curNoticePage)
+        const pageable = 'page=' + (curNoticePage - 1) + '&size=10&sort=id,desc'
 
-        if (result.data) {
-            console.log(result.data[0].allNoticeCount)
-            setNotice(result.data)
-            setNoticeCount(result.data[0].allNoticeCount)
+
+        // let result = await ChannelService.getAllNotice(channelId, curNoticePage)
+        let result = await ArticleService.getAll('CHANNEL_NOTICE', pageable)
+
+        if (result) {
+            setNotice(result.content)
+            setNoticeCount(result.totalElements)
         }
+
+        // if (result.data) {
+        //     console.log(result.data[0].allNoticeCount)
+        //     setNotice(result.data)
+        //     setNoticeCount(result.data[0].allNoticeCount)
+        // }
     }
 
     useEffect(() => {
@@ -64,9 +74,6 @@ const ChannelNotice = ({channelId}) => {
                     <ChannelNoticeTable notices={notice} channelId={channelId} page={curNoticePage} />
                 </div>
                 <div className="col">
-                    {/*<button onClick={handleManageChannel} className="btn btn-primary btn-sm float-start" type="button" id="manager">*/}
-                    {/*    채널 관리*/}
-                    {/*</button>*/}
                     <div className="d-grid gap-2 d-md-block float-end">
                         {/*<button className="btn btn-secondary btn-sm" type="button" id="deleteNoticeAll">*/}
                         {/*    일괄삭제*/}

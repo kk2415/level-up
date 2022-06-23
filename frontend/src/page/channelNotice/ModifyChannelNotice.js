@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelService from '../../api/service/ChannelService'
+import ArticleService from '../../api/service/ArticleService'
 import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 
@@ -45,6 +46,7 @@ const ModifyChannel = () => {
 
     const loadChannelNotice = async (channelNoticeId) => {
         let channelNotice = await ChannelService.getNotice(channelNoticeId)
+        // ArticleService.get()
 
         console.log(channelNotice)
         setChannelNotice(channelNotice)

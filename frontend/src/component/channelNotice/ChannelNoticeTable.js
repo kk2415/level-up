@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Table, Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
 import ArticleTableRow from '../ArticleTableRow'
 
-export const ChannelNoticeTable = ({notices, channelId, page}) => {
+export const ChannelNoticeTable = ({notices, channelId}) => {
     return (
         <>
             {
@@ -14,7 +14,7 @@ export const ChannelNoticeTable = ({notices, channelId, page}) => {
                         <th scope="col" className='fs-5 fw-bold'>글쓴이</th>
                         <th scope="col" className='fs-5 fw-bold'>제목</th>
                         <th scope="col" className='fs-5 fw-bold'>조회수</th>
-                        {/*<th scope="col" className='fs-5 fw-bold'>추천</th>*/}
+                        <th scope="col" className='fs-5 fw-bold'>추천</th>
                         <th scope="col" className='fs-5 fw-bold'>작성일</th>
                     </tr>
                     </thead>

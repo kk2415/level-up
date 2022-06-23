@@ -3,6 +3,8 @@ import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelService from '../../api/service/ChannelService'
+import ChannelPostService from '../../api/service/ChannelPostService'
+import ArticleService from '../../api/service/ArticleService'
 import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 
@@ -24,11 +26,13 @@ const CreateChannelNotice = () => {
         let notice = {
             title : formData.get('title'),
             content  : $('#summernote').val(),
-            // content  : contents,
+            articleType : 'CHANNEL_NOTICE',
         }
 
         console.log(notice)
-        await ChannelService.createNotice(notice, channelId)
+        // await ArticleService.create(notice)
+        // await ChannelService.createNotice(notice, channelId)
+        await ChannelPostService.create(notice, channelId)
     }
 
     const handleCancel = () => {

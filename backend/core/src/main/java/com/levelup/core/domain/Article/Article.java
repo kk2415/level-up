@@ -47,6 +47,7 @@ public class Article extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Enumerated(EnumType.STRING)
     private ArticleType articleType;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
