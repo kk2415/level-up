@@ -3,6 +3,7 @@ import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
 import ChannelService from '../../api/service/ChannelService'
+import ChannelPostService from '../../api/service/ChannelPostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 
@@ -30,7 +31,7 @@ const DetailChannelNotice = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await ChannelService.getPrevNotice(channelNoticeId)
+        let prev = await ChannelPostService.getPrev(channelNoticeId, 'CHANNEL_NOTICE', channelId)
 
         if (prev != null) {
             window.location.href = '/channel-notice/detail/' + prev.id + '?channel=' + channelId
@@ -41,7 +42,7 @@ const DetailChannelNotice = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await ChannelService.getNextNotice(channelNoticeId)
+        let next = await ChannelPostService.getNext(channelNoticeId, 'CHANNEL_NOTICE', channelId)
 
         if (next != null) {
             window.location.href = '/channel-notice/detail/' + next.id + '?channel=' + channelId
@@ -56,11 +57,12 @@ const DetailChannelNotice = () => {
     }
 
     const handleDeleteButton = async () => {
-        await ChannelService.deleteNotice(channelId, channelNoticeId)
+        await ChannelPostService.delete(channelNoticeId, channelId)
     }
 
     const loadChannelNotice = async (channelNoticeId) => {
-        let notice = await ChannelService.getNotice(channelNoticeId)
+        // let notice = await ChannelService.getNotice(channelNoticeId)
+        let notice = await ChannelPostService.get(channelNoticeId)
 
         console.log(notice)
         setChannelNotice(notice)

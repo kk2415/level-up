@@ -2,6 +2,7 @@ package com.levelup.api.service;
 
 
 import com.levelup.core.DateFormat;
+import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
@@ -58,6 +59,7 @@ public class ChannelService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final ArticleRepository articleRepository;
+    private final ChannelPostRepository channelPostRepository;
 //    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
 
@@ -148,9 +150,7 @@ public class ChannelService {
     public ChannelResponse getById(Long channelId) {
         Channel findChannel = channelRepository.findById(channelId);
 
-        return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getManager().getId(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
-                findChannel.getMemberCount(), findChannel.getThumbnailImage().getStoreFileName());
+        return new ChannelResponse(findChannel);
     }
 
     public List<Channel> getByMemberId(Long memberId) {
@@ -160,19 +160,13 @@ public class ChannelService {
     @Cacheable(cacheNames = "ChannelCategory")
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
-                .stream().map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getManager().getId(),
-                        c.getDescription(), c.getThumbnailDescription(), c.getMemberCount(),
-                        c.getThumbnailImage().getStoreFileName()))
+                .stream().map(ChannelResponse::new)
                 .collect(Collectors.toList());
     }
 
     public List<ChannelResponse> getAll() {
         return channelRepository.findAll().stream()
-                .map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getManager().getId(),
-                        c.getDescription(), c.getThumbnailDescription(), c.getMemberCount(),
-                        c.getThumbnailImage().getStoreFileName()))
+                .map(ChannelResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -199,32 +193,16 @@ public class ChannelService {
         return new UrlResource("file:" + fullPath);
     }
 
-    public ChannelManagerResponse getChannelAllInfo(Long channelId, Long memberId) {
+    public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
         Channel channel = channelRepository.findById(channelId);
         Member findMember = memberRepository.findById(memberId);
-        List<Member> waitingMembers = memberRepository.findWaitingMemberByChannelId(channelId);
-        List<Member> members = memberRepository.findByChannelId(channelId);
-        List<ChannelPost> channelPosts = articleRepository.findByChannelId(channelId);
 
         ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt()),
-                channel.getMemberCount(), (long)waitingMembers.size(), (long) channelPosts.size(),
+                channel.getMemberCount(), channel.getWaitingMemberCount(), channel.getPostCount(),
                 channel.getThumbnailImage().getStoreFileName());
 
-        List<MemberResponse> waitingMemberResponses = waitingMembers.stream().map(m -> new MemberResponse(
-                        m.getId(), m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
-                .collect(Collectors.toList());
-
-        List<MemberResponse> memberResponses = members.stream().map(m -> new MemberResponse(
-                        m.getId(), m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
-                .collect(Collectors.toList());
-
-        List<ManagerPostResponse> channelPostResponse = channelPosts.stream().map(ManagerPostResponse::new)
-                .collect(Collectors.toList());
-
-        return new ChannelManagerResponse(channelInfo, waitingMemberResponses, memberResponses, channelPostResponse);
+        return channelInfo;
     }
 
 
@@ -236,10 +214,7 @@ public class ChannelService {
         Channel channel = channelRepository.findById(channelId);
         channel.modifyChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
 
-        return new ChannelResponse(channel.getId(),
-                channel.getName(), channel.getLimitedMemberNumber(), channel.getManagerName(), channel.getManager().getId(),
-                channel.getDescription(), channel.getThumbnailDescription(), channel.getMemberCount(),
-                channel.getThumbnailImage().getStoreFileName());
+        return new ChannelResponse(channel);
     }
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)

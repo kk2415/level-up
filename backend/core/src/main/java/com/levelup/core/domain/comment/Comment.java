@@ -28,8 +28,8 @@ public class Comment extends BaseTimeEntity {
     private String writer;
     private String content;
 
-    @Column(name = "vote_count")
     private Long voteCount;
+    private Long replyCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -100,24 +100,16 @@ public class Comment extends BaseTimeEntity {
         this.qna = qna;
     }
 
-    public void setArticle(Object object) {
-        if (object instanceof Post) {
-            this.post = ((Post) object);
-        }
-        else if (object instanceof Notice) {
-            this.notice = ((Notice) object);
-        }
-        else if (object instanceof ChannelNotice) {
-            this.channelNotice = ((ChannelNotice) object);
-        }
-        else if (object instanceof Qna) {
-            this.qna = ((Qna) object);
-        }
-        else {
-            Article article = (Article) object;
+    public void setArticle(Article article) {
             this.article = article;
             article.getComments().add(this);
-        }
+    }
+
+    public void addChildComment(Comment child) {
+        this.child.add(child);
+        child.parent = (this);
+
+        this.addReplyCount();
     }
 
 
@@ -127,12 +119,15 @@ public class Comment extends BaseTimeEntity {
     }
 
     public void addVoteCount() {
-        this.voteCount = (this.voteCount + 1);
+        this.voteCount++;
     }
 
-    public void addChildComment(Comment child) {
-        this.child.add(child);
-        child.parent = (this);
+    public void addReplyCount() {
+        this.replyCount++;
+    }
+
+    public void removeReplyCount() {
+        this.replyCount++;
     }
 
 }

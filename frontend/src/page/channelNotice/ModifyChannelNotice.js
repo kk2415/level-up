@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelService from '../../api/service/ChannelService'
+import ChannelPostService from '../../api/service/ChannelPostService'
 import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 
@@ -32,11 +33,13 @@ const ModifyChannel = () => {
         let channelNotice = {
             title : formData.get('title'),
             content  : $('#summernote').val(),
-            // content  : contents,
         }
 
         console.log(channelNotice)
-        await ChannelService.modifyNotice(channelNotice, channelId, channelNoticeId)
+        let result = await ChannelPostService.modify(channelNotice, channelNoticeId, channelId);
+        if (result) {
+            window.history.back()
+        }
     }
 
     const handleCancel = () => {
@@ -44,9 +47,8 @@ const ModifyChannel = () => {
     }
 
     const loadChannelNotice = async (channelNoticeId) => {
-        let channelNotice = await ChannelService.getNotice(channelNoticeId)
+        let channelNotice = await ChannelPostService.get(channelNoticeId)
 
-        console.log(channelNotice)
         setChannelNotice(channelNotice)
     }
 

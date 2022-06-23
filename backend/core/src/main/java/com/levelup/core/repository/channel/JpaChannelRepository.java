@@ -53,6 +53,17 @@ public class JpaChannelRepository implements ChannelRepository {
     }
 
     @Override
+    public Channel findByArticleId(Long articleId) {
+        String query = "select ch from Channel ch " +
+                "join ChannelPost cp on ch.id = cp.channel.id " +
+                "where cp.articleId = :articleId";
+
+        return em.createQuery(query, Channel.class)
+                .setParameter("articleId", articleId)
+                .getSingleResult();
+    }
+
+    @Override
     public List<Channel> findByCategory(ChannelCategory category) {
         return em.createQuery("select ch from Channel ch where ch.category = :category", Channel.class)
                 .setParameter("category", category)

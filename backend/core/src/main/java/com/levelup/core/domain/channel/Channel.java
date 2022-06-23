@@ -1,5 +1,6 @@
 package com.levelup.core.domain.channel;
 
+import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
@@ -25,21 +26,15 @@ public class Channel extends BaseTimeEntity {
     @Column(name = "channel_id")
     private Long id;
 
-    private String name;
-
-    @Column(name = "limited_mem_num")
-    private Long limitedMemberNumber;
-
-    @Column(name = "manager_name")
-    private String managerName;
-
     @Lob
     private String description;
 
-    @Column(name = "member_count")
-    private Long memberCount;
+    private String name;
+    private String managerName;
+    private Long limitedMemberNumber;
 
-    @Column(name = "waiting_member_count")
+    private Long postCount;
+    private Long memberCount;
     private Long waitingMemberCount;
 
     @Enumerated(EnumType.STRING)
@@ -66,6 +61,9 @@ public class Channel extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "channel")
     private List<ChannelNotice> channelNotices;
+
+    @OneToMany(mappedBy = "channel")
+    private List<ChannelPost> channelPosts;
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.
@@ -147,16 +145,18 @@ public class Channel extends BaseTimeEntity {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, ChannelCategory category, UploadFile thumbnailImage) {
-        this.name = name;
-        this.limitedMemberNumber = limitNumber;
-        this.description = description;
-        this.thumbnailDescription = thumbnailDescription;
-        this.thumbnailImage = thumbnailImage;
-        this.category = category;
-    }
-
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
+
+    public void addPostCount() {
+        this.postCount++;
+    }
+
+    public void removePostCount() {
+        if (this.postCount > 0) {
+            this.postCount--;
+        }
+    }
+
 }

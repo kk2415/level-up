@@ -1,13 +1,10 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import PostService from '../../api/service/PostService'
 import ChannelPostService from '../../api/service/ChannelPostService'
 import {Container, Form} from 'react-bootstrap'
 
 const ModifyChannel = () => {
-    const navigate = useNavigate();
 
     const getChannelId = () => {
         let search = decodeURI($(window.location).attr('search'))
@@ -31,13 +28,11 @@ const ModifyChannel = () => {
 
         let post = {
             title : formData.get('title'),
-            // content  : contents,
             content  : $('#summernote').val(),
-            category : formData.get('category'),
+            postCategory : formData.get('category'),
         }
-        console.log(post)
 
-        await PostService.modify(post, postId, channelId)
+        await ChannelPostService.modify(post, postId, channelId)
     }
 
     const handleCancel = () => {
@@ -133,7 +128,6 @@ const ModifyChannel = () => {
                         <Form.Group className="mb-3">
                             <Form.Label>내용</Form.Label>
                             <textarea id='summernote' />
-                            {/*<RichTextEditor setContents={setContents} contents={post.content} />*/}
                         </Form.Group>
 
                         <div className="row">

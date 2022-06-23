@@ -1,5 +1,6 @@
 package com.levelup.core.dto.channel;
 
+import com.levelup.core.domain.channel.Channel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -16,7 +17,19 @@ public class ChannelResponse {
     private String description;
     private String thumbnailDescription;
     private Long memberCount;
+    private Long postCount;
     private String storeFileName;
 
-
+    public ChannelResponse(Channel channel) {
+        this.id = channel.getId();
+        this.name = channel.getName();
+        this.limitedMemberNumber = channel.getLimitedMemberNumber();
+        this.managerName = channel.getManagerName();
+        this.managerId = channel.getManager().getId();
+        this.description = channel.getDescription();
+        this.thumbnailDescription = channel.getThumbnailDescription();
+        this.memberCount = channel.getMemberCount();
+        this.postCount = channel.getPostCount();
+        this.storeFileName = channel.getThumbnailImage().getStoreFileName();
+    }
 }

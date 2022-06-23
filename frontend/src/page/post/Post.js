@@ -33,7 +33,7 @@ const Post = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await ChannelPostService.getPrev(postId, channelId)
+        let prev = await ChannelPostService.getPrev(postId, 'CHANNEL_POST', channelId)
 
         if (prev != null) {
             window.location.href = '/channel-post/' + prev.id + '?channel=' + channelId
@@ -44,7 +44,7 @@ const Post = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await ChannelPostService.getNext(postId, channelId)
+        let next = await ChannelPostService.getNext(postId, 'CHANNEL_POST', channelId)
 
         if (next != null) {
             window.location.href = '/channel-post/' + next.id + '?channel=' + channelId
@@ -173,7 +173,7 @@ const Post = () => {
                         <br />
                     </div>
 
-                    <CommentFrame articleId={postId} identity={'POST'} />
+                    <CommentFrame articleId={postId} identity={'CHANNEL_POST'} />
 
                     <div>
                         <button onClick={handleGoChannelButton} className="btn btn-dark float-start" type="button" id="allPostButton">목록으로

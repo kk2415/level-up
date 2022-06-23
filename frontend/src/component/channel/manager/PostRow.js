@@ -2,18 +2,26 @@ import React from 'react';
 import {send} from "../../../api/request";
 import {Button} from "@mui/material";
 import {Container} from "react-bootstrap";
+import ChannelPostService from "../../../api/service/ChannelPostService";
 
 const PostRow = ({info, channelId}) => {
 
     const deletePost = async () => {
-        await send('/api/post/' + info.id, 'DELETE')
-            .then(() => {
-                alert('게시물이 삭제되었습니다.')
-                window.location.href = '/channel/' + channelId + '/manager'
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        let result = await ChannelPostService.delete(info.id, channelId);
+
+        if (result) {
+            alert('게시물이 삭제되었습니다.')
+            window.location.href = '/channel/' + channelId + '/manager'
+        }
+
+        // await send('/api/post/' + info.id, 'DELETE')
+        //     .then(() => {
+        //         alert('게시물이 삭제되었습니다.')
+        //         window.location.href = '/channel/' + channelId + '/manager'
+        //     })
+        //     .catch((error) => {
+        //         console.log(error)
+        //     })
     }
 
     return (
