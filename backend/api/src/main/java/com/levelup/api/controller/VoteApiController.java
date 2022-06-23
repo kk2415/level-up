@@ -4,10 +4,9 @@ package com.levelup.api.controller;
 import com.levelup.api.service.VoteService;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.vote.CreateVoteRequest;
-import com.levelup.core.dto.Result;
+import com.levelup.core.dto.vote.VoteResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -25,11 +24,15 @@ public class VoteApiController {
     private final VoteService voteService;
 
     @PostMapping("/vote")
-    public ResponseEntity create(@RequestBody @Validated CreateVoteRequest voteRequest,
+    public ResponseEntity<VoteResponse> create(@RequestBody @Validated CreateVoteRequest voteRequest,
                                  @AuthenticationPrincipal Member member) {
-        voteService.create(voteRequest.getIdentity(), voteRequest.getArticleId(), member.getId());
+        System.out.println(voteRequest.getVoteType());
+        System.out.println(voteRequest.getOwnerId());
+        System.out.println(member.getId());
 
-        return new ResponseEntity(new Result<>("추천되었습니다", 0), HttpStatus.CREATED);
+        VoteResponse voteResponse = voteService.create(voteRequest, member.getId());
+
+        return ResponseEntity.ok().body(voteResponse);
     }
 
 }

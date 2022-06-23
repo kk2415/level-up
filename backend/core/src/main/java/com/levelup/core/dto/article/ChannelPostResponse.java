@@ -3,7 +3,7 @@ package com.levelup.core.dto.article;
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
-import com.levelup.core.domain.post.PostCategory;
+import com.levelup.core.domain.Article.PostCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

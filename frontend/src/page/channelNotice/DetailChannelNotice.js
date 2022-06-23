@@ -2,10 +2,10 @@
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import ChannelService from '../../api/service/ChannelService'
 import ChannelPostService from '../../api/service/ChannelPostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
+    import VoteService from "../../api/service/VoteService";
 
 const DetailChannelNotice = () => {
     const navigate = useNavigate();
@@ -19,12 +19,6 @@ const DetailChannelNotice = () => {
         let search = decodeURI($(window.location).attr('search'))
         return search.substr(search.indexOf('=') + 1)
     }
-
-    const [channelNotice, setChannelNotice] = useState(null)
-    const [channelNoticeId, setChannelNoticeId] = useState(getChannelNoticeId())
-    const [channelId, setChannelId] = useState(getChannelId())
-    const [authentication, setAuthentication] = useState(false)
-    const [voteCount, setVoteCount] = useState(0)
 
     const handleGoChannelButton = () => {
         navigate('/channel/' + channelId + '?page=1')
@@ -61,12 +55,10 @@ const DetailChannelNotice = () => {
     }
 
     const loadChannelNotice = async (channelNoticeId) => {
-        // let notice = await ChannelService.getNotice(channelNoticeId)
         let notice = await ChannelPostService.get(channelNoticeId)
 
-        console.log(notice)
         setChannelNotice(notice)
-        // setVoteCount(post.voteCount)
+        setVoteCount(notice.voteCount)
     }
 
     const authorize = (channelNotice) => {
@@ -78,16 +70,22 @@ const DetailChannelNotice = () => {
     }
 
     const createVote = async () => {
-        // let voteRequest = {
-        //     'articleId' : post.id,
-        //     'identity' : 'POST',
-        // }
-        //
-        // let result = await VoteService.create(voteRequest)
-        // if (result != null) {
-        //     setVoteCount(voteCount + 1)
-        // }
+        let voteRequest = {
+            'ownerId' : channelNoticeId,
+            'voteType' : 'ARTICLE',
+        }
+
+        let result = await VoteService.create(voteRequest)
+        if (result != null) {
+            setVoteCount(voteCount + 1)
+        }
     }
+
+    const [channelNotice, setChannelNotice] = useState(null)
+    const [channelNoticeId, setChannelNoticeId] = useState(getChannelNoticeId())
+    const [channelId, setChannelId] = useState(getChannelId())
+    const [authentication, setAuthentication] = useState(false)
+    const [voteCount, setVoteCount] = useState(0)
 
     useEffect(() => {
         authorize(channelNotice)
@@ -118,21 +116,21 @@ const DetailChannelNotice = () => {
                                     <span id="views">{channelNotice.views}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;
-                                {/*<span>추천*/}
-                                {/*    &nbsp;*/}
-                                {/*    <span id="voteCount">0</span>*/}
-                                {/*</span>*/}
+                                <span>추천
+                                    &nbsp;
+                                    <span id="voteCount">{voteCount}</span>
+                                </span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span>
                                     댓글&nbsp;
                                     <span id="commentCount">{channelNotice.commentCount}</span>
                                 </span>
 
-                                {/*<span className="d-grid gap-2 d-md-block float-end">*/}
-                                {/*    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">*/}
-                                {/*        {'추천 ' + voteCount}*/}
-                                {/*    </button>*/}
-                                {/*</span>*/}
+                                <span className="d-grid gap-2 d-md-block float-end">
+                                    <button onClick={createVote} id="vote" className="btn-sm btn btn-primary">
+                                        {'추천 ' + voteCount}
+                                    </button>
+                                </span>
                             </p>
                         </div>
 
@@ -180,9 +178,9 @@ const DetailChannelNotice = () => {
                             목록으로
                         </button>
                         <div className="d-grid gap-2 d-md-block float-end">
-                            <button onClick={handlePrevPostButton} className="btn btn-dark" type="button" id="prevPostButton">이전글
-                            </button>
                             <button onClick={handleNextPostButton} className="btn btn-dark" type="button" id="nextPostButton">다음글
+                            </button>
+                            <button onClick={handlePrevPostButton} className="btn btn-dark" type="button" id="prevPostButton">이전글
                             </button>
                         </div>
                     </div>

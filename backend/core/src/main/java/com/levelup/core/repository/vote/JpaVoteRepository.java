@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,60 +32,33 @@ public class JpaVoteRepository implements VoteRepository {
     }
 
     @Override
-    public List<Vote> findByPostAndMember(Long postId, Long memberId) {
+    public Optional<List<Vote>> findByMemberIdAndArticleId(Long articleId, Long memberId) {
         String query = "select v from Vote v " +
-                "join fetch v.post p " +
+                "join fetch v.article a " +
                 "join fetch v.member m " +
-                "where p.id = :postId and m.id = :memberId";
+                "where a.articleId = :articleId and m.id = :memberId";
 
-        return em.createQuery(query, Vote.class)
-                .setParameter("postId", postId)
+        List<Vote> result = em.createQuery(query, Vote.class)
+                .setParameter("articleId", articleId)
                 .setParameter("memberId", memberId)
                 .getResultList();
+
+        return Optional.ofNullable(result);
     }
 
     @Override
-    public List<Vote> findByQnaAndMember(Long qnaId, Long memberId) {
-        String query = "select v from Vote v " +
-                "join fetch v.qna q " +
-                "join fetch v.member m " +
-                "where q.id = :qnaId and m.id = :memberId";
-
-        return em.createQuery(query, Vote.class)
-                .setParameter("qnaId", qnaId)
-                .setParameter("memberId", memberId)
-                .getResultList();
-    }
-
-    @Override
-    public List<Vote> findByCommentAndMember(Long commentId, Long memberId) {
+    public Optional<List<Vote>> findByMemberIdAndCommentId(Long commentId, Long memberId) {
         String query = "select v from Vote v " +
                 "join fetch v.comment c " +
                 "join fetch v.member m " +
                 "where c.id = :commentId and m.id = :memberId";
 
-        return em.createQuery(query, Vote.class)
+        List<Vote> result = em.createQuery(query, Vote.class)
                 .setParameter("commentId", commentId)
                 .setParameter("memberId", memberId)
                 .getResultList();
-    }
 
-    @Override
-    public List<Vote> findByPostId(Long postId) {
-        String query = "select v from Vote v join fetch v.post p where p.id = :postId";
-
-        return em.createQuery(query, Vote.class)
-                .setParameter("postId", postId)
-                .getResultList();
-    }
-
-    @Override
-    public List<Vote> findByQnaId(Long qnaId) {
-        String query = "select v from Vote v join fetch v.qna q where q.id = :qnaId";
-
-        return em.createQuery(query, Vote.class)
-                .setParameter("qnaId", qnaId)
-                .getResultList();
+        return Optional.ofNullable(result);
     }
 
     @Override

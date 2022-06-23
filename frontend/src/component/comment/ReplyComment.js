@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {Container} from 'react-bootstrap'
-import VoteService from "../../api/VoteService";
+import VoteService from "../../api/service/VoteService";
 
 const ReplyComment = ({reply}) => {
     const [voteCount, setVoteCount] = useState(reply.voteCount)
 
     const createVote = async () => {
         let voteRequest = {
-            'articleId' : reply.id,
-            'identity' : 'COMMENT',
+            'ownerId' : reply.id,
+            'voteType' : 'COMMENT',
         }
 
         let result = await VoteService.create(voteRequest)

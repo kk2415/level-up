@@ -1,22 +1,24 @@
 package com.levelup.api.service;
 
 
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.post.Post;
-import com.levelup.core.domain.qna.Qna;
 import com.levelup.core.domain.vote.Vote;
+import com.levelup.core.domain.vote.VoteType;
+import com.levelup.core.dto.vote.CreateVoteRequest;
+import com.levelup.core.dto.vote.VoteResponse;
 import com.levelup.core.exception.DuplicateVoteException;
+import com.levelup.core.exception.PostNotFoundException;
+import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
-import com.levelup.core.repository.post.PostRepository;
-import com.levelup.core.repository.qna.QnaRepository;
 import com.levelup.core.repository.vote.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,78 +29,67 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
-    private final QnaRepository qnaRepository;
+    private final ArticleRepository articleRepository;
 
-    public Long create(ArticleType identity, Long articleId, Long memberId) {
-        Object article = identifyArticle(identity, articleId);
+
+    /**
+     * 생성
+     * */
+    public VoteResponse create(CreateVoteRequest voteRequest, Long memberId) {
+        validDuplicateVote(voteRequest.getVoteType(), voteRequest.getOwnerId(), memberId);
+
         Member findMember = memberRepository.findById(memberId);
 
-        validDuplicateVote(identity, articleId, memberId);
-
-        Vote vote = Vote.createVote(findMember, article);
+        Vote vote = Vote.createVote(findMember);
+        associationMapping(vote, voteRequest.getOwnerId(),voteRequest.getVoteType());
         voteRepository.save(vote);
 
-        addVoteCount(article, articleId);
-        return vote.getId();
+        return new VoteResponse(voteRequest.getOwnerId(), voteRequest.getVoteType());
     }
 
-    private void validDuplicateVote(ArticleType identity, Long articleId, Long memberId) {
-        List<Vote> votes;
+    public void associationMapping(Vote vote, Long ownerId, VoteType voteType) {
+        switch (voteType) {
+            case ARTICLE:
+                Article article = articleRepository.findById(ownerId)
+                        .orElseThrow(() -> new PostNotFoundException("존재하지 않는 게시글입니다."));
+                article.addVote(vote);
+                break;
+            case COMMENT:
+                Comment comment = commentRepository.findById(ownerId);
+                comment.addVote(vote);
+                break;
+        }
+    }
 
-        switch (identity) {
-            case POST: votes = voteRepository.findByPostAndMember(articleId, memberId); break;
-            case QNA: votes = voteRepository.findByQnaAndMember(articleId, memberId); break;
-            case COMMENT: votes = voteRepository.findByCommentAndMember(articleId, memberId); break;
-            default: throw new IllegalArgumentException("Unknown Article Identity");
+    private void validDuplicateVote(VoteType voteType, Long ownerId, Long memberId) {
+        List<Vote> votes = new ArrayList<>();
+
+        switch (voteType) {
+            case ARTICLE:
+                votes = voteRepository.findByMemberIdAndArticleId(ownerId, memberId).orElse(new ArrayList<>());
+                break;
+            case COMMENT:
+                votes = voteRepository.findByMemberIdAndCommentId(ownerId, memberId).orElse(new ArrayList<>());
+                break;
         }
 
         if (!votes.isEmpty()) {
-            throw new DuplicateVoteException("추천은 한 번만 할 수 있습니다!");
+            throw new DuplicateVoteException("추천은 한 번만 가능합니다");
         }
     }
 
-    private Object identifyArticle(ArticleType identity, Long articleId) {
-        switch (identity) {
-            case POST: return postRepository.findById(articleId);
-            case QNA: return qnaRepository.findById(articleId);
-            case COMMENT: return commentRepository.findById(articleId);
-            default: throw new IllegalArgumentException("Unknown Article Identity");
-        }
-    }
 
-    private void addVoteCount (Object article, Long articleId) {
-        if (article instanceof Post) {
-            postRepository.findById(articleId).get().addVoteCount();
-        }
-        else if (article instanceof Qna) {
-            qnaRepository.findById(articleId).addVoteCount();
-        }
-        else if (article instanceof Comment) {
-            commentRepository.findById(articleId).addVoteCount();
-        }
-    }
-
+    /**
+     * 조회
+     * */
     public Vote findById(Long id) {
         return voteRepository.findById(id);
     }
 
-    public List<Vote> findByPostAndMember(Long pottId, Long memberId) {
-        return voteRepository.findByPostAndMember(pottId, memberId);
-    }
 
-    public List<Vote> findByQnaAndMember(Long qnaId, Long memberId) {
-        return voteRepository.findByQnaAndMember(qnaId, memberId);
-    }
-
-    public List<Vote> findByCommentAndMember(Long commentId, Long memberId) {
-        return voteRepository.findByCommentAndMember(commentId, memberId);
-    }
-
-    public List<Vote> findAll() {
-        return voteRepository.findAll();
-    }
-
+    /**
+     * 삭제
+     * */
     public void delete(Long id) {
         voteRepository.delete(id);
     }

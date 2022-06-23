@@ -2,8 +2,6 @@ package com.levelup.api.service;
 
 
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelInfo;
@@ -15,26 +13,19 @@ import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.post.Post;
 import com.levelup.core.dto.channel.*;
-import com.levelup.core.dto.member.MemberResponse;
-import com.levelup.core.dto.post.SearchCondition;
 import com.levelup.core.exception.DuplicateChannelMemberException;
-import com.levelup.core.exception.DuplicateVoteException;
 import com.levelup.core.exception.ImageNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.article.ChannelPostRepository;
 import com.levelup.core.repository.channel.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
-import com.levelup.core.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,9 +48,6 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
-    private final ArticleRepository articleRepository;
-    private final ChannelPostRepository channelPostRepository;
 //    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
 

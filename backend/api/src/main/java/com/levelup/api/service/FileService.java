@@ -58,10 +58,6 @@ public class FileService {
         return fileRepository.findByNoticeId(noticeId);
     }
 
-    public List<File> findByChannelNoticeId(Long channelNoticeId) {
-        return fileRepository.findByChannelNoticeId(channelNoticeId);
-    }
-
     public List<File> findByQnaId(Long qnaId) {
         return fileRepository.findByQnaId(qnaId);
     }

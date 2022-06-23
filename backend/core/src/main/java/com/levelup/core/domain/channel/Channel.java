@@ -5,8 +5,6 @@ import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.notice.ChannelNotice;
-import com.levelup.core.domain.post.Post;
 import com.levelup.core.exception.NoPlaceChnnelException;
 import lombok.*;
 
@@ -49,18 +47,12 @@ public class Channel extends BaseTimeEntity {
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers;
 
-    @OneToMany(mappedBy = "channel",  cascade = CascadeType.REMOVE)
-    private List<Post> posts;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Member manager;
 
     @OneToMany(mappedBy = "channel")
     private List<File> files;
-
-    @OneToMany(mappedBy = "channel")
-    private List<ChannelNotice> channelNotices;
 
     @OneToMany(mappedBy = "channel")
     private List<ChannelPost> channelPosts;

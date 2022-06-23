@@ -1,7 +1,6 @@
 package com.levelup.core.domain.Article;
 
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.post.PostCategory;
 import lombok.*;
 
 import javax.persistence.*;

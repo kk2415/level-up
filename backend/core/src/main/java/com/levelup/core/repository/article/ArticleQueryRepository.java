@@ -5,8 +5,7 @@ package com.levelup.core.repository.article;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
-import com.levelup.core.domain.post.Post;
-import com.levelup.core.dto.post.SearchCondition;
+import com.levelup.core.domain.Article.SearchCondition;
 
 import java.util.List;
 import java.util.Optional;

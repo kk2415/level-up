@@ -51,11 +51,10 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Vote> votes = new ArrayList<>();
 
-    public void setMember(Member member) {
-        this.member = member;
-        member.getArticles().add(this);
-    }
 
+    /**
+     * 생성 메서드
+     * */
     public static Article createArticle(Member member, String title, String content, ArticleType articleType) {
         Article article = new Article();
 
@@ -71,6 +70,24 @@ public class Article extends BaseTimeEntity {
         return article;
     }
 
+
+    /**
+     * 연관관계 매핑
+     * */
+    public void setMember(Member member) {
+        this.member = member;
+        member.getArticles().add(this);
+    }
+
+    public void addVote(Vote vote) {
+        vote.setArticle(this);
+        addVoteCount();
+    }
+
+
+    /**
+     * 비즈니스 로직
+     * */
     public void addViews() {
         this.views++;
     }
