@@ -40,7 +40,7 @@ const ChannelNotice = ({channelId}) => {
     }
 
     const loadNotice = async (channelId) => {
-        const pageable = 'page=' + (curNoticePage - 1) + '&size=10&sort=id,desc'
+        const pageable = 'page=' + (curNoticePage - 1) + '&size=5&sort=id,desc'
 
 
         let result = await ChannelPostService.getAll(channelId, 'CHANNEL_NOTICE', pageable)

@@ -1,7 +1,12 @@
 package com.levelup.core.dto.comment;
 
+import com.levelup.core.DateFormat;
+import com.levelup.core.domain.comment.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.format.datetime.DateFormatter;
+
+import java.time.format.DateTimeFormatter;
 
 
 @Data
@@ -14,5 +19,14 @@ public class CommentResponse {
     private String dateCreated;
     private Long voteCount;
     private Long replyCount;
+
+    public CommentResponse(Comment comment) {
+        this.id = comment.getId();
+        this.writer = comment.getWriter();
+        this.content = comment.getContent();
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(comment.getCreateAt());
+        this.voteCount = comment.getVoteCount();
+        this.replyCount = comment.getReplyCount();
+    }
 
 }

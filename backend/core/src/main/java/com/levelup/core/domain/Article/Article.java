@@ -6,7 +6,6 @@ import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.vote.Vote;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,22 +24,15 @@ public class Article extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "article_id")
     private Long articleId;
-
-    private String title;
-    private String writer;
 
     @Lob
     private String content;
+    private String title;
+    private String writer;
 
-    @Column(name = "vote_count")
     private Long voteCount;
-
-    @Column(name = "comment_count")
     private Long commentCount;
-
-    @Column(name = "views")
     private Long views;
 
     @ManyToOne(fetch = LAZY)
@@ -80,15 +72,23 @@ public class Article extends BaseTimeEntity {
     }
 
     public void addViews() {
-        this.views += 1;
+        this.views++;
     }
 
     public void addVoteCount() {
-        this.voteCount += 1;
+        this.voteCount++;
+    }
+
+    public void removeVoteCount() {
+        this.voteCount--;
     }
 
     public void addCommentCount() {
-        this.commentCount += 1;
+        this.commentCount++;
+    }
+
+    public void removeCommentCount() {
+        this.commentCount--;
     }
 
     public void modifyArticle(String title, String content) {

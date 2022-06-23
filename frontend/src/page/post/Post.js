@@ -173,7 +173,7 @@ const Post = () => {
                         <br />
                     </div>
 
-                    <CommentFrame articleId={postId} identity={'POST'} />
+                    <CommentFrame articleId={postId} identity={'CHANNEL_POST'} />
 
                     <div>
                         <button onClick={handleGoChannelButton} className="btn btn-dark float-start" type="button" id="allPostButton">목록으로

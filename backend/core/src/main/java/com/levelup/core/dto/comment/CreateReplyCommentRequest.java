@@ -1,5 +1,6 @@
 package com.levelup.core.dto.comment;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
@@ -23,12 +24,13 @@ public class CreateReplyCommentRequest {
     @NotNull
     private ArticleType identity;
 
-    public Comment toEntity(Member member, Object article) {
+    public Comment toEntity(Member member, Article article) {
         Comment comment = Comment.builder()
                 .member(member)
                 .writer(member.getName())
                 .content(content)
                 .voteCount(0L)
+                .replyCount(0L)
                 .child(new ArrayList<>())
                 .build();
         comment.setArticle(article);

@@ -1,25 +1,20 @@
 package com.levelup.api.service;
 
 
-import com.levelup.core.DateFormat;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.post.Post;
 import com.levelup.core.dto.comment.CommentResponse;
 import com.levelup.core.dto.comment.CreateCommentRequest;
 import com.levelup.core.dto.comment.CreateReplyCommentRequest;
+import com.levelup.core.exception.PostNotFoundException;
+import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
-import com.levelup.core.repository.notice.ChannelNoticeRepository;
-import com.levelup.core.repository.notice.NoticeRepository;
-import com.levelup.core.repository.post.PostRepository;
-import com.levelup.core.repository.qna.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,85 +25,47 @@ public class CommentService {
 
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final ChannelNoticeRepository channelNoticeRepository;
-    private final PostRepository postRepository;
-    private final NoticeRepository noticeRepository;
-    private final QnaRepository qnaRepository;
+    private final ArticleRepository articleRepository;
+
 
     /**
      * 댓글 작성
      * */
     public CommentResponse create(CreateCommentRequest commentRequest, Long memeberId) {
         Member findMember = memberRepository.findById(memeberId);
-        Object article = identifyArticle(commentRequest.getIdentity(), commentRequest.getArticleId());
-
+        Article article = articleRepository.findById(commentRequest.getArticleId())
+                .orElseThrow(() -> new PostNotFoundException("존재하지 않는 게시글입니다.0"));
         Comment findComment = commentRequest.toEntity(findMember, article);
 
         commentRepository.save(findComment);
+        article.addCommentCount();
 
-        return new CommentResponse(findComment.getId(), findComment.getWriter(), findComment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findComment.getCreateAt()),
-                findComment.getVoteCount(), (long) findComment.getChild().size());
+        return new CommentResponse(findComment);
     }
 
     public CommentResponse createReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
         Member member = memberRepository.findById(memberId);
         Comment parent = commentRepository.findById(commentRequest.getParentId());
-        Object article = identifyArticle(commentRequest.getIdentity(), commentRequest.getArticleId());
-
+        Article article = articleRepository.findById(commentRequest.getArticleId())
+                .orElseThrow(() -> new PostNotFoundException("존재하지 않는 게시글입니다.0"));
         Comment child = commentRequest.toEntity(member, article);
-        commentRepository.save(child);
 
+        commentRepository.save(child);
         parent.addChildComment(child);
 
-        return new CommentResponse(child.getId(), child.getWriter(), child.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(child.getCreateAt()),
-                child.getVoteCount(), (long) child.getChild().size());
-    }
-
-    private Object identifyArticle(ArticleType identity, Long articleId) {
-        switch (identity) {
-            case POST:
-                Post post = postRepository.findById(articleId).get();
-                post.addCommentCount();;
-
-                return post;
-            case CHANNEL_NOTICE: return channelNoticeRepository.findById(articleId);
-            case NOTICE: return noticeRepository.findById(articleId);
-            case QNA: return qnaRepository.findById(articleId);
-            default: throw new IllegalArgumentException("Unknown Article Identity");
-        }
+        return new CommentResponse(child);
     }
 
 
     /**
      * 댓글 조회
      * */
-    public List<CommentResponse> getAllByIdentityAndArticleId(ArticleType identity, Long articleId) {
-        List<Comment> comments;
-
-        switch (identity) {
-            case POST:
-                comments = commentRepository.findByPostId(articleId);
-                break;
-            case CHANNEL_NOTICE:
-                comments = commentRepository.findByChannelNoticeId(articleId);
-                break;
-            case NOTICE:
-                comments = commentRepository.findByNoticeId(articleId);
-                break;
-            case QNA:
-                comments = commentRepository.findByQnaId(articleId);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown Article Identity");
-        }
+    public List<CommentResponse> getComments(Long articleId) {
+        List<Comment> comments = commentRepository.findByArticleId(articleId);
 
         return comments.stream()
                 .filter(c -> c.getParent() == null)
-                .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreateAt()),
-                        c.getVoteCount(), (long) c.getChild().size()))
+                .map(CommentResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -116,34 +73,8 @@ public class CommentService {
         List<Comment> reply = commentRepository.findReplyById(commentId);
 
         return reply.stream()
-                .map(c -> new CommentResponse(c.getId() ,c.getWriter(), c.getContent(),
-                        DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(c.getCreateAt()),
-                        c.getVoteCount(), (long) c.getChild().size()))
+                .map(CommentResponse::new)
                 .collect(Collectors.toList());
-    }
-
-    public List<Comment> findByMemberId(Long memberId) {
-        return commentRepository.findByMemberId(memberId);
-    }
-
-    public List<Comment> findByPostId(Long postId) {
-        return commentRepository.findByPostId(postId);
-    }
-
-    public List<Comment> findByNoticeId(Long noticeId) {
-        return commentRepository.findByNoticeId(noticeId);
-    }
-
-    public List<Comment> findByChannelNoticeId(Long channelNoticeId) {
-        return commentRepository.findByChannelNoticeId(channelNoticeId);
-    }
-
-    public List<Comment> findByQnaId(Long qnaId) {
-        return commentRepository.findByQnaId(qnaId);
-    }
-
-    public List<Comment> findAll() {
-        return commentRepository.findAll();
     }
 
 

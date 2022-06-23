@@ -55,7 +55,7 @@ public class CommentApiController {
     @GetMapping("/comment/{articleId}")
     public ResponseEntity<Result<CommentResponse>> find(@PathVariable Long articleId,
                        @RequestParam ArticleType identity) {
-        List<CommentResponse> comments = commentService.getAllByIdentityAndArticleId(identity, articleId);
+        List<CommentResponse> comments = commentService.getComments(articleId);
 
         return ResponseEntity.ok().body(new Result(comments, comments.size()));
     }

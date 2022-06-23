@@ -45,13 +45,14 @@ public class ChannelRequest {
         return Channel.builder()
                 .name(name)
                 .managerName(memberEmail)
-                .limitedMemberNumber(limitedMemberNumber)
                 .description(description)
+                .limitedMemberNumber(limitedMemberNumber)
                 .thumbnailDescription(thumbnailDescription)
+                .thumbnailImage(thumbnailImage)
+                .category(category)
                 .memberCount(0L)
                 .waitingMemberCount(0L)
-                .category(category)
-                .thumbnailImage(thumbnailImage)
+                .postCount(0L)
                 .build();
     }
 

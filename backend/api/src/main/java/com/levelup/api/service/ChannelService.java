@@ -150,9 +150,7 @@ public class ChannelService {
     public ChannelResponse getById(Long channelId) {
         Channel findChannel = channelRepository.findById(channelId);
 
-        return new ChannelResponse(findChannel.getId(), findChannel.getName(), findChannel.getLimitedMemberNumber(),
-                findChannel.getManagerName(), findChannel.getManager().getId(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
-                findChannel.getMemberCount(), findChannel.getThumbnailImage().getStoreFileName());
+        return new ChannelResponse(findChannel);
     }
 
     public List<Channel> getByMemberId(Long memberId) {
@@ -162,19 +160,13 @@ public class ChannelService {
     @Cacheable(cacheNames = "ChannelCategory")
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
-                .stream().map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getManager().getId(),
-                        c.getDescription(), c.getThumbnailDescription(), c.getMemberCount(),
-                        c.getThumbnailImage().getStoreFileName()))
+                .stream().map(ChannelResponse::new)
                 .collect(Collectors.toList());
     }
 
     public List<ChannelResponse> getAll() {
         return channelRepository.findAll().stream()
-                .map(c -> new ChannelResponse(c.getId(),
-                        c.getName(), c.getLimitedMemberNumber(), c.getManagerName(), c.getManager().getId(),
-                        c.getDescription(), c.getThumbnailDescription(), c.getMemberCount(),
-                        c.getThumbnailImage().getStoreFileName()))
+                .map(ChannelResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -204,12 +196,10 @@ public class ChannelService {
     public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
         Channel channel = channelRepository.findById(channelId);
         Member findMember = memberRepository.findById(memberId);
-        List<Member> waitingMembers = memberRepository.findWaitingMemberByChannelId(channelId);
-        List<ChannelPost> channelPosts = channelPostRepository.findByChannelIdAndArticleType(channelId, ArticleType.CHANNEL_POST);
 
         ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt()),
-                channel.getMemberCount(), (long)waitingMembers.size(), (long) channelPosts.size(),
+                channel.getMemberCount(), channel.getWaitingMemberCount(), channel.getPostCount(),
                 channel.getThumbnailImage().getStoreFileName());
 
         return channelInfo;
@@ -224,10 +214,7 @@ public class ChannelService {
         Channel channel = channelRepository.findById(channelId);
         channel.modifyChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
 
-        return new ChannelResponse(channel.getId(),
-                channel.getName(), channel.getLimitedMemberNumber(), channel.getManagerName(), channel.getManager().getId(),
-                channel.getDescription(), channel.getThumbnailDescription(), channel.getMemberCount(),
-                channel.getThumbnailImage().getStoreFileName());
+        return new ChannelResponse(channel);
     }
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)

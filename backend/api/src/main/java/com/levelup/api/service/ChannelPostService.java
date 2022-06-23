@@ -8,7 +8,6 @@ import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.article.ChannelPostRequest;
 import com.levelup.core.dto.article.ChannelPostResponse;
@@ -48,11 +47,10 @@ public class ChannelPostService {
     public ChannelPostResponse create(ChannelPostRequest channelPostRequest, Long memberId, Long channelId) {
         Member member = memberRepository.findById(memberId);
         Channel channel = channelRepository.findById(channelId);
-
         ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
 
-        System.out.println(channelPost.getPostCategory());
-        articleRepository.save(channelPost);
+        channelPostRepository.save(channelPost);
+        channel.addPostCount();
 
         return new ChannelPostResponse(channelPost);
     }
@@ -142,6 +140,9 @@ public class ChannelPostService {
      * 게시글 삭제
      * */
     public void delete(Long articleId) {
+        Channel channel = channelRepository.findByArticleId(articleId);
+        channel.removePostCount();
+
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
 

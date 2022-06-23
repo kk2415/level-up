@@ -77,7 +77,7 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByArticleId(Long articleId) {
-        String query = "select c from Comment c join fetch c.article a where a.id = :articleId order by c.createAt";
+        String query = "select c from Comment c join fetch c.article a where a.articleId = :articleId order by c.id asc";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("articleId", articleId)

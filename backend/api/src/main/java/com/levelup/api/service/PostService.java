@@ -49,6 +49,7 @@ public class PostService {
         Post findPost = postRequest.toEntity(channel, member);
         postRepository.save(findPost);
 
+        channel.addPostCount();
         return new PostResponse(findPost);
     }
 
