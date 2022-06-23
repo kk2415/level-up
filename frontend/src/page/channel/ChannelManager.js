@@ -55,11 +55,9 @@ const ChannelManager = () => {
 
     useEffect(() => {
         if (manager) {
-            console.log(manager)
-
-            setLastPostPagerNum(getLastPostPagerNum(manager.channelInfo.postCount))
-            setLastMemberPagerNum(getLastMemberPagerNum(manager.channelInfo.memberCount))
-            setLastWaitingMemberPagerNum(getLastWaitingMemberPagerNum(manager.channelInfo.waitingMemberCount))
+            setLastPostPagerNum(getLastPostPagerNum(manager.postCount))
+            setLastMemberPagerNum(getLastMemberPagerNum(manager.memberCount))
+            setLastWaitingMemberPagerNum(getLastWaitingMemberPagerNum(manager.waitingMemberCount))
         }
     })
 
@@ -78,36 +76,36 @@ const ChannelManager = () => {
                             <h5 className="card-header">채널정보</h5>
                             <div className="card-body">
                                 <div className="justify-content-center">
-                                    <img src={S3_URL + manager.channelInfo.thumbnail} id="thumbnail" className="img-thumbnail img-fluid rounded-circle"
+                                    <img src={S3_URL + manager.thumbnail} id="thumbnail" className="img-thumbnail img-fluid rounded-circle"
                                          width="200px" height="200px"/>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="inputGroup-sizing-default1">채널명</span>
                                         <input type="text" className="form-control" id="channelName"
-                                               aria-label="Sizing example input" value={manager.channelInfo.channelName}
+                                               aria-label="Sizing example input" value={manager.channelName}
                                                aria-describedby="inputGroup-sizing-default" disabled/>
                                     </div>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="inputGroup-sizing-default2">매니저</span>
                                         <input type="text" className="form-control" id="manager"
-                                               aria-label="Sizing example input" value={manager.channelInfo.manager}
+                                               aria-label="Sizing example input" value={manager.manager}
                                                aria-describedby="inputGroup-sizing-default" disabled/>
                                     </div>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="inputGroup-sizing-default3">채널 등록일</span>
                                         <input type="text" className="form-control" id="date"
-                                               aria-label="Sizing example input" value={manager.channelInfo.date}
+                                               aria-label="Sizing example input" value={manager.date}
                                                aria-describedby="inputGroup-sizing-default" disabled/>
                                     </div>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="inputGroup-sizing-default4">회원수</span>
                                         <input type="text" className="form-control" id="memberCount"
-                                               aria-label="Sizing example input" value={manager.channelInfo.memberCount}
+                                               aria-label="Sizing example input" value={manager.memberCount}
                                                aria-describedby="inputGroup-sizing-default" disabled/>
                                     </div>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="inputGroup-sizing-default5">게시글 개수</span>
                                         <input type="text" className="form-control" id="postCount"
-                                               aria-label="Sizing example input" value={manager.channelInfo.postCount}
+                                               aria-label="Sizing example input" value={manager.postCount}
                                                aria-describedby="inputGroup-sizing-default" disabled/>
                                     </div>
                                     <br/>
@@ -136,9 +134,9 @@ const ChannelManager = () => {
                 //     <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
                 // </div>
                 <Container className="row row-cols-1 row-cols-md-3 g-4 mb-5">
-                    <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.channelInfo.waitingMemberCount} />
-                    <MemberFrame channelId={channelId} memberCount={manager.channelInfo.memberCount} />
-                    <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
+                    <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.waitingMemberCount} />
+                    <MemberFrame channelId={channelId} memberCount={manager.memberCount} />
+                    <PostFrame channelId={channelId} postCount={manager.postCount} />
                 </Container>
             }
 

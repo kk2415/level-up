@@ -4,6 +4,7 @@ import Pager from "../../pager/Pager";
 
 import {send} from "../../../api/request";
 import {Container} from 'react-bootstrap'
+import ChannelPostService from "../../../api/service/ChannelPostService";
 
 const PAGER_LENGTH = 5
 
@@ -13,15 +14,19 @@ const PostFrame = ({channelId, postCount}) => {
     const [curPage, setCurPage] = useState(1)
 
     const loadPosts = async (channelId, curPage, PAGER_LENGTH) => {
-        let url = '/api/' + channelId + '/posts/' + curPage + '?postCount=' + PAGER_LENGTH
+        // let url = '/api/' + channelId + '/posts/' + curPage + '?postCount=' + PAGER_LENGTH
+        const pageable = 'page=' + (curPage - 1) + '&size=5&sort=id,desc'
 
-        await send(url, 'GET')
-            .then((result) => {
-                setPosts(result.data)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable);
+        setPosts(result.content)
+
+        // await send(url, 'GET')
+        //     .then((result) => {
+        //         setPosts(result.data)
+        //     })
+        //     .catch((error) => {
+        //         console.log(error)
+        //     })
     }
 
     const onNext = (currentPage, lastPagerNum, pagerLength, searchCondition) => {

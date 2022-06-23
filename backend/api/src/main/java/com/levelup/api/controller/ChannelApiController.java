@@ -5,6 +5,7 @@ import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
+import com.levelup.core.domain.channel.ChannelInfo;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
@@ -136,7 +137,7 @@ public class ChannelApiController {
     @GetMapping("/channel/{channelId}/manager")
     public ResponseEntity getChannelAllInfo(@PathVariable Long channelId,
                                    @AuthenticationPrincipal Member member) {
-        ChannelManagerResponse channelAllInfo = channelService.getChannelAllInfo(channelId, member.getId());
+        ChannelInfo channelAllInfo = channelService.getChannelAllInfo(channelId, member.getId());
 
         return ResponseEntity.ok().body(channelAllInfo);
     }

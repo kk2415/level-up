@@ -2,6 +2,7 @@ package com.levelup.api.service;
 
 
 import com.levelup.core.DateFormat;
+import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
@@ -58,6 +59,7 @@ public class ChannelService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final ArticleRepository articleRepository;
+    private final ChannelPostRepository channelPostRepository;
 //    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
 
@@ -199,32 +201,18 @@ public class ChannelService {
         return new UrlResource("file:" + fullPath);
     }
 
-    public ChannelManagerResponse getChannelAllInfo(Long channelId, Long memberId) {
+    public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
         Channel channel = channelRepository.findById(channelId);
         Member findMember = memberRepository.findById(memberId);
         List<Member> waitingMembers = memberRepository.findWaitingMemberByChannelId(channelId);
-        List<Member> members = memberRepository.findByChannelId(channelId);
-        List<ChannelPost> channelPosts = articleRepository.findByChannelId(channelId);
+        List<ChannelPost> channelPosts = channelPostRepository.findByChannelIdAndArticleType(channelId, ArticleType.CHANNEL_POST);
 
         ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt()),
                 channel.getMemberCount(), (long)waitingMembers.size(), (long) channelPosts.size(),
                 channel.getThumbnailImage().getStoreFileName());
 
-        List<MemberResponse> waitingMemberResponses = waitingMembers.stream().map(m -> new MemberResponse(
-                        m.getId(), m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
-                .collect(Collectors.toList());
-
-        List<MemberResponse> memberResponses = members.stream().map(m -> new MemberResponse(
-                        m.getId(), m.getEmail(), m.getName(), m.getGender(),
-                        m.getBirthday(), m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
-                .collect(Collectors.toList());
-
-        List<ManagerPostResponse> channelPostResponse = channelPosts.stream().map(ManagerPostResponse::new)
-                .collect(Collectors.toList());
-
-        return new ChannelManagerResponse(channelInfo, waitingMemberResponses, memberResponses, channelPostResponse);
+        return channelInfo;
     }
 
 

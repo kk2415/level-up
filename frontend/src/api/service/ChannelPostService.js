@@ -101,14 +101,19 @@ const ChannelPostService = {
     },
 
     delete: async (articleId, channelId) => {
+        let result = null
+
         await send('/api/channel-posts/' + articleId, 'DELETE')
-            .then(() => {
+            .then((data) => {
+                result = data
                 alert('삭제되었습니다.')
                 window.location.href = '/channel/' + channelId + '?page=1'
             })
             .catch((error) => {
                 console.log(error)
             })
+
+        return result
     },
 }
 
