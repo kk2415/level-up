@@ -18,7 +18,11 @@ public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>,
     List<ChannelPost> findByChannelId(Long channelId);
     List<ChannelPost> findByChannelIdAndArticleType(Long channelId, ArticleType articleType);
     Page<ChannelPost> findByChannelId(Long channelId, Pageable pageable);
-    Page<ChannelPost> findByChannelIdAndArticleType(Long channelId, ArticleType articleType, Pageable pageable);
+
+    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.articleType = :articleType")
+    Page<ChannelPost> findByChannelIdAndArticleType(@Param("channelId") Long channelId,
+                                                    @Param("articleType") ArticleType articleType,
+                                                    Pageable pageable);
 
     @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.articleType = :articleType " +
             "and cp.title like %:title%")

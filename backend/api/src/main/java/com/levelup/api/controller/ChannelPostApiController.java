@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ChannelPostApiController {
 
-    private final ArticleService articleService;
     private final ChannelPostService channelPostService;
 
 
@@ -83,7 +82,7 @@ public class ChannelPostApiController {
 
     @GetMapping("/channel-posts/{articleId}/oauth")
     public ResponseEntity checkMember(@PathVariable Long articleId, @RequestParam Long memberId) {
-        articleService.articleOauth(articleId, memberId);
+        channelPostService.articleOauth(articleId, memberId);
 
         return new ResponseEntity(new Result("인증 성공", 1), HttpStatus.OK);
     }

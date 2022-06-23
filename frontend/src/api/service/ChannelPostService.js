@@ -31,10 +31,10 @@ const ChannelPostService = {
         return post
     },
 
-    getAll: async (channelId, pageable, searchCondition) => {
+    getAll: async (channelId, articleType, pageable, searchCondition) => {
         let result = {}
 
-        let url = '/api/channel-posts?channel=' + channelId + '&' + pageable;
+        let url = '/api/channel-posts?channel=' + channelId + '&articleType=' + articleType + '&' + pageable;
         if (searchCondition !== undefined && searchCondition.field !== undefined) {
             url += '&field=' + searchCondition.field + '&query=' + searchCondition.querys
         }
@@ -50,10 +50,10 @@ const ChannelPostService = {
         return result;
     },
 
-    getNext: async (articleId, channelId) => {
+    getNext: async (articleId, articleType, channelId) => {
         let post = {}
 
-        await send('/api/channel-posts/' + articleId + '/nextPost?channel=' + channelId)
+        await send('/api/channel-posts/' + articleId + '/nextPost?articleType=' + articleType + '&channel=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -65,10 +65,10 @@ const ChannelPostService = {
         return post
     },
 
-    getPrev: async (articleId, channelId) => {
+    getPrev: async (articleId, articleType, channelId) => {
         let post = {}
 
-        await send('/api/channel-posts/' + articleId + '/prevPost?channel=' + channelId)
+        await send('/api/channel-posts/' + articleId + '/prevPost?articleType=' + articleType + '&channel=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -85,14 +85,19 @@ const ChannelPostService = {
     },
 
     modify: async (channelPost, articleId, channelId) => {
+        let result = null
+
         await send('/api/channel-posts/' + articleId, 'PATCH', channelPost)
-            .then(() => {
+            .then((data) => {
                 alert('수정되었습니다.')
+                result = data
                 window.location.href = '/post/' + articleId + '?channel=' + channelId
             })
             .catch((error) => {
                 console.log(error)
             })
+
+        return result
     },
 
     delete: async (articleId, channelId) => {

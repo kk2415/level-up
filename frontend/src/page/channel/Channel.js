@@ -58,7 +58,7 @@ const Channel = () => {
 
     const loadChannelPosts = async (channelId, searchCondition) => {
         const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
-        let result = await ChannelPostService.getAll(channelId, pageable, searchCondition)
+        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable, searchCondition)
 
         setChannelPosts(result.content)
         setChannelPostsCount(result.totalElements)

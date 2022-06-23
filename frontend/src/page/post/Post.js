@@ -33,7 +33,7 @@ const Post = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await ChannelPostService.getPrev(postId, channelId)
+        let prev = await ChannelPostService.getPrev(postId, 'CHANNEL_POST', channelId)
 
         if (prev != null) {
             window.location.href = '/channel-post/' + prev.id + '?channel=' + channelId
@@ -44,7 +44,7 @@ const Post = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await ChannelPostService.getNext(postId, channelId)
+        let next = await ChannelPostService.getNext(postId, 'CHANNEL_POST', channelId)
 
         if (next != null) {
             window.location.href = '/channel-post/' + next.id + '?channel=' + channelId
