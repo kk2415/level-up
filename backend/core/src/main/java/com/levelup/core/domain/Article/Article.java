@@ -35,12 +35,12 @@ public class Article extends BaseTimeEntity {
     private Long commentCount;
     private Long views;
 
+    @Enumerated(EnumType.STRING)
+    private ArticleType articleType;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @Enumerated(EnumType.STRING)
-    private ArticleType articleType;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
