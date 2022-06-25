@@ -21,10 +21,6 @@ const CreatePost = () => {
     const handleCreatePost = async () => {
         let formData = new FormData(document.getElementById('form'));
 
-        if (!validate(formData)) {
-            return
-        }
-
         let post = {
             channelId : channelId,
             title : formData.get('title'),
@@ -34,23 +30,26 @@ const CreatePost = () => {
             articleType : 'CHANNEL_POST',
         }
 
-        // await PostService.create(post)
+        if (!validate(post)) {
+            return
+        }
+
         await ChannelPostService.create(post, channelId)
     }
 
-    const validate = (formData) => {
+    const validate = (post) => {
         let valid = true;
 
         removeAlertMassageBox()
-        if (formData.get('title') === null || formData.get('title') === "") {
+        if (post.title === null || post.title === "") {
             $('#alert').append('<h5>[제목] : 제목을 입력해주세요.</h5>')
             valid = false;
         }
-        if (formData.get('category') === 'NONE') {
+        if (post.category === 'NONE') {
             $('#alert').append('<h5>[카테고리] : 카테고리를 선택해주세요.</h5>')
             valid = false;
         }
-        if (contents === null || contents === "") {
+        if (post.contents === null || post.contents === "") {
             $('#alert').append('<h5>[내용] : 내용을 입력해주세요</h5>')
             valid = false;
         }
@@ -153,7 +152,6 @@ const CreatePost = () => {
                     <Form.Group className="mb-3">
                         <Form.Label>내용</Form.Label>
                         <textarea id='summernote' />
-                        {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
                     </Form.Group>
 
                     <div className="alert alert-danger mt-5" id="alert" role="alert">

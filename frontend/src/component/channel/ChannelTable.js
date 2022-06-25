@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Table} from 'react-bootstrap'
-import ArticleTableRow from '../ArticleTableRow'
+import ArticleTableRow from '../article/ArticleTableRow'
 
 export const ChannelTable = ({channelPost, channelId} ) => {
     return (

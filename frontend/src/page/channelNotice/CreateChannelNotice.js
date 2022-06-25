@@ -89,7 +89,6 @@ const CreateChannelNotice = () => {
                     <Form.Group className="mb-3">
                         <Form.Label>내용</Form.Label>
                         <textarea id='summernote' />
-                        {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
                     </Form.Group>
 
                     <div className="row">

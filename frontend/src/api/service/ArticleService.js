@@ -3,14 +3,19 @@ import { send } from "../request"
 const ArticleService = {
 
     create: async (article) => {
+        let result = null
+
         await send('/api/article', 'POST', article)
             .then((data) => {
+                result = data
             })
             .catch((error) => {
                 console.log(error)
 
                 alert(error.responseJSON.message)
             })
+
+        return result
     },
 
     get: async (articleId) => {
@@ -81,23 +86,33 @@ const ArticleService = {
     },
 
     modify: async (article, articleId) => {
+        let result = false
+
         await send('/api/article/' + articleId, 'PATCH', article)
             .then(() => {
                 alert('수정되었습니다.')
+                result = true
             })
             .catch((error) => {
                 console.log(error)
             })
+
+        return result
     },
 
     delete: async (articleId) => {
+        let result = false
+
         await send('/api/article/' + articleId, 'DELETE')
             .then(() => {
+                result = true
                 alert('삭제되었습니다.')
             })
             .catch((error) => {
                 console.log(error)
             })
+
+        return result
     },
 }
 
