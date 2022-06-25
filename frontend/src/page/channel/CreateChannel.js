@@ -97,6 +97,10 @@ const CreateChannel = () => {
         $('#alert').css('display', 'none')
     }
 
+    const handleBackButton = () => {
+        window.history.back()
+    }
+
     function configSummernote() {
         $(document).ready(function() {
             $('#summernote').summernote({
@@ -188,7 +192,7 @@ const CreateChannel = () => {
                                     id="createButton">생성</button>
                         </div>
                         <div className="col">
-                            <button className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
+                            <button onClick={handleBackButton} className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
                         </div>
                     </div>
                 </Form>
