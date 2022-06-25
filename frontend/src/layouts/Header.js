@@ -54,7 +54,7 @@ const Header = () => {
 	}
 
 	const qnaHandler = () => {
-		alert('서비스 준비중입니다.')
+		navigate(`/article/list?articleType=QNA&page=1`);
 	}
 
 	const noticeHandler = () => {
@@ -106,7 +106,7 @@ const Header = () => {
 								</Nav.Link>
 								<Nav.Link>
 									<Button onClick={qnaHandler} size="md" className='btn-info'>
-										QNA
+										QnA
 									</Button>
 								</Nav.Link>
 								<Nav.Link>

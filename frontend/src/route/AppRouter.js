@@ -15,6 +15,13 @@ import CreateChannelNotice from "../page/channelNotice/CreateChannelNotice"
 import DetailChannelNotice from "../page/channelNotice/DetailChannelNotice"
 import ModifyChannelNotice from "../page/channelNotice/ModifyChannelNotice"
 import Post from "../page/post/Post"
+import Qna from "../page/qna/Qna"
+
+import CreateArticle from "../page/article/CreateArticle"
+import ArticleList from "../page/article/ArticleList"
+import Article from "../page/article/Article"
+import ModifyArticle from "../page/article/ModifyArticle"
+
 import ModifyPost from "../page/post/ModifyPost"
 import ConfirmEmail from "../page/member/ConfirmEmail";
 
@@ -43,6 +50,13 @@ const AppRouter = () => {
 		<Route path="/post/create" element={<CreatePost />}></Route>
 		<Route path="/post/modify/:postId" element={<ModifyPost />}></Route>
 		<Route path="/channel-post/modify/:postId" element={<ModifyPost />}></Route>
+
+		<Route path="/qna" element={<Qna />}></Route>
+
+		<Route path="/article/:articleId" element={<Article />}></Route>
+		<Route path="/article/list" element={<ArticleList />}></Route>
+		<Route path="/article/create" element={<CreateArticle />}></Route>
+		<Route path="/article/modify/:articleId" element={<ModifyArticle />}></Route>
 
 	</Routes>
   )
