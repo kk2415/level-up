@@ -16,7 +16,7 @@ const ArticleService = {
     get: async (articleId) => {
         let post = {}
 
-        await send('/api/article/' + articleId + '?view=true')
+        await send('/api/article/' + articleId + '?view=true', 'GET')
             .then((data) => {
                 post = data
             })
@@ -50,7 +50,7 @@ const ArticleService = {
     getNext: async (articleId, articleType) => {
         let post = {}
 
-        await send('/api/article/' + articleId + '/nextArticle?articleType=' + articleType)
+        await send('/api/article/' + articleId + '/nextArticle?articleType=' + articleType, 'GET')
             .then((data) => {
                 post = data
             })
@@ -65,7 +65,7 @@ const ArticleService = {
     getPrev: async (articleId, articleType) => {
         let post = {}
 
-        await send('/api/article/' + articleId + '/prevArticle?articleType=' + articleType)
+        await send('/api/article/' + articleId + '/prevArticle?articleType=' + articleType, 'GET')
             .then((data) => {
                 post = data
             })
