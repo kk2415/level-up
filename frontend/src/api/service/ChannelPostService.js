@@ -53,7 +53,7 @@ const ChannelPostService = {
     getNext: async (articleId, articleType, channelId) => {
         let post = {}
 
-        await send('/api/channel-posts/' + articleId + '/nextPost?articleType=' + articleType + '&channel=' + channelId)
+        await send('/api/channel-posts/' + articleId + '/nextPost?articleType=' + articleType + '&channel=' + channelId, 'GET')
             .then((data) => {
                 post = data
             })
@@ -68,7 +68,7 @@ const ChannelPostService = {
     getPrev: async (articleId, articleType, channelId) => {
         let post = {}
 
-        await send('/api/channel-posts/' + articleId + '/prevPost?articleType=' + articleType + '&channel=' + channelId)
+        await send('/api/channel-posts/' + articleId + '/prevPost?articleType=' + articleType + '&channel=' + channelId, 'GET')
             .then((data) => {
                 post = data
             })

@@ -3,7 +3,7 @@ import {Button, Form, Container, Row} from 'react-bootstrap';
 
 import {BiUserCircle} from "react-icons/bi";
 import {MemberService} from "../../api/service/MemberService";
-import {AuthEmailService} from "../../api/AuthEmailService";
+import {AuthEmailService} from "../../api/service/AuthEmailService";
 import '../../css/login.css'
 
 const SignIn = ({} ) => {
