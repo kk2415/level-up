@@ -1,6 +1,5 @@
 package com.levelup.api.service;
 
-
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
@@ -16,8 +15,6 @@ import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.channel.*;
 import com.levelup.core.exception.DuplicateChannelMemberException;
 import com.levelup.core.exception.ImageNotFoundException;
-import com.levelup.core.repository.article.ArticleRepository;
-import com.levelup.core.repository.article.ChannelPostRepository;
 import com.levelup.core.repository.channel.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -69,8 +66,7 @@ public class ChannelService {
 
         channelRepository.save(channel);
 
-        return new CreateChannelResponse(channel.getName(), channel.getLimitedMemberNumber(),
-                channel.getManagerName(), channel.getDescription());
+        return new CreateChannelResponse(channel);
     }
 
     private void validationDuplicateChannel(String name) {
