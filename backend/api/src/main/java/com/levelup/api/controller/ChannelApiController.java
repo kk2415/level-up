@@ -45,6 +45,8 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
+        System.out.println("getMemberEmail() : " + channelRequest.getMemberEmail());
+
         return channelService.create(channelRequest);
     }
 

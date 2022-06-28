@@ -26,10 +26,6 @@ public class VoteApiController {
     @PostMapping("/vote")
     public ResponseEntity<VoteResponse> create(@RequestBody @Validated CreateVoteRequest voteRequest,
                                  @AuthenticationPrincipal Member member) {
-        System.out.println(voteRequest.getVoteType());
-        System.out.println(voteRequest.getOwnerId());
-        System.out.println(member.getId());
-
         VoteResponse voteResponse = voteService.create(voteRequest, member.getId());
 
         return ResponseEntity.ok().body(voteResponse);

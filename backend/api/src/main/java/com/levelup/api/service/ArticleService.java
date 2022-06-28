@@ -58,7 +58,6 @@ public class ArticleService {
 
         ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
 
-        System.out.println(channelPost.getPostCategory());
         articleRepository.save(channelPost);
 
         return new ChannelPostResponse(channelPost);

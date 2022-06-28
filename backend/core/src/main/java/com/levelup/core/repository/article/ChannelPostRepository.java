@@ -13,7 +13,11 @@ import java.util.Optional;
 
 public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>, ChannelPostQueryRepository {
 
-    Optional<ChannelPost> findByArticleId(Long articleId);
+    @Query("SELECT cp FROM ChannelPost cp " +
+            "join fetch cp.member m " +
+            "join fetch m.emailAuth e " +
+            "where cp.member.id = m.id and cp.articleId = :articleId")
+    Optional<ChannelPost> findByArticleId(@Param("articleId") Long articleId);
 
     List<ChannelPost> findByChannelId(Long channelId);
     List<ChannelPost> findByChannelIdAndArticleType(Long channelId, ArticleType articleType);

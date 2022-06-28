@@ -36,6 +36,7 @@ public class JpaVoteRepository implements VoteRepository {
         String query = "select v from Vote v " +
                 "join fetch v.article a " +
                 "join fetch v.member m " +
+                "join fetch m.emailAuth e " +
                 "where a.articleId = :articleId and m.id = :memberId";
 
         List<Vote> result = em.createQuery(query, Vote.class)
@@ -51,6 +52,7 @@ public class JpaVoteRepository implements VoteRepository {
         String query = "select v from Vote v " +
                 "join fetch v.comment c " +
                 "join fetch v.member m " +
+                "join fetch m.emailAuth e " +
                 "where c.id = :commentId and m.id = :memberId";
 
         List<Vote> result = em.createQuery(query, Vote.class)

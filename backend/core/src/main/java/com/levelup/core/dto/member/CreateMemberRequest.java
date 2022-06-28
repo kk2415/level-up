@@ -67,5 +67,4 @@ public class CreateMemberRequest {
                 .channels(new ArrayList<>())
                 .build();
     }
-
 }

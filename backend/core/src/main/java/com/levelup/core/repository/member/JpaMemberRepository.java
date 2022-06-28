@@ -30,7 +30,11 @@ public class JpaMemberRepository implements MemberRepository {
      * */
     @Override
     public Member findById(Long id) {
-        return em.find(Member.class, id);
+        return em.createQuery("select m from Member m " +
+                        "join fetch m.emailAuth e " +
+                        "where m.id = :id", Member.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
@@ -41,18 +45,23 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public List<Member> findAll() {
-        return em.createQuery("select m from Member m", Member.class)
-                .getResultList();
+    public Member findByEmail(String email) {
+        return em.createQuery("select m from Member m " +
+                        "join fetch m.emailAuth e " +
+                        "where m.email = :email", Member.class)
+                .setParameter("email", email)
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public Member findByEmail(String email) {
-        return em.createQuery("select m from Member m where m.email = :email", Member.class)
+    public Member findByEmailWithOutEmailAuth(String email) {
+        return em.createQuery("select m from Member m " +
+                        "where m.email = :email", Member.class)
                 .setParameter("email", email)
-                .getResultList()
-                .stream().findAny()
-                .orElse(null);
+                .getSingleResult();
     }
 
     @Override
@@ -62,9 +71,7 @@ public class JpaMemberRepository implements MemberRepository {
         return em.createQuery(query, Member.class)
                 .setParameter("email", email)
                 .setParameter("password", password)
-                .getResultList()
-                .stream().findAny()
-                .orElse(null);
+                .getSingleResult();
     }
 
     @Override
@@ -115,6 +122,11 @@ public class JpaMemberRepository implements MemberRepository {
                 .getResultList();
     }
 
+    @Override
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member m", Member.class)
+                .getResultList();
+    }
 
 
     /**

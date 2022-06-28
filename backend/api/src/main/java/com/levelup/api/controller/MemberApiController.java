@@ -41,8 +41,7 @@ public class MemberApiController {
      * */
     @PostMapping("/member")
     public ResponseEntity create(@RequestBody @Valid CreateMemberRequest memberRequest) throws IOException {
-
-
+        System.out.println(memberRequest.getEmail());
         CreateMemberResponse response = memberService.create(memberRequest);
 
         return new ResponseEntity(response, HttpStatus.OK);
@@ -58,16 +57,16 @@ public class MemberApiController {
     /**
      * 조회
      * */
+    @GetMapping("/member/{email}")
+    public MemberResponse getMember(@PathVariable("email") String email) {
+        return memberService.findByEmail(email);
+    }
+
     @GetMapping("/members")
     public ResponseEntity<Result> getAllMembers() {
         List<MemberResponse> members = memberService.findAllMembers();
 
         return ResponseEntity.ok(new Result<>(members, members.size()));
-    }
-
-    @GetMapping("/member/{email}")
-    public MemberResponse getMember(@PathVariable("email") String email) {
-        return memberService.findByEmail(email);
     }
 
     @GetMapping(path = "/member/{email}/image", produces = "image/jpeg")
@@ -83,6 +82,7 @@ public class MemberApiController {
 
         return ResponseEntity.ok().body(new MemberResponse(member));
     }
+
 
     /**
      * 수정
@@ -112,6 +112,15 @@ public class MemberApiController {
     @GetMapping("/send/auth-email")
     public void sendSecurityCode(@AuthenticationPrincipal Member member) {
         memberService.sendSecurityCode(member.getId());
+    }
+
+
+    /**
+     * 삭제
+     * */
+    @DeleteMapping("/member/{memberId}")
+    public void delete(@PathVariable Long memberId) throws IOException {
+        memberService.delete(memberId);
     }
 
 }
