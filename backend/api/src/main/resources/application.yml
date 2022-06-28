@@ -7,11 +7,11 @@ spring:
       name: levelup
 
   profiles:
-    active: dev
+    active: prod
 
   config:
-#    import: optional:configserver:http://52.79.161.162:8888
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://52.79.161.162:8888
+#    import: optional:configserver:http://localhost:8888
 
   mvc:
     pathmatch:

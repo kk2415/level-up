@@ -56,7 +56,7 @@ public class ChannelService {
      * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public CreateChannelResponse create(ChannelRequest channelRequest) {
-        validationDuplicateChannel(channelRequest.getName());
+//        validationDuplicateChannel(channelRequest.getName());
 
         Member member = memberRepository.findByEmail(channelRequest.getMemberEmail());
 

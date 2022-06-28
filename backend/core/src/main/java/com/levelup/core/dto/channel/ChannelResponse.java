@@ -4,7 +4,6 @@ import com.levelup.core.domain.channel.Channel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
 @Data
 @AllArgsConstructor
 public class ChannelResponse {
@@ -30,6 +29,9 @@ public class ChannelResponse {
         this.thumbnailDescription = channel.getThumbnailDescription();
         this.memberCount = channel.getMemberCount();
         this.postCount = channel.getPostCount();
-        this.storeFileName = channel.getThumbnailImage().getStoreFileName();
+
+        if (channel.getThumbnailImage() != null) {
+            this.storeFileName = channel.getThumbnailImage().getStoreFileName();
+        }
     }
 }

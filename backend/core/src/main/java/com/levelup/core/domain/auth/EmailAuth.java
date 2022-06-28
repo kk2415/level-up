@@ -29,7 +29,7 @@ public class EmailAuth extends BaseTimeEntity {
     private String securityCode;
     private Boolean isConfirmed;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

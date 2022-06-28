@@ -38,7 +38,7 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<Vote> votes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
     private Comment parent;
 

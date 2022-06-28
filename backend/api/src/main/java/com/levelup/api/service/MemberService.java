@@ -59,7 +59,6 @@ public class MemberService implements UserDetailsService {
     public CreateMemberResponse create(CreateMemberRequest memberRequest) {
         validationDuplicateMember(memberRequest.getEmail());
 
-
         Member member = memberRequest.toEntity();
         member.setPassword(passwordEncoder.encode(member.getPassword()));//중복 회원 검증
 
@@ -68,7 +67,7 @@ public class MemberService implements UserDetailsService {
 
         memberRepository.save(member);
 
-//        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
+        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
         return new CreateMemberResponse(member.getId(), member.getEmail(), member.getPassword(), member.getName(),
                 member.getGender(), member.getBirthday(), member.getPhone());
@@ -103,17 +102,14 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findAllMembers() {
         return memberRepository.findAll()
                 .stream()
-                .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
+                .map(MemberResponse::new)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     public MemberResponse findOne(Long memberId) {
         Member member = memberRepository.findById(memberId);
 
-        return new MemberResponse(member.getId(), member.getEmail(), member.getName(),
-                member.getGender(), member.getBirthday(), member.getPhone(), member.getEmailAuth().getIsConfirmed(),
-                member.getProfileImage());
+        return new MemberResponse(member);
     }
 
     public MemberResponse findByEmail(String email) {
@@ -122,9 +118,7 @@ public class MemberService implements UserDetailsService {
         if (findMember == null) {
             throw new MemberNotFoundException("가입된 이메일이 없습니다");
         }
-        return new MemberResponse(findMember.getId(), findMember.getEmail(), findMember.getName(),
-                findMember.getGender(), findMember.getBirthday(), findMember.getPhone(),
-                findMember.getEmailAuth().getIsConfirmed(), findMember.getProfileImage());
+        return new MemberResponse(findMember);
     }
 
     public List<Member> findByChannelId(Long channelId) {
@@ -134,8 +128,7 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findByChannelId(Long channelId, Long page, Long count) {
         return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count))
                 .stream()
-                .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
+                .map(MemberResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -146,8 +139,7 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findWaitingMemberByChannelId(Long channelId, Long page) {
         return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5)
                 .stream()
-                .map(m -> new MemberResponse(m.getId(), m.getEmail(), m.getName(), m.getGender(), m.getBirthday(),
-                        m.getPhone(), m.getEmailAuth().getIsConfirmed(), m.getProfileImage()))
+                .map(MemberResponse::new)
                 .collect(Collectors.toList());
     }
 

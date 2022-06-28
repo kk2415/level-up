@@ -1,6 +1,5 @@
 package com.levelup.api.controller;
 
-import com.levelup.api.service.ArticleService;
 import com.levelup.api.service.ChannelPostService;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
@@ -33,11 +32,12 @@ public class ChannelPostApiController {
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
                                                       @RequestParam("channel") Long channelId,
                                                       @AuthenticationPrincipal Member member) {
+        System.out.println("member.getId() : " + member.getId());
+
         ChannelPostResponse channelPost = channelPostService.create(request, member.getId(), channelId);
 
         return ResponseEntity.ok().body(channelPost);
     }
-
 
     /**
      * 조회

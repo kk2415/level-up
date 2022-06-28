@@ -16,7 +16,7 @@ public class ChannelPost extends Article {
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
