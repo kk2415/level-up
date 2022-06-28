@@ -68,7 +68,7 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<Vote> votes;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private EmailAuth emailAuth;
 
 

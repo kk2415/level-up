@@ -42,7 +42,7 @@ public class ArticleApiController {
      * */
     @GetMapping("/article/{articleId}")
     public ResponseEntity<ArticleResponse> getPost(@PathVariable Long articleId,
-                                                       @RequestParam(required = false, defaultValue = "false") String view) {
+                                                   @RequestParam(required = false, defaultValue = "false") String view) {
         ArticleResponse article = articleService.getArticle(articleId, view);
 
         return ResponseEntity.ok().body(article);

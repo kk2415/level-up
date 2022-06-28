@@ -3,7 +3,6 @@ package com.levelup.core.repository.article;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

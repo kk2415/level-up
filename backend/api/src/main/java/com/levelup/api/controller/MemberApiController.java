@@ -57,16 +57,16 @@ public class MemberApiController {
     /**
      * 조회
      * */
+    @GetMapping("/member/{email}")
+    public MemberResponse getMember(@PathVariable("email") String email) {
+        return memberService.findByEmail(email);
+    }
+
     @GetMapping("/members")
     public ResponseEntity<Result> getAllMembers() {
         List<MemberResponse> members = memberService.findAllMembers();
 
         return ResponseEntity.ok(new Result<>(members, members.size()));
-    }
-
-    @GetMapping("/member/{email}")
-    public MemberResponse getMember(@PathVariable("email") String email) {
-        return memberService.findByEmail(email);
     }
 
     @GetMapping(path = "/member/{email}/image", produces = "image/jpeg")

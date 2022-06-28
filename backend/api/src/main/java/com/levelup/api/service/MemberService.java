@@ -17,6 +17,8 @@ import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -67,7 +69,7 @@ public class MemberService implements UserDetailsService {
 
         memberRepository.save(member);
 
-        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
+//        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
         return new CreateMemberResponse(member.getId(), member.getEmail(), member.getPassword(), member.getName(),
                 member.getGender(), member.getBirthday(), member.getPhone());
@@ -95,10 +97,6 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버조회
      * */
-    public Member findRegisterMember(String email, String password) {
-        return memberRepository.findByEmailAndPassword(email, password);
-    }
-
     public List<MemberResponse> findAllMembers() {
         return memberRepository.findAll()
                 .stream()
@@ -106,19 +104,24 @@ public class MemberService implements UserDetailsService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public MemberResponse findOne(Long memberId) {
+    public MemberResponse findById(Long memberId) {
         Member member = memberRepository.findById(memberId);
+
+        if (member == null) {
+            throw new MemberNotFoundException("가입된 회원이 아닙니다");
+        }
 
         return new MemberResponse(member);
     }
 
+    @Cacheable(cacheNames = "member") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'email'
     public MemberResponse findByEmail(String email) {
-        Member findMember = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
 
-        if (findMember == null) {
-            throw new MemberNotFoundException("가입된 이메일이 없습니다");
+        if (member == null) {
+            throw new MemberNotFoundException("가입된 회원이 아닙니다");
         }
-        return new MemberResponse(findMember);
+        return new MemberResponse(member);
     }
 
     public List<Member> findByChannelId(Long channelId) {
@@ -166,6 +169,7 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버 수정
      * */
+    @CacheEvict(cacheNames = "member", allEntries = true)
     public void modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
@@ -183,6 +187,7 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버 삭제
      * */
+    @CacheEvict(cacheNames = "member", allEntries = true)
     public void delete(Long memberId) {
         memberRepository.delete(memberId);
     }
@@ -206,6 +211,7 @@ public class MemberService implements UserDetailsService {
     /**
      * 이메일 인증
      * */
+    @CacheEvict(cacheNames = "member", allEntries = true)
     public EmailAuthResponse confirmEmail(String securityCode, Long memberId) {
         EmailAuth auth = emailAuthRepository.findByMemberId(memberId)
                 .orElseThrow(() -> {
@@ -250,7 +256,7 @@ public class MemberService implements UserDetailsService {
 
         Member member = memberRepository.findByEmail(username);
         if (member == null) {
-            throw new MemberNotFoundException("잘못된 이메일입니다.");
+            throw new UsernameNotFoundException("존재하지 않는 이메일입니다.");
         }
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
