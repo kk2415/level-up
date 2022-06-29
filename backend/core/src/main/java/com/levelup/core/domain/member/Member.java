@@ -7,7 +7,6 @@ import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.vote.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +32,7 @@ public class Member extends BaseTimeEntity {
 
     private String password;
     private String name;
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

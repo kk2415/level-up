@@ -18,6 +18,7 @@ public class MemberResponse {
         this.id = member.getId();
         this.email = member.getEmail();
         this.name = member.getName();
+        this.nickname = member.getNickname();
         this.gender = member.getGender();
         this.birthday = member.getBirthday();
         this.phone = member.getPhone();
@@ -32,6 +33,7 @@ public class MemberResponse {
     private Long id;
     private String email;
     private String name;
+    private String nickname;
     private Gender gender;
     private String birthday;
     private String phone;

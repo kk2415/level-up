@@ -76,6 +76,11 @@ const MyPage = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
+                    <Form.Label>닉네임</Form.Label>
+                    <Form.Control placeholder={member.nickname} id="nickname" name="nickname" disabled={true} />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
                     <Form.Label>전화번호</Form.Label>
                     <Form.Control placeholder={member.phone} id="phone" name="phone" disabled={true} />
                 </Form.Group>

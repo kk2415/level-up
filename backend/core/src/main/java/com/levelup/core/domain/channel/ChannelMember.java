@@ -18,6 +18,8 @@ public class ChannelMember {
     @Column(name = "channel_member_id")
     private Long id;
 
+    private Boolean isManager;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
