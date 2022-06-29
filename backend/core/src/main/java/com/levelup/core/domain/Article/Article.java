@@ -55,7 +55,7 @@ public class Article extends BaseTimeEntity {
 
         article.setMember(member);
         article.setTitle(title);
-        article.setWriter(member.getName());
+        article.setWriter(member.getNickname());
         article.setContent(content);
         article.setVoteCount(0L);
         article.setCommentCount(0L);

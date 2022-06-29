@@ -45,11 +45,12 @@ public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
-//    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
+//    private final LocalFileStore fileStore;
 
     @Value("${file.linux_local_dir}")
     private String fileDir;
+
 
     /**
      * 생성
@@ -60,7 +61,7 @@ public class ChannelService {
 
         Member member = memberRepository.findByEmail(channelRequest.getMemberEmail());
 
-        Channel channel = channelRequest.toEntity();
+        Channel channel = channelRequest.toEntity(member.getNickname());
         channel.setManager(member);
         member.setAuthority(Authority.CHANNEL_MANAGER);
 
@@ -137,10 +138,6 @@ public class ChannelService {
         return new ChannelResponse(findChannel);
     }
 
-    public List<Channel> getByMemberId(Long memberId) {
-        return channelRepository.findByMemberId(memberId);
-    }
-
     @Cacheable(cacheNames = "ChannelCategory")
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
@@ -158,7 +155,7 @@ public class ChannelService {
         return channelRepository.findAll(start, end);
     }
 
-        public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
+    public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
         Channel findChannel = channelRepository.findById(channelId);
 
         if (findChannel.getThumbnailImage() == null) {
@@ -181,11 +178,7 @@ public class ChannelService {
         Channel channel = channelRepository.findById(channelId);
         Member findMember = memberRepository.findById(memberId);
 
-        ChannelInfo channelInfo = new ChannelInfo(channel.getName(), findMember.getName(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt()),
-                channel.getMemberCount(), channel.getWaitingMemberCount(), channel.getPostCount(),
-                channel.getThumbnailImage().getStoreFileName());
-
+        ChannelInfo channelInfo = new ChannelInfo(channel);
         return channelInfo;
     }
 
