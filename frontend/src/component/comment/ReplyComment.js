@@ -7,7 +7,8 @@ const ReplyComment = ({reply}) => {
 
     const createVote = async () => {
         let voteRequest = {
-            'ownerId' : reply.id,
+            'memberId' : sessionStorage.getItem('id'),
+            'targetId' : reply.id,
             'voteType' : 'COMMENT',
         }
 

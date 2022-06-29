@@ -1,7 +1,6 @@
 package com.levelup.core.domain.vote;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.levelup.core.domain.Article.ArticleType;
 
 public enum VoteType {
 

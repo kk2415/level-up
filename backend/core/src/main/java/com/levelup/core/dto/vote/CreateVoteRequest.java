@@ -1,6 +1,6 @@
 package com.levelup.core.dto.vote;
 
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.vote.Vote;
 import com.levelup.core.domain.vote.VoteType;
 import lombok.Data;
 import javax.validation.constraints.NotNull;
@@ -9,9 +9,20 @@ import javax.validation.constraints.NotNull;
 public class CreateVoteRequest {
 
     @NotNull
-    private Long ownerId;
+    private Long memberId;
+
+    @NotNull
+    private Long targetId;
 
     @NotNull
     private VoteType voteType;
+
+    public Vote toEntity() {
+        return Vote.builder()
+                .memberId(memberId)
+                .targetId(targetId)
+                .voteType(voteType)
+                .build();
+    }
 
 }
