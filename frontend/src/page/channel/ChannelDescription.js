@@ -53,7 +53,7 @@ const ChannelDescription = () => {
     }
 
     const loadDescription = async (channelId) => {
-        let result = await ChannelService.getDescription(channelId)
+        let result = await ChannelService.get(channelId)
 
         setDescription(result)
     }

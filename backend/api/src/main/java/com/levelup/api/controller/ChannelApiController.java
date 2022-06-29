@@ -95,16 +95,6 @@ public class ChannelApiController {
         return channelService.getById(channelId);
     }
 
-    @GetMapping("/channel/{channelId}/description")
-    public ChannelDescriptionResponse getChannelDescriptionInfo(@PathVariable Long channelId) {
-        Channel findChannel = channelRepository.findById(channelId);
-
-        return new ChannelDescriptionResponse(findChannel.getName(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findChannel.getCreateAt()),
-                findChannel.getManagerName(), findChannel.getMemberCount(), findChannel.getLimitedMemberNumber(),
-                findChannel.getCategory(), findChannel.getThumbnailImage());
-    }
-
     @GetMapping("/channels/{category}")
     public Result getByCategory(@PathVariable ChannelCategory category) {
         List<ChannelResponse> findChannels = channelService.getByCategory(category);
