@@ -24,6 +24,8 @@ public class ChannelResponse {
     private Long postCount;
     private String dateCreated;
     private String storeFileName;
+    private ChannelCategory category;
+    private UploadFile thumbnailImage;
 
     public ChannelResponse(Channel channel) {
         this.id = channel.getId();
@@ -35,7 +37,9 @@ public class ChannelResponse {
         this.thumbnailDescription = channel.getThumbnailDescription();
         this.memberCount = channel.getMemberCount();
         this.postCount = channel.getPostCount();
+        this.thumbnailImage = channel.getThumbnailImage();
         this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt());
+        this.category = channel.getCategory();
 
         if (channel.getThumbnailImage() != null) {
             this.storeFileName = channel.getThumbnailImage().getStoreFileName();

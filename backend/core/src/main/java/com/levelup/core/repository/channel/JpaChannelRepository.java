@@ -65,8 +65,14 @@ public class JpaChannelRepository implements ChannelRepository {
 
     @Override
     public List<Channel> findByCategory(ChannelCategory category) {
-        return em.createQuery("select ch from Channel ch where ch.category = :category", Channel.class)
+        String query = "select ch from Channel ch join fetch ch.manager m " +
+                "join fetch m.emailAuth e " +
+                "where ch.category = :category " +
+                "order by ch.id desc";
+
+        return em.createQuery(query, Channel.class)
                 .setParameter("category", category)
+                .setMaxResults(10)
                 .getResultList();
     }
 

@@ -8,6 +8,8 @@ import { MemberService } from '../../api/service/MemberService'
 import { uploadFile } from '../../api/service/FileService'
 import { S3_URL } from "../../api/backEndHost"
 
+import '../../css/mypage.css'
+
 const MyPage = () => {
     let navigate = new useNavigate();
 
@@ -61,7 +63,8 @@ const MyPage = () => {
                     <Image thumbnail roundedCircle
                            src={S3_URL + member.uploadFile.storeFileName}
                            className='mb-5'
-                            style={{width: "50vh"}}
+                           id='profileImage'
+                           style={{width: "50xp", height: "50xp"}}
                     />
                 </div>
 
