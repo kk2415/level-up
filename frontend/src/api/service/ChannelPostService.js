@@ -3,9 +3,11 @@ import { send } from "../request"
 const ChannelPostService = {
 
     create: async (channelPost, channelId) => {
+        let result = null
+
         await send('/api/channel-post?channel=' + channelId, 'POST', channelPost)
-            .then(() => {
-                window.history.back()
+            .then((data) => {
+                result = data
             })
             .catch((error) => {
                 console.log(error)
@@ -14,6 +16,8 @@ const ChannelPostService = {
                     alert('이메일 인증을 해야합니다.')
                 }
             })
+
+        return result
     },
 
     get: async (articleId) => {
