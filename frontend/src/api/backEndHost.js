@@ -2,7 +2,7 @@ let backendHostUrl;
 
 const hostname = window && window.location && window.location.hostname;
 
-backendHostUrl = "http://3.39.237.216:8080"
+backendHostUrl = "https://levelupback.link:8080"
 if (hostname === "localhost") {
 	backendHostUrl = "http://localhost:8080"
 }
