@@ -11,8 +11,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.LAZY;
-
 @Entity
 @Getter
 @Setter
@@ -48,9 +46,6 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<File> files = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<Vote> votes = new ArrayList<>();
-
 
     /**
      * 생성 메서드
@@ -60,7 +55,7 @@ public class Article extends BaseTimeEntity {
 
         article.setMember(member);
         article.setTitle(title);
-        article.setWriter(member.getName());
+        article.setWriter(member.getNickname());
         article.setContent(content);
         article.setVoteCount(0L);
         article.setCommentCount(0L);
@@ -79,8 +74,7 @@ public class Article extends BaseTimeEntity {
         member.getArticles().add(this);
     }
 
-    public void addVote(Vote vote) {
-        vote.setArticle(this);
+    public void addVote() {
         addVoteCount();
     }
 

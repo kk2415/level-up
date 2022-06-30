@@ -71,7 +71,8 @@ const DetailChannelNotice = () => {
 
     const createVote = async () => {
         let voteRequest = {
-            'ownerId' : channelNoticeId,
+            'memberId' : sessionStorage.getItem('id'),
+            'targetId' : channelNoticeId,
             'voteType' : 'ARTICLE',
         }
 

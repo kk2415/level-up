@@ -35,9 +35,6 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
-    private List<Vote> votes;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent")
     private Comment parent;
@@ -64,8 +61,7 @@ public class Comment extends BaseTimeEntity {
         this.addReplyCount();
     }
 
-    public void addVote(Vote vote) {
-        vote.setComment(this);
+    public void addVote() {
         addVoteCount();
     }
 

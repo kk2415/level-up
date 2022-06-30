@@ -29,7 +29,7 @@ public class ChannelPostRequest {
 
         channelPost.setMember(member);
         channelPost.setTitle(title);
-        channelPost.setWriter(member.getName());
+        channelPost.setWriter(member.getNickname());
         channelPost.setContent(content);
         channelPost.setViews(0L);
         channelPost.setVoteCount(0L);

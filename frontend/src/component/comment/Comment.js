@@ -15,7 +15,8 @@ const Comment = ({comment, articleId, identity}) => {
 
     const createVote = async () => {
         let voteRequest = {
-            'ownerId' : comment.id,
+            'memberId' : sessionStorage.getItem('id'),
+            'targetId' : comment.id,
             'voteType' : 'COMMENT',
         }
 

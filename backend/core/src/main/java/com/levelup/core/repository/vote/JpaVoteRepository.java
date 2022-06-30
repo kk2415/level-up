@@ -1,6 +1,7 @@
 package com.levelup.core.repository.vote;
 
 import com.levelup.core.domain.vote.Vote;
+import com.levelup.core.domain.vote.VoteType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -32,32 +33,14 @@ public class JpaVoteRepository implements VoteRepository {
     }
 
     @Override
-    public Optional<List<Vote>> findByMemberIdAndArticleId(Long articleId, Long memberId) {
+    public Optional<List<Vote>> findByMemberAndTargetAndVoteType(Long memberId, Long targetId, VoteType voteType) {
         String query = "select v from Vote v " +
-                "join fetch v.article a " +
-                "join fetch v.member m " +
-                "join fetch m.emailAuth e " +
-                "where a.articleId = :articleId and m.id = :memberId";
+                "where v.memberId = :memberId and v.targetId = :targetId and v.voteType = :voteType";
 
         List<Vote> result = em.createQuery(query, Vote.class)
-                .setParameter("articleId", articleId)
                 .setParameter("memberId", memberId)
-                .getResultList();
-
-        return Optional.ofNullable(result);
-    }
-
-    @Override
-    public Optional<List<Vote>> findByMemberIdAndCommentId(Long commentId, Long memberId) {
-        String query = "select v from Vote v " +
-                "join fetch v.comment c " +
-                "join fetch v.member m " +
-                "join fetch m.emailAuth e " +
-                "where c.id = :commentId and m.id = :memberId";
-
-        List<Vote> result = em.createQuery(query, Vote.class)
-                .setParameter("commentId", commentId)
-                .setParameter("memberId", memberId)
+                .setParameter("targetId", targetId)
+                .setParameter("voteType", voteType)
                 .getResultList();
 
         return Optional.ofNullable(result);

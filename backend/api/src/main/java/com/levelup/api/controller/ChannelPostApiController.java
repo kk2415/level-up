@@ -32,8 +32,6 @@ public class ChannelPostApiController {
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
                                                       @RequestParam("channel") Long channelId,
                                                       @AuthenticationPrincipal Member member) {
-        System.out.println("member.getId() : " + member.getId());
-
         ChannelPostResponse channelPost = channelPostService.create(request, member.getId(), channelId);
 
         return ResponseEntity.ok().body(channelPost);

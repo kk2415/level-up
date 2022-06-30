@@ -7,7 +7,6 @@ import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.auth.EmailAuthRequest;
 import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
@@ -20,9 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +28,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -71,8 +67,7 @@ public class MemberService implements UserDetailsService {
 
 //        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
-        return new CreateMemberResponse(member.getId(), member.getEmail(), member.getPassword(), member.getName(),
-                member.getGender(), member.getBirthday(), member.getPhone());
+        return new CreateMemberResponse(member);
     }
 
     private void validationDuplicateMember(String email) {

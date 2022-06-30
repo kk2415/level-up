@@ -36,7 +36,6 @@ import java.util.List;
 public class ChannelApiController {
 
     private final ChannelService channelService;
-    private final ChannelRepository channelRepository;
     private final MemberService memberService;
 
 
@@ -45,8 +44,6 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
-        System.out.println("getMemberEmail() : " + channelRequest.getMemberEmail());
-
         return channelService.create(channelRequest);
     }
 
@@ -93,16 +90,6 @@ public class ChannelApiController {
     @GetMapping("/channel/{channelId}")
     public ChannelResponse getByChannelId(@PathVariable Long channelId) {
         return channelService.getById(channelId);
-    }
-
-    @GetMapping("/channel/{channelId}/description")
-    public ChannelDescriptionResponse getChannelDescriptionInfo(@PathVariable Long channelId) {
-        Channel findChannel = channelRepository.findById(channelId);
-
-        return new ChannelDescriptionResponse(findChannel.getName(), findChannel.getDescription(), findChannel.getThumbnailDescription(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(findChannel.getCreateAt()),
-                findChannel.getManagerName(), findChannel.getMemberCount(), findChannel.getLimitedMemberNumber(),
-                findChannel.getCategory(), findChannel.getThumbnailImage());
     }
 
     @GetMapping("/channels/{category}")

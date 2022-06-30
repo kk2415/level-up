@@ -41,10 +41,10 @@ public class ChannelRequest {
 
     private List<UploadFile> uploadFiles;
 
-    public Channel toEntity() {
+    public Channel toEntity(String managerName) {
         return Channel.builder()
                 .name(name)
-                .managerName(memberEmail)
+                .managerName(managerName)
                 .description(description)
                 .limitedMemberNumber(limitedMemberNumber)
                 .thumbnailDescription(thumbnailDescription)

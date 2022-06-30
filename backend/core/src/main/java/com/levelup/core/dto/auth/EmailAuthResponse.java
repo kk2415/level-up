@@ -8,6 +8,6 @@ import lombok.Data;
 public class EmailAuthResponse {
 
     private String securityCode;
-    private boolean isConfirmed;
+    private Boolean isConfirmed;
 
 }

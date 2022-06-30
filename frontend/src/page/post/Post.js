@@ -79,7 +79,8 @@ const Post = () => {
 
     const createVote = async () => {
         let voteRequest = {
-            'ownerId' : post.id,
+            'memberId' : sessionStorage.getItem('id'),
+            'targetId' : post.id,
             'voteType' : 'ARTICLE',
         }
 

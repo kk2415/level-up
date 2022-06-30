@@ -27,7 +27,7 @@ public class CreateReplyCommentRequest {
     public Comment toEntity(Member member, Article article) {
         Comment comment = Comment.builder()
                 .member(member)
-                .writer(member.getName())
+                .writer(member.getNickname())
                 .content(content)
                 .voteCount(0L)
                 .replyCount(0L)

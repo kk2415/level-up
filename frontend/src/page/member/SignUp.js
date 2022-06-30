@@ -22,6 +22,7 @@ const SignUp = () => {
         let profileImage = await uploadFile('/api/member/image', 'POST', file)
         let member = {
             name : formData.get('name'),
+            nickname : formData.get('nickname'),
             email : formData.get('email'),
             password : formData.get('password'),
             confirmPassword : formData.get('confirmPassword'),
@@ -54,6 +55,10 @@ const SignUp = () => {
         removeAlertMassageBox()
         if (!validation.name.test(member.name) || member.name === null) {
             $('#alert').append('<h5>[이름] : 이름은 2자리 이상 15이하, 한글만 입력하세요</h5>')
+            valid = false;
+        }
+        if (!validation.nickname.test(member.nickname) || member.nickname === null) {
+            $('#alert').append('<h5>[닉네임] : 이름은 2자리 이상 15이하, 영문, 숫자 또는 한글만 입력하세요</h5>')
             valid = false;
         }
         if (!validation.email.test(member.email) || member.email === null) {
@@ -120,6 +125,11 @@ const SignUp = () => {
             <Form.Group className="mb-3">
                 <Form.Label>비밀번호 확인</Form.Label>
                 <Form.Control id="confirmPassword" name="confirmPassword" type="password" placeholder="비밀번호를 재입력해주세요" />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>닉네임</Form.Label>
+                <Form.Control id="nickname" name="nickname" placeholder="닉네임을 입력해주세요" />
             </Form.Group>
 
             <Form.Group className="mb-3">
