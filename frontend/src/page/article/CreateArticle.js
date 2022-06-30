@@ -18,19 +18,18 @@ const CreateArticle = () => {
     const handleCreateNotice = async () => {
         let formData = new FormData(document.getElementById('form'));
 
-        let qna = {
+        let article = {
             title : formData.get('title'),
             content  : $('#summernote').val(),
             articleType : articleType,
         }
-        console.log(qna)
 
-        if (!validate(qna)) {
+        if (!validate(article)) {
             return
         }
 
-        let result = await ArticleService.create(qna)
-        console.log(result)
+        let result = await ArticleService.create(article)
+
         if (result) {
             navigate('/article/list?articleType=' + articleType + '&page=1')
         }
@@ -40,15 +39,15 @@ const CreateArticle = () => {
         navigate('/qna?page=1')
     }
 
-    const validate = (qna) => {
+    const validate = (article) => {
         let valid = true;
 
         removeAlertMassageBox()
-        if (qna.title === null || qna.title === "") {
+        if (article.title === null || article.title === "") {
             $('#alert').append('<h5>[제목] : 제목을 입력해주세요.</h5>')
             valid = false;
         }
-        if (qna.content === null || qna.content === "") {
+        if (article.content === null || article.content === "") {
             $('#alert').append('<h5>[내용] : 내용을 입력해주세요</h5>')
             valid = false;
         }

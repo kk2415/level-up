@@ -29,10 +29,10 @@ const CreateChannelNotice = () => {
             articleType : 'CHANNEL_NOTICE',
         }
 
-        console.log(notice)
-        // await ArticleService.create(notice)
-        // await ChannelService.createNotice(notice, channelId)
-        await ChannelPostService.create(notice, channelId)
+        let result = await ChannelPostService.create(notice, channelId);
+        if (result) {
+            navigate('/channel/' + channelId + '?page=1')
+        }
     }
 
     const handleCancel = () => {

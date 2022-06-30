@@ -45,27 +45,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler); //권한 에러 처리(관리자 권한 등)
 
         http.authorizeRequests()
-//                .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**", "/channel/{\\d+}/waiting-member/**")
-//                .hasAnyRole("CHANNEL_MANAGER", "ADMIN")
-//
-//                .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
-//                .antMatchers("/api/channel/**")
-//                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
-//
-//                .antMatchers( HttpMethod.POST,"/api/member").permitAll()
-//                .antMatchers("/api/member").authenticated()
-//
-//                .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
-//                .antMatchers("/api/comment/**")
-//                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
-//
-//                .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
-//                        "/api/{\\d+}/posts/{\\d+}").permitAll()
-//                .antMatchers("/api/post/**")
-//                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
-//
-//                .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-//                .antMatchers("/api/notice/**").hasRole("ADMIN")
+                .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**", "/channel/{\\d+}/waiting-member/**")
+                .hasAnyRole("CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
+                .antMatchers("/api/channel/**")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers( HttpMethod.POST,"/api/member").permitAll()
+                .antMatchers("/api/member").authenticated()
+
+                .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
+                .antMatchers("/api/comment/**")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
+                        "/api/{\\d+}/posts/{\\d+}").permitAll()
+                .antMatchers("/api/post/**")
+                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                .antMatchers("/api/notice/**").hasRole("ADMIN")
 
                 .anyRequest().permitAll();
 
