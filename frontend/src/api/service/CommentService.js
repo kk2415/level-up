@@ -78,12 +78,18 @@ const CommentService = {
             })
     },
 
-    delete: async () => {
-        await send()
+    delete: async (commentId) => {
+        let result = false
+
+        await send('/api/comment/' + commentId, 'DELETE')
             .then(() => {
+                result = true
             })
             .catch((error) => {
+                console.log(error)
             })
+
+        return result
     },
 
 }
