@@ -130,7 +130,7 @@ public class JpaMemberRepository implements MemberRepository {
 
 
     /**
-     * 수정
+     * 삭제
      * */
     @Override
     public void delete(Long id) {
