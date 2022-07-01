@@ -1,5 +1,6 @@
 package com.levelup.api.controller;
 
+import com.levelup.api.service.EmailAuthService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -35,6 +36,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final EmailAuthService emailAuthService;
 
     /**
      * 생성
@@ -101,17 +103,20 @@ public class MemberApiController {
     @PostMapping("/confirm-email")
     public ResponseEntity confirmEmail(@RequestBody EmailAuthRequest request,
                                        @AuthenticationPrincipal Member member) {
-        EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), member.getId());
+        EmailAuthResponse response = emailAuthService.confirmEmail(request.getSecurityCode(), member.getId());
 
         return ResponseEntity.ok().body(response);
     }
+
 
     /**
      * 인증번호 전송
      * */
     @GetMapping("/send/auth-email")
-    public void sendSecurityCode(@AuthenticationPrincipal Member member) {
-        memberService.sendSecurityCode(member.getId());
+    public ResponseEntity sendSecurityCode(@AuthenticationPrincipal Member member) {
+        emailAuthService.sendSecurityCode(member.getId());
+
+        return ResponseEntity.ok().build();
     }
 
 

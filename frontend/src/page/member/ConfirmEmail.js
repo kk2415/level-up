@@ -11,7 +11,11 @@ const SignIn = ({} ) => {
     const [memberId, setMemberId] = useState(null)
 
     const HandleReConfirmButton = async () => {
-        await AuthEmailService.sendSecurityCode()
+        let result = await AuthEmailService.sendSecurityCode();
+
+        if (result) {
+            alert('인증번호가 전송되었습니다.')
+        }
     }
 
     const HandleConfirmButton = async () => {
@@ -22,10 +26,8 @@ const SignIn = ({} ) => {
         }
 
         let result = await MemberService.confirmEmail(auth);
-        if (result === null) {
-            setOnShowAlertMsg(true)
-        }
-        else {
+
+        if (result) {
             alert('인증되었습니다.')
             window.location.href = '/'
         }
