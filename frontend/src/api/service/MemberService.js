@@ -91,4 +91,22 @@ export const MemberService = {
 
         return members
     },
+
+    delete : async function deleteMember(memberId) {
+        let members = {}
+
+        await send('/api/member/' + memberId, 'DELETE')
+            .then((data) => {
+                members = data
+            })
+            .catch((error) => {
+                members = null
+                console.log(error)
+                alert(error)
+            })
+
+        return members
+    },
+
+
 }

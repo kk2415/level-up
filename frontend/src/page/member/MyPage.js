@@ -20,7 +20,6 @@ const MyPage = () => {
             window.location.href = '/'
         }
 
-        console.log(result)
         setMember(result)
     }
 
@@ -47,6 +46,18 @@ const MyPage = () => {
         navigate('/confirm-email')
     }
 
+    const handleDeleteMemberButton = () => {
+        if (window.confirm('정말 탈퇴하시겠습니까?')) {
+            let result = MemberService.delete(member.id);
+
+            if (result) {
+                alert('탈퇴되었습니다.')
+
+                MemberService.signOut()
+            }
+        }
+    }
+
     const [myPageFile, setMyPageFile] = useState(null)
     const [member, setMember] = useState({uploadFile : {storeFileName : ''}})
 
@@ -67,6 +78,13 @@ const MyPage = () => {
                            style={{width: "50xp", height: "50xp"}}
                     />
                 </div>
+
+                {
+                    member.confirmed === false &&
+                    <button onClick={handleConfirmEmail} className='btn btn-info w-100 mb-5'>
+                        이메일 인증 하기
+                    </button>
+                }
 
                 <Form.Group className="mb-3">
                     <Form.Label>이메일</Form.Label>
@@ -105,14 +123,10 @@ const MyPage = () => {
 
                 <HorizonLine text={""} />
 
-                {
-                    member.confirmed === false &&
-                    <button onClick={handleConfirmEmail} className='btn btn-danger w-100 mb-5'>
-                        이메일 인증 하기
-                    </button>
-                }
+                <button onClick={handleDeleteMemberButton} className='btn btn-danger w-100 mb-5'>
+                    탈퇴
+                </button>
 
-                <br/>
                 <Row>
                     <Col className='col'>
                         <Button onClick={handleModify} className='w-100 btn btn-primary btn-lg' type='button' id='updateButton'>수정</Button>
