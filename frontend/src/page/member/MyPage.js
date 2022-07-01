@@ -20,6 +20,7 @@ const MyPage = () => {
             window.location.href = '/'
         }
 
+        console.log(result)
         setMember(result)
     }
 
@@ -64,8 +65,6 @@ const MyPage = () => {
     useEffect(() => {
         loadMember()
     }, [])
-
-    console.log(member)
 
     return (
         <Container>

@@ -34,7 +34,11 @@ const CreatePost = () => {
             return
         }
 
-        await ChannelPostService.create(post, channelId)
+        let result = await ChannelPostService.create(post, channelId);
+
+        if (result) {
+            window.location.href = '/channel/' + channelId + '?page=1'
+        }
     }
 
     const validate = (post) => {

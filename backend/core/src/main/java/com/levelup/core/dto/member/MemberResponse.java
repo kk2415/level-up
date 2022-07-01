@@ -22,11 +22,7 @@ public class MemberResponse {
         this.gender = member.getGender();
         this.birthday = member.getBirthday();
         this.phone = member.getPhone();
-
-        this.isConfirmed = false;
-        if (member.getEmailAuth() != null) {
-            this.isConfirmed = member.getEmailAuth().getIsConfirmed();
-        }
+        this.isConfirmed = member.getEmailAuth().getIsConfirmed();
         this.uploadFile = member.getProfileImage();
     }
 

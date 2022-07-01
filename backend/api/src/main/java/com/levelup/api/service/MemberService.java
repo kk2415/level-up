@@ -44,7 +44,7 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final EmailAuthRepository emailAuthRepository;
+    private final EmailAuthService emailAuthService;
     private final EmailService emailService;
     private final FileService fileService;
 //    private final LocalFileStore fileStore;
@@ -58,7 +58,7 @@ public class MemberService implements UserDetailsService {
         validationDuplicateMember(memberRequest.getEmail());
 
         Member member = memberRequest.toEntity();
-        member.setPassword(passwordEncoder.encode(member.getPassword()));//중복 회원 검증
+        member.setPassword(passwordEncoder.encode(member.getPassword())); //중복 회원 검증
 
         EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
         member.setEmailAuth(authEmail);
@@ -200,45 +200,6 @@ public class MemberService implements UserDetailsService {
                 imageFile.delete();
             }
         }
-    }
-
-
-    /**
-     * 이메일 인증
-     * */
-    @CacheEvict(cacheNames = "member", allEntries = true)
-    public EmailAuthResponse confirmEmail(String securityCode, Long memberId) {
-        EmailAuth auth = emailAuthRepository.findByMemberId(memberId)
-                .orElseThrow(() -> {
-                    throw new MemberNotFoundException("해당하는 회원을 찾을 수 없습니다");
-                });
-
-        if (!auth.getSecurityCode().equals(securityCode)) {
-            throw new NotMatchSecurityCodeException("인증번호가 일치하지 않습니다.");
-        }
-
-        auth.setConfirmed(true);
-
-        Member member = memberRepository.findById(memberId);
-        member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
-
-        return new EmailAuthResponse(securityCode, true);
-    }
-
-    public void sendSecurityCode(Long memberId) {
-        Member member = memberRepository.findById(memberId);
-
-        emailAuthRepository.findByMemberId(memberId).ifPresentOrElse((authEmail) -> {
-            String securityCode = EmailAuth.createSecurityCode();
-            authEmail.setSecurityCode(securityCode);
-
-            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
-        }, () -> {
-            EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
-            member.setEmailAuth(authEmail);
-
-            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
-        });
     }
 
 

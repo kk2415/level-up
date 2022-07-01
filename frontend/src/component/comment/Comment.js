@@ -36,6 +36,16 @@ const Comment = ({comment, articleId, identity}) => {
         setOnHideShowReplyComment(!onHideReplyComment)
     }
 
+    const handleDeleteComment = async () => {
+        if (window.confirm('삭제하시겠습니까?')) {
+            let result = await CommentService.delete(comment.id)
+
+            if (result) {
+                window.location.reload()
+            }
+        }
+    }
+
     useEffect(() => {
         loadReplyComment(comment.id)
     }, [onHideReplyComment, writingReplyComment])
@@ -50,9 +60,6 @@ const Comment = ({comment, articleId, identity}) => {
                         &nbsp;&nbsp;&nbsp;
                         <span id="commentDate">{comment.dateCreated}</span>
                         <p id="commentContent">{comment.content}</p>
-                        <span id="commentVote" className="float-end">
-                            <button onClick={createVote} className="btn-sm btn-info" type="button">{'추천 ' + voteCount}</button>
-                        </span>
                         {
                             comment.replyCount > 0 &&
                             <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글 {replyCount}</button>
@@ -61,6 +68,17 @@ const Comment = ({comment, articleId, identity}) => {
                             comment.replyCount <= 0 &&
                             <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글쓰기</button>
                         }
+
+                        {
+                            comment.memberId === Number(sessionStorage.getItem('id')) &&
+                            <button onClick={handleDeleteComment} className="btn-sm btn-danger" id="replyButton">
+                                삭제
+                            </button>
+                        }
+
+                        <span id="commentVote" className="float-end">
+                            <button onClick={createVote} className="btn-sm btn-info" type="button">{'추천 ' + voteCount}</button>
+                        </span>
                     </Container>
                     {
                         onHideReplyComment &&

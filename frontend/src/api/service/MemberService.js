@@ -86,7 +86,9 @@ export const MemberService = {
             })
             .catch((error) => {
                 members = null
+
                 console.log(error)
+                alert(error.responseJSON.message)
             })
 
         return members

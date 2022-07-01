@@ -57,24 +57,18 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
+    protected ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
                                                                   HttpServletRequest request) {
-        log.error(e.getClass().getName());
-        log.error(e.getMessage());
+        log.error(e.getClass().getName(), e.getMessage());
 
-        CreateExceptionResponse createExceptionResponse = new CreateExceptionResponse();
-        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
 
-        for (FieldError fieldError : fieldErrors) {
-            createExceptionResponse.message.put(
-                    fieldError.getField(),
-                    fieldError.getDefaultMessage());
-        }
-        createExceptionResponse.setTimeStamp(LocalDateTime.now());
-        createExceptionResponse.setException(e.getClass().getName());
-        createExceptionResponse.setPath(request.getRequestURI());
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(e.getClass().getName());
+        exceptionResponse.setPath(request.getRequestURI());
 
-        return new ResponseEntity(createExceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ImageNotFoundException.class)
@@ -150,6 +144,21 @@ public class ExceptionController {
 
     @ExceptionHandler(DuplicateChannelMemberException.class)
     public ResponseEntity<ExceptionResponse> notLoggedInException(DuplicateChannelMemberException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+
+        exceptionResponse.setTimeStamp(LocalDateTime.now());
+        exceptionResponse.setMessage(e.getMessage());
+        exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
+        exceptionResponse.setPath(request.getRequestURI());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(EmailCodeExpiredException.class)
+    public ResponseEntity<ExceptionResponse> notLoggedInException(EmailCodeExpiredException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
