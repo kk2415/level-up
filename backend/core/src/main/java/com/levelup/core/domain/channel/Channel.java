@@ -54,7 +54,7 @@ public class Channel extends BaseTimeEntity {
     @OneToMany(mappedBy = "channel")
     private List<File> files;
 
-    @OneToMany(mappedBy = "channel")
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<ChannelPost> channelPosts;
 
     /**

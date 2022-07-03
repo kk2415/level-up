@@ -150,6 +150,7 @@ const ChannelService = {
             })
             .catch((error) => {
                 result = null
+                alert('삭제 실패')
                 console.log(error)
             })
 
