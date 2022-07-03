@@ -17,7 +17,7 @@ public class TokenProvider {
 
     public String create(Member member) {
         Date expireDate = Date.from(Instant.now()
-                .plus(1, ChronoUnit.DAYS));
+                .plus(30, ChronoUnit.MINUTES));
 
         //JWT Token 생성
         return Jwts.builder()
