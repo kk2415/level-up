@@ -12,7 +12,7 @@ public interface ChannelRepository {
     void save(Channel channel);
     Channel findById(Long id);
     List<Channel> findByMemberId(Long memberId);
-    public Channel findByArticleId(Long articleId);
+    Channel findByArticleId(Long articleId);
     List<Channel> findByName(String name);
     List<Channel> findByCategory(ChannelCategory category);
     List<Channel> findAll();

@@ -3,12 +3,11 @@ import {TOKEN} from '../token'
 
 export const MemberService = {
     signUp : async function (member) {
-        let result = false
+        let result = null
 
         await send('/api/member', 'POST', member)
             .then((data) => {
-                alert(data.name + '님 가입되었습니다')
-                result = true
+                result = data
             })
             .catch((error) => {
                 alert(error.responseJSON.message)
