@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {MemberService} from "../../../api/service/MemberService";
+import ChannelMemberService from "../../../api/service/ChannelMemberService";
 
 import WaitingMemberRow from "../../../component/channel/manager/WaitingMemberRow";
 import Pager from "../../pager/Pager";
@@ -12,9 +13,11 @@ const WaitingMemberFrame = ({channelId, waitingMemberCount}) => {
     const [curPage, setCurPage] = useState(1)
 
     const loadWaitingMembers = async (channelId, curPage, PAGER_LENGTH) => {
-        let result = await MemberService.getWaitingMembers(channelId, curPage, PAGER_LENGTH)
+        const pageable = 'page=' + (curPage - 1) + '&size=' + PAGER_LENGTH + '&sort=id,desc'
 
-        setWaitingMembers(result.data)
+        let result = await ChannelMemberService.getAll(channelId, true, pageable);
+
+        setWaitingMembers(result.content)
     }
 
     const onNext = (currentPage, lastPagerNum, pagerLength, searchCondition) => {

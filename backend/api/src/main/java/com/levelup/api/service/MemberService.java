@@ -65,7 +65,7 @@ public class MemberService implements UserDetailsService {
 
         memberRepository.save(member);
 
-        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
+//        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
         return new CreateMemberResponse(member);
     }

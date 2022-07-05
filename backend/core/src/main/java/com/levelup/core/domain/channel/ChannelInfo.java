@@ -22,8 +22,14 @@ public class ChannelInfo {
         this.channelName = channel.getName();
         this.manager = channel.getManagerName();
         this.date = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt());
-        this.memberCount = channel.getMemberCount();
-        this.waitingMemberCount = channel.getWaitingMemberCount();
+        this.memberCount = channel.getChannelMembers().stream()
+                .filter(member -> !member.getIsWaitingMember())
+                .count();
+
+        this.waitingMemberCount = channel.getChannelMembers().stream()
+                .filter(member -> member.getIsWaitingMember())
+                .count();
+
         this.postCount = channel.getPostCount();
         this.thumbnail = channel.getThumbnailImage().getStoreFileName();
     }
