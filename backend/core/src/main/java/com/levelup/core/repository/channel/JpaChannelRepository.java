@@ -28,7 +28,15 @@ public class JpaChannelRepository implements ChannelRepository {
      * */
     @Override
     public Channel findById(Long id) {
-        return em.find(Channel.class, id);
+        String query = "select ch from Channel ch " +
+                "join fetch ch.channelMembers chm " +
+                "join fetch chm.member m " +
+                "join fetch m.emailAuth ea " +
+                "where ch.id = :id";
+
+        return em.createQuery(query, Channel.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
@@ -65,7 +73,11 @@ public class JpaChannelRepository implements ChannelRepository {
 
     @Override
     public List<Channel> findByCategory(ChannelCategory category) {
-        String query = "select ch from Channel ch where ch.category = :category order by ch.id desc";
+        String query = "select ch from Channel ch " +
+                "join fetch ch.channelMembers chm " +
+                "join fetch chm.member m " +
+                "join fetch m.emailAuth ea " +
+                "where ch.category = :category order by ch.id desc";
 
         return em.createQuery(query, Channel.class)
                 .setParameter("category", category)

@@ -7,11 +7,13 @@ import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ChannelResponse {
 
     private Long id;

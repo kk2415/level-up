@@ -15,47 +15,26 @@ const getChannelId = () => {
     return Number(pathname.substr(pathname.lastIndexOf('/') + 1))
 }
 
-const getManagerId = async (channelId) => {
-    let channel = await ChannelService.get(channelId);
-
-    return channel.managerId
-}
-
 const ChannelDescription = () => {
-    const navigate = useNavigate();
+    const handleEnterChannel = () => {
+        $(window.location).attr('href', '/channel/' + channelId + '?page=1')
+    }
 
-    const [isManager, setIsManager] = useState(false)
-    const [showModify, setShowModify] = useState(false)
-    const [showDelete, setShowDelete] = useState(false)
-    const [description, setDescription] = useState({})
-    const [channelId, setChannelId] = useState(getChannelId())
+    const handleBack = () => {
+        $(window.location).attr('href', '/')
+    }
 
-    let managerId = 0
+    const handleModifyChannel = () => {
+        $(window.location).attr('href', '/channel/modify/' + channelId)
+    }
 
-    useEffect(  () => {
-        const initDescription = async () => {
-            managerId = await getManagerId(channelId)
-
-            VerifyingPermissions(managerId)
-            await loadDescription(channelId)
-        }
-
-        initDescription()
-    }, [channelId])
-
-    const VerifyingPermissions = async (managerId) => {
-        console.log(managerId)
-
-        if (managerId === Number(sessionStorage.getItem('id'))) {
-            setShowModify(true)
-            setShowDelete(true)
-            setIsManager(true)
-        }
+    const handleDeleteChannel = async () => {
+        await ChannelService.delete(channelId)
     }
 
     const loadDescription = async (channelId) => {
         let result = await ChannelService.get(channelId)
-
+        console.log(result)
         setDescription(result)
     }
 
@@ -72,21 +51,16 @@ const ChannelDescription = () => {
         }
     }
 
-    const handleEnterChannel = () => {
-        $(window.location).attr('href', '/channel/' + channelId + '?page=1')
-    }
+    const [description, setDescription] = useState({})
+    const [channelId, setChannelId] = useState(getChannelId())
 
-    const handleBack = () => {
-        $(window.location).attr('href', '/')
-    }
+    useEffect(  () => {
+        const initDescription = async () => {
+            await loadDescription(channelId)
+        }
 
-    const handleModifyChannel = () => {
-        $(window.location).attr('href', '/channel/modify/' + channelId)
-    }
-
-    const handleDeleteChannel = async () => {
-        await ChannelService.delete(channelId)
-    }
+        initDescription()
+    }, [channelId])
 
     return (
         <>
@@ -127,13 +101,13 @@ const ChannelDescription = () => {
                         </div>
                         <div className="float-end">
                             {
-                                showModify &&
+                                description.managerId === Number(sessionStorage.getItem('id')) &&
                                 <button onClick={handleModifyChannel} className="btn btn-sm btn-secondary" type="button" id="modifyButton">
                                     채널 수정
                                 </button>
                             }
                             {
-                                showDelete &&
+                                description.managerId === Number(sessionStorage.getItem('id')) &&
                                 <button onClick={handleDeleteChannel} className="btn btn-sm btn-danger" type="button" id="deleteButton">
                                     채널 삭제
                                 </button>
@@ -143,7 +117,7 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     {
-                        !isManager &&
+                        !(description.managerId === Number(sessionStorage.getItem('id'))) &&
                         <button onClick={handleRegisterChannel} className="btn btn-lg btn-success" type="button" id="registerStudyButton">
                             가입 신청
                         </button>

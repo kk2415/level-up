@@ -1,9 +1,7 @@
 package com.levelup.api.controller;
 
-import com.levelup.core.DateFormat;
 import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.MemberService;
-import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelInfo;
 import com.levelup.core.domain.member.Member;
@@ -11,8 +9,6 @@ import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.dto.Result;
 import com.levelup.core.dto.channel.*;
-import com.levelup.core.dto.member.MemberResponse;
-import com.levelup.core.repository.channel.ChannelRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Tag(name = "채널 API")
@@ -72,8 +67,10 @@ public class ChannelApiController {
     }
 
     @GetMapping("/channel/{channelId}")
-    public ChannelResponse getByChannelId(@PathVariable Long channelId) {
-        return channelService.getById(channelId);
+    public ResponseEntity<ChannelResponse> getByChannelId(@PathVariable Long channelId) {
+        ChannelResponse channelResponse = channelService.getChannel(channelId);
+
+        return ResponseEntity.ok().body(channelResponse);
     }
 
     @GetMapping("/channels/{category}")
@@ -90,7 +87,7 @@ public class ChannelApiController {
 
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
     @GetMapping("/channel/{channelId}/manager")
-    public ResponseEntity getChannelAllInfo(@PathVariable Long channelId,
+    public ResponseEntity<ChannelInfo> getChannelAllInfo(@PathVariable Long channelId,
                                    @AuthenticationPrincipal Member member) {
         ChannelInfo channelAllInfo = channelService.getChannelAllInfo(channelId, member.getId());
 

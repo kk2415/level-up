@@ -12,7 +12,6 @@ import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.channel.*;
-import com.levelup.core.exception.DuplicateChannelMemberException;
 import com.levelup.core.exception.ImageNotFoundException;
 import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelMemberRepository;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,7 +86,7 @@ public class ChannelService {
     /**
      * 채널 조회
      * */
-    public ChannelResponse getById(Long channelId) {
+    public ChannelResponse getChannel(Long channelId) {
         Channel findChannel = channelRepository.findById(channelId);
 
         return new ChannelResponse(findChannel);
