@@ -11,7 +11,7 @@ export const MemberService = {
                 result = true
             })
             .catch((error) => {
-                alert('회원가입 실패')
+                alert(error.responseJSON.message)
                 console.log(error)
             })
 

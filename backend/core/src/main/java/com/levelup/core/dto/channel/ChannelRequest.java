@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -51,8 +51,10 @@ public class ChannelRequest {
                 .thumbnailImage(thumbnailImage)
                 .category(category)
                 .memberCount(0L)
-                .waitingMemberCount(0L)
                 .postCount(0L)
+                .channelMembers(new ArrayList<>())
+                .channelPosts(new ArrayList<>())
+                .files(new ArrayList<>())
                 .build();
     }
 

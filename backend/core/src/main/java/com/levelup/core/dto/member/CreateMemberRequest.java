@@ -60,7 +60,6 @@ public class CreateMemberRequest {
                 .phone(phone)
                 .authority(Authority.ANONYMOUS)
                 .profileImage(uploadFile)
-                .channels(new ArrayList<>())
                 .build();
     }
 }

@@ -4,8 +4,6 @@ import com.levelup.core.domain.Article.ChannelPost;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.NoPlaceChnnelException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,7 +31,6 @@ public class Channel extends BaseTimeEntity {
 
     private Long postCount;
     private Long memberCount;
-    private Long waitingMemberCount;
 
     @Enumerated(EnumType.STRING)
     private ChannelCategory category;
@@ -47,15 +44,12 @@ public class Channel extends BaseTimeEntity {
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id")
-    private Member manager;
-
     @OneToMany(mappedBy = "channel")
     private List<File> files;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<ChannelPost> channelPosts;
+
 
     /**
      * 연관관계 메서드는 한쪽에서만 해주면된다.
@@ -65,67 +59,17 @@ public class Channel extends BaseTimeEntity {
      * 만약 이렇게 연관관계 메서드를 호출하지 않으면 컬럼에 값이 들어가지 않는다.
      * */
     //==연관관계 메서드==//
-    public void setManager(Member manager) {
-        if (this.manager != null) {
-            this.manager.getChannels().remove(this);
-        }
-
-        this.manager = manager;
-        manager.getChannels().add(this);
-    }
-
     public void setChannelMember(ChannelMember channelMember) {
-        this.channelMembers.add(channelMember);
+        this.getChannelMembers().add(channelMember);
         channelMember.setChannel(this);
     }
 
 
     //==비즈니스 로직==//
-    public void addMember(List<ChannelMember> channelMembers) {
-        if (memberCount >= limitedMemberNumber ) {
-            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
-        }
-
-        for (ChannelMember channelMember : channelMembers) {
-            if (memberCount >= limitedMemberNumber ) {
-                break;
-            }
-
-            this.getChannelMembers().add(channelMember);
-            channelMember.setChannel(this);
-            memberCount++;
-        }
-    }
-
-    public void addWaitingMember(List<ChannelMember> channelMembers) {
-        if (waitingMemberCount >= limitedMemberNumber ) {
-            throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
-        }
-
-        for (ChannelMember channelMember : channelMembers) {
-            this.getChannelMembers().add(channelMember);
-            channelMember.setChannel(this);
-            waitingMemberCount++;
-        }
-    }
-
     public void removeMember(List<ChannelMember> channelMembers) {
-        if (memberCount <= 0 ) {
-            throw new IllegalStateException("더이상 제거할 수 없습니다.");
-        }
-
         for (ChannelMember channelMember : channelMembers) {
             this.getChannelMembers().remove(channelMember);
             channelMember.getMember().getChannelMembers().remove(channelMember);
-            memberCount--;
-        }
-    }
-
-    public void removeWaitingMember(List<ChannelMember> channelMembers) {
-        for (ChannelMember channelMember : channelMembers) {
-            this.getChannelMembers().remove(channelMember);
-            channelMember.getWaitingMember().getChannelMembers().remove(channelMember);
-            waitingMemberCount--;
         }
     }
 

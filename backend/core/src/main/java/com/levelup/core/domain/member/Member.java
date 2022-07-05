@@ -62,9 +62,6 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "waitingMember")
     private List<ChannelMember> channelWaitingMembers;
 
-    @OneToMany(mappedBy = "manager", cascade = CascadeType.REMOVE)
-    private List<Channel> channels;
-
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private EmailAuth emailAuth;
 

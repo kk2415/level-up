@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import $ from 'jquery'
 import {useNavigate} from 'react-router-dom'
 import ChannelService from '../../api/service/ChannelService'
+import ChannelMemberService from "../../../src/api/service/ChannelMemberService";
 import {Container} from 'react-bootstrap'
 import {TOKEN} from "../../api/token";
 import react from "react";
@@ -60,7 +61,11 @@ const ChannelDescription = () => {
 
     const handleRegisterChannel = async () => {
         if (sessionStorage.getItem(TOKEN)) {
-            await ChannelService.addWaitingMember(channelId);
+            let result = await ChannelMemberService.create(channelId);
+
+            if (result) {
+                alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
+            }
         }
         else {
             alert('로그인해야합니다.')

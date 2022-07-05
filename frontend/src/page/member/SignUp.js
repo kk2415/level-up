@@ -8,6 +8,7 @@ import HorizonLine from "../../component/HorizonLine";
 import { MemberService } from '../../api/service/MemberService'
 import { uploadFile } from '../../api/service/FileService'
 import {createMemberValidation as validation} from '../../api/validation'
+import {AuthEmailService} from "../../api/service/AuthEmailService";
 
 const SignUp = () => {
     const [file, setFile] = useState(null)
@@ -32,7 +33,6 @@ const SignUp = () => {
             uploadFile : profileImage,
             authority : 'NORMAL',
         }
-        console.log(member)
 
         if (validate(member)) {
             let result = await MemberService.signUp(member);
@@ -44,6 +44,12 @@ const SignUp = () => {
                 }
 
                 await MemberService.signIn(logInMember);
+
+                let result = await AuthEmailService.sendSecurityCode();
+                if (result) {
+                    alert('인증번호가 전송되었습니다.')
+                }
+
                 window.location.href = '/confirm-email'
             }
         }
