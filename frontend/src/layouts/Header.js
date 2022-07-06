@@ -54,11 +54,13 @@ const Header = () => {
 	}
 
 	const qnaHandler = () => {
-		navigate(`/article/list?articleType=QNA&page=1`);
+		window.location.href = `/article/list?articleType=QNA&page=1`
+		// navigate(`/article/list?articleType=QNA&page=1`);
 	}
 
 	const noticeHandler = () => {
-		alert('서비스 준비중입니다.')
+		window.location.href = `/article/list?articleType=NOTICE&page=1`
+		// navigate(`/article/list?articleType=NOTICE&page=1`);
 	}
 
 	return (
