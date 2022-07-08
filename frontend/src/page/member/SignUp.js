@@ -21,6 +21,7 @@ const SignUp = () => {
     async function HandleSignUpButton() {
         let formData = new FormData(document.getElementById('signUpForm'));
         let profileImage = await uploadFile('/api/member/image', 'POST', file)
+
         let member = {
             name : formData.get('name'),
             nickname : formData.get('nickname'),

@@ -12,6 +12,7 @@ import com.levelup.core.dto.channel.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+@Slf4j
 @Tag(name = "채널 API")
 @RestController
 @RequiredArgsConstructor

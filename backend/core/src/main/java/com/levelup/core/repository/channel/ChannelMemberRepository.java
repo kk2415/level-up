@@ -14,7 +14,6 @@ import java.util.Optional;
 public interface ChannelMemberRepository extends JpaRepository<ChannelMember, Long> {
 
     Optional<List<ChannelMember>> findByChannelIdAndMemberId(Long channelId, Long memberId);
-    Optional<List<ChannelMember>> findByChannelIdAndWaitingMemberId(Long channelId, Long memberId);
 
     @Query(value = "select cm from ChannelMember cm " +
             "join fetch cm.channel c " +

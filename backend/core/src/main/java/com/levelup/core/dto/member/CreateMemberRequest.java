@@ -47,6 +47,7 @@ public class CreateMemberRequest {
     @NotNull
     private String phone;
 
+    @NotNull
     private UploadFile uploadFile;
 
     public Member toEntity() {
