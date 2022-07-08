@@ -8,15 +8,24 @@ import "swiper/css/pagination";
 
 import "../css/HomeSwiper.css"
 import { S3_URL } from "../api/backEndHost"
+import $ from "jquery";
 
 const CardSlide = ({ channel }) => {
 	const IMG_DIR = S3_URL + channel.storeFileName
+
+	const onMouseOver = () => {
+		$('.cardImg').css('cursor', 'pointer')
+	}
+
+	const handleCardImage = () => {
+		window.location.href = `/channel/description/` + channel.id
+	}
 
 	return (
 		<Card>
 			<Row className="g-0">
 				<Container>
-					<Card.Img className="cardImg" variant="top" src={IMG_DIR} style={{ height: '20vh'}} />
+					<Card.Img onClick={handleCardImage} onMouseOver={onMouseOver} className="cardImg" variant="top" src={IMG_DIR} style={{ height: '20vh'}} />
 					<Card.Body className="card-body">
 						<Link to={'/channel/description/' + channel.id}>
 							<Card.Title className="card-title">
