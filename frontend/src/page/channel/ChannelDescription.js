@@ -128,12 +128,17 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     <div>
-                        <button onClick={handleBack} className="btn btn-secondary float-start" type="button" id="toAllStudyChannelButton">목록으로
-                        </button>
-                        <button onClick={handleEnterChannel} className="btn btn-info float-end" type="button" id="enterStudyButton">
-                            <AiOutlineImport className='enterChannel' />
-                            <span className='fs-3 fw-bold mx-2 '>접속</span>
-                        </button>
+                        <Container className="d-grid gap-2">
+                            <button onClick={handleEnterChannel} className="btn btn-info" type="button" id="enterStudyButton">
+                                <AiOutlineImport className='enterChannel' />
+                                <span className='fs-3 fw-bold mx-2 '>접속</span>
+                            </button>
+                            <button onClick={handleBack} className="btn btn-secondary float-start" type="button" id="toAllStudyChannelButton">
+                                홈으로
+                            </button>
+                        </Container>
+
+
                     </div>
                 </Container>
             }

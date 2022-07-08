@@ -61,6 +61,7 @@ const MyPage = () => {
             $('#nickname').attr('disabled', true)
 
             setOnModifyButton(false)
+            window.location.reload()
         }
     }
 
@@ -96,14 +97,15 @@ const MyPage = () => {
                     <Form id='signUpForm' className='mt-5'>
                         {
                             member.uploadFile &&
-                            <div className='w-100' style={{ textAlign: "center" }} >
-                                <Image thumbnail roundedCircle
+                            <Container className='w-100' style={{ textAlign: "center", width: "10xp", height: "10xp" }}>
+                                <Image thumbnail roundedCircle fluid
                                        src={S3_URL + member.uploadFile.storeFileName}
-                                       className='mb-5'
+                                       className='mb-5 img-fluid'
                                        id='profileImage'
-                                       style={{width: "50xp", height: "50xp"}}
+                                       style={{width: "30%", height: "30%", objectFit: "contain"}}
                                 />
-                            </div>
+                            </Container>
+
                         }
 
                         {

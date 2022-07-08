@@ -1,6 +1,8 @@
 package com.levelup.api.service;
 
 import com.levelup.core.domain.auth.EmailAuth;
+import com.levelup.core.domain.channel.Channel;
+import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.S3FileStore;
@@ -14,6 +16,7 @@ import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
 import com.levelup.core.repository.auth.EmailAuthRepository;
+import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +48,7 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final ChannelRepository channelRepository;
     private final EmailAuthService emailAuthService;
     private final EmailService emailService;
     private final FileService fileService;
@@ -192,8 +196,19 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버 삭제
      * */
-    @CacheEvict(cacheNames = "member", allEntries = true)
+    @CacheEvict(cacheNames = {"ChannelCategory", "member"}, allEntries = true)
     public void delete(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        List<ChannelMember> channelMembers = member.getChannelMembers().stream()
+                .filter(ChannelMember::getIsManager)
+                .collect(Collectors.toList());
+
+        channelMembers.forEach(channelMember -> {
+            Channel channel = channelMember.getChannel();
+
+            channelRepository.delete(channel.getId());
+        });
+
         memberRepository.delete(memberId);
     }
 

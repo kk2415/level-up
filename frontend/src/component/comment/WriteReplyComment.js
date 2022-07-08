@@ -12,13 +12,14 @@ const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, p
             articleId : articleId,
             identity : identity,
         }
-        console.log(replyRequest)
 
         let reuslt = await CommentService.createReply(replyRequest)
         if (reuslt !== null) {
             $('#createReplyContent').val('')
             setWritingReplyComment(true)
             setReplyCount(replyCount + 1)
+
+            window.location.reload()
         }
     }
 
