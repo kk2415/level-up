@@ -11,6 +11,7 @@ import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
+import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
 import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -164,18 +165,27 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버 수정
      * */
+    public void modifyMember(UpdateMemberRequest updateMemberRequest, Long memberId) {
+        Member member = memberRepository.findById(memberId);
+
+        member.updateMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
+    }
+
     @CacheEvict(cacheNames = "member", allEntries = true)
-    public void modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
+    public UploadFile modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }
 
         Member member = memberRepository.findById(memberId);
-
-        deleteS3Profile(member.getProfileImage().getStoreFileName());
+        if (member.getProfileImage() != null) {
+            deleteS3Profile(member.getProfileImage().getStoreFileName());
+        }
 
         UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
         member.modifyProfileImage(uploadFile); //변경 감지의 의한 update문 쿼리 발생
+
+        return uploadFile;
     }
 
 

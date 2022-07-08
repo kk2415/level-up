@@ -3,7 +3,6 @@ package com.levelup.core.domain.member;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.auth.EmailAuth;
 import com.levelup.core.domain.base.BaseTimeEntity;
-import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.UploadFile;
@@ -50,17 +49,14 @@ public class Member extends BaseTimeEntity {
      * cascade = CascadeType.ALL : member를 persist()하면 member랑 맵핑된 post도 같이 영속화된다.
      * 하지만 postRepository를 따로 만들어서 em.persist를 할꺼라서 여기서 post를 persist 안해도 된다.
      * */
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Article> articles;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<ChannelMember> channelMembers;
-
-    @OneToMany(mappedBy = "waitingMember")
-    private List<ChannelMember> channelWaitingMembers;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private EmailAuth emailAuth;
@@ -83,6 +79,11 @@ public class Member extends BaseTimeEntity {
     }
 
     public void modifyProfileImage(UploadFile profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateMember(String nickname, UploadFile profileImage) {
+        this.nickname = nickname;
         this.profileImage = profileImage;
     }
 

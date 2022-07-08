@@ -8,6 +8,7 @@ import com.levelup.core.dto.Result;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
+import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,7 +42,6 @@ public class MemberApiController {
      * */
     @PostMapping("/member")
     public ResponseEntity create(@RequestBody @Valid CreateMemberRequest memberRequest) throws IOException {
-        System.out.println(memberRequest.getEmail());
         CreateMemberResponse response = memberService.create(memberRequest);
 
         return new ResponseEntity(response, HttpStatus.OK);
@@ -50,6 +50,7 @@ public class MemberApiController {
     @PostMapping("/member/image")
     public ResponseEntity createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
         UploadFile profileImage = memberService.createProfileImage(file);
+
         return ResponseEntity.ok().body(profileImage);
     }
 
@@ -87,11 +88,21 @@ public class MemberApiController {
     /**
      * 수정
      * */
+    @PatchMapping("/member")
+    public ResponseEntity modifyMember(@RequestBody UpdateMemberRequest updateMemberRequest,
+                                       @AuthenticationPrincipal Member member) {
+        memberService.modifyMember(updateMemberRequest, member.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
     @PatchMapping("/member/{email}/image")
-    public void modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
+    public ResponseEntity<UploadFile> modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
         Member member = memberRepository.findByEmail(email);
 
-        memberService.modifyProfileImage(file, member.getId());
+        UploadFile profileImage = memberService.modifyProfileImage(file, member.getId());
+
+        return ResponseEntity.ok().body(profileImage);
     }
 
 

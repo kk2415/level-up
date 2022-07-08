@@ -7,7 +7,7 @@ spring:
   cloud:
     config:
       server:
-        bootstrap: true
+        bootstrap: false
         git:
           uri: git@github.com:kk2415/spring-cloud-config.git
           ignoreLocalSshSettings: true

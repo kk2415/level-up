@@ -48,10 +48,8 @@ public class VoteService {
      * 생성
      * */
     public VoteResponse create(CreateVoteRequest voteRequest) {
-        System.out.println("getVoteType() : " + voteRequest.getVoteType());
         Vote vote = voteRequest.toEntity();
 
-        System.out.println("getVoteType() : " + vote.getVoteType());
         voteRepository.save(vote);
         increaseVoteCount(voteRequest.getTargetId(), voteRequest.getVoteType());
 
@@ -71,24 +69,6 @@ public class VoteService {
                 break;
         }
     }
-
-//
-//    private void validDuplicateVote(VoteType voteType, Long ownerId, Long memberId) {
-//        List<Vote> votes = new ArrayList<>();
-//
-//        switch (voteType) {
-//            case ARTICLE:
-//                votes = voteRepository.findByMemberIdAndArticleId(ownerId, memberId).orElse(new ArrayList<>());
-//                break;
-//            case COMMENT:
-//                votes = voteRepository.findByMemberIdAndCommentId(ownerId, memberId).orElse(new ArrayList<>());
-//                break;
-//        }
-//
-//        if (!votes.isEmpty()) {
-//            throw new DuplicateVoteException("추천은 한 번만 가능합니다");
-//        }
-//    }
 
 
     /**
