@@ -14,7 +14,7 @@
   
 ### Frontend
 + html, CSS, JavaScript
-+ 리액트  
++   
 
 ### DevOps
 + AWS EC2, S3, Route 53
