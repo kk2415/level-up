@@ -13,7 +13,7 @@
 + MySQL
   
 ### Frontend
-+ html, CSS, JavaScript
++ HTML, CSS, JavaScript
 + React  
 
 ### DevOps
