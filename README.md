@@ -1,7 +1,7 @@
 # level up application
 
 ## 프로젝트 소개
-
+[https://github.com/kk2415/level-up/wiki]
 
 
 ## 프로젝트 실행환경  
