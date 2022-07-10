@@ -162,18 +162,6 @@ public class ChannelService {
         channelRepository.delete(channelId);
     }
 
-    public void deleteChannelMember(Long channelId, Long memberId) {
-//        ChannelMember channelMember = channelMemberRepository.findByChannelAndMember(channelId, memberId)
-
-//        Channel findChannel = channelRepository.findById(channelId);
-//        Member findMember = memberRepository.findById(memberId);
-
-//        findChannel.getChannelMembers().remove(channelMember);
-//        findMember.getChannelMembers().remove(channelMember);
-//
-//        channelMemberRepository.delete(channelMember.getId());
-    }
-
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = channelRepository.findById(channelId);

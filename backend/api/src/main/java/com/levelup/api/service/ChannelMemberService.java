@@ -68,6 +68,7 @@ public class ChannelMemberService {
     /**
      * 수정
      * */
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void approvalMember(Long channelMemberId) {
         ChannelMember channelMember = channelMemberRepository.findById(channelMemberId)
                 .orElseThrow(() -> new MemberNotFoundException("채널 멤버를 찾을 수 없습니다."));

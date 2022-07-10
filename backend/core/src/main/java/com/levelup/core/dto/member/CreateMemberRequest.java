@@ -63,4 +63,5 @@ public class CreateMemberRequest {
                 .profileImage(uploadFile)
                 .build();
     }
+
 }

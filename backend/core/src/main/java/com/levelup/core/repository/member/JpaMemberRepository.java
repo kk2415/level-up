@@ -98,31 +98,6 @@ public class JpaMemberRepository implements MemberRepository {
     }
 
     @Override
-    public List<Member> findWaitingMemberByChannelId(Long channelId) {
-        String query = "select cm.waitingMember from ChannelMember cm join cm.channel c " +
-                "where c.id = :channelId";
-
-        return em.createQuery(query, Member.class)
-                .setParameter("channelId", channelId)
-                .getResultList();
-    }
-
-    @Override
-    public List<Member> findWaitingMemberByChannelId(Long channelId, int page, int count) {
-        int firstPage = (page - 1) * count; //0, 5, 10, 15
-        int lastPage = page * count; //5, 10, 15, 20
-
-        String query = "select cm.waitingMember from ChannelMember cm join cm.channel c " +
-                "where c.id = :channelId";
-
-        return em.createQuery(query, Member.class)
-                .setParameter("channelId", channelId)
-                .setFirstResult(firstPage)
-                .setMaxResults(lastPage)
-                .getResultList();
-    }
-
-    @Override
     public List<Member> findAll() {
         return em.createQuery("select m from Member m", Member.class)
                 .getResultList();
