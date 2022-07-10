@@ -7,15 +7,12 @@ import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
-import com.levelup.core.repository.auth.EmailAuthRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -60,17 +58,15 @@ public class MemberService implements UserDetailsService {
      * 생성
      * */
     public CreateMemberResponse create(CreateMemberRequest memberRequest) {
-        validationDuplicateMember(memberRequest.getEmail());
+        validationDuplicateMember(memberRequest.getEmail()); //중복 이메일 검증
 
         Member member = memberRequest.toEntity();
-        member.setPassword(passwordEncoder.encode(member.getPassword())); //중복 회원 검증
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
 
         EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
         member.setEmailAuth(authEmail);
 
         memberRepository.save(member);
-
-//        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
         return new CreateMemberResponse(member);
     }
@@ -122,28 +118,6 @@ public class MemberService implements UserDetailsService {
             throw new MemberNotFoundException("가입된 회원이 아닙니다");
         }
         return new MemberResponse(member);
-    }
-
-    public List<Member> findByChannelId(Long channelId) {
-        return memberRepository.findByChannelId(channelId);
-    }
-
-    public List<MemberResponse> findByChannelId(Long channelId, Long page, Long count) {
-        return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count))
-                .stream()
-                .map(MemberResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<Member> findWaitingMemberByChannelId(Long channelId) {
-        return memberRepository.findWaitingMemberByChannelId(channelId);
-    }
-
-    public List<MemberResponse> findWaitingMemberByChannelId(Long channelId, Long page) {
-        return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5)
-                .stream()
-                .map(MemberResponse::new)
-                .collect(Collectors.toList());
     }
 
     public UrlResource getProfileImage(String email) throws MalformedURLException {

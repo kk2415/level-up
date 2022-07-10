@@ -1,6 +1,5 @@
 package com.levelup.api.security;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.levelup.core.SessionName;
 import com.levelup.core.domain.member.Member;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -33,7 +31,7 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        log.info("login filter start");
+        log.info("login filter start = url : {}", request.getRequestURL());
 
         try {
             LoginRequest creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
@@ -52,8 +50,8 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        log.info("login filter successfulAuthentication() start");
+                                            Authentication authResult) throws IOException {
+        log.info("login filter successfulAuthentication() start = url : {}", request.getRequestURL());
 
         ObjectMapper mapper = new ObjectMapper();
         String email = ((User)authResult.getPrincipal()).getUsername();

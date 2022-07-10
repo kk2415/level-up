@@ -1,6 +1,5 @@
-package com.levelup.api.controller;
+package com.levelup.api.controller.member;
 
-import com.levelup.api.service.EmailAuthService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -21,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -40,13 +40,6 @@ public class MemberApiController {
     /**
      * 생성
      * */
-    @PostMapping("/member")
-    public ResponseEntity create(@RequestBody @Valid CreateMemberRequest memberRequest) throws IOException {
-        CreateMemberResponse response = memberService.create(memberRequest);
-
-        return new ResponseEntity(response, HttpStatus.OK);
-    }
-
     @PostMapping("/member/image")
     public ResponseEntity createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
         UploadFile profileImage = memberService.createProfileImage(file);

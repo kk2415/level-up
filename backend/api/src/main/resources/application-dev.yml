@@ -12,3 +12,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #actuator 설정실패 때문에 삽입
+
+logging:
+  config: classpath:log4j2-dev.xml
