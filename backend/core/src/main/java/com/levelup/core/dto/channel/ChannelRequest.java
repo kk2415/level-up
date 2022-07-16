@@ -41,6 +41,21 @@ public class ChannelRequest {
 
     private List<UploadFile> uploadFiles;
 
+    static public ChannelRequest of(
+            String memberEmail, String name, Long limitedMemberNumber, String description, ChannelCategory category,
+            String thumbnailDescription, UploadFile thumbnailImage, List<UploadFile> uploadFiles
+    ) {
+        return new ChannelRequest(
+                memberEmail,
+                name,
+                limitedMemberNumber,
+                description,
+                category,
+                thumbnailDescription,
+                thumbnailImage,
+                uploadFiles);
+    }
+
     public Channel toEntity(String managerName) {
         return Channel.builder()
                 .name(name)
