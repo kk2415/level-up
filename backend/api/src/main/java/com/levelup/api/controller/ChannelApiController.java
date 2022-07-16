@@ -76,10 +76,10 @@ public class ChannelApiController {
     }
 
     @GetMapping("/channels/{category}")
-    public Result getByCategory(@PathVariable ChannelCategory category) {
+    public ResponseEntity<List<ChannelResponse>> getByCategory(@PathVariable ChannelCategory category) {
         List<ChannelResponse> findChannels = channelService.getByCategory(category);
 
-        return new Result(findChannels, findChannels.size());
+        return ResponseEntity.ok().body(findChannels);
     }
 
     @GetMapping(path = "/channel/{channelId}/thumbnail", produces = "image/jpeg")
