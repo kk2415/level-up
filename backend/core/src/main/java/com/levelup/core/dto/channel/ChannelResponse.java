@@ -9,12 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChannelResponse {
+public class ChannelResponse implements Serializable {
 
     private Long id;
     private Long managerId;

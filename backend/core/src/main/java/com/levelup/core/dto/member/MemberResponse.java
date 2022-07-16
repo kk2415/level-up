@@ -8,11 +8,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponse {
+public class MemberResponse implements Serializable {
 
     public MemberResponse(Member member) {
         this.id = member.getId();

@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UploadFile {
+public class UploadFile implements Serializable {
 
     private String uploadFileName;
     private String storeFileName;
