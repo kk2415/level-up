@@ -1,6 +1,7 @@
 package com.levelup.api.security;
 
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -37,7 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && !token.equalsIgnoreCase("null")) {
                 //id 가져오기
                 Long memberId = Long.valueOf(tokenProvider.validateAndGetUserId(token));
-                Member member = memberRepository.findById(memberId);
+                Member member = Optional.ofNullable(memberRepository.findById(memberId))
+                        .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getAuthority().name()));
