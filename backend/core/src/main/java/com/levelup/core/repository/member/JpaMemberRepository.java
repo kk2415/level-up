@@ -34,7 +34,10 @@ public class JpaMemberRepository implements MemberRepository {
                         "join fetch m.emailAuth e " +
                         "where m.id = :id", Member.class)
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultList()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

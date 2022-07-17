@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import $ from 'jquery'
 import {useNavigate} from 'react-router-dom'
 import ChannelService from '../../api/service/ChannelService'
-import ChannelMemberService from "../../../src/api/service/ChannelMemberService";
+import ChannelMemberService from "../../api/service/ChannelMemberService";
 import {Container} from 'react-bootstrap'
 import {TOKEN} from "../../api/token";
 import react from "react";
