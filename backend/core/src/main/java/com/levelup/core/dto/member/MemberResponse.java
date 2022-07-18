@@ -16,6 +16,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class MemberResponse {
 
+    private Long id;
+    private String email;
+    private String name;
+    private String nickname;
+    private Gender gender;
+    private String birthday;
+    private String phone;
+    private boolean isConfirmed;
+    private UploadFile uploadFile;
+
     public MemberResponse(Member member) {
         this.id = member.getId();
         this.email = member.getEmail();
@@ -27,15 +37,5 @@ public class MemberResponse {
         this.isConfirmed = member.getEmailAuth().getIsConfirmed();
         this.uploadFile = member.getProfileImage();
     }
-
-    private Long id;
-    private String email;
-    private String name;
-    private String nickname;
-    private Gender gender;
-    private String birthday;
-    private String phone;
-    private boolean isConfirmed;
-    private UploadFile uploadFile;
 
 }
