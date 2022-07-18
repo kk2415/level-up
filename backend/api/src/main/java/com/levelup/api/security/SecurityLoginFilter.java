@@ -8,6 +8,7 @@ import com.levelup.core.dto.member.LoginResponse;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -36,7 +37,10 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
         try {
             LoginRequest creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
 
-            return getAuthenticationManager().authenticate(
+            //ProviderManager
+            AuthenticationManager authenticationManager = getAuthenticationManager();
+
+            return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),
                             creds.getPassword(),
