@@ -9,8 +9,8 @@ import java.io.Serializable;
 
 @Embeddable
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UploadFile implements Serializable {
+@NoArgsConstructor
+public class UploadFile {
 
     private String uploadFileName;
     private String storeFileName;

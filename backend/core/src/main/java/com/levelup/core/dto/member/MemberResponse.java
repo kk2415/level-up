@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponse implements Serializable {
+public class MemberResponse {
 
     public MemberResponse(Member member) {
         this.id = member.getId();
