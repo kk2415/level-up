@@ -3,14 +3,20 @@ package com.levelup.core.dto.channel;
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
+import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ChannelResponse {
 
     private Long id;
@@ -28,18 +34,26 @@ public class ChannelResponse {
     private UploadFile thumbnailImage;
 
     public ChannelResponse(Channel channel) {
+        ChannelMember channelManager = channel.getChannelMembers().stream()
+                .filter(member -> member.getIsManager())
+                .findFirst().get();
+
         this.id = channel.getId();
         this.name = channel.getName();
+        this.managerId = channelManager.getMember().getId();
+        this.managerName = channelManager.getMember().getNickname();
         this.limitedMemberNumber = channel.getLimitedMemberNumber();
-        this.managerName = channel.getManagerName();
-        this.managerId = channel.getManager().getId();
         this.description = channel.getDescription();
         this.thumbnailDescription = channel.getThumbnailDescription();
-        this.memberCount = channel.getMemberCount();
         this.postCount = channel.getPostCount();
         this.thumbnailImage = channel.getThumbnailImage();
         this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt());
         this.category = channel.getCategory();
+
+        this.memberCount = channel.getChannelMembers().stream()
+                .filter(member -> !member.getIsWaitingMember())
+                .count();
+
 
         if (channel.getThumbnailImage() != null) {
             this.storeFileName = channel.getThumbnailImage().getStoreFileName();

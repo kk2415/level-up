@@ -15,8 +15,6 @@ public interface MemberRepository {
     List<Member> findByName(String name);
     List<Member> findByChannelId(Long channelId);
     List<Member> findByChannelId(Long channelId, int page, int count);
-    List<Member> findWaitingMemberByChannelId(Long id);
-    List<Member> findWaitingMemberByChannelId(Long id, int page, int count);
     List<Member> findAll();
     void delete(Long id);
 

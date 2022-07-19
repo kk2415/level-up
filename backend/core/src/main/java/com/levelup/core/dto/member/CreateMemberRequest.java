@@ -47,7 +47,15 @@ public class CreateMemberRequest {
     @NotNull
     private String phone;
 
+    @NotNull
     private UploadFile uploadFile;
+
+    static public CreateMemberRequest of(
+            String email, String password, String name, String nickname,
+            Gender gender, String birthday, String phone, UploadFile uploadFile
+    ) {
+        return new CreateMemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
+    }
 
     public Member toEntity() {
         return Member.builder()
@@ -60,7 +68,8 @@ public class CreateMemberRequest {
                 .phone(phone)
                 .authority(Authority.ANONYMOUS)
                 .profileImage(uploadFile)
-                .channels(new ArrayList<>())
+                .channelMembers(new ArrayList<>())
                 .build();
     }
+
 }

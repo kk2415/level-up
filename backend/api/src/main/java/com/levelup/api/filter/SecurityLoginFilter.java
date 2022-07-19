@@ -1,7 +1,7 @@
-package com.levelup.api.security;
-
+package com.levelup.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.SessionName;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.member.LoginRequest;
@@ -9,6 +9,7 @@ import com.levelup.core.dto.member.LoginResponse;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,7 +17,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -33,12 +33,15 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        log.info("login filter start");
+        log.info("login filter start = url : {}", request.getRequestURL());
 
         try {
             LoginRequest creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
 
-            return getAuthenticationManager().authenticate(
+            //ProviderManager
+            AuthenticationManager authenticationManager = getAuthenticationManager();
+
+            return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),
                             creds.getPassword(),
@@ -52,8 +55,8 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        log.info("login filter successfulAuthentication() start");
+                                            Authentication authResult) throws IOException {
+        log.info("login filter successfulAuthentication() start = url : {}", request.getRequestURL());
 
         ObjectMapper mapper = new ObjectMapper();
         String email = ((User)authResult.getPrincipal()).getUsername();

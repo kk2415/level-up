@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Entity
@@ -28,6 +29,7 @@ public class EmailAuth extends BaseTimeEntity {
 
     private String securityCode;
     private Boolean isConfirmed;
+    private LocalDateTime receivedDate;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -45,11 +47,16 @@ public class EmailAuth extends BaseTimeEntity {
         this.securityCode = securityCode;
     }
 
+    public void setReceivedDate(LocalDateTime receivedDate) {
+        this.receivedDate = receivedDate;
+    }
+
     public static EmailAuth createAuthEmail(String email) {
         return EmailAuth.builder()
                 .email(email)
                 .securityCode(createSecurityCode())
                 .isConfirmed(false)
+                .receivedDate(LocalDateTime.now())
                 .build();
     }
 

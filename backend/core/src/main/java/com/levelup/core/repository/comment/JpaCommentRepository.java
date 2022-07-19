@@ -33,7 +33,9 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findReplyById(Long commentId) {
-        String query = "select c from Comment c where c.parent.id = :commentId";
+        String query = "select c from Comment c " +
+                "join fetch c.member m " +
+                "where c.parent.id = :commentId";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("commentId", commentId)
@@ -51,7 +53,9 @@ public class JpaCommentRepository implements CommentRepository {
 
     @Override
     public List<Comment> findByArticleId(Long articleId) {
-        String query = "select c from Comment c join fetch c.article a where a.articleId = :articleId order by c.id asc";
+        String query = "select c from Comment c join fetch c.article a " +
+                "join fetch c.member m " +
+                "where a.articleId = :articleId order by c.id asc";
 
         return em.createQuery(query, Comment.class)
                 .setParameter("articleId", articleId)

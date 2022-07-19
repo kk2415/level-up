@@ -3,15 +3,14 @@ import {TOKEN} from '../token'
 
 export const MemberService = {
     signUp : async function (member) {
-        let result = false
+        let result = null
 
         await send('/api/member', 'POST', member)
             .then((data) => {
-                alert(data.name + '님 가입되었습니다')
-                result = true
+                result = data
             })
             .catch((error) => {
-                alert('회원가입 실패')
+                alert(error.responseJSON.message)
                 console.log(error)
             })
 
@@ -62,21 +61,6 @@ export const MemberService = {
         return member
     },
 
-    getWaitingMembers : async function getWaitingMembers(channelId, page, count) {
-        let members = {}
-
-        await send('/api/channel/' + channelId + '/waiting-members/?page=' + page + '&count=' + count, 'GET')
-            .then((data) => {
-                members = data
-            })
-            .catch((error) => {
-                members = null
-                console.log(error)
-            })
-
-        return members
-    },
-
     confirmEmail : async function confirmEmail(auth) {
         let members = {}
 
@@ -86,10 +70,26 @@ export const MemberService = {
             })
             .catch((error) => {
                 members = null
+
                 console.log(error)
+                alert(error.responseJSON.message)
             })
 
         return members
+    },
+
+    modify: async function modifyMember(member) {
+        let result = false
+
+        await send('/api/member', 'PATCH', member)
+            .then((data) => {
+                result = true
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
+        return result
     },
 
     delete : async function deleteMember(memberId) {

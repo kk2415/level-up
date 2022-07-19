@@ -4,7 +4,6 @@ import com.levelup.core.DateFormat;
 import com.levelup.core.domain.comment.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.format.datetime.DateFormatter;
 
 import java.time.format.DateTimeFormatter;
 
@@ -14,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class CommentResponse {
 
     private Long id;
+    private Long memberId;
     private String writer;
     private String content;
     private String dateCreated;
@@ -22,6 +22,7 @@ public class CommentResponse {
 
     public CommentResponse(Comment comment) {
         this.id = comment.getId();
+        this.memberId = comment.getMember().getId();
         this.writer = comment.getWriter();
         this.content = comment.getContent();
         this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(comment.getCreateAt());

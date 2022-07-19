@@ -17,8 +17,9 @@ const StudySwiper = () => {
 	useEffect(() => {
 		send('/api/channels/' + 'STUDY', 'GET')
 			.then((data) => {
-				setChannels(data.data)
-				setCount(data.count)
+				console.log(data)
+
+				setChannels(data)
 			})
 			.catch((error) => {
 				console.log(error)
@@ -27,33 +28,36 @@ const StudySwiper = () => {
 
 	return (
 	  <>
-		<Container className='mt-5'>
-		  <Swiper
-			slidesPerView={3}
-			spaceBetween={30}
-			slidesPerGroup={3}
-			loop={true}
-			loopFillGroupWithBlank={true}
-			pagination={{
-			clickable: true,
-			}}
-			navigation={true}
-			modules={[Pagination, Navigation]}
-			className="mySwiper"
-		  >
+		  {
+			  channels &&
+			  <Container className='mt-5'>
+				  <Swiper
+					  slidesPerView={3}
+					  spaceBetween={30}
+					  slidesPerGroup={3}
+					  loop={true}
+					  loopFillGroupWithBlank={true}
+					  pagination={{
+						  clickable: true,
+					  }}
+					  navigation={true}
+					  modules={[Pagination, Navigation]}
+					  className="mySwiper"
+				  >
 
-			{
-			  channels.map(function(channel) {
-				return (
-				  <SwiperSlide>
-					<CardSlide channel={ channel } />
-				  </SwiperSlide>
-				)
-			  })
-			}
+					  {
+						  channels.map(function(channel) {
+							  return (
+								  <SwiperSlide>
+									  <CardSlide channel={ channel } />
+								  </SwiperSlide>
+							  )
+						  })
+					  }
 
-			</Swiper>
-		</Container>
+				  </Swiper>
+			  </Container>
+		  }
 	  </>
 	)
 }
@@ -75,33 +79,36 @@ const ProjectSwiper = () => {
 
 	return (
 		<>
-			<Container className='mt-5'>
-				<Swiper
-					slidesPerView={3}
-					spaceBetween={30}
-					slidesPerGroup={3}
-					loop={true}
-					loopFillGroupWithBlank={true}
-					pagination={{
-						clickable: true,
-					}}
-					navigation={true}
-					modules={[Pagination, Navigation]}
-					className="mySwiper"
-				>
+			{
+				channels &&
+				<Container className='mt-5'>
+					<Swiper
+						slidesPerView={3}
+						spaceBetween={30}
+						slidesPerGroup={3}
+						loop={true}
+						loopFillGroupWithBlank={true}
+						pagination={{
+							clickable: true,
+						}}
+						navigation={true}
+						modules={[Pagination, Navigation]}
+						className="mySwiper"
+					>
 
-					{
-						channels.map(function(channel) {
-							return (
-								<SwiperSlide>
-									<CardSlide channel={ channel } />
-								</SwiperSlide>
-							)
-						})
-					}
+						{
+							channels.map(function(channel) {
+								return (
+									<SwiperSlide>
+										<CardSlide channel={ channel } />
+									</SwiperSlide>
+								)
+							})
+						}
 
-				</Swiper>
-			</Container>
+					</Swiper>
+				</Container>
+			}
 		</>
 	)
 }

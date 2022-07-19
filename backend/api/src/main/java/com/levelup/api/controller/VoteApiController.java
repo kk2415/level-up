@@ -37,8 +37,6 @@ public class VoteApiController {
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<String> handle(SQLIntegrityConstraintViolationException e, HttpServletRequest request) {
-        log.error(e.getClass().getName(), e.getMessage());
-
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
@@ -47,6 +45,7 @@ public class VoteApiController {
         exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
         exceptionResponse.setPath(request.getRequestURI());
 
+        log.error("[{}] - {}", exceptionDir, exceptionResponse.getMessage());
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 

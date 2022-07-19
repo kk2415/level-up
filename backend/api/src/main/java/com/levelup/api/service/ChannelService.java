@@ -1,6 +1,5 @@
 package com.levelup.api.service;
 
-import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelInfo;
@@ -13,8 +12,8 @@ import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.channel.*;
-import com.levelup.core.exception.DuplicateChannelMemberException;
 import com.levelup.core.exception.ImageNotFoundException;
+import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -31,8 +30,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,59 +54,16 @@ public class ChannelService {
      * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public CreateChannelResponse create(ChannelRequest channelRequest) {
-//        validationDuplicateChannel(channelRequest.getName());
-
         Member member = memberRepository.findByEmail(channelRequest.getMemberEmail());
-
-        Channel channel = channelRequest.toEntity(member.getNickname());
-        channel.setManager(member);
         member.setAuthority(Authority.CHANNEL_MANAGER);
 
+        Channel channel = channelRequest.toEntity(member.getNickname());
         channelRepository.save(channel);
 
+        ChannelMember channelMember = ChannelMember.createChannelMember(member, true, false);
+        channel.setChannelMember(channelMember);
+
         return new CreateChannelResponse(channel);
-    }
-
-    private void validationDuplicateChannel(String name) {
-        //이 로직은 동시성 문제가 있음. 동시에 같은 아이디가 접근해서 호출하면 통과될 수 있음. 차후에 개선
-        List<Channel> findChannels = channelRepository.findByName(name);
-
-        if (findChannels.size() > 0) {
-            throw new IllegalStateException("이미 존재하는 채널입니다.");
-        }
-    }
-
-    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public void addMember(Long channelId, Long... memberIds) {
-        Channel channel = channelRepository.findById(channelId);
-        List<ChannelMember> channelMembers = new ArrayList<>();
-
-        for (Long id : memberIds) {
-            Member findMember = memberRepository.findById(id);
-            ChannelMember channelMember = ChannelMember.createChannelMember(findMember);
-            channelMembers.add(channelMember);
-        }
-
-        channel.addMember(channelMembers);
-    }
-
-    public void addWaitingMember(Long channelId, Long... memberIds) {
-        Channel channel = channelRepository.findById(channelId);
-        List<ChannelMember> channelMembers = new ArrayList<>();
-
-        for (Long id : memberIds) {
-            Member findMember = memberRepository.findById(id);
-            List<ChannelMember> waitingMembers = channelMemberRepository.findByChannelAndWaitingMember(channelId, findMember.getId());
-
-            if (waitingMembers.isEmpty()) {
-                ChannelMember channelMember = ChannelMember.createChannelWaitingMember(findMember);
-                channelMembers.add(channelMember);
-            }
-            else {
-                throw new DuplicateChannelMemberException("이미 신청하셨습니다.");
-            }
-        }
-        channel.addWaitingMember(channelMembers);
     }
 
     public void createFileByBase64(Base64Dto base64) throws IOException {
@@ -132,7 +86,7 @@ public class ChannelService {
     /**
      * 채널 조회
      * */
-    public ChannelResponse getById(Long channelId) {
+    public ChannelResponse getChannel(Long channelId) {
         Channel findChannel = channelRepository.findById(channelId);
 
         return new ChannelResponse(findChannel);
@@ -149,10 +103,6 @@ public class ChannelService {
         return channelRepository.findAll().stream()
                 .map(ChannelResponse::new)
                 .collect(Collectors.toList());
-    }
-
-    public List<Channel> getAll(int start, int end) {
-        return channelRepository.findAll(start, end);
     }
 
     public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
@@ -176,10 +126,8 @@ public class ChannelService {
 
     public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
         Channel channel = channelRepository.findById(channelId);
-        Member findMember = memberRepository.findById(memberId);
 
-        ChannelInfo channelInfo = new ChannelInfo(channel);
-        return channelInfo;
+        return new ChannelInfo(channel);
     }
 
 
@@ -214,42 +162,16 @@ public class ChannelService {
         channelRepository.delete(channelId);
     }
 
-    public void deleteChannelMember(Long channelId, Long memberId) {
-//        ChannelMember channelMember = channelMemberRepository.findByChannelAndMember(channelId, memberId)
-
-//        Channel findChannel = channelRepository.findById(channelId);
-//        Member findMember = memberRepository.findById(memberId);
-
-//        findChannel.getChannelMembers().remove(channelMember);
-//        findMember.getChannelMembers().remove(channelMember);
-//
-//        channelMemberRepository.delete(channelMember.getId());
-    }
-
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = channelRepository.findById(channelId);
         Member findMember = memberRepository.findByEmail(email);
 
-        List<ChannelMember> members = channelMemberRepository.findByChannelAndMember(channelId, findMember.getId());
+        List<ChannelMember> members = channelMemberRepository.findByChannelIdAndMemberId(channelId, findMember.getId())
+                        .orElseThrow(() -> new MemberNotFoundException("채널에 속해있지 않습니다."));
         findChannel.removeMember(members);
 
-        for (ChannelMember channelMember : members) {
-            channelMemberRepository.delete(channelMember.getId());
-        }
-    }
-
-    public void deleteWaitingMember(Long channelId, String email) {
-        Channel findChannel = channelRepository.findById(channelId);
-        Member findMember = memberRepository.findByEmail(email);
-
-        List<ChannelMember> waitingMember = channelMemberRepository
-                .findByChannelAndWaitingMember(channelId, findMember.getId());
-        findChannel.removeWaitingMember(waitingMember);
-
-        for (ChannelMember channelMember : waitingMember) {
-            channelMemberRepository.delete(channelMember.getId());
-        }
+        channelMemberRepository.deleteAll(members);
     }
 
     private void deleteLocalThumbNail(String storeFileName) {

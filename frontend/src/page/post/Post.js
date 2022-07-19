@@ -59,7 +59,12 @@ const Post = () => {
     }
 
     const handleDeleteButton = async () => {
-        await ChannelPostService.delete(postId, channelId)
+        let result = await ChannelPostService.delete(postId, channelId);
+
+        if (result) {
+            alert('삭제되었습니다.')
+            window.location.href = '/channel/' + channelId + '?page=1'
+        }
     }
 
     const loadPost = async (postId) => {

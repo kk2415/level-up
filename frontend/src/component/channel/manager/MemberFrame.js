@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import MemberRow from "../../../component/channel/manager/MemberRow"
 import Pager from "../../pager/Pager";
-import {send} from "../../../api/request";
+import ChannelMemberService from "../../../api/service/ChannelMemberService";
 
 const PAGER_LENGTH = 5
 
@@ -11,15 +11,12 @@ const MemberFrame = ({channelId, memberCount}) => {
     const [curPage, setCurPage] = useState(1)
 
     const loadMembers = async (channelId, curPage, PAGER_LENGTH) => {
-        let url = '/api/channel/' + channelId + '/members/?page=' + curPage + '&count=' + PAGER_LENGTH
+        const pageable = 'page=' + (curPage - 1) + '&size=' + PAGER_LENGTH + '&sort=id,desc'
 
-        await send(url, 'GET')
-            .then((result) => {
-                setMembers(result.data)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        let result = await ChannelMemberService.getAll(channelId, false, pageable);
+        console.log(result)
+
+        setMembers(result.content)
     }
 
     const onNext = (currentPage, lastPagerNum, pagerLength, searchCondition) => {

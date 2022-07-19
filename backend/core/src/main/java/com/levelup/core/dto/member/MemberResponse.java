@@ -8,27 +8,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponse {
-
-    public MemberResponse(Member member) {
-        this.id = member.getId();
-        this.email = member.getEmail();
-        this.name = member.getName();
-        this.nickname = member.getNickname();
-        this.gender = member.getGender();
-        this.birthday = member.getBirthday();
-        this.phone = member.getPhone();
-
-        this.isConfirmed = false;
-        if (member.getEmailAuth() != null) {
-            this.isConfirmed = member.getEmailAuth().getIsConfirmed();
-        }
-        this.uploadFile = member.getProfileImage();
-    }
 
     private Long id;
     private String email;
@@ -39,5 +25,17 @@ public class MemberResponse {
     private String phone;
     private boolean isConfirmed;
     private UploadFile uploadFile;
+
+    public MemberResponse(Member member) {
+        this.id = member.getId();
+        this.email = member.getEmail();
+        this.name = member.getName();
+        this.nickname = member.getNickname();
+        this.gender = member.getGender();
+        this.birthday = member.getBirthday();
+        this.phone = member.getPhone();
+        this.isConfirmed = member.getEmailAuth().getIsConfirmed();
+        this.uploadFile = member.getProfileImage();
+    }
 
 }

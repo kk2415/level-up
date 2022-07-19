@@ -1,14 +1,13 @@
-package com.levelup.api.controller;
+package com.levelup.api.controller.member;
 
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
-import com.levelup.core.dto.auth.EmailAuthRequest;
-import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
+import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,20 +36,14 @@ public class MemberApiController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
+
     /**
      * 생성
      * */
-    @PostMapping("/member")
-    public ResponseEntity create(@RequestBody @Valid CreateMemberRequest memberRequest) throws IOException {
-        System.out.println(memberRequest.getEmail());
-        CreateMemberResponse response = memberService.create(memberRequest);
-
-        return new ResponseEntity(response, HttpStatus.OK);
-    }
-
     @PostMapping("/member/image")
     public ResponseEntity createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
         UploadFile profileImage = memberService.createProfileImage(file);
+
         return ResponseEntity.ok().body(profileImage);
     }
 
@@ -87,31 +81,21 @@ public class MemberApiController {
     /**
      * 수정
      * */
+    @PatchMapping("/member")
+    public ResponseEntity modifyMember(@RequestBody UpdateMemberRequest updateMemberRequest,
+                                       @AuthenticationPrincipal Member member) {
+        memberService.modifyMember(updateMemberRequest, member.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
     @PatchMapping("/member/{email}/image")
-    public void modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
+    public ResponseEntity<UploadFile> modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
         Member member = memberRepository.findByEmail(email);
 
-        memberService.modifyProfileImage(file, member.getId());
-    }
+        UploadFile profileImage = memberService.modifyProfileImage(file, member.getId());
 
-
-    /**
-     * 이메일 인증
-     * */
-    @PostMapping("/confirm-email")
-    public ResponseEntity confirmEmail(@RequestBody EmailAuthRequest request,
-                                       @AuthenticationPrincipal Member member) {
-        EmailAuthResponse response = memberService.confirmEmail(request.getSecurityCode(), member.getId());
-
-        return ResponseEntity.ok().body(response);
-    }
-
-    /**
-     * 인증번호 전송
-     * */
-    @GetMapping("/send/auth-email")
-    public void sendSecurityCode(@AuthenticationPrincipal Member member) {
-        memberService.sendSecurityCode(member.getId());
+        return ResponseEntity.ok().body(profileImage);
     }
 
 

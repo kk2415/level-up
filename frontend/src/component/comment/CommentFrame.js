@@ -13,7 +13,7 @@ const CommentFrame = ({articleId, identity}) => {
     const loadComment = async (articleId, identity) => {
         let result = await CommentService.get(articleId, identity)
         console.log(result.data)
-
+        console.log(sessionStorage.getItem('id'))
         setComments(result.data)
     }
 

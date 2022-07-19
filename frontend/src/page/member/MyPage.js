@@ -20,6 +20,7 @@ const MyPage = () => {
             window.location.href = '/'
         }
 
+        console.log(result)
         setMember(result)
     }
 
@@ -28,18 +29,40 @@ const MyPage = () => {
     }
 
     const handleModify = () => {
+        setOnModifyButton(true)
+
         $('#file').attr('disabled', false)
+        $('#nickname').attr('disabled', false)
     }
 
-    const handleAccess = () => {
-        if (myPageFile) {
-            let result = uploadFile('/api/member/' + member.email + '/image', 'PATCH', myPageFile)
-            if (result) {
-                alert('수정되었습니다.')
+    const handleAccess = async () => {
+        if (onModifyButton) {
+            let profileImage = member.uploadFile
+            if (myPageFile) {
+                profileImage = await uploadFile('/api/member/' + member.email + '/image', 'PATCH', myPageFile)
+                console.log(profileImage)
             }
-        }
 
-        $('#file').attr('disabled', true)
+            let updateMember = {
+                nickname : $('#nickname').val(),
+                profileImage : profileImage,
+            }
+
+            if ($('#nickname').val() === '') {
+                updateMember.nickname = member.nickname
+            }
+
+            let result = await MemberService.modify(updateMember);
+            if (result) {
+                alert('수정되었습니다')
+            }
+
+            $('#file').attr('disabled', true)
+            $('#nickname').attr('disabled', true)
+
+            setOnModifyButton(false)
+            window.location.reload()
+        }
     }
 
     const handleConfirmEmail = () => {
@@ -59,84 +82,92 @@ const MyPage = () => {
     }
 
     const [myPageFile, setMyPageFile] = useState(null)
-    const [member, setMember] = useState({uploadFile : {storeFileName : ''}})
+    const [onModifyButton, setOnModifyButton] = useState(false)
+    const [member, setMember] = useState(null)
 
     useEffect(() => {
         loadMember()
     }, [])
 
-    console.log(member)
-
     return (
-        <Container>
-            <Form id='signUpForm' className='mt-5'>
-                <div className='w-100' style={{ textAlign: "center" }} >
-                    <Image thumbnail roundedCircle
-                           src={S3_URL + member.uploadFile.storeFileName}
-                           className='mb-5'
-                           id='profileImage'
-                           style={{width: "50xp", height: "50xp"}}
-                    />
-                </div>
+        <>
+            {
+                member &&
+                <Container>
+                    <Form id='signUpForm' className='mt-5'>
+                        {
+                            member.uploadFile &&
+                            <Container className='w-100' style={{ textAlign: "center", width: "10xp", height: "10xp" }}>
+                                <Image thumbnail roundedCircle fluid
+                                       src={S3_URL + member.uploadFile.storeFileName}
+                                       className='mb-5 img-fluid'
+                                       id='profileImage'
+                                       style={{width: "30%", height: "30%", objectFit: "contain"}}
+                                />
+                            </Container>
 
-                {
-                    member.confirmed === false &&
-                    <button onClick={handleConfirmEmail} className='btn btn-info w-100 mb-5'>
-                        이메일 인증 하기
-                    </button>
-                }
+                        }
 
-                <Form.Group className="mb-3">
-                    <Form.Label>이메일</Form.Label>
-                    <Form.Control placeholder={member.email} id="email" name="email" disabled={true} />
-                </Form.Group>
+                        {
+                            member.confirmed === false &&
+                            <button onClick={handleConfirmEmail} className='btn btn-info w-100 mb-5'>
+                                이메일 인증 하기
+                            </button>
+                        }
 
-                <Form.Group className="mb-3">
-                    <Form.Label>이름</Form.Label>
-                    <Form.Control placeholder={member.name} id="name" name="name" disabled={true} />
-                </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>이메일</Form.Label>
+                            <Form.Control placeholder={member.email} id="email" name="email" disabled={true} />
+                        </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>닉네임</Form.Label>
-                    <Form.Control placeholder={member.nickname} id="nickname" name="nickname" disabled={true} />
-                </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>이름</Form.Label>
+                            <Form.Control placeholder={member.name} id="name" name="name" disabled={true} />
+                        </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>전화번호</Form.Label>
-                    <Form.Control placeholder={member.phone} id="phone" name="phone" disabled={true} />
-                </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>닉네임</Form.Label>
+                            <Form.Control placeholder={member.nickname} id="nickname" name="nickname" disabled={true} />
+                        </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>생년월일</Form.Label>
-                    <Form.Control placeholder={member.birthday} id="birthday" name="birthday" disabled={true} />
-                </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>전화번호</Form.Label>
+                            <Form.Control placeholder={member.phone} id="phone" name="phone" disabled={true} />
+                        </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>성별</Form.Label>
-                    <Form.Control placeholder={member.gender} id="gender" name="gender" disabled={true} />
-                </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>생년월일</Form.Label>
+                            <Form.Control placeholder={member.birthday} id="birthday" name="birthday" disabled={true} />
+                        </Form.Group>
 
-                <Form.Group>
-                    <Form.Label>프로필 사진 선택</Form.Label>
-                    <Form.Control onChange={handleChangeFile} id='file' type='file' disabled={true} />
-                </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>성별</Form.Label>
+                            <Form.Control placeholder={member.gender} id="gender" name="gender" disabled={true} />
+                        </Form.Group>
 
-                <HorizonLine text={""} />
+                        <Form.Group>
+                            <Form.Label>프로필 사진 선택</Form.Label>
+                            <Form.Control onChange={handleChangeFile} id='file' type='file' disabled={true} />
+                        </Form.Group>
 
-                <button onClick={handleDeleteMemberButton} className='btn btn-danger w-100 mb-5'>
-                    탈퇴
-                </button>
+                        <HorizonLine text={""} />
 
-                <Row>
-                    <Col className='col'>
-                        <Button onClick={handleModify} className='w-100 btn btn-primary btn-lg' type='button' id='updateButton'>수정</Button>
-                    </Col>
-                    <Col>
-                        <Button onClick={handleAccess} className='w-100 btn btn-primary btn-lg' type='button' id='modifyButton'>확인</Button>
-                    </Col>
-                </Row>
-            </Form>
-        </Container>
+                        <button onClick={handleDeleteMemberButton} className='btn btn-danger w-100 mb-5'>
+                            탈퇴
+                        </button>
+
+                        <Row>
+                            <Col className='col'>
+                                <Button onClick={handleModify} className='w-100 btn btn-primary btn-lg' type='button' id='updateButton'>수정</Button>
+                            </Col>
+                            <Col>
+                                <Button onClick={handleAccess} className='w-100 btn btn-primary btn-lg' type='button' id='modifyButton'>확인</Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Container>
+            }
+        </>
     );
 };
 

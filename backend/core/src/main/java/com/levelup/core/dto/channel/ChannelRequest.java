@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -41,6 +41,21 @@ public class ChannelRequest {
 
     private List<UploadFile> uploadFiles;
 
+    static public ChannelRequest of(
+            String memberEmail, String name, Long limitedMemberNumber, String description, ChannelCategory category,
+            String thumbnailDescription, UploadFile thumbnailImage, List<UploadFile> uploadFiles
+    ) {
+        return new ChannelRequest(
+                memberEmail,
+                name,
+                limitedMemberNumber,
+                description,
+                category,
+                thumbnailDescription,
+                thumbnailImage,
+                uploadFiles);
+    }
+
     public Channel toEntity(String managerName) {
         return Channel.builder()
                 .name(name)
@@ -51,8 +66,10 @@ public class ChannelRequest {
                 .thumbnailImage(thumbnailImage)
                 .category(category)
                 .memberCount(0L)
-                .waitingMemberCount(0L)
                 .postCount(0L)
+                .channelMembers(new ArrayList<>())
+                .channelPosts(new ArrayList<>())
+                .files(new ArrayList<>())
                 .build();
     }
 

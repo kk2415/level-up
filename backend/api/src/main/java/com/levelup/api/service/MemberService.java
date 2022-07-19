@@ -1,18 +1,19 @@
 package com.levelup.api.service;
 
 import com.levelup.core.domain.auth.EmailAuth;
+import com.levelup.core.domain.channel.Channel;
+import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
+import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
-import com.levelup.core.repository.auth.EmailAuthRepository;
+import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -44,7 +46,8 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final EmailAuthRepository emailAuthRepository;
+    private final ChannelRepository channelRepository;
+    private final EmailAuthService emailAuthService;
     private final EmailService emailService;
     private final FileService fileService;
 //    private final LocalFileStore fileStore;
@@ -55,17 +58,15 @@ public class MemberService implements UserDetailsService {
      * 생성
      * */
     public CreateMemberResponse create(CreateMemberRequest memberRequest) {
-        validationDuplicateMember(memberRequest.getEmail());
+        validationDuplicateMember(memberRequest.getEmail()); //중복 이메일 검증
 
         Member member = memberRequest.toEntity();
-        member.setPassword(passwordEncoder.encode(member.getPassword()));//중복 회원 검증
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
 
         EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
         member.setEmailAuth(authEmail);
 
         memberRepository.save(member);
-
-        emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
 
         return new CreateMemberResponse(member);
     }
@@ -119,28 +120,6 @@ public class MemberService implements UserDetailsService {
         return new MemberResponse(member);
     }
 
-    public List<Member> findByChannelId(Long channelId) {
-        return memberRepository.findByChannelId(channelId);
-    }
-
-    public List<MemberResponse> findByChannelId(Long channelId, Long page, Long count) {
-        return memberRepository.findByChannelId(channelId, Math.toIntExact(page), Math.toIntExact(count))
-                .stream()
-                .map(MemberResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<Member> findWaitingMemberByChannelId(Long channelId) {
-        return memberRepository.findWaitingMemberByChannelId(channelId);
-    }
-
-    public List<MemberResponse> findWaitingMemberByChannelId(Long channelId, Long page) {
-        return memberRepository.findWaitingMemberByChannelId(channelId, Math.toIntExact(page), 5)
-                .stream()
-                .map(MemberResponse::new)
-                .collect(Collectors.toList());
-    }
-
     public UrlResource getProfileImage(String email) throws MalformedURLException {
         Member findMember = memberRepository.findByEmail(email);
 
@@ -164,26 +143,46 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버 수정
      * */
+    public void modifyMember(UpdateMemberRequest updateMemberRequest, Long memberId) {
+        Member member = memberRepository.findById(memberId);
+
+        member.updateMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
+    }
+
     @CacheEvict(cacheNames = "member", allEntries = true)
-    public void modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
+    public UploadFile modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }
 
         Member member = memberRepository.findById(memberId);
-
-        deleteS3Profile(member.getProfileImage().getStoreFileName());
+        if (member.getProfileImage() != null) {
+            deleteS3Profile(member.getProfileImage().getStoreFileName());
+        }
 
         UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
         member.modifyProfileImage(uploadFile); //변경 감지의 의한 update문 쿼리 발생
+
+        return uploadFile;
     }
 
 
     /**
      * 멤버 삭제
      * */
-    @CacheEvict(cacheNames = "member", allEntries = true)
+    @CacheEvict(cacheNames = {"ChannelCategory", "member"}, allEntries = true)
     public void delete(Long memberId) {
+        Member member = memberRepository.findById(memberId);
+        List<ChannelMember> channelMembers = member.getChannelMembers().stream()
+                .filter(ChannelMember::getIsManager)
+                .collect(Collectors.toList());
+
+        channelMembers.forEach(channelMember -> {
+            Channel channel = channelMember.getChannel();
+
+            channelRepository.delete(channel.getId());
+        });
+
         memberRepository.delete(memberId);
     }
 
@@ -200,45 +199,6 @@ public class MemberService implements UserDetailsService {
                 imageFile.delete();
             }
         }
-    }
-
-
-    /**
-     * 이메일 인증
-     * */
-    @CacheEvict(cacheNames = "member", allEntries = true)
-    public EmailAuthResponse confirmEmail(String securityCode, Long memberId) {
-        EmailAuth auth = emailAuthRepository.findByMemberId(memberId)
-                .orElseThrow(() -> {
-                    throw new MemberNotFoundException("해당하는 회원을 찾을 수 없습니다");
-                });
-
-        if (!auth.getSecurityCode().equals(securityCode)) {
-            throw new NotMatchSecurityCodeException("인증번호가 일치하지 않습니다.");
-        }
-
-        auth.setConfirmed(true);
-
-        Member member = memberRepository.findById(memberId);
-        member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
-
-        return new EmailAuthResponse(securityCode, true);
-    }
-
-    public void sendSecurityCode(Long memberId) {
-        Member member = memberRepository.findById(memberId);
-
-        emailAuthRepository.findByMemberId(memberId).ifPresentOrElse((authEmail) -> {
-            String securityCode = EmailAuth.createSecurityCode();
-            authEmail.setSecurityCode(securityCode);
-
-            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
-        }, () -> {
-            EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
-            member.setEmailAuth(authEmail);
-
-            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
-        });
     }
 
 

@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import $ from 'jquery'
 import {useNavigate} from 'react-router-dom'
 import ChannelService from '../../api/service/ChannelService'
+import ChannelMemberService from "../../api/service/ChannelMemberService";
 import {Container} from 'react-bootstrap'
 import {TOKEN} from "../../api/token";
 import react from "react";
@@ -14,59 +15,7 @@ const getChannelId = () => {
     return Number(pathname.substr(pathname.lastIndexOf('/') + 1))
 }
 
-const getManagerId = async (channelId) => {
-    let channel = await ChannelService.get(channelId);
-
-    return channel.managerId
-}
-
 const ChannelDescription = () => {
-    const navigate = useNavigate();
-
-    const [isManager, setIsManager] = useState(false)
-    const [showModify, setShowModify] = useState(false)
-    const [showDelete, setShowDelete] = useState(false)
-    const [description, setDescription] = useState({})
-    const [channelId, setChannelId] = useState(getChannelId())
-
-    let managerId = 0
-
-    useEffect(  () => {
-        const initDescription = async () => {
-            managerId = await getManagerId(channelId)
-
-            VerifyingPermissions(managerId)
-            await loadDescription(channelId)
-        }
-
-        initDescription()
-    }, [channelId])
-
-    const VerifyingPermissions = async (managerId) => {
-        console.log(managerId)
-
-        if (managerId === Number(sessionStorage.getItem('id'))) {
-            setShowModify(true)
-            setShowDelete(true)
-            setIsManager(true)
-        }
-    }
-
-    const loadDescription = async (channelId) => {
-        let result = await ChannelService.get(channelId)
-
-        setDescription(result)
-    }
-
-    const handleRegisterChannel = async () => {
-        if (sessionStorage.getItem(TOKEN)) {
-            await ChannelService.addWaitingMember(channelId);
-        }
-        else {
-            alert('로그인해야합니다.')
-        }
-    }
-
     const handleEnterChannel = () => {
         $(window.location).attr('href', '/channel/' + channelId + '?page=1')
     }
@@ -82,6 +31,36 @@ const ChannelDescription = () => {
     const handleDeleteChannel = async () => {
         await ChannelService.delete(channelId)
     }
+
+    const loadDescription = async (channelId) => {
+        let result = await ChannelService.get(channelId)
+        console.log(result)
+        setDescription(result)
+    }
+
+    const handleRegisterChannel = async () => {
+        if (sessionStorage.getItem(TOKEN)) {
+            let result = await ChannelMemberService.create(channelId);
+
+            if (result) {
+                alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
+            }
+        }
+        else {
+            alert('로그인해야합니다.')
+        }
+    }
+
+    const [description, setDescription] = useState({})
+    const [channelId, setChannelId] = useState(getChannelId())
+
+    useEffect(  () => {
+        const initDescription = async () => {
+            await loadDescription(channelId)
+        }
+
+        initDescription()
+    }, [channelId])
 
     return (
         <>
@@ -122,13 +101,13 @@ const ChannelDescription = () => {
                         </div>
                         <div className="float-end">
                             {
-                                showModify &&
+                                description.managerId === Number(sessionStorage.getItem('id')) &&
                                 <button onClick={handleModifyChannel} className="btn btn-sm btn-secondary" type="button" id="modifyButton">
                                     채널 수정
                                 </button>
                             }
                             {
-                                showDelete &&
+                                description.managerId === Number(sessionStorage.getItem('id')) &&
                                 <button onClick={handleDeleteChannel} className="btn btn-sm btn-danger" type="button" id="deleteButton">
                                     채널 삭제
                                 </button>
@@ -138,7 +117,7 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     {
-                        !isManager &&
+                        !(description.managerId === Number(sessionStorage.getItem('id'))) &&
                         <button onClick={handleRegisterChannel} className="btn btn-lg btn-success" type="button" id="registerStudyButton">
                             가입 신청
                         </button>
@@ -149,12 +128,17 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     <div>
-                        <button onClick={handleBack} className="btn btn-secondary float-start" type="button" id="toAllStudyChannelButton">목록으로
-                        </button>
-                        <button onClick={handleEnterChannel} className="btn btn-info float-end" type="button" id="enterStudyButton">
-                            <AiOutlineImport className='enterChannel' />
-                            <span className='fs-3 fw-bold mx-2 '>접속</span>
-                        </button>
+                        <Container className="d-grid gap-2">
+                            <button onClick={handleEnterChannel} className="btn btn-info" type="button" id="enterStudyButton">
+                                <AiOutlineImport className='enterChannel' />
+                                <span className='fs-3 fw-bold mx-2 '>접속</span>
+                            </button>
+                            <button onClick={handleBack} className="btn btn-secondary float-start" type="button" id="toAllStudyChannelButton">
+                                홈으로
+                            </button>
+                        </Container>
+
+
                     </div>
                 </Container>
             }
