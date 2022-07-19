@@ -1,6 +1,7 @@
-package com.levelup.api.security;
+package com.levelup.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.SessionName;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.member.LoginRequest;

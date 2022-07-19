@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -51,6 +53,7 @@ public class ChannelResponse {
         this.memberCount = channel.getChannelMembers().stream()
                 .filter(member -> !member.getIsWaitingMember())
                 .count();
+
 
         if (channel.getThumbnailImage() != null) {
             this.storeFileName = channel.getThumbnailImage().getStoreFileName();
