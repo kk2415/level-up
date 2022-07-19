@@ -17,8 +17,8 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
 
     group = 'com.together'
-    version = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '17'
+    version = 'v1.0'
+    sourceCompatibility = '11'
 
     configurations {
         all {
