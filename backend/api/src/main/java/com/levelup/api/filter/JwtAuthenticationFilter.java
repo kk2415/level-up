@@ -1,5 +1,6 @@
-package com.levelup.api.security;
+package com.levelup.api.filter;
 
+import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.exception.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
@@ -38,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // JWT 토큰이 있어야 컨텍스트홀더에 authenticationToken 저장
             if (token != null && !token.equalsIgnoreCase("null")) {
                 //id 가져오기
-                Long memberId = Long.valueOf(tokenProvider.validateAndGetUserId(token));
+                Long memberId = Long.valueOf(tokenProvider.getMemberId(token));
                 Member member = Optional.ofNullable(memberRepository.findById(memberId))
                         .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 

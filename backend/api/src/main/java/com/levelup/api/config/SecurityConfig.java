@@ -1,8 +1,8 @@
 package com.levelup.api.config;
 
-import com.levelup.api.security.JwtAuthenticationFilter;
-import com.levelup.api.security.SecurityLoginFilter;
-import com.levelup.api.security.TokenProvider;
+import com.levelup.api.filter.JwtAuthenticationFilter;
+import com.levelup.api.filter.SecurityLoginFilter;
+import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/channel/**")
                 .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers( HttpMethod.POST,"/api/member").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/member").permitAll()
                 .antMatchers("/api/member").authenticated()
 
                 .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()

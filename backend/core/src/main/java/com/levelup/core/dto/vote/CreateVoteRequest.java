@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class CreateVoteRequest {
+public class  CreateVoteRequest {
 
     @NotNull
     private Long memberId;
