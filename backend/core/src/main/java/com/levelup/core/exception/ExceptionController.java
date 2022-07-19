@@ -55,8 +55,10 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
-                                                                  HttpServletRequest request) {
+    protected ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException e,
+            HttpServletRequest request
+    ) {
         log.error(e.getClass().getName(), e.getMessage());
 
         ExceptionResponse exceptionResponse = new ExceptionResponse();
