@@ -41,7 +41,7 @@ public class ArticleService {
 
     /**
      * 게시글 등록
-     * */
+     */
     public ArticleResponse createArticle(ArticleRequest articleRequest, Long memberId) {
         Member member = memberRepository.findById(memberId);
 
@@ -74,13 +74,14 @@ public class ArticleService {
 
     /**
      * 게시글 조회
-     * */
+     */
     public ArticleResponse getArticle(Long articleId, String view) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         if (view.equals("true")) {
-            article.addViews();;
+            article.addViews();
+            ;
         }
 
         return new ArticleResponse(article);
@@ -91,11 +92,9 @@ public class ArticleService {
 
         if (field == null || field.equals("")) {
             pages = articleRepository.findByArticleType(articleType, pageable);
-        }
-        else if (field.equals("title")) {
+        } else if (field.equals("title")) {
             pages = articleRepository.findByArticleTypeAndTitle(articleType, query, pageable);
-        }
-        else if (field.equals("writer")) {
+        } else if (field.equals("writer")) {
             pages = articleRepository.findByArticleTypeAndWriter(articleType, query, pageable);
         }
 
@@ -107,7 +106,8 @@ public class ArticleService {
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         if (view.equals("true")) {
-            channelPost.addViews();;
+            channelPost.addViews();
+            ;
         }
 
         return new ChannelPostResponse(channelPost);
@@ -118,11 +118,9 @@ public class ArticleService {
 
         if (field == null || field.equals("")) {
             pages = articleRepository.findByChannelId(channelId, pageable);
-        }
-        else if (field.equals("title")) {
+        } else if (field.equals("title")) {
             pages = articleRepository.findByChannelIdAndTitle(channelId, query, pageable);
-        }
-        else if (field.equals("writer")) {
+        } else if (field.equals("writer")) {
             pages = articleRepository.findByChannelIdAndWriter(channelId, query, pageable);
         }
 
@@ -173,7 +171,7 @@ public class ArticleService {
 
     /**
      * 게시글 수정
-     * */
+     */
     public ArticleResponse modifyArticle(Long articleId, Long memberId, ChannelPostRequest request) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
@@ -195,16 +193,15 @@ public class ArticleService {
 
     /**
      * 게시글 삭제
-     * */
+     */
     public void deleteArticle(Long articleId) {
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
 
 
-
     /**
      * 게시글 권한
-     * */
+     */
     public Long articleOauth(Long articleId, Long memberId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
