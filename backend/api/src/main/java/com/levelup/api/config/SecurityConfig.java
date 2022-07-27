@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin().loginPage("/login");
 
+        //JWT 토큰 인증필터 추가
         http.addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());
     }
