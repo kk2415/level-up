@@ -1,4 +1,4 @@
-package com.levelup.core.exception;
+package com.levelup.core.exception.vote;
 
 public class DuplicateVoteException extends RuntimeException {
 

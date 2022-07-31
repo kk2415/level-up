@@ -4,24 +4,19 @@ import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.Result;
-import com.levelup.core.dto.member.CreateMemberRequest;
-import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.member.UpdateMemberRequest;
-import com.levelup.core.exception.MemberNotFoundException;
+import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -91,7 +86,8 @@ public class MemberApiController {
 
     @PatchMapping("/member/{email}/image")
     public ResponseEntity<UploadFile> modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         UploadFile profileImage = memberService.modifyProfileImage(file, member.getId());
 

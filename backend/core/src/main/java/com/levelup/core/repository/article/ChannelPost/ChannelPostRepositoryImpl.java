@@ -1,4 +1,4 @@
-package com.levelup.core.repository.article;
+package com.levelup.core.repository.article.ChannelPost;
 
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 
 @Repository

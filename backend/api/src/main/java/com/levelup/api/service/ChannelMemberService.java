@@ -4,10 +4,11 @@ import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.channelMember.ChannelMemberResponse;
-import com.levelup.core.exception.DuplicateChannelMemberException;
-import com.levelup.core.exception.MemberNotFoundException;
-import com.levelup.core.exception.NoPlaceChnnelException;
-import com.levelup.core.repository.channel.ChannelMemberRepository;
+import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
+import com.levelup.core.exception.channelMember.DuplicateChannelMemberException;
+import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.core.exception.channel.NoPlaceChnnelException;
+import com.levelup.core.repository.channelMember.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,10 @@ public class ChannelMemberService {
      * 생성
      * */
     public void createChannelMember(Long channelId, Long memberId, Boolean isWaitingMember) {
-        Channel channel = channelRepository.findById(channelId);
-        Member findMember = memberRepository.findById(memberId);
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
         channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId)
                 .ifPresent(channelMemberList -> {
@@ -85,7 +88,8 @@ public class ChannelMemberService {
         ChannelMember channelMember = channelMemberRepository.findById(channelMemberId)
                 .orElseThrow(() -> new MemberNotFoundException("채널 멤버를 찾을 수 없습니다."));
 
-        Channel channel = channelRepository.findById(channelId);
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
         channel.removeMember(List.of(channelMember));
 
         channelMemberRepository.delete(channelMember);

@@ -12,7 +12,9 @@ import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.article.ChannelPostRequest;
 import com.levelup.core.dto.article.ChannelPostResponse;
-import com.levelup.core.exception.PostNotFoundException;
+import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
+import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -43,7 +45,8 @@ public class ArticleService {
      * 게시글 등록
      */
     public ArticleResponse createArticle(ArticleRequest articleRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
         Article article = Article.createArticle(member, articleRequest.getTitle(), articleRequest.getContent(),
                 articleRequest.getArticleType());
@@ -53,8 +56,10 @@ public class ArticleService {
     }
 
     public ChannelPostResponse createChannelPost(ChannelPostRequest channelPostRequest, Long memberId, Long channelId) {
-        Member member = memberRepository.findById(memberId);
-        Channel channel = channelRepository.findById(channelId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
         ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
 

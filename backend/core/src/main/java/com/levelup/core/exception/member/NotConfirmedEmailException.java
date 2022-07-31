@@ -1,4 +1,4 @@
-package com.levelup.core.exception;
+package com.levelup.core.exception.member;
 
 
 public class NotConfirmedEmailException extends RuntimeException {
