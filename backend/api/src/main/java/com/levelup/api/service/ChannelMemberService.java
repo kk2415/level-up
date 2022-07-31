@@ -35,27 +35,26 @@ public class ChannelMemberService {
     /**
      * 생성
      * */
-    public void createChannelMember(Long channelId, Long memberId, Boolean isWaitingMember) {
+    public ChannelMemberResponse create(Long channelId, Long memberId, Boolean isWaitingMember) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
-        Member findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+        List<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId);
 
-        channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId)
-                .ifPresent(channelMemberList -> {
-                    if (!channelMemberList.isEmpty()) {
-                        throw new DuplicateChannelMemberException("채널에 이미 존재하는 멤버입니다.");
-                    }
+        if (channelMembers.isEmpty()) {
+            if (channel.getChannelMembers().size() >= channel.getLimitedMemberNumber() ) {
+                throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+            }
 
-                    if (channel.getChannelMembers().size() >= channel.getLimitedMemberNumber() ) {
-                        throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
-                    }
+            ChannelMember channelMember = ChannelMember.createChannelMember(
+                    member, false, isWaitingMember);
+            channel.setChannelMember(channelMember);
 
+            return ChannelMemberResponse.from(channelMember);
+        }
 
-                    ChannelMember channelMember = ChannelMember.createChannelMember(findMember, false, isWaitingMember);
-
-                    channel.setChannelMember(channelMember);
-                });
+        throw new DuplicateChannelMemberException("채널에 이미 존재하는 멤버입니다.");
     }
 
 
@@ -63,7 +62,8 @@ public class ChannelMemberService {
      * 조회
      * */
     public Page<ChannelMemberResponse> getChannelMembers(Long channelId, Boolean isWaitingMember, Pageable pageable) {
-        Page<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndIsWaitingMember(channelId, isWaitingMember, pageable);
+        final Page<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndIsWaitingMember(channelId, isWaitingMember, pageable);
+
         return channelMembers.map(ChannelMemberResponse::from);
     }
 
@@ -84,7 +84,7 @@ public class ChannelMemberService {
      * 삭제
      * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public void deleteChannelMember(Long channelMemberId, Long channelId) {
+    public void delete(Long channelMemberId, Long channelId) {
         ChannelMember channelMember = channelMemberRepository.findById(channelMemberId)
                 .orElseThrow(() -> new MemberNotFoundException("채널 멤버를 찾을 수 없습니다."));
 

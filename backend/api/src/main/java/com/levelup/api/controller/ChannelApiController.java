@@ -41,20 +41,21 @@ public class ChannelApiController {
      * */
     @PostMapping("/channel")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
-        return channelService.create(channelRequest);
+        return channelService.save(channelRequest);
     }
 
     @PostMapping("/channel/description/files/base64")
-    public ResponseEntity storeDescriptionFilesByBase64(@RequestBody Base64Dto base64) throws IOException {
+    public ResponseEntity<Void> storeDescriptionFilesByBase64(@RequestBody Base64Dto base64) throws IOException {
         channelService.createFileByBase64(base64);
-        return ResponseEntity.ok().body("파일 생성 완료");
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/channel/thumbnail")
-    public ResponseEntity createChannelThumbnail(MultipartFile file) throws IOException {
-        UploadFile thumbnail = channelService.createChannelThumbnail(file);
+    public ResponseEntity<UploadFile> createChannelThumbnail(MultipartFile file) throws IOException {
+        UploadFile response = channelService.createChannelThumbnail(file);
 
-        return ResponseEntity.ok().body(thumbnail);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -62,24 +63,24 @@ public class ChannelApiController {
      * 조회
      * */
     @GetMapping("/channels")
-    public Result getAll() {
-        List<ChannelResponse> channels = channelService.getAll();
+    public ResponseEntity<Result> getAll() {
+        List<ChannelResponse> response = channelService.getAll();
 
-        return new Result(channels, channels.size());
+        return ResponseEntity.ok().body(new Result(response, response.size()));
     }
 
     @GetMapping("/channel/{channelId}")
     public ResponseEntity<ChannelResponse> getByChannelId(@PathVariable Long channelId) {
-        ChannelResponse channelResponse = channelService.getChannel(channelId);
+        ChannelResponse response = channelService.getChannel(channelId);
 
-        return ResponseEntity.ok().body(channelResponse);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/channels/{category}")
     public ResponseEntity<List<ChannelResponse>> getByCategory(@PathVariable ChannelCategory category) {
-        List<ChannelResponse> findChannels = channelService.getByCategory(category);
+        List<ChannelResponse> response = channelService.getByCategory(category);
 
-        return ResponseEntity.ok().body(findChannels);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(path = "/channel/{channelId}/thumbnail", produces = "image/jpeg")
@@ -91,9 +92,9 @@ public class ChannelApiController {
     @GetMapping("/channel/{channelId}/manager")
     public ResponseEntity<ChannelInfo> getChannelAllInfo(@PathVariable Long channelId,
                                    @AuthenticationPrincipal Member member) {
-        ChannelInfo channelAllInfo = channelService.getChannelAllInfo(channelId, member.getId());
+        ChannelInfo response = channelService.getChannelAllInfo(channelId, member.getId());
 
-        return ResponseEntity.ok().body(channelAllInfo);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -101,20 +102,22 @@ public class ChannelApiController {
      * 수정
      * */
     @PatchMapping("/channel/{channelId}")
-    public ResponseEntity modifyDetailDescription(@PathVariable Long channelId,
+    public ResponseEntity<ChannelResponse> modifyDetailDescription(@PathVariable Long channelId,
                                                   @RequestBody @Validated UpdateChannelRequest channelRequest) {
-        ChannelResponse findChannel = channelService.update(channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
-                channelRequest.getDescription(), channelRequest.getThumbnailDescription(), channelRequest.getThumbnailImage());
+        ChannelResponse response = channelService.modify(
+                channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
+                channelRequest.getDescription(), channelRequest.getThumbnailDescription(),
+                channelRequest.getThumbnailImage());
 
-        return ResponseEntity.ok().body(findChannel);
+        return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("/channel/{channelId}/thumbnail")
-    public ResponseEntity modifyChannelThumbnail(@PathVariable Long channelId,
+    public ResponseEntity<UploadFile> modifyChannelThumbnail(@PathVariable Long channelId,
                                                  MultipartFile file) throws IOException {
-        UploadFile thumbNail = channelService.modifyChannelThumbNail(file, channelId);
+        UploadFile response = channelService.modifyChannelThumbNail(file, channelId);
 
-        return ResponseEntity.ok().body(thumbNail);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -122,10 +125,10 @@ public class ChannelApiController {
      * 삭제
      * */
     @DeleteMapping("/channel/{channelId}")
-    public ResponseEntity deleteChannel(@PathVariable Long channelId) {
+    public ResponseEntity<Void> deleteChannel(@PathVariable Long channelId) {
         channelService.deleteChannel(channelId);
 
-        return new ResponseEntity(new Result("삭제 완료", 1), HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -22,18 +22,18 @@ public class FileService {
     /**
      * 생성
      * */
-    public Long create(Object object, UploadFile uploadFile) {
+    public Long save(Object object, UploadFile uploadFile) {
         File file = File.createFile(object, uploadFile);
 
         fileRepository.save(file);
         return file.getId();
     }
 
-    public List<Long> create(Object object, List<UploadFile> uploadFile) {
+    public List<Long> save(Object object, List<UploadFile> uploadFile) {
         List<Long> ids = new ArrayList<>();
 
         for (UploadFile file : uploadFile) {
-            Long id = create(object, file);
+            Long id = save(object, file);
             ids.add(id);
         }
 
@@ -43,7 +43,7 @@ public class FileService {
     /**
      * 조회
      * */
-    public File findById(Long id) {
+    public File getById(Long id) {
         return fileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("파일이 존재하지 않습니다."));
     }

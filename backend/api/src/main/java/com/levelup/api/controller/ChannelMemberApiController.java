@@ -24,11 +24,11 @@ public class ChannelMemberApiController {
      * 생성
      * */
     @PostMapping("channel-members")
-    public ResponseEntity createChannelMember(@RequestParam Long channelId,
+    public ResponseEntity<ChannelMemberResponse> createChannelMember(@RequestParam Long channelId,
                                               @AuthenticationPrincipal Member member) {
-        channelMemberService.createChannelMember(channelId, member.getId(), true);
+        ChannelMemberResponse response = channelMemberService.create(channelId, member.getId(), true);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -39,9 +39,9 @@ public class ChannelMemberApiController {
     public ResponseEntity<Page<ChannelMemberResponse>> getChannelMembers(@RequestParam Long channelId,
                                                                          @RequestParam Boolean isWaitingMember,
                                                                          Pageable pageable) {
-        Page<ChannelMemberResponse> channelMembers = channelMemberService.getChannelMembers(channelId, isWaitingMember, pageable);
+        Page<ChannelMemberResponse> responses = channelMemberService.getChannelMembers(channelId, isWaitingMember, pageable);
 
-        return ResponseEntity.ok().body(channelMembers);
+        return ResponseEntity.ok().body(responses);
     }
 
 
@@ -62,7 +62,7 @@ public class ChannelMemberApiController {
     @DeleteMapping("/channel-members/{channelMemberId}")
     public ResponseEntity deleteChannelMembers(@PathVariable Long channelMemberId,
                                                  @RequestParam Long channelId) {
-        channelMemberService.deleteChannelMember(channelMemberId, channelId);
+        channelMemberService.delete(channelMemberId, channelId);
 
         return ResponseEntity.ok().build();
     }

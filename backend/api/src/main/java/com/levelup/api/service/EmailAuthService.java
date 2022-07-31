@@ -1,5 +1,6 @@
 package com.levelup.api.service;
 
+import com.levelup.api.util.EmailService;
 import com.levelup.core.domain.auth.EmailAuth;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
@@ -28,9 +29,6 @@ public class EmailAuthService {
     private final EmailAuthRepository emailAuthRepository;
     private final EmailService emailService;
 
-    /**
-     * 인증코드 발송
-     * */
     public void sendSecurityCode(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
@@ -49,24 +47,14 @@ public class EmailAuthService {
         });
     }
 
-
-    /**
-     * 이메일 인증
-     * */
     @CacheEvict(cacheNames = "member", allEntries = true)
     public EmailAuthResponse confirmEmail(String securityCode, Long memberId) {
-        EmailAuth auth = emailAuthRepository.findByMemberId(memberId)
-                .orElseThrow(() -> {
-                    throw new MemberNotFoundException("해당하는 회원을 찾을 수 없습니다");
-                });
+        EmailAuth emailAuth = emailAuthRepository.findByMemberId(memberId)
+                .orElseThrow(() -> {throw new MemberNotFoundException("해당하는 회원을 찾을 수 없습니다");});
 
-        if (!auth.getSecurityCode().equals(securityCode)) {
-            throw new NotMatchSecurityCodeException("인증번호가 일치하지 않습니다.");
-        }
+        validateSecurityCode(securityCode, emailAuth);
+        emailAuth.setConfirmed(true);
 
-        isExpired(auth.getReceivedDate());
-
-        auth.setConfirmed(true);
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
         member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
@@ -74,16 +62,20 @@ public class EmailAuthService {
         return EmailAuthResponse.of(securityCode, true);
     }
 
-
-    /**
-     * 인증코드 만료 시간 체크
-     * */
-    public void isExpired(LocalDateTime receivedDate) {
-        long between = Duration.between(receivedDate, LocalDateTime.now()).getSeconds();
-
-        if (between > EXPIRATION_SECOND) {
+    private void validateSecurityCode(String securityCode, EmailAuth emailAuth) {
+        if (isExpired(emailAuth.getReceivedDate())) {
             throw new EmailCodeExpiredException("인증코드가 만료되었습니다.");
         }
+
+        if (!emailAuth.getSecurityCode().equals(securityCode)) {
+            throw new NotMatchSecurityCodeException("인증번호가 일치하지 않습니다.");
+        }
+    }
+
+    private boolean isExpired(LocalDateTime receivedDate) {
+        long between = Duration.between(receivedDate, LocalDateTime.now()).getSeconds();
+
+        return between > EXPIRATION_SECOND;
     }
 
 }

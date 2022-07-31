@@ -1,7 +1,7 @@
 package com.levelup.api.config;
 
 import com.levelup.api.filter.JwtAuthenticationFilter;
-import com.levelup.api.filter.SecurityLoginFilter;
+import com.levelup.api.filter.LoginFilter;
 import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.repository.member.MemberRepository;
@@ -68,8 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/notice/**").hasRole("ADMIN")
 
                 .anyRequest().permitAll();
-
-
         http.formLogin().loginPage("/login");
 
         //JWT 토큰 인증필터 추가
@@ -84,8 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
-    private SecurityLoginFilter getSecurityLoginFilter() throws Exception {
-        SecurityLoginFilter securityLoginFilter = new SecurityLoginFilter(memberRepository, new TokenProvider());
+    private LoginFilter getSecurityLoginFilter() throws Exception {
+        LoginFilter securityLoginFilter = new LoginFilter(memberRepository, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
         return securityLoginFilter;

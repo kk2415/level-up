@@ -11,7 +11,6 @@ import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.exception.comment.CommentNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
-import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.vote.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,6 @@ import javax.persistence.EntityNotFoundException;
 public class VoteService {
 
     private final VoteRepository voteRepository;
-    private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
 
@@ -35,7 +33,7 @@ public class VoteService {
     /**
      * 생성
      * */
-    public VoteResponse create(CreateVoteRequest voteRequest) {
+    public VoteResponse save(CreateVoteRequest voteRequest) {
         final Vote vote = voteRequest.toEntity();
 
         voteRepository.save(vote);

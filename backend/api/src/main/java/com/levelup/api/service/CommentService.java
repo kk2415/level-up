@@ -33,32 +33,33 @@ public class CommentService {
     /**
      * 댓글 작성
      * */
-    public CommentResponse create(CreateCommentRequest commentRequest, Long memeberId) {
-        Member findMember = memberRepository.findById(memeberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+    public CommentResponse save(CreateCommentRequest commentRequest, Long memberId) {
         Article article = articleRepository.findById(commentRequest.getArticleId())
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
-        Comment findComment = commentRequest.toEntity(findMember, article);
 
-        commentRepository.save(findComment);
-        article.addCommentCount();
+       final Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+       final Comment findComment = commentRequest.toEntity(findMember, article);
 
-        return CommentResponse.from(findComment);
+       commentRepository.save(findComment);
+       article.addCommentCount();
+
+       return CommentResponse.from(findComment);
     }
 
-    public CommentResponse createReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public CommentResponse saveReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
+        final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
-        Comment parent = commentRepository.findById(commentRequest.getParentId())
-                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
-        Article article = articleRepository.findById(commentRequest.getArticleId())
+        final Article article = articleRepository.findById(commentRequest.getArticleId())
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
-        Comment child = commentRequest.toEntity(member, article);
+        Comment parentComment = commentRepository.findById(commentRequest.getParentId())
+                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
+        Comment replyComment = commentRequest.toEntity(member, article);
 
-        commentRepository.save(child);
-        parent.addChildComment(child);
+        commentRepository.save(replyComment);
+        parentComment.addChildComment(replyComment);
 
-        return CommentResponse.from(child);
+        return CommentResponse.from(replyComment);
     }
 
 
@@ -66,27 +67,27 @@ public class CommentService {
      * 댓글 조회
      * */
     public List<CommentResponse> getComments(Long articleId) {
-        List<Comment> comments = commentRepository.findByArticleId(articleId);
+       final List<Comment> comments = commentRepository.findByArticleId(articleId);
 
         return comments.stream()
                 .filter(c -> c.getParent() == null)
                 .map(CommentResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<CommentResponse> findReplyById(Long commentId) {
-        List<Comment> reply = commentRepository.findReplyById(commentId);
+    public List<CommentResponse> getReplyCommentByParentId(Long commentId) {
+        final List<Comment> reply = commentRepository.findReplyByParentId(commentId);
 
         return reply.stream()
                 .map(CommentResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
 
     /**
      * 댓글 수정
      * */
-    public void updateComment(Long commentId, String content) {
+    public void modify(Long commentId, String content) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
 
@@ -103,5 +104,4 @@ public class CommentService {
 
         commentRepository.delete(findComment);
     }
-
 }

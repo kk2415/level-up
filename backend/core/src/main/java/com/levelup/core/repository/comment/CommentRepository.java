@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("select c from Comment c join fetch c.member m where c.parent.id = :parentId")
-    List<Comment> findReplyById(@Param("parentId") Long parentId);
+    List<Comment> findReplyByParentId(@Param("parentId") Long parentId);
 
     @Query("select c from Comment c join fetch c.article a " +
             "join fetch c.member m " +

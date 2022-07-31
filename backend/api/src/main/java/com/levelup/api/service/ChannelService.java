@@ -54,10 +54,9 @@ public class ChannelService {
      * 생성
      * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public CreateChannelResponse create(ChannelRequest channelRequest) {
+    public CreateChannelResponse save(ChannelRequest channelRequest) {
         Member member = memberRepository.findByEmail(channelRequest.getMemberEmail())
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
-
         member.setAuthority(Authority.CHANNEL_MANAGER);
 
         Channel channel = channelRequest.toEntity(member.getNickname());
@@ -90,7 +89,7 @@ public class ChannelService {
      * 채널 조회
      * */
     public ChannelResponse getChannel(Long channelId) {
-        Channel findChannel = channelRepository.findById(channelId)
+        final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
         return ChannelResponse.from(findChannel);
@@ -100,17 +99,17 @@ public class ChannelService {
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
                 .stream().map(ChannelResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public List<ChannelResponse> getAll() {
         return channelRepository.findAll().stream()
                 .map(ChannelResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
-        Channel findChannel = channelRepository.findById(channelId)
+        final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
         if (findChannel.getThumbnailImage() == null) {
@@ -130,7 +129,7 @@ public class ChannelService {
     }
 
     public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
-        Channel channel = channelRepository.findById(channelId)
+        final Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
         return new ChannelInfo(channel);
@@ -141,7 +140,7 @@ public class ChannelService {
      * 채널 수정
      * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public ChannelResponse update(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
+    public ChannelResponse modify(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
@@ -178,15 +177,12 @@ public class ChannelService {
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
-
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
+        List<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndMemberId(channelId, findMember.getId());
 
-        List<ChannelMember> members = channelMemberRepository.findByChannelIdAndMemberId(channelId, findMember.getId())
-                        .orElseThrow(() -> new MemberNotFoundException("채널에 속해있지 않습니다."));
-        findChannel.removeMember(members);
-
-        channelMemberRepository.deleteAll(members);
+        findChannel.removeMember(channelMembers);
+        channelMemberRepository.deleteAll(channelMembers);
     }
 
     private void deleteLocalThumbNail(String storeFileName) {

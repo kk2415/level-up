@@ -3,7 +3,6 @@ package com.levelup.api.service;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.Article.ChannelPost;
-import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
@@ -12,7 +11,6 @@ import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.article.ChannelPostRequest;
 import com.levelup.core.dto.article.ChannelPostResponse;
-import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
@@ -36,7 +34,6 @@ import java.util.stream.Collectors;
 public class ArticleService {
 
     private final MemberRepository memberRepository;
-    private final ChannelRepository channelRepository;
     private final LocalFileStore fileStore;
     private final ArticleRepository articleRepository;
 
@@ -44,28 +41,15 @@ public class ArticleService {
     /**
      * 게시글 등록
      */
-    public ArticleResponse createArticle(ArticleRequest articleRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public ArticleResponse save(ArticleRequest articleRequest, Long memberId) {
+        final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
-        Article article = Article.createArticle(member, articleRequest.getTitle(), articleRequest.getContent(),
+        final Article article = Article.createArticle(member, articleRequest.getTitle(), articleRequest.getContent(),
                 articleRequest.getArticleType());
         articleRepository.save(article);
 
         return ArticleResponse.from(article);
-    }
-
-    public ChannelPostResponse createChannelPost(ChannelPostRequest channelPostRequest, Long memberId, Long channelId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
-        Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
-
-        ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
-
-        articleRepository.save(channelPost);
-
-        return ChannelPostResponse.from(channelPost);
     }
 
     public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
@@ -81,7 +65,7 @@ public class ArticleService {
      * 게시글 조회
      */
     public ArticleResponse getArticle(Long articleId, String view) {
-        Article article = articleRepository.findById(articleId)
+        final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         if (view.equals("true")) {
@@ -136,63 +120,54 @@ public class ArticleService {
 
     }
 
-    public ArticleResponse findNextPageByArticleType(Long articleId, ArticleType articleType) {
-        Article article = articleRepository.findNextPageByArticleType(articleId, articleType)
+    public ArticleResponse getNextPageByArticleType(Long articleId, ArticleType articleType) {
+        final Article article = articleRepository.findNextPageByArticleType(articleId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ArticleResponse.from(article);
     }
 
-    public ArticleResponse findPrevPageByArticleType(Long articleId, ArticleType articleType) {
-        Article article = articleRepository.findPrevPageArticleType(articleId, articleType)
+    public ArticleResponse getPrevPageByArticleType(Long articleId, ArticleType articleType) {
+        final Article article = articleRepository.findPrevPageArticleType(articleId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ArticleResponse.from(article);
     }
 
-    public ChannelPostResponse findNextPageByChannelId(Long articleId, Long channelId) {
-        ChannelPost channelPost = articleRepository.findNextPageByChannelId(articleId, channelId)
+    public ChannelPostResponse getNextPageByChannelId(Long articleId, Long channelId) {
+        final ChannelPost channelPost = articleRepository.findNextPageByChannelId(articleId, channelId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ChannelPostResponse.from(channelPost);
     }
 
-    public ChannelPostResponse findPrevPageByChannelId(Long articleId, Long channelId) {
-        ChannelPost channelPost = articleRepository.findPrevPageChannelId(articleId, channelId)
+    public ChannelPostResponse getPrevPageByChannelId(Long articleId, Long channelId) {
+        final ChannelPost channelPost = articleRepository.findPrevPageChannelId(articleId, channelId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ChannelPostResponse.from(channelPost);
     }
 
-    public List<ArticleResponse> findByMemberId(Long memberId) {
+    public List<ArticleResponse> getByMemberId(Long memberId) {
         List<Article> articles = articleRepository.findByMemberId(memberId).orElseThrow(
                 () -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         return articles.stream()
                 .map(ArticleResponse::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
 
     /**
      * 게시글 수정
      */
-    public ArticleResponse modifyArticle(Long articleId, Long memberId, ChannelPostRequest request) {
+    public ArticleResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
 
         article.modifyArticle(request.getTitle(), request.getContent());
 
         return ArticleResponse.from(article);
-    }
-
-    public ChannelPostResponse modifyChannelPost(Long articleId, Long memberId, ChannelPostRequest request) {
-        ChannelPost channelPost = articleRepository.findChannelPostById(articleId)
-                .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
-
-        channelPost.modifyChannelPost(request.getTitle(), request.getContent(), request.getPostCategory());
-
-        return ChannelPostResponse.from(channelPost);
     }
 
 
@@ -208,7 +183,7 @@ public class ArticleService {
      * 게시글 권한
      */
     public Long articleOauth(Long articleId, Long memberId) {
-        Article article = articleRepository.findById(articleId)
+        final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         if (!article.getMember().getId().equals(memberId)) {
