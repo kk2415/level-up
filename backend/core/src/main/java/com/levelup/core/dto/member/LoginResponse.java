@@ -11,4 +11,15 @@ public class LoginResponse {
     private String email;
     private String token;
     private Authority authority;
+
+    private LoginResponse(Long id, String email, String token, Authority authority) {
+        this.id = id;
+        this.email = email;
+        this.token = token;
+        this.authority = authority;
+    }
+
+    public static LoginResponse of(Long id, String email, String token, Authority authority) {
+        return new LoginResponse(id, email, token, authority);
+    }
 }

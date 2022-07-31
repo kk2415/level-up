@@ -43,7 +43,7 @@ public class CommentService {
         commentRepository.save(findComment);
         article.addCommentCount();
 
-        return new CommentResponse(findComment);
+        return CommentResponse.from(findComment);
     }
 
     public CommentResponse createReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
@@ -58,7 +58,7 @@ public class CommentService {
         commentRepository.save(child);
         parent.addChildComment(child);
 
-        return new CommentResponse(child);
+        return CommentResponse.from(child);
     }
 
 
@@ -70,7 +70,7 @@ public class CommentService {
 
         return comments.stream()
                 .filter(c -> c.getParent() == null)
-                .map(CommentResponse::new)
+                .map(CommentResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +78,7 @@ public class CommentService {
         List<Comment> reply = commentRepository.findReplyById(commentId);
 
         return reply.stream()
-                .map(CommentResponse::new)
+                .map(CommentResponse::from)
                 .collect(Collectors.toList());
     }
 

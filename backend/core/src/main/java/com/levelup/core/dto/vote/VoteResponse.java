@@ -13,10 +13,13 @@ public class VoteResponse {
     private Long targetId;
     private VoteType voteType;
 
-    public VoteResponse(Vote vote) {
+    private VoteResponse(Vote vote) {
         this.memberId = vote.getMemberId();
         this.targetId = vote.getTargetId();
         this.voteType = vote.getVoteType();
     }
 
+    public static VoteResponse from(Vote vote) {
+        return new VoteResponse(vote);
+    }
 }

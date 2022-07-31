@@ -12,11 +12,14 @@ public class ChannelMemberResponse {
     private boolean isManager;
 
 
-    public ChannelMemberResponse(ChannelMember channelMember) {
+    private ChannelMemberResponse(ChannelMember channelMember) {
         this.channelMemberId = channelMember.getId();
         this.memberId = channelMember.getMember().getId();
         this.email = channelMember.getMember().getEmail();
         this.isManager = channelMember.getIsManager();
     }
 
+    public static ChannelMemberResponse from(ChannelMember channelMember) {
+        return new ChannelMemberResponse(channelMember);
+    }
 }

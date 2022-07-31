@@ -69,7 +69,7 @@ public class MemberService implements UserDetailsService {
 
         memberRepository.save(member);
 
-        return new CreateMemberResponse(member);
+        return CreateMemberResponse.from(member);
     }
 
     private void validationDuplicateMember(String email) {
@@ -96,7 +96,7 @@ public class MemberService implements UserDetailsService {
     public List<MemberResponse> findAllMembers() {
         return memberRepository.findAll()
                 .stream()
-                .map(MemberResponse::new)
+                .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -108,7 +108,7 @@ public class MemberService implements UserDetailsService {
             throw new MemberNotFoundException("가입된 회원이 아닙니다");
         }
 
-        return new MemberResponse(member);
+        return MemberResponse.from(member);
     }
 
     @Cacheable(cacheNames = "member") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'email'
@@ -119,7 +119,7 @@ public class MemberService implements UserDetailsService {
         if (member == null) {
             throw new MemberNotFoundException("가입된 회원이 아닙니다");
         }
-        return new MemberResponse(member);
+        return MemberResponse.from(member);
     }
 
     public UrlResource getProfileImage(String email) throws MalformedURLException {

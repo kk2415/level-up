@@ -9,10 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -33,15 +30,16 @@ public class ChannelResponse {
     private ChannelCategory category;
     private UploadFile thumbnailImage;
 
-    public ChannelResponse(Channel channel) {
-        ChannelMember channelManager = channel.getChannelMembers().stream()
-                .filter(member -> member.getIsManager())
-                .findFirst().get();
+    private ChannelResponse(Channel channel) {
+        channel.getChannelMembers().stream()
+                .filter(ChannelMember::getIsManager).findFirst()
+                .ifPresent(channelManager -> {
+                    this.managerId = channelManager.getMember().getId();
+                    this.managerName = channelManager.getMember().getNickname();
+                });
 
         this.id = channel.getId();
         this.name = channel.getName();
-        this.managerId = channelManager.getMember().getId();
-        this.managerName = channelManager.getMember().getNickname();
         this.limitedMemberNumber = channel.getLimitedMemberNumber();
         this.description = channel.getDescription();
         this.thumbnailDescription = channel.getThumbnailDescription();
@@ -49,14 +47,11 @@ public class ChannelResponse {
         this.thumbnailImage = channel.getThumbnailImage();
         this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt());
         this.category = channel.getCategory();
+        this.memberCount = channel.getChannelMembers().stream().filter(member -> !member.getIsWaitingMember()).count();
+        this.storeFileName = channel.getThumbnailImage().getStoreFileName();
+    }
 
-        this.memberCount = channel.getChannelMembers().stream()
-                .filter(member -> !member.getIsWaitingMember())
-                .count();
-
-
-        if (channel.getThumbnailImage() != null) {
-            this.storeFileName = channel.getThumbnailImage().getStoreFileName();
-        }
+    public static ChannelResponse from(Channel channel) {
+        return new ChannelResponse(channel);
     }
 }

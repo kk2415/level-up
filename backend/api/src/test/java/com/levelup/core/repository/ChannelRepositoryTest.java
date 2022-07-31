@@ -102,7 +102,7 @@ public class ChannelRepositoryTest extends TestSupporter {
         Page<Channel> channelPage = channelRepository.findByCategory(
                 ChannelCategory.STUDY, PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"))
         );
-        List<ChannelResponse> channelResponses = channelPage.map(ChannelResponse::new).toList();
+        List<ChannelResponse> channelResponses = channelPage.map(ChannelResponse::from).toList();
         for (ChannelResponse channelRespons : channelResponses) {
             System.out.println(channelRespons.getName());
         }

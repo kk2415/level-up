@@ -63,18 +63,11 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
         String email = ((User)authResult.getPrincipal()).getUsername();
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
-
         String token = tokenProvider.create(member);
-
-        LoginResponse loginResponse = LoginResponse.builder()
-                .token(token)
-                .email(email)
-                .id(member.getId())
-                .build();
-
+        LoginResponse loginResponse = LoginResponse.of(member.getId(), email, token, member.getAuthority());
         HttpSession session = request.getSession();
-        session.setAttribute(SessionName.SESSION_NAME, member);
 
+        session.setAttribute(SessionName.SESSION_NAME, member);
         response.setContentType("application/json");
         response.getWriter().write(mapper.writeValueAsString(loginResponse));
     }

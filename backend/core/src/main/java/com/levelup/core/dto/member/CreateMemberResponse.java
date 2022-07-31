@@ -18,7 +18,7 @@ public class CreateMemberResponse {
     private String birthday;
     private String phone;
 
-    public CreateMemberResponse(Member member) {
+    private CreateMemberResponse(Member member) {
         this.id = member.getId();
         this.email = member.getEmail();
         this.password = member.getPassword();
@@ -29,4 +29,7 @@ public class CreateMemberResponse {
         this.phone = member.getPhone();
     }
 
+    public static CreateMemberResponse from(Member member) {
+        return new CreateMemberResponse(member);
+    }
 }
