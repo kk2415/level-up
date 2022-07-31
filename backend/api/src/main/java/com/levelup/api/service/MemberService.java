@@ -1,5 +1,6 @@
 package com.levelup.api.service;
 
+import com.levelup.api.util.EmailService;
 import com.levelup.core.domain.auth.EmailAuth;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelMember;
@@ -58,7 +59,7 @@ public class MemberService implements UserDetailsService {
     /**
      * 생성
      * */
-    public CreateMemberResponse create(CreateMemberRequest memberRequest) {
+    public CreateMemberResponse save(CreateMemberRequest memberRequest) {
         validationDuplicateMember(memberRequest.getEmail()); //중복 이메일 검증
 
         Member member = memberRequest.toEntity();
@@ -93,14 +94,14 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버조회
      * */
-    public List<MemberResponse> findAllMembers() {
+    public List<MemberResponse> getAllMembers() {
         return memberRepository.findAll()
                 .stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public MemberResponse findById(Long memberId) {
+    public MemberResponse getById(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
@@ -112,7 +113,7 @@ public class MemberService implements UserDetailsService {
     }
 
     @Cacheable(cacheNames = "member") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'email'
-    public MemberResponse findByEmail(String email) {
+    public MemberResponse getByEmail(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
@@ -146,7 +147,7 @@ public class MemberService implements UserDetailsService {
     /**
      * 멤버 수정
      * */
-    public void modifyMember(UpdateMemberRequest updateMemberRequest, Long memberId) {
+    public void modify(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
@@ -154,12 +155,12 @@ public class MemberService implements UserDetailsService {
     }
 
     @CacheEvict(cacheNames = "member", allEntries = true)
-    public UploadFile modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
+    public UploadFile modifyProfileImage(MultipartFile file, String email) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         if (member.getProfileImage() != null) {
@@ -184,7 +185,7 @@ public class MemberService implements UserDetailsService {
 
         List<ChannelMember> channelMembers = member.getChannelMembers().stream()
                 .filter(ChannelMember::getIsManager)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
 
         channelMembers.forEach(channelMember -> {
             Channel channel = channelMember.getChannel();
@@ -217,7 +218,7 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername start");
 
-        Member member = memberRepository.findByEmail(username)
+       final Member member = memberRepository.findByEmail(username)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();

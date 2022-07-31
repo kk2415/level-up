@@ -1,4 +1,4 @@
-package com.levelup.api.service;
+package com.levelup.api.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

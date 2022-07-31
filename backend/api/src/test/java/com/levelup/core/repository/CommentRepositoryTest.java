@@ -71,7 +71,7 @@ public class CommentRepositoryTest extends TestSupporter {
         commentRepository.save(replyComment);
 
         // When
-        List<Comment> replyComments = commentRepository.findReplyById(parentComment.getId());
+        List<Comment> replyComments = commentRepository.findReplyByParentId(parentComment.getId());
 
         // Then
         Assertions.assertThat(replyComments).isNotEmpty();

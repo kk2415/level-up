@@ -30,17 +30,17 @@ public class CommentApiController {
     @PostMapping("/comment")
     public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
                                                   @AuthenticationPrincipal Member member) {
-        CommentResponse comment = commentService.create(commentRequest, member.getId());
+        CommentResponse response = commentService.save(commentRequest, member.getId());
 
-        return ResponseEntity.ok().body(comment);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/comment/reply")
     public ResponseEntity<CommentResponse> createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
                                                               @AuthenticationPrincipal Member member) {
-        CommentResponse replyComment = commentService.createReplyComment(commentRequest, member.getId());
+        CommentResponse response = commentService.saveReplyComment(commentRequest, member.getId());
 
-        return ResponseEntity.ok().body(replyComment);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -50,16 +50,16 @@ public class CommentApiController {
     @GetMapping("/comment/{articleId}")
     public ResponseEntity<Result<CommentResponse>> find(@PathVariable Long articleId,
                        @RequestParam ArticleType identity) {
-        List<CommentResponse> comments = commentService.getComments(articleId);
+        List<CommentResponse> response = commentService.getComments(articleId);
 
-        return ResponseEntity.ok().body(new Result(comments, comments.size()));
+        return ResponseEntity.ok().body(new Result(response, response.size()));
     }
 
     @GetMapping("/comment/{commentId}/reply")
     public ResponseEntity<Result<CommentResponse>> findReply(@PathVariable Long commentId) {
-        List<CommentResponse> comments = commentService.findReplyById(commentId);
+        List<CommentResponse> response = commentService.getReplyCommentByParentId(commentId);
 
-        return ResponseEntity.ok().body(new Result(comments, comments.size()));
+        return ResponseEntity.ok().body(new Result(response, response.size()));
     }
 
 
@@ -67,7 +67,7 @@ public class CommentApiController {
      * 댓글 삭제
      */
     @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity delete(@PathVariable Long commentId) {
+    public ResponseEntity<Void> delete(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
 
         return ResponseEntity.ok().build();

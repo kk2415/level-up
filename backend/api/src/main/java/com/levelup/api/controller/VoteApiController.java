@@ -8,7 +8,6 @@ import com.levelup.core.dto.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +27,14 @@ public class VoteApiController {
 
     @PostMapping("/vote")
     public ResponseEntity<VoteResponse> create(@RequestBody @Validated CreateVoteRequest voteRequest) {
-        VoteResponse voteResponse = voteService.create(voteRequest);
+        VoteResponse response = voteService.save(voteRequest);
 
-        return ResponseEntity.ok().body(voteResponse);
+        return ResponseEntity.ok().body(response);
     }
 
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<String> handle(SQLIntegrityConstraintViolationException e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> handle(SQLIntegrityConstraintViolationException e, HttpServletRequest request) {
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = new ExceptionResponse();
 
@@ -45,7 +44,7 @@ public class VoteApiController {
         exceptionResponse.setPath(request.getRequestURI());
 
         log.error("[{}] - {}", exceptionDir, exceptionResponse.getMessage());
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.ok().body(exceptionResponse);
     }
 
 }

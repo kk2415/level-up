@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
+public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
@@ -71,5 +71,4 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.getWriter().write(mapper.writeValueAsString(loginResponse));
     }
-
 }

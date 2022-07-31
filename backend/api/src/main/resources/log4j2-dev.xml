@@ -87,7 +87,7 @@
             <AppenderRef ref="signUpFile" />
         </logger>
 
-        <logger name="com.levelup.api.filter.SecurityLoginFilter" level="debug" additivity="false">
+        <logger name="com.levelup.api.filter.LoginFilter" level="debug" additivity="false">
             <AppenderRef ref="console" />
             <AppenderRef ref="signInFile" />
         </logger><!--아래에 위치한게 우선순위가 다 높다-->

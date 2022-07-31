@@ -32,9 +32,9 @@ public class ChannelPostApiController {
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
                                                       @RequestParam("channel") Long channelId,
                                                       @AuthenticationPrincipal Member member) {
-        ChannelPostResponse channelPost = channelPostService.create(request, member.getId(), channelId);
+        ChannelPostResponse response = channelPostService.save(request, member.getId(), channelId);
 
-        return ResponseEntity.ok().body(channelPost);
+        return ResponseEntity.ok().body(response);
     }
 
     /**
@@ -43,9 +43,9 @@ public class ChannelPostApiController {
     @GetMapping("/channel-post/{articleId}")
     public ResponseEntity<ChannelPostResponse> getPost(@PathVariable Long articleId,
                                                        @RequestParam(required = false, defaultValue = "false") String view) {
-        ChannelPostResponse channelPost = channelPostService.getChannelPost(articleId, view);
+        ChannelPostResponse response = channelPostService.getChannelPost(articleId, view);
 
-        return ResponseEntity.ok().body(channelPost);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/channel-posts")
@@ -54,28 +54,28 @@ public class ChannelPostApiController {
                                                               Pageable pageable,
                                                               @RequestParam(required = false) String field,
                                                               @RequestParam(required = false) String query) {
-        Page<ChannelPostResponse> channelPosts = channelPostService.getChannelPosts(channelId, articleType, field,
-                query, pageable);
+        Page<ChannelPostResponse> response = channelPostService.getChannelPosts(
+                channelId, articleType, field, query, pageable);
 
-        return ResponseEntity.ok().body(channelPosts);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/channel-posts/{articleId}/nextPost")
     public ResponseEntity<ChannelPostResponse> findNextPost(@PathVariable Long articleId,
                                                             @RequestParam ArticleType articleType,
                                                             @RequestParam("channel") Long channelId) {
-        ChannelPostResponse channelPost = channelPostService.findNextPage(articleId, articleType, channelId);
+        ChannelPostResponse response = channelPostService.getNextPage(articleId, articleType, channelId);
 
-        return ResponseEntity.ok().body(channelPost);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/channel-posts/{articleId}/prevPost")
     public ResponseEntity<ChannelPostResponse> findPrevPost(@PathVariable Long articleId,
                                                             @RequestParam ArticleType articleType,
                                                             @RequestParam("channel") Long channelId) {
-        ChannelPostResponse channelPost = channelPostService.findPrevPage(articleId, articleType, channelId);
+        ChannelPostResponse response = channelPostService.getPrevPage(articleId, articleType, channelId);
 
-        return ResponseEntity.ok().body(channelPost);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/channel-posts/{articleId}/oauth")
@@ -93,9 +93,9 @@ public class ChannelPostApiController {
     public ResponseEntity<ChannelPostResponse> updatePost(@PathVariable Long articleId,
                                      @RequestBody ChannelPostRequest request,
                                      @AuthenticationPrincipal Member member) {
-        ChannelPostResponse channelPost = channelPostService.modify(articleId, member.getId(), request);
+        ChannelPostResponse response = channelPostService.modify(articleId, member.getId(), request);
 
-        return ResponseEntity.ok().body(channelPost);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -103,10 +103,10 @@ public class ChannelPostApiController {
      * 삭제
      * */
     @DeleteMapping("/channel-posts/{articleId}")
-    public ResponseEntity<Result> deletePost(@PathVariable Long articleId) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long articleId) {
         channelPostService.delete(articleId);
 
-        return new ResponseEntity(new Result("게시물이 성공적으로 삭제되었습니다.", 1), HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

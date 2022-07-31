@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +30,16 @@ import java.util.List;
 public class MemberApiController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
 
 
     /**
      * 생성
      * */
     @PostMapping("/member/image")
-    public ResponseEntity createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
-        UploadFile profileImage = memberService.createProfileImage(file);
+    public ResponseEntity<UploadFile> createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
+        UploadFile response = memberService.createProfileImage(file);
 
-        return ResponseEntity.ok().body(profileImage);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -47,24 +47,28 @@ public class MemberApiController {
      * 조회
      * */
     @GetMapping("/member/{email}")
-    public MemberResponse getMember(@PathVariable("email") String email) {
-        return memberService.findByEmail(email);
+    public ResponseEntity<MemberResponse> getMember(@PathVariable("email") String email) {
+        MemberResponse response = memberService.getByEmail(email);
+
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/members")
     public ResponseEntity<Result> getAllMembers() {
-        List<MemberResponse> members = memberService.findAllMembers();
+        List<MemberResponse> response = memberService.getAllMembers();
 
-        return ResponseEntity.ok(new Result<>(members, members.size()));
+        return ResponseEntity.ok(new Result<>(response, response.size()));
     }
 
     @GetMapping(path = "/member/{email}/image", produces = "image/jpeg")
-    public Resource getProfileImage(@PathVariable String email) throws MalformedURLException {
-        return memberService.getProfileImage(email);
+    public ResponseEntity<Resource> getProfileImage(@PathVariable String email) throws MalformedURLException {
+        UrlResource response = memberService.getProfileImage(email);
+
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/member")
-    public ResponseEntity confirmLogin(@AuthenticationPrincipal Member member) {
+    public ResponseEntity<MemberResponse> confirmLogin(@AuthenticationPrincipal Member member) {
         if (member == null) {
             throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
         }
@@ -77,19 +81,16 @@ public class MemberApiController {
      * 수정
      * */
     @PatchMapping("/member")
-    public ResponseEntity modifyMember(@RequestBody UpdateMemberRequest updateMemberRequest,
-                                       @AuthenticationPrincipal Member member) {
-        memberService.modifyMember(updateMemberRequest, member.getId());
+    public ResponseEntity<Void> modifyMember(@RequestBody UpdateMemberRequest updateMemberRequest,
+                                             @AuthenticationPrincipal Member member) {
+        memberService.modify(updateMemberRequest, member.getId());
 
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/member/{email}/image")
     public ResponseEntity<UploadFile> modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
-
-        UploadFile profileImage = memberService.modifyProfileImage(file, member.getId());
+        UploadFile profileImage = memberService.modifyProfileImage(file, email);
 
         return ResponseEntity.ok().body(profileImage);
     }
@@ -99,8 +100,9 @@ public class MemberApiController {
      * 삭제
      * */
     @DeleteMapping("/member/{memberId}")
-    public void delete(@PathVariable Long memberId) throws IOException {
+    public ResponseEntity<Void> delete(@PathVariable Long memberId) throws IOException {
         memberService.delete(memberId);
-    }
 
+        return ResponseEntity.ok().build();
+    }
 }

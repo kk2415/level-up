@@ -7,7 +7,6 @@ import com.levelup.core.dto.Result;
 import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.article.ChannelPostRequest;
-import com.levelup.core.dto.article.ChannelPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +30,9 @@ public class ArticleApiController {
     @PostMapping("/article")
     public ResponseEntity<ArticleResponse> create(@Validated @RequestBody ArticleRequest request,
                                                       @AuthenticationPrincipal Member member) {
-        ArticleResponse article = articleService.createArticle(request, member.getId());
+        ArticleResponse response = articleService.save(request, member.getId());
 
-        return ResponseEntity.ok().body(article);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -43,9 +42,9 @@ public class ArticleApiController {
     @GetMapping("/article/{articleId}")
     public ResponseEntity<ArticleResponse> getPost(@PathVariable Long articleId,
                                                    @RequestParam(required = false, defaultValue = "false") String view) {
-        ArticleResponse article = articleService.getArticle(articleId, view);
+        ArticleResponse response = articleService.getArticle(articleId, view);
 
-        return ResponseEntity.ok().body(article);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/articles")
@@ -53,32 +52,32 @@ public class ArticleApiController {
                                                           Pageable pageable,
                                                           @RequestParam(required = false) String field,
                                                           @RequestParam(required = false) String query) {
-        Page<ArticleResponse> article = articleService.getArticles(articleType, field, query, pageable);
+        Page<ArticleResponse> response = articleService.getArticles(articleType, field, query, pageable);
 
-        return ResponseEntity.ok().body(article);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/article/{articleId}/nextArticle")
     public ResponseEntity<ArticleResponse> findNextPost(@PathVariable Long articleId,
                                                         @RequestParam ArticleType articleType) {
-        ArticleResponse article = articleService.findNextPageByArticleType(articleId, articleType);
+        ArticleResponse response = articleService.getNextPageByArticleType(articleId, articleType);
 
-        return ResponseEntity.ok().body(article);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/article/{articleId}/prevArticle")
     public ResponseEntity<ArticleResponse> findPrevPost(@PathVariable Long articleId,
                                                         @RequestParam ArticleType articleType) {
-        ArticleResponse article = articleService.findPrevPageByArticleType(articleId, articleType);
+        ArticleResponse response = articleService.getPrevPageByArticleType(articleId, articleType);
 
-        return ResponseEntity.ok().body(article);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/article/{articleId}/oauth")
-    public ResponseEntity checkMember(@PathVariable Long articleId, @RequestParam Long memberId) {
+    public ResponseEntity<Void> checkMember(@PathVariable Long articleId, @RequestParam Long memberId) {
         articleService.articleOauth(articleId, memberId);
 
-        return new ResponseEntity(new Result("인증 성공", 1), HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 
@@ -89,9 +88,9 @@ public class ArticleApiController {
     public ResponseEntity<ArticleResponse> mopdify(@PathVariable Long articleId,
                                                    @RequestBody ChannelPostRequest request,
                                                    @AuthenticationPrincipal Member member) {
-        ArticleResponse articleResponse = articleService.modifyArticle(articleId, member.getId(), request);
+        ArticleResponse response = articleService.modify(articleId, member.getId(), request);
 
-        return ResponseEntity.ok().body(articleResponse);
+        return ResponseEntity.ok().body(response);
     }
 
 
@@ -99,9 +98,9 @@ public class ArticleApiController {
      * 삭제
      * */
     @DeleteMapping("/article/{articleId}")
-    public ResponseEntity<Result> deletePost(@PathVariable Long articleId) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long articleId) {
         articleService.deleteArticle(articleId);
 
-        return new ResponseEntity(new Result("게시물이 성공적으로 삭제되었습니다.", 1), HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }
