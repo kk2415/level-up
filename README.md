@@ -7,10 +7,10 @@
 ## 프로젝트 실행환경  
 
 ### Backend
-+ Java
++ Java(11)
 + Spring boot, Spring Cloud Config, Spring Data JPA,
 + Spring Security
-+ MySQL
++ MySQL(8)
   
 ### Frontend
 + HTML, CSS, JavaScript
