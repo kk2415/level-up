@@ -13,6 +13,8 @@ import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
+import com.levelup.core.exception.member.DuplicateEmailException;
+import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -73,11 +74,10 @@ public class MemberService implements UserDetailsService {
 
     private void validationDuplicateMember(String email) {
         //이 로직은 동시성 문제가 있음. 동시에 같은 아이디가 접근해서 호출하면 통과될 수 있음. 차후에 개선
-        Member findMembers = memberRepository.findByEmail(email);
-
-        if (findMembers != null) {
-            throw new DuplicateEmailException("중복된 이메일입니다.");
-        }
+        memberRepository.findByEmail(email)
+                .ifPresent(user -> {
+                    throw new DuplicateEmailException("중복된 이메일입니다.");
+                });
     }
 
     public UploadFile createProfileImage(MultipartFile file) throws IOException {
@@ -101,7 +101,8 @@ public class MemberService implements UserDetailsService {
     }
 
     public MemberResponse findById(Long memberId) {
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         if (member == null) {
             throw new MemberNotFoundException("가입된 회원이 아닙니다");
@@ -112,7 +113,8 @@ public class MemberService implements UserDetailsService {
 
     @Cacheable(cacheNames = "member") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'email'
     public MemberResponse findByEmail(String email) {
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         if (member == null) {
             throw new MemberNotFoundException("가입된 회원이 아닙니다");
@@ -121,7 +123,8 @@ public class MemberService implements UserDetailsService {
     }
 
     public UrlResource getProfileImage(String email) throws MalformedURLException {
-        Member findMember = memberRepository.findByEmail(email);
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         if (findMember.getProfileImage() == null) {
             throw new ImageNotFoundException("프로필 사진을 찾을 수 없습니다");
@@ -144,7 +147,8 @@ public class MemberService implements UserDetailsService {
      * 멤버 수정
      * */
     public void modifyMember(UpdateMemberRequest updateMemberRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         member.updateMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
     }
@@ -155,7 +159,9 @@ public class MemberService implements UserDetailsService {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }
 
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+
         if (member.getProfileImage() != null) {
             deleteS3Profile(member.getProfileImage().getStoreFileName());
         }
@@ -169,21 +175,23 @@ public class MemberService implements UserDetailsService {
 
     /**
      * 멤버 삭제
+     * 삭제하는 멤버가 채널의 매니저일 경우 해당 채널도 같이 삭제 처리
      * */
     @CacheEvict(cacheNames = {"ChannelCategory", "member"}, allEntries = true)
     public void delete(Long memberId) {
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+
         List<ChannelMember> channelMembers = member.getChannelMembers().stream()
                 .filter(ChannelMember::getIsManager)
                 .collect(Collectors.toList());
 
         channelMembers.forEach(channelMember -> {
             Channel channel = channelMember.getChannel();
-
-            channelRepository.delete(channel.getId());
+            channelRepository.delete(channel);
         });
 
-        memberRepository.delete(memberId);
+        memberRepository.delete(member);
     }
 
     private void deleteS3Profile(String storeFileName) {
@@ -209,10 +217,8 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername start");
 
-        Member member = memberRepository.findByEmail(username);
-        if (member == null) {
-            throw new UsernameNotFoundException("존재하지 않는 이메일입니다.");
-        }
+        Member member = memberRepository.findByEmail(username)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getAuthority().name()));

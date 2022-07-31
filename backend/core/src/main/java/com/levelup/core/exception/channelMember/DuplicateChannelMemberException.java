@@ -1,4 +1,4 @@
-package com.levelup.core.exception;
+package com.levelup.core.exception.channelMember;
 
 public class DuplicateChannelMemberException extends RuntimeException {
     public DuplicateChannelMemberException() {

@@ -11,10 +11,11 @@ import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.article.ChannelPostRequest;
 import com.levelup.core.dto.article.ChannelPostResponse;
-import com.levelup.core.exception.MemberNotFoundException;
-import com.levelup.core.exception.PostNotFoundException;
+import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
+import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
-import com.levelup.core.repository.article.ChannelPostRepository;
+import com.levelup.core.repository.article.ChannelPost.ChannelPostRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,11 @@ public class ChannelPostService {
      * 게시글 등록
      * */
     public ChannelPostResponse create(ChannelPostRequest channelPostRequest, Long memberId, Long channelId) {
-        Member member = memberRepository.findById(memberId);
-        Channel channel = channelRepository.findById(channelId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+
         ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
 
         channelPostRepository.save(channelPost);
@@ -140,7 +144,9 @@ public class ChannelPostService {
      * 게시글 삭제
      * */
     public void delete(Long articleId) {
-        Channel channel = channelRepository.findByArticleId(articleId);
+        Channel channel = channelRepository.findByArticleId(articleId)
+                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+
         channel.removePostCount();
 
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);

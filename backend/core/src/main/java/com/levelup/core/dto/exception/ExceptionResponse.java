@@ -1,4 +1,4 @@
-package com.levelup.core.exception;
+package com.levelup.core.dto.exception;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

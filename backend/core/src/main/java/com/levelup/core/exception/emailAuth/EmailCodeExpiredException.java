@@ -1,4 +1,4 @@
-package com.levelup.core.exception;
+package com.levelup.core.exception.emailAuth;
 
 public class EmailCodeExpiredException extends RuntimeException {
     public EmailCodeExpiredException() {

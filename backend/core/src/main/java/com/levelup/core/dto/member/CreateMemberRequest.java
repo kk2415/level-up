@@ -69,7 +69,7 @@ public class CreateMemberRequest {
                 .authority(Authority.ANONYMOUS)
                 .profileImage(uploadFile)
                 .channelMembers(new ArrayList<>())
+                .articles(new ArrayList<>())
                 .build();
     }
-
 }

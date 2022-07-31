@@ -24,6 +24,17 @@ public class CreateReplyCommentRequest {
     @NotNull
     private ArticleType identity;
 
+    private CreateReplyCommentRequest(Long parentId, Long articleId, String content, ArticleType identity) {
+        this.parentId = parentId;
+        this.articleId = articleId;
+        this.content = content;
+        this.identity = identity;
+    }
+
+    public static CreateReplyCommentRequest of(Long parentId, Long articleId, String content, ArticleType identity) {
+        return new CreateReplyCommentRequest(parentId, articleId, content, identity);
+    }
+
     public Comment toEntity(Member member, Article article) {
         Comment comment = Comment.builder()
                 .member(member)

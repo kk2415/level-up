@@ -1,4 +1,4 @@
-package com.levelup.core.exception;
+package com.levelup.core.exception.channel;
 
 public class NoPlaceChnnelException extends RuntimeException {
 

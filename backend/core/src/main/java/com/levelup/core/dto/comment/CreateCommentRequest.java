@@ -23,6 +23,17 @@ public class CreateCommentRequest {
     @NotNull
     private ArticleType identity;
 
+    private CreateCommentRequest(String memberEmail, Long articleId, String content, ArticleType identity) {
+        this.memberEmail = memberEmail;
+        this.articleId = articleId;
+        this.content = content;
+        this.identity = identity;
+    }
+
+    public static CreateCommentRequest of(String memberEmail, Long articleId, String content, ArticleType identity) {
+        return new CreateCommentRequest(memberEmail, articleId, content, identity);
+    }
+
     public Comment toEntity(Member member, Article article) {
         Comment comment = Comment.builder()
                 .member(member)

@@ -6,6 +6,7 @@ import com.levelup.core.SessionName;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.member.LoginRequest;
 import com.levelup.core.dto.member.LoginResponse;
+import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,9 @@ public class SecurityLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         ObjectMapper mapper = new ObjectMapper();
         String email = ((User)authResult.getPrincipal()).getUsername();
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
+
         String token = tokenProvider.create(member);
 
         LoginResponse loginResponse = LoginResponse.builder()

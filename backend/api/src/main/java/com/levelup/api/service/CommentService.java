@@ -7,7 +7,9 @@ import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.comment.CommentResponse;
 import com.levelup.core.dto.comment.CreateCommentRequest;
 import com.levelup.core.dto.comment.CreateReplyCommentRequest;
-import com.levelup.core.exception.PostNotFoundException;
+import com.levelup.core.exception.comment.CommentNotFoundException;
+import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -32,9 +34,10 @@ public class CommentService {
      * 댓글 작성
      * */
     public CommentResponse create(CreateCommentRequest commentRequest, Long memeberId) {
-        Member findMember = memberRepository.findById(memeberId);
+        Member findMember = memberRepository.findById(memeberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
         Article article = articleRepository.findById(commentRequest.getArticleId())
-                .orElseThrow(() -> new PostNotFoundException("존재하지 않는 게시글입니다.0"));
+                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
         Comment findComment = commentRequest.toEntity(findMember, article);
 
         commentRepository.save(findComment);
@@ -44,10 +47,12 @@ public class CommentService {
     }
 
     public CommentResponse createReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
-        Member member = memberRepository.findById(memberId);
-        Comment parent = commentRepository.findById(commentRequest.getParentId());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+        Comment parent = commentRepository.findById(commentRequest.getParentId())
+                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
         Article article = articleRepository.findById(commentRequest.getArticleId())
-                .orElseThrow(() -> new PostNotFoundException("존재하지 않는 게시글입니다.0"));
+                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
         Comment child = commentRequest.toEntity(member, article);
 
         commentRepository.save(child);
@@ -82,7 +87,9 @@ public class CommentService {
      * 댓글 수정
      * */
     public void updateComment(Long commentId, String content) {
-        Comment findComment = commentRepository.findById(commentId);
+        Comment findComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
+
         findComment.changeComment(content);
     }
 
@@ -91,7 +98,10 @@ public class CommentService {
      * 댓글 삭제
      * */
     public void deleteComment(Long commentId) {
-        commentRepository.delete(commentId);
+        Comment findComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
+
+        commentRepository.delete(findComment);
     }
 
 }

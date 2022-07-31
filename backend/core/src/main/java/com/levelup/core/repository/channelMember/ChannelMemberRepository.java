@@ -1,4 +1,4 @@
-package com.levelup.core.repository.channel;
+package com.levelup.core.repository.channelMember;
 
 
 import com.levelup.core.domain.channel.ChannelMember;

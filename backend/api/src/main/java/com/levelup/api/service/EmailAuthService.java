@@ -4,10 +4,10 @@ import com.levelup.core.domain.auth.EmailAuth;
 import com.levelup.core.domain.member.Authority;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.auth.EmailAuthResponse;
-import com.levelup.core.exception.EmailCodeExpiredException;
-import com.levelup.core.exception.MemberNotFoundException;
-import com.levelup.core.exception.NotMatchSecurityCodeException;
-import com.levelup.core.repository.auth.EmailAuthRepository;
+import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
+import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.core.exception.emailAuth.NotMatchSecurityCodeException;
+import com.levelup.core.repository.emailAuth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -32,7 +32,8 @@ public class EmailAuthService {
      * 인증코드 발송
      * */
     public void sendSecurityCode(Long memberId) {
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
         emailAuthRepository.findByMemberId(memberId).ifPresentOrElse((authEmail) -> { //재발송
             String securityCode = EmailAuth.createSecurityCode();
@@ -66,7 +67,8 @@ public class EmailAuthService {
         isExpired(auth.getReceivedDate());
 
         auth.setConfirmed(true);
-        Member member = memberRepository.findById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
         member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
 
         return new EmailAuthResponse(securityCode, true);

@@ -1,5 +1,13 @@
 package com.levelup.core.exception;
 
+import com.levelup.core.dto.exception.ExceptionResponse;
+import com.levelup.core.exception.article.PostNotFoundException;
+import com.levelup.core.exception.channel.NoPlaceChnnelException;
+import com.levelup.core.exception.channelMember.DuplicateChannelMemberException;
+import com.levelup.core.exception.member.DuplicateEmailException;
+import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
+import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.core.exception.member.NotConfirmedEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +20,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionController {
+public class GlobalExceptionHandler {
 
 //    @ExceptionHandler(Exception.class)
 //    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {

@@ -3,10 +3,13 @@ package com.levelup.core.repository;
 import com.levelup.TestSupporter;
 import com.levelup.api.ApiApplication;
 import com.levelup.core.domain.channel.Channel;
+import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channel.ChannelMember;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,12 @@ public class MemberRepositoryTest extends TestSupporter {
     private final MemberRepository memberRepository;
     private final ChannelRepository channelRepository;
 
+    @BeforeEach
+    public void setup() {
+        memberRepository.deleteAll();
+        channelRepository.deleteAll();
+    }
+
     public MemberRepositoryTest(@Autowired MemberRepository memberRepository,
                                 @Autowired ChannelRepository channelRepository) {
         this.memberRepository = memberRepository;
@@ -42,26 +51,12 @@ public class MemberRepositoryTest extends TestSupporter {
         memberRepository.save(member);
 
         // When
-        Member findMember = memberRepository.findByEmail(member.getEmail());
+        Member findMember = memberRepository.findByEmail(member.getEmail())
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         // Then
         assertThat(findMember).isNotNull();
         assertThat(findMember.getEmail()).isEqualTo(member.getEmail());
-    }
-
-    @DisplayName("멤버 삭제 테스트")
-    @Test
-    void deleteMemberTest() {
-        // Given
-        Member member = createMember("testEmail@test.com", "testUser");
-        memberRepository.save(member);
-
-        // When
-        memberRepository.delete(member.getId());
-        Member findMember = memberRepository.findById(member.getId());
-
-        // Then
-        assertThat(findMember).isNull();
     }
 
     @DisplayName("채널 가입된 멤버 조회 테스트")
@@ -75,7 +70,7 @@ public class MemberRepositoryTest extends TestSupporter {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Channel channel = createChannel(manager, "testChannel");
+        Channel channel = createChannel(manager, "testChannel", ChannelCategory.STUDY);
         channelRepository.save(channel);
 
         ChannelMember channelMember1 = ChannelMember.createChannelMember(member1, false, false);
@@ -89,5 +84,4 @@ public class MemberRepositoryTest extends TestSupporter {
         // Then
         assertThat(findMembers.size()).isEqualTo(3);
     }
-
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,39 +44,17 @@ public class FileService {
      * 조회
      * */
     public File findById(Long id) {
-        return fileRepository.findById(id);
+        return fileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("파일이 존재하지 않습니다."));
     }
-
-    public List<File> findAll() {
-        return fileRepository.findAll();
-    }
-
-    public List<File> findByPostId(Long postId) {
-        return fileRepository.findByPostId(postId);
-    }
-
-    public List<File> findByNoticeId(Long noticeId) {
-        return fileRepository.findByNoticeId(noticeId);
-    }
-
-    public List<File> findByQnaId(Long qnaId) {
-        return fileRepository.findByQnaId(qnaId);
-    }
-
 
     /**
      * 삭제
      * */
     public void delete(Long id) {
-        fileRepository.delete(id);
+        File file = fileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("파일이 존재하지 않습니다."));
+
+        fileRepository.delete(file);
     }
-
-    public void deleteByPostId(Long postId) {
-        List<File> findPostFiles = fileRepository.findByPostId(postId);
-
-        for (File findPostFile : findPostFiles) {
-            fileRepository.delete(findPostFile.getId());
-        }
-    }
-
 }

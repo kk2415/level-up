@@ -2,10 +2,9 @@ package com.levelup.api.controller;
 
 
 import com.levelup.api.service.VoteService;
-import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.vote.CreateVoteRequest;
 import com.levelup.core.dto.vote.VoteResponse;
-import com.levelup.core.exception.ExceptionResponse;
+import com.levelup.core.dto.exception.ExceptionResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

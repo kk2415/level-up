@@ -2,9 +2,6 @@ package com.levelup.api.config;
 
 import com.levelup.core.domain.base.Auditor;
 import com.levelup.core.repository.comment.CommentRepository;
-import com.levelup.core.repository.comment.JpaCommentRepository;
-import com.levelup.core.repository.member.JpaMemberRepository;
-import com.levelup.core.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,16 +22,6 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public MemberRepository memberRepository() {
-        return new JpaMemberRepository(em);
-    }
-
-    @Bean
-    public CommentRepository commentRepository() {
-        return new JpaCommentRepository(em);
     }
 
     @Bean
