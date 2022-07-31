@@ -69,7 +69,7 @@ public class MemberApiController {
             throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
         }
 
-        return ResponseEntity.ok().body(new MemberResponse(member));
+        return ResponseEntity.ok().body(MemberResponse.from(member));
     }
 
 

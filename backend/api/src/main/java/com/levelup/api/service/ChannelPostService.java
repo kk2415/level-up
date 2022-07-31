@@ -56,7 +56,7 @@ public class ChannelPostService {
         channelPostRepository.save(channelPost);
         channel.addPostCount();
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
@@ -79,7 +79,7 @@ public class ChannelPostService {
             channelPost.addViews();;
         }
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public Page<ChannelPostResponse> getChannelPosts(Long channelId, ArticleType articleType, String field,
@@ -96,21 +96,21 @@ public class ChannelPostService {
             pages = channelPostRepository.findByChannelIdAndWriterAndArticleType(channelId, articleType, query, pageable);
         }
 
-        return pages.map(ChannelPostResponse::new);
+        return pages.map(ChannelPostResponse::from);
     }
 
     public ChannelPostResponse findNextPage(Long articleId, ArticleType articleType, Long channelId) {
         ChannelPost channelPost = channelPostRepository.findNextByChannelIdAndArticleType(articleId, channelId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public ChannelPostResponse findPrevPage(Long articleId, ArticleType articleType, Long channelId) {
         ChannelPost channelPost = channelPostRepository.findPrevChannelIdAndArticleType(articleId, channelId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public List<ArticleResponse> findByMemberId(Long memberId) {
@@ -118,7 +118,7 @@ public class ChannelPostService {
                 () -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         return articles.stream()
-                .map(ArticleResponse::new)
+                .map(ArticleResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -136,7 +136,7 @@ public class ChannelPostService {
 
         channelPost.modifyChannelPost(request.getTitle(), request.getContent(), request.getPostCategory());
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
 

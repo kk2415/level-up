@@ -52,7 +52,7 @@ public class ArticleService {
                 articleRequest.getArticleType());
         articleRepository.save(article);
 
-        return new ArticleResponse(article);
+        return ArticleResponse.from(article);
     }
 
     public ChannelPostResponse createChannelPost(ChannelPostRequest channelPostRequest, Long memberId, Long channelId) {
@@ -65,7 +65,7 @@ public class ArticleService {
 
         articleRepository.save(channelPost);
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
@@ -89,7 +89,7 @@ public class ArticleService {
             ;
         }
 
-        return new ArticleResponse(article);
+        return ArticleResponse.from(article);
     }
 
     public Page<ArticleResponse> getArticles(ArticleType articleType, String field, String query, Pageable pageable) {
@@ -103,7 +103,7 @@ public class ArticleService {
             pages = articleRepository.findByArticleTypeAndWriter(articleType, query, pageable);
         }
 
-        return pages.map(ArticleResponse::new);
+        return pages.map(ArticleResponse::from);
     }
 
     public ChannelPostResponse getChannelPost(Long articleId, String view) {
@@ -115,7 +115,7 @@ public class ArticleService {
             ;
         }
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public Page<ChannelPostResponse> getChannelPosts(Long channelId, String field, String query, Pageable pageable) {
@@ -129,7 +129,7 @@ public class ArticleService {
             pages = articleRepository.findByChannelIdAndWriter(channelId, query, pageable);
         }
 
-        return pages.map(ChannelPostResponse::new);
+        return pages.map(ChannelPostResponse::from);
     }
 
     public void getChannelPostsCount(Long channelId, String field, String query) {
@@ -140,28 +140,28 @@ public class ArticleService {
         Article article = articleRepository.findNextPageByArticleType(articleId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return new ArticleResponse(article);
+        return ArticleResponse.from(article);
     }
 
     public ArticleResponse findPrevPageByArticleType(Long articleId, ArticleType articleType) {
         Article article = articleRepository.findPrevPageArticleType(articleId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return new ArticleResponse(article);
+        return ArticleResponse.from(article);
     }
 
     public ChannelPostResponse findNextPageByChannelId(Long articleId, Long channelId) {
         ChannelPost channelPost = articleRepository.findNextPageByChannelId(articleId, channelId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public ChannelPostResponse findPrevPageByChannelId(Long articleId, Long channelId) {
         ChannelPost channelPost = articleRepository.findPrevPageChannelId(articleId, channelId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
     public List<ArticleResponse> findByMemberId(Long memberId) {
@@ -169,7 +169,7 @@ public class ArticleService {
                 () -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
         return articles.stream()
-                .map(ArticleResponse::new)
+                .map(ArticleResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -183,7 +183,7 @@ public class ArticleService {
 
         article.modifyArticle(request.getTitle(), request.getContent());
 
-        return new ArticleResponse(article);
+        return ArticleResponse.from(article);
     }
 
     public ChannelPostResponse modifyChannelPost(Long articleId, Long memberId, ChannelPostRequest request) {
@@ -192,7 +192,7 @@ public class ArticleService {
 
         channelPost.modifyChannelPost(request.getTitle(), request.getContent(), request.getPostCategory());
 
-        return new ChannelPostResponse(channelPost);
+        return ChannelPostResponse.from(channelPost);
     }
 
 

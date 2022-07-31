@@ -26,7 +26,7 @@ public class MemberResponse {
     private boolean isConfirmed;
     private UploadFile uploadFile;
 
-    public MemberResponse(Member member) {
+    private MemberResponse(Member member) {
         this.id = member.getId();
         this.email = member.getEmail();
         this.name = member.getName();
@@ -38,4 +38,7 @@ public class MemberResponse {
         this.uploadFile = member.getProfileImage();
     }
 
+    public static MemberResponse from(Member member) {
+        return new MemberResponse(member);
+    }
 }

@@ -41,7 +41,7 @@ public class VoteService {
         voteRepository.save(vote);
         increaseVoteCount(voteRequest.getTargetId(), voteRequest.getVoteType());
 
-        return new VoteResponse(vote);
+        return VoteResponse.from(vote);
     }
 
     public void increaseVoteCount(Long targetId, VoteType voteType) {

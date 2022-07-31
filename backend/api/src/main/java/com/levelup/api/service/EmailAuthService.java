@@ -71,7 +71,7 @@ public class EmailAuthService {
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
         member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
 
-        return new EmailAuthResponse(securityCode, true);
+        return EmailAuthResponse.of(securityCode, true);
     }
 
 

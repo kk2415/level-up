@@ -15,11 +15,15 @@ public class CreateChannelResponse {
     private String managerName;
     private String description;
 
-    public CreateChannelResponse(Channel channel) {
+    private CreateChannelResponse(Channel channel) {
         this.id = channel.getId();
         this.name = channel.getName();
         this.limitedMemberNumber = channel.getLimitedMemberNumber();
         this.managerName = channel.getManagerName();
         this.description = channel.getDescription();
+    }
+
+    public static CreateChannelResponse from(Channel channel) {
+        return new CreateChannelResponse(channel);
     }
 }

@@ -66,7 +66,7 @@ public class ChannelService {
         ChannelMember channelMember = ChannelMember.createChannelMember(member, true, false);
         channel.setChannelMember(channelMember);
 
-        return new CreateChannelResponse(channel);
+        return CreateChannelResponse.from(channel);
     }
 
     public void createFileByBase64(Base64Dto base64) throws IOException {
@@ -93,19 +93,19 @@ public class ChannelService {
         Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
-        return new ChannelResponse(findChannel);
+        return ChannelResponse.from(findChannel);
     }
 
     @Cacheable(cacheNames = "ChannelCategory")
     public List<ChannelResponse> getByCategory(ChannelCategory category) {
         return channelRepository.findByCategory(category)
-                .stream().map(ChannelResponse::new)
+                .stream().map(ChannelResponse::from)
                 .collect(Collectors.toList());
     }
 
     public List<ChannelResponse> getAll() {
         return channelRepository.findAll().stream()
-                .map(ChannelResponse::new)
+                .map(ChannelResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -147,7 +147,7 @@ public class ChannelService {
 
         channel.modifyChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
 
-        return new ChannelResponse(channel);
+        return ChannelResponse.from(channel);
     }
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)

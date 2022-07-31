@@ -64,7 +64,7 @@ public class ChannelMemberService {
      * */
     public Page<ChannelMemberResponse> getChannelMembers(Long channelId, Boolean isWaitingMember, Pageable pageable) {
         Page<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndIsWaitingMember(channelId, isWaitingMember, pageable);
-        return channelMembers.map(ChannelMemberResponse::new);
+        return channelMembers.map(ChannelMemberResponse::from);
     }
 
 

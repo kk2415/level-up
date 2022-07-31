@@ -13,6 +13,15 @@ public class ExceptionResponse {
     private String message;
     private String exception;
     private String path;
-    private String category;
 
+    private ExceptionResponse(LocalDateTime timeStamp, String message, String exception, String path) {
+        this.timeStamp = timeStamp;
+        this.message = message;
+        this.exception = exception;
+        this.path = path;
+    }
+
+    public static ExceptionResponse of(LocalDateTime timeStamp, String message, String exception, String path) {
+        return new ExceptionResponse(timeStamp, message, exception, path);
+    }
 }

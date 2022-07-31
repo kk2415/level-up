@@ -12,7 +12,18 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class ArticleResponse {
 
-    public ArticleResponse(Article article) {
+    private Long id;
+    private Long memberId;
+    private String title;
+    private String writer;
+    private String content;
+    private String dateCreated;
+    private Long voteCount;
+    private Long views;
+    private Long commentCount;
+    private ArticleType articleType;
+
+    private ArticleResponse(Article article) {
         this.id = article.getArticleId();
         this.memberId = article.getMember().getId();
         this.title = article.getTitle();
@@ -25,15 +36,7 @@ public class ArticleResponse {
         this.articleType = article.getArticleType();
     }
 
-    private Long id;
-    private Long memberId;
-    private String title;
-    private String writer;
-    private String content;
-    private String dateCreated;
-    private Long voteCount;
-    private Long views;
-    private Long commentCount;
-    private ArticleType articleType;
-
+    public static ArticleResponse from(Article article) {
+        return new ArticleResponse(article);
+    }
 }

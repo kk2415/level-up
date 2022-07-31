@@ -29,7 +29,7 @@ public class ChannelPostResponse {
     private PostCategory postCategory;
     private ArticleType articleType;
 
-    public ChannelPostResponse(ChannelPost channelPost) {
+    private ChannelPostResponse(ChannelPost channelPost) {
         this.id = channelPost.getArticleId();
         this.memberId = channelPost.getMember().getId();
         this.title = channelPost.getTitle();
@@ -41,5 +41,9 @@ public class ChannelPostResponse {
         this.commentCount = channelPost.getCommentCount();
         this.postCategory = channelPost.getPostCategory();
         this.articleType = channelPost.getArticleType();
+    }
+
+    public static ChannelPostResponse from(ChannelPost channelPost) {
+        return new ChannelPostResponse(channelPost);
     }
 }

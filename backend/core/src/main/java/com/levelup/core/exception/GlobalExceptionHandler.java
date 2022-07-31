@@ -22,28 +22,26 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(Exception.class)
-//    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
-//        ExceptionResponse exceptionResponse = new ExceptionResponse();
-//
-//        exceptionResponse.setTimeStamp(LocalDateTime.now());
-//        exceptionResponse.setMessage(e.getMessage());
-//        exceptionResponse.setException(e.getClass().getName());
-//        exceptionResponse.setPath(request.getRequestURI());
-//
-//        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(Exception.class)
+    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
@@ -52,12 +50,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> duplicateEmailExceptionHandler(Exception e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
@@ -69,12 +65,10 @@ public class GlobalExceptionHandler {
     ) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
@@ -83,12 +77,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> notFoundImageException(ImageNotFoundException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
@@ -97,12 +89,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> postNotFoundException(PostNotFoundException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
@@ -111,12 +101,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> notLoggedInException(NotLoggedInException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -125,12 +113,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> notLoggedInException(NotConfirmedEmailException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(e.getClass().getName());
-        exceptionResponse.setPath(request.getRequestURI());
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -140,12 +126,9 @@ public class GlobalExceptionHandler {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
-        exceptionResponse.setPath(request.getRequestURI());
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -155,12 +138,9 @@ public class GlobalExceptionHandler {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
-        exceptionResponse.setPath(request.getRequestURI());
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -170,14 +150,10 @@ public class GlobalExceptionHandler {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-
-        exceptionResponse.setTimeStamp(LocalDateTime.now());
-        exceptionResponse.setMessage(e.getMessage());
-        exceptionResponse.setException(exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1));
-        exceptionResponse.setPath(request.getRequestURI());
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
-
 }

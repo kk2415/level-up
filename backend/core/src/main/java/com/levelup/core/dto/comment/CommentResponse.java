@@ -20,7 +20,7 @@ public class CommentResponse {
     private Long voteCount;
     private Long replyCount;
 
-    public CommentResponse(Comment comment) {
+    private CommentResponse(Comment comment) {
         this.id = comment.getId();
         this.memberId = comment.getMember().getId();
         this.writer = comment.getWriter();
@@ -30,4 +30,7 @@ public class CommentResponse {
         this.replyCount = comment.getReplyCount();
     }
 
+    public static CommentResponse from(Comment comment) {
+        return new CommentResponse(comment);
+    }
 }
