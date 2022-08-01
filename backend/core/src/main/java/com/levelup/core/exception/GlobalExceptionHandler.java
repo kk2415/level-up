@@ -22,17 +22,17 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
-        log.error(e.getClass().getName(), e.getMessage());
-
-        String exceptionDir = e.getClass().getName();
-        ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
-        );
-
-        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public final ResponseEntity<Object> handleAllExceptions(Exception e, HttpServletRequest request) {
+//        log.error(e.getClass().getName(), e.getMessage());
+//
+//        String exceptionDir = e.getClass().getName();
+//        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+//                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+//        );
+//
+//        return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(MemberNotFoundException.class)
     public final ResponseEntity<Object> memberNotFoundException(MemberNotFoundException e, HttpServletRequest request) {
