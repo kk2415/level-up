@@ -8,7 +8,7 @@ import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 import VoteService from "../../api/service/VoteService";
 
-const Post = () => {
+const DetailPost = () => {
     const navigate = useNavigate();
 
     const getPostId = () => {
@@ -170,15 +170,6 @@ const Post = () => {
                     </div>
 
                     <hr/>
-
-                    <div className="col">
-                        <br />
-                        <div className="fs-3">
-                            댓글<span className="fs-3" id="commentCount2"/>
-                        </div>
-                        <br />
-                    </div>
-
                     <CommentFrame articleId={postId} identity={'CHANNEL_POST'} />
 
                     <div>
@@ -199,4 +190,4 @@ const Post = () => {
     );
 };
 
-export default Post;
+export default DetailPost;

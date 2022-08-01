@@ -1,4 +1,4 @@
-import { sendMultiPart, send } from "../request"
+import { sendMultiPart, send } from "./request"
 
 export async function uploadFile(url, method, file) {
     let form = new FormData()
