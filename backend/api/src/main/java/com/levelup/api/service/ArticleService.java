@@ -70,7 +70,6 @@ public class ArticleService {
 
         if (view.equals("true")) {
             article.addViews();
-            ;
         }
 
         return ArticleResponse.from(article);

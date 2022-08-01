@@ -1,11 +1,12 @@
 import { send } from "../request"
 import {TOKEN} from '../token'
+import {uploadFile} from "../UploadFile";
 
 export const MemberService = {
     signUp : async function (member) {
         let result = null
 
-        await send('/api/member', 'POST', member)
+        await send('/api/v1/member', 'POST', member)
             .then((data) => {
                 result = data
             })
@@ -23,14 +24,10 @@ export const MemberService = {
         await send('/login', 'POST', member)
             .then((data) => {
                 result = true
-                sessionStorage.setItem(TOKEN, data.token)
-                sessionStorage.setItem('email', data.email)
-                sessionStorage.setItem('id', data.id)
-                sessionStorage.setItem('role', data.authority)
-
-                console.log(data.email)
-                console.log(data.id)
-                console.log(sessionStorage.getItem('id'))
+                localStorage.setItem(TOKEN, data.token)
+                localStorage.setItem('email', data.email)
+                localStorage.setItem('id', data.id)
+                localStorage.setItem('role', data.authority)
             })
             .catch((error) => {
                 console.log(error)
@@ -42,14 +39,14 @@ export const MemberService = {
     },
 
     signOut : function () {
-        sessionStorage.clear()
+        localStorage.clear()
         window.location.href = "/"
     },
 
     get : async function getMember() {
         let member = {}
 
-        await send('/api/member', 'GET')
+        await send('/api/v1/member', 'GET')
             .then((data) => {
                 member = data
             })
@@ -64,7 +61,7 @@ export const MemberService = {
     confirmEmail : async function confirmEmail(auth) {
         let members = {}
 
-        await send('/api/confirm-email', 'POST', auth)
+        await send('/api/v1/confirm-email', 'POST', auth)
             .then((data) => {
                 members = data
             })
@@ -81,7 +78,7 @@ export const MemberService = {
     modify: async function modifyMember(member) {
         let result = false
 
-        await send('/api/member', 'PATCH', member)
+        await send('/api/v1/member', 'PATCH', member)
             .then((data) => {
                 result = true
             })
@@ -95,7 +92,7 @@ export const MemberService = {
     delete : async function deleteMember(memberId) {
         let members = {}
 
-        await send('/api/member/' + memberId, 'DELETE')
+        await send('/api/v1/member/' + memberId, 'DELETE')
             .then((data) => {
                 members = data
             })
@@ -108,5 +105,11 @@ export const MemberService = {
         return members
     },
 
+    uploadProfile : async (thumbnail) => {
+        return await uploadFile('/api/v1/member/image', 'POST', thumbnail)
+    },
 
+    modifyProfile: async (email, profile) => {
+        return await uploadFile('/api/v1/member/' + email + '/image', 'PATCH', profile)
+    },
 }

@@ -7,6 +7,7 @@ import ArticleService from "../../api/service/ArticleService";
 
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
+import ChannelPostService from "../../api/service/ChannelPostService";
 
 const Article = () => {
     const navigate = useNavigate();
@@ -54,15 +55,16 @@ const Article = () => {
     }
 
     const handleDeleteButton = async () => {
-        let result = await ArticleService.delete(articleId);
-
-        if (result) {
-            navigate('/article/list?articleType=' + articleType + '&page=1')
+        if (window.confirm('삭제하시겠습니까?')) {
+            let result = await ArticleService.delete(articleId);
+            if (result) {
+                navigate('/article/list?articleType=' + articleType + '&page=1')
+            }
         }
     }
 
     const authorize = (article) => {
-        let memberId = sessionStorage.getItem('id')
+        let memberId = localStorage.getItem('id')
 
         if (article && Number(memberId) === article.memberId) {
             setAuthentication(true)
@@ -71,7 +73,7 @@ const Article = () => {
 
     const createVote = async () => {
         let voteRequest = {
-            'memberId' : sessionStorage.getItem('id'),
+            'memberId' : localStorage.getItem('id'),
             'targetId' : articleId,
             'voteType' : 'ARTICLE',
         }
@@ -171,13 +173,7 @@ const Article = () => {
 
                     <hr/>
 
-                    <div className="col">
-                        <br />
-                        <div className="fs-3">
-                            댓글<span className="fs-3" id="commentCount2"/>
-                        </div>
-                        <br />
-                    </div>
+
 
                     <CommentFrame articleId={articleId} identity={'CHANNEL_NOTICE'} />
 

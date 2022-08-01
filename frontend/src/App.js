@@ -11,8 +11,8 @@ const AuthProvider = ({ children }) => {
   const [member, setMember] = useState(null);
 
   useEffect(() => {
-    const email = sessionStorage.getItem('email');
-    const id = sessionStorage.getItem('id')
+    const email = localStorage.getItem('email');
+    const id = localStorage.getItem('id')
     setMember({ email, id });
   }, []);
 

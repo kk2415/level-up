@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "게시글 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class ChannelPostApiController {
 
     private final ChannelPostService channelPostService;

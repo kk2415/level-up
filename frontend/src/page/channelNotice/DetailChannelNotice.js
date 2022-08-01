@@ -51,7 +51,13 @@ const DetailChannelNotice = () => {
     }
 
     const handleDeleteButton = async () => {
-        await ChannelPostService.delete(channelNoticeId, channelId)
+        if (window.confirm('삭제하시겠습니까?')) {
+            let result = await ChannelPostService.delete(channelNoticeId, channelId)
+            if (result) {
+                alert('삭제되었습니다.')
+                window.location.href = '/channel/' + channelId + '?page=1'
+            }
+        }
     }
 
     const loadChannelNotice = async (channelNoticeId) => {
@@ -62,7 +68,7 @@ const DetailChannelNotice = () => {
     }
 
     const authorize = (channelNotice) => {
-        let memberId = sessionStorage.getItem('id')
+        let memberId = localStorage.getItem('id')
 
         if (channelNotice && Number(memberId) === channelNotice.memberId) {
             setAuthentication(true)
@@ -70,8 +76,17 @@ const DetailChannelNotice = () => {
     }
 
     const createVote = async () => {
+        let memberId = localStorage.getItem('id');
+        if (memberId === null || memberId === '') {
+            alert('로그인을 해야합니다.')
+            return
+        }
+
+        console.log(memberId)
+        console.log(channelNoticeId)
+
         let voteRequest = {
-            'memberId' : sessionStorage.getItem('id'),
+            'memberId' : memberId,
             'targetId' : channelNoticeId,
             'voteType' : 'ARTICLE',
         }
@@ -163,15 +178,6 @@ const DetailChannelNotice = () => {
                     </div>
 
                     <hr/>
-
-                    <div className="col">
-                        <br />
-                        <div className="fs-3">
-                            댓글<span className="fs-3" id="commentCount2"/>
-                        </div>
-                        <br />
-                    </div>
-
                     <CommentFrame articleId={channelNoticeId} identity={'CHANNEL_NOTICE'} />
 
                     <div>

@@ -56,7 +56,7 @@ const ArticleList = () => {
     }
 
     const handleWriting = () => {
-        if (sessionStorage.getItem(TOKEN)) {
+        if (localStorage.getItem(TOKEN)) {
             navigate('/article/create?articleType=' + articleType)
         }
         else {

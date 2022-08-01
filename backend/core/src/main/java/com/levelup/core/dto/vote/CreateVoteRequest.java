@@ -3,9 +3,14 @@ package com.levelup.core.dto.vote;
 import com.levelup.core.domain.vote.Vote;
 import com.levelup.core.domain.vote.VoteType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class  CreateVoteRequest {
 
     @NotNull
@@ -24,5 +29,4 @@ public class  CreateVoteRequest {
                 .voteType(voteType)
                 .build();
     }
-
 }

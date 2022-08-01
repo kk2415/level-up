@@ -38,7 +38,7 @@ public class ChannelPostResponse {
         this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelPost.getCreateAt());
         this.voteCount = channelPost.getVoteCount();
         this.views = channelPost.getViews();
-        this.commentCount = channelPost.getCommentCount();
+        this.commentCount = (long) channelPost.getComments().size();
         this.postCategory = channelPost.getPostCategory();
         this.articleType = channelPost.getArticleType();
     }

@@ -10,7 +10,7 @@ const VoteService = {
             return
         }
 
-        await send('/api/vote', 'POST', vote)
+        await send('/api/v1/vote', 'POST', vote)
             .then((data) => {
                 result = data
             })

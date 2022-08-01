@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class VoteApiController {
 
     private final VoteService voteService;

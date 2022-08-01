@@ -7,8 +7,9 @@ import ChannelPostService from '../../api/service/ChannelPostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 import VoteService from "../../api/service/VoteService";
+import ChannelService from "../../api/service/ChannelService";
 
-const Post = () => {
+const DetailPost = () => {
     const navigate = useNavigate();
 
     const getPostId = () => {
@@ -59,11 +60,12 @@ const Post = () => {
     }
 
     const handleDeleteButton = async () => {
-        let result = await ChannelPostService.delete(postId, channelId);
-
-        if (result) {
-            alert('삭제되었습니다.')
-            window.location.href = '/channel/' + channelId + '?page=1'
+        if (window.confirm('삭제하시겠습니까?')) {
+            let result = await ChannelPostService.delete(postId, channelId);
+            if (result) {
+                alert('삭제되었습니다.')
+                window.location.href = '/channel/' + channelId + '?page=1'
+            }
         }
     }
 
@@ -75,7 +77,7 @@ const Post = () => {
     }
 
     const authorize = (post) => {
-        let memberId = sessionStorage.getItem('id')
+        let memberId = localStorage.getItem('id')
 
         if (post && Number(memberId) === post.memberId) {
             setAuthentication(true)
@@ -84,7 +86,7 @@ const Post = () => {
 
     const createVote = async () => {
         let voteRequest = {
-            'memberId' : sessionStorage.getItem('id'),
+            'memberId' : localStorage.getItem('id'),
             'targetId' : post.id,
             'voteType' : 'ARTICLE',
         }
@@ -170,15 +172,6 @@ const Post = () => {
                     </div>
 
                     <hr/>
-
-                    <div className="col">
-                        <br />
-                        <div className="fs-3">
-                            댓글<span className="fs-3" id="commentCount2"/>
-                        </div>
-                        <br />
-                    </div>
-
                     <CommentFrame articleId={postId} identity={'CHANNEL_POST'} />
 
                     <div>
@@ -199,4 +192,4 @@ const Post = () => {
     );
 };
 
-export default Post;
+export default DetailPost;

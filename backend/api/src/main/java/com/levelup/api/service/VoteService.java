@@ -9,6 +9,7 @@ import com.levelup.core.dto.vote.CreateVoteRequest;
 import com.levelup.core.dto.vote.VoteResponse;
 import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.exception.comment.CommentNotFoundException;
+import com.levelup.core.exception.vote.DuplicateVoteException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.vote.VoteRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -34,13 +36,23 @@ public class VoteService {
      * 생성
      * */
     public VoteResponse save(CreateVoteRequest voteRequest) {
-        final Vote vote = voteRequest.toEntity();
+        validateVote(voteRequest.getMemberId(), voteRequest.getTargetId(), voteRequest.getVoteType());
 
+        Vote vote = voteRequest.toEntity();
         voteRepository.save(vote);
-        increaseVoteCount(voteRequest.getTargetId(), voteRequest.getVoteType());
 
+        increaseVoteCount(voteRequest.getTargetId(), voteRequest.getVoteType());
         return VoteResponse.from(vote);
     }
+
+    private void validateVote(Long memberId, Long targetId, VoteType voteType) {
+        List<Vote> votes = voteRepository.findByMemberIdAndTargetIdAndVoteType(memberId, targetId, voteType);
+
+        if (!votes.isEmpty()) {
+            throw new DuplicateVoteException("추천은 한 번만 할 수 있습니다.");
+        }
+    }
+
 
     public void increaseVoteCount(Long targetId, VoteType voteType) {
         switch (voteType) {

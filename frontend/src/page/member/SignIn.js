@@ -63,7 +63,6 @@ const SignIn = ({} ) => {
 
     useEffect(() => {
         hideAlertMassageBox()
-        // useScript('')
     }, [])
 
     return (

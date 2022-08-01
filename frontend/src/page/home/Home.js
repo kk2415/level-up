@@ -8,11 +8,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleCreateChannel = () => {
-    if (sessionStorage.getItem(TOKEN) === null || sessionStorage.getItem(TOKEN) === 'null') {
+    if (localStorage.getItem(TOKEN) === null || localStorage.getItem(TOKEN) === 'null') {
       alert('로그인이 필요합니다')
     }
     else {
-      console.log(sessionStorage.getItem(TOKEN))
+      console.log(localStorage.getItem(TOKEN))
       navigate(`/channel/create`);
     }
   }

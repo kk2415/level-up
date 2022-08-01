@@ -29,7 +29,7 @@ import java.util.List;
 @Tag(name = "채널 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class ChannelApiController {
 
     private final ChannelService channelService;

@@ -10,18 +10,18 @@ import ChannelDescription from "../page/channel/ChannelDescription";
 import ModifyChannel from "../page/channel/ModifyChannel";
 import Channel from "../page/channel/Channel"
 import ChannelManager from "../page/channel/ChannelManager"
-import CreatePost from "../page/post/CreatePost"
+import CreatePost from "../page/channelPost/CreatePost"
 import CreateChannelNotice from "../page/channelNotice/CreateChannelNotice"
 import DetailChannelNotice from "../page/channelNotice/DetailChannelNotice"
 import ModifyChannelNotice from "../page/channelNotice/ModifyChannelNotice"
-import Post from "../page/post/Post"
+import DetailPost from "../page/channelPost/DetailPost"
 
 import CreateArticle from "../page/article/CreateArticle"
 import ArticleList from "../page/article/ArticleList"
 import Article from "../page/article/Article"
 import ModifyArticle from "../page/article/ModifyArticle"
 
-import ModifyPost from "../page/post/ModifyPost"
+import ModifyPost from "../page/channelPost/ModifyPost"
 import ConfirmEmail from "../page/member/ConfirmEmail";
 
 const AppRouter = () => {
@@ -44,8 +44,8 @@ const AppRouter = () => {
 		<Route path="/channel-notice/detail/:channelNoticeId" element={<DetailChannelNotice />}></Route>
 		<Route path="/channel-notice/modify/:channelNoticeId" element={<ModifyChannelNotice />}></Route>
 
-		<Route path="/post/:postId" element={<Post />}></Route>
-		<Route path="/channel-post/:postId" element={<Post />}></Route>
+		<Route path="/post/:postId" element={<DetailPost />}></Route>
+		<Route path="/channel-post/:postId" element={<DetailPost />}></Route>
 		<Route path="/post/create" element={<CreatePost />}></Route>
 		<Route path="/post/modify/:postId" element={<ModifyPost />}></Route>
 		<Route path="/channel-post/modify/:postId" element={<ModifyPost />}></Route>

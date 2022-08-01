@@ -13,7 +13,7 @@ const CommentFrame = ({articleId, identity}) => {
     const loadComment = async (articleId, identity) => {
         let result = await CommentService.get(articleId, identity)
         console.log(result.data)
-        console.log(sessionStorage.getItem('id'))
+        console.log(localStorage.getItem('id'))
         setComments(result.data)
     }
 
@@ -24,7 +24,7 @@ const CommentFrame = ({articleId, identity}) => {
             identity : identity,
         }
 
-        if (sessionStorage.getItem(TOKEN)) {
+        if (localStorage.getItem(TOKEN)) {
             console.log(comment)
 
             CommentService.create(comment)
@@ -42,18 +42,22 @@ const CommentFrame = ({articleId, identity}) => {
 
     return (
         <>
+            <div className="fs-3 mb-1">
+                댓글
+            </div>
             <div id="commentFrame" className="row row-cols-1">
-                {
-                    comments &&
-                    comments.map((info) => (
-                        <Comment comment={info} articleId={articleId} identity={identity} />
-                    ))
-                }
-
-                <Container className='mb-5 mt-5'>
-                    <textarea id="contentOfWritingComment" className="form-control" rows="3" placeholder="댓글을 입력해주세요" />
+                <Container className="mb-3">
+                    {
+                        comments &&
+                        comments.map((info) => (
+                            <Comment comment={info} articleId={articleId} identity={identity} />
+                        ))
+                    }
+                </Container>
+                <Container>
+                    <textarea id="contentOfWritingComment" className="form-control" rows="3" placeholder="댓글을 입력해주세요." />
                     <br/>
-                    <button onClick={createComment} className="btn btn btn-success float-end" type="button">
+                    <button onClick={createComment} className="btn btn btn-success float-end mb-5" type="button">
                         등록
                     </button>
                 </Container>

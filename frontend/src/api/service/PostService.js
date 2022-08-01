@@ -3,7 +3,7 @@ import { send } from "../request"
 const PostService = {
 
     create: async (post) => {
-        await send('/api/post', 'POST', post)
+        await send('/api/v1/post', 'POST', post)
             .then((data) => {
                 window.history.back()
             })
@@ -19,7 +19,7 @@ const PostService = {
     get: async (postId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '?view=true')
+        await send('/api/v1/post/' + postId + '?view=true')
             .then((data) => {
                 post = data
             })
@@ -33,11 +33,10 @@ const PostService = {
 
     getAll: async (channelId, page, searchCondition) => {
         let result = {}
-        let url = '/api/' + channelId + '/posts/' + page
+        let url = '/api/v1/' + channelId + '/posts/' + page
 
         if (searchCondition !== undefined && searchCondition.field !== undefined) {
-            url = '/api/' + channelId + '/posts/' + page +
-                '?' + 'field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
+            url += '?' + 'field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
         }
 
         await send(url, 'GET')
@@ -54,7 +53,7 @@ const PostService = {
     getNext: async (postId, channelId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '/nextPost?channelId=' + channelId)
+        await send('/api/v1/post/' + postId + '/nextPost?channelId=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -69,7 +68,7 @@ const PostService = {
     getPrev: async (postId, channelId) => {
         let post = {}
 
-        await send('/api/post/' + postId + '/prevPost?channelId=' + channelId)
+        await send('/api/v1/post/' + postId + '/prevPost?channelId=' + channelId)
             .then((data) => {
                 post = data
             })
@@ -84,10 +83,10 @@ const PostService = {
     count: async (channelId, searchCondition) => {
         let count = 0
 
-        let url = '/api/' + channelId + '/search/count'
+        let url = '/api/v1/' + channelId + '/search/count'
 
         if (searchCondition !== undefined && searchCondition.field !== undefined) {
-            url = '/api/' + channelId + '/search/count?field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
+            url = '/api/v1/' + channelId + '/search/count?field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
         }
 
         await send(url, 'GET')
@@ -100,7 +99,7 @@ const PostService = {
     },
 
     modify: async (post, postId, channelId) => {
-        await send('/api/post/' + postId, 'PATCH', post)
+        await send('/api/v1/post/' + postId, 'PATCH', post)
             .then(() => {
                 alert('수정되었습니다.')
                 window.location.href = '/post/' + postId + '?channel=' + channelId
@@ -111,7 +110,7 @@ const PostService = {
     },
 
     delete: async (postId, channelId) => {
-        await send('/api/post/' + postId, 'DELETE')
+        await send('/api/v1/post/' + postId, 'DELETE')
             .then(() => {
                 alert('삭제되었습니다.')
                 window.location.href = '/channel/' + channelId + '?page=1'

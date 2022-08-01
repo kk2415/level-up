@@ -5,7 +5,7 @@ export const AuthEmailService = {
     sendSecurityCode : async function () {
         let result = true
 
-        await send('/api/send/auth-email', 'GET')
+        await send('/api/v1/send/auth-email', 'GET')
             .then(() => {
             })
             .catch((error) => {
