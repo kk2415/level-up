@@ -6,7 +6,6 @@ import $ from 'jquery'
 
 import HorizonLine from "../../component/HorizonLine";
 import { MemberService } from '../../api/service/MemberService'
-import { uploadFile } from '../../api/service/FileService'
 import {createMemberValidation as validation} from '../../api/validation'
 import {AuthEmailService} from "../../api/service/AuthEmailService";
 
@@ -20,7 +19,7 @@ const SignUp = () => {
 
     async function HandleSignUpButton() {
         let formData = new FormData(document.getElementById('signUpForm'));
-        let profileImage = await uploadFile('/api/member/image', 'POST', file)
+        let profileImage = MemberService.uploadProfile(file)
 
         let member = {
             name : formData.get('name'),

@@ -5,7 +5,6 @@ import $ from 'jquery'
 import {Button, Form, Container, Row, Col, Image} from 'react-bootstrap';
 import HorizonLine from "../../component/HorizonLine";
 import { MemberService } from '../../api/service/MemberService'
-import { uploadFile } from '../../api/service/FileService'
 import { S3_URL } from "../../api/backEndHost"
 
 import '../../css/mypage.css'
@@ -39,7 +38,7 @@ const MyPage = () => {
         if (onModifyButton) {
             let profileImage = member.uploadFile
             if (myPageFile) {
-                profileImage = await uploadFile('/api/member/' + member.email + '/image', 'PATCH', myPageFile)
+                profileImage = await MemberService.modifyProfile(member.email, myPageFile)
                 console.log(profileImage)
             }
 

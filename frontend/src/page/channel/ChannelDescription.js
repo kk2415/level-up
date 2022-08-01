@@ -8,6 +8,7 @@ import {TOKEN} from "../../api/token";
 import react from "react";
 import {AiOutlineImport} from "react-icons/ai";
 import '../../css/channel.css'
+import CommentService from "../../api/service/CommentService";
 
 const getChannelId = () => {
     let pathname = decodeURI($(window.location).attr('pathname'))
@@ -29,7 +30,12 @@ const ChannelDescription = () => {
     }
 
     const handleDeleteChannel = async () => {
-        await ChannelService.delete(channelId)
+        if (window.confirm('삭제하시겠습니까?')) {
+            let result = await ChannelService.delete(channelId)
+            if (result) {
+                window.location.href = '/'
+            }
+        }
     }
 
     const loadDescription = async (channelId) => {
@@ -39,7 +45,7 @@ const ChannelDescription = () => {
     }
 
     const handleRegisterChannel = async () => {
-        if (sessionStorage.getItem(TOKEN)) {
+        if (localStorage.getItem(TOKEN)) {
             let result = await ChannelMemberService.create(channelId);
 
             if (result) {
@@ -101,13 +107,13 @@ const ChannelDescription = () => {
                         </div>
                         <div className="float-end">
                             {
-                                description.managerId === Number(sessionStorage.getItem('id')) &&
+                                description.managerId === Number(localStorage.getItem('id')) &&
                                 <button onClick={handleModifyChannel} className="btn btn-sm btn-secondary" type="button" id="modifyButton">
                                     채널 수정
                                 </button>
                             }
                             {
-                                description.managerId === Number(sessionStorage.getItem('id')) &&
+                                description.managerId === Number(localStorage.getItem('id')) &&
                                 <button onClick={handleDeleteChannel} className="btn btn-sm btn-danger" type="button" id="deleteButton">
                                     채널 삭제
                                 </button>
@@ -117,7 +123,7 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     {
-                        !(description.managerId === Number(sessionStorage.getItem('id'))) &&
+                        !(description.managerId === Number(localStorage.getItem('id'))) &&
                         <button onClick={handleRegisterChannel} className="btn btn-lg btn-success" type="button" id="registerStudyButton">
                             가입 신청
                         </button>

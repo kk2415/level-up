@@ -4,7 +4,7 @@ const ChannelMemberService = {
 
     create: async (channelId) => {
         let result = false
-        let url = '/api/channel-members?channelId=' + channelId
+        let url = '/api/v1/channel-members?channelId=' + channelId
 
         await send(url, 'POST')
             .then(() => {
@@ -20,7 +20,7 @@ const ChannelMemberService = {
 
     getAll: async (channelId, isWaitingMember, pageable) => {
         let result = null
-        let url = '/api/channel-members?channelId=' + channelId + '&isWaitingMember=' + isWaitingMember + '&' + pageable;
+        let url = '/api/v1/channel-members?channelId=' + channelId + '&isWaitingMember=' + isWaitingMember + '&' + pageable;
 
         await send(url, 'GET')
             .then((data) => {
@@ -35,7 +35,7 @@ const ChannelMemberService = {
 
     approval: async (channelMemberId) => {
         let result = false
-        let url = '/api/channel-members/' + channelMemberId
+        let url = '/api/v1/channel-members/' + channelMemberId
 
         await send(url, 'PATCH')
             .then(() => {
@@ -50,7 +50,7 @@ const ChannelMemberService = {
 
     delete: async (channelMemberId, channelId) => {
         let result = false
-        let url = '/api/channel-members/' + channelMemberId + '?channelId=' + channelId;
+        let url = '/api/v1/channel-members/' + channelMemberId + '?channelId=' + channelId;
 
         await send(url, 'DELETE')
             .then(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useLayoutEffect} from "react";
 import {Container} from 'react-bootstrap'
 
 import { Swiper, SwiperSlide } from "swiper/react"; // basic
@@ -15,7 +15,7 @@ const StudySwiper = () => {
 	const [count, setCount] = useState(0)
 
 	useEffect(() => {
-		send('/api/channels/' + 'STUDY', 'GET')
+		send('/api/v1/channels/' + 'STUDY', 'GET')
 			.then((data) => {
 				console.log(data)
 
@@ -46,7 +46,7 @@ const StudySwiper = () => {
 				  >
 
 					  {
-						  channels.map(function(channel) {
+						  channels.map((channel) => {
 							  return (
 								  <SwiperSlide>
 									  <CardSlide channel={ channel } />
@@ -66,11 +66,10 @@ const ProjectSwiper = () => {
 	const [channels, setChannels] = useState([])
 	const [count, setCount] = useState(0)
 
-	useEffect(() => {
-		send('/api/channels/' + 'PROJECT', 'GET')
+	useLayoutEffect(() => {
+		send('/api/v1/channels/' + 'PROJECT', 'GET')
 			.then((data) => {
-				setChannels(data.data)
-				setCount(data.count)
+				setChannels(data)
 			})
 			.catch((error) => {
 				console.log(error)
@@ -97,7 +96,7 @@ const ProjectSwiper = () => {
 					>
 
 						{
-							channels.map(function(channel) {
+							channels.map((channel) => {
 								return (
 									<SwiperSlide>
 										<CardSlide channel={ channel } />

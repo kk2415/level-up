@@ -15,7 +15,7 @@ const Comment = ({comment, articleId, identity}) => {
 
     const createVote = async () => {
         let voteRequest = {
-            'memberId' : sessionStorage.getItem('id'),
+            'memberId' : localStorage.getItem('id'),
             'targetId' : comment.id,
             'voteType' : 'COMMENT',
         }
@@ -54,32 +54,35 @@ const Comment = ({comment, articleId, identity}) => {
         <>
             {
                 comment &&
-                <Container id="comment" className="comment col">
-                    <Container className='border-bottom border-top'>
+                <Container id="comment" className="comment col mb-3">
+                    <div className="mt-3">
                         <span id="commentWriter">{comment.writer}</span>
                         &nbsp;&nbsp;&nbsp;
                         <span id="commentDate">{comment.dateCreated}</span>
-                        <p id="commentContent">{comment.content}</p>
-                        {
-                            comment.replyCount > 0 &&
-                            <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글 {replyCount}</button>
-                        }
-                        {
-                            comment.replyCount <= 0 &&
-                            <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글쓰기</button>
-                        }
+                    </div>
+                    <div id="commentContent" className="text-dark bg-opacity-10 d-flex fs-3 mb-4">
+                        {comment.content}
+                    </div>
+                    {
+                        comment.replyCount > 0 &&
+                        <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글 {replyCount}</button>
+                    }
+                    {
+                        comment.replyCount <= 0 &&
+                        <button onClick={showReplyCommentList} className="btn-sm btn-secondary" id="replyButton">답글쓰기</button>
+                    }
 
-                        {
-                            comment.memberId === Number(sessionStorage.getItem('id')) &&
-                            <button onClick={handleDeleteComment} className="btn-sm btn-danger" id="replyButton">
-                                삭제
-                            </button>
-                        }
+                    {
+                        comment.memberId === Number(localStorage.getItem('id')) &&
+                        <button onClick={handleDeleteComment} className="btn-sm btn-danger" id="replyButton">
+                            삭제
+                        </button>
+                    }
 
-                        <span id="commentVote" className="float-end">
-                            <button onClick={createVote} className="btn-sm btn-info" type="button">{'추천 ' + voteCount}</button>
-                        </span>
-                    </Container>
+                    <span id="commentVote" className="float-end">
+                        <button onClick={createVote} className="btn-sm btn-info" type="button">{'추천 ' + voteCount}</button>
+                    </span>
+
                     {
                         onHideReplyComment &&
                         <Container className="container" id="replyList">

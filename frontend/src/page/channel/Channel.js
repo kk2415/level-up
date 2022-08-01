@@ -67,7 +67,7 @@ const Channel = () => {
     const loadChannelInfo = async (channelId) => {
         let result = await ChannelService.get(channelId)
 
-        if (result.managerId === Number(sessionStorage.getItem('id'))) {
+        if (result.managerId === Number(localStorage.getItem('id'))) {
             setIsManager(true)
         }
 
@@ -81,7 +81,7 @@ const Channel = () => {
     }
 
     const handleWriting = () => {
-        if (sessionStorage.getItem(TOKEN)) {
+        if (localStorage.getItem(TOKEN)) {
             navigate('/post/create?channel=' + channelId)
         }
         else {

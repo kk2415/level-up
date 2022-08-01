@@ -7,11 +7,12 @@ import ChannelPostService from "../../../api/service/ChannelPostService";
 const PostRow = ({info, channelId}) => {
 
     const deletePost = async () => {
-        let result = await ChannelPostService.delete(info.id);
-
-        if (result) {
-            alert('게시물이 삭제되었습니다.')
-            window.location.href = '/channel/' + channelId + '/manager'
+        if (window.confirm('삭제하시겠습니까?')) {
+            let result = await ChannelPostService.delete(info.id);
+            if (result) {
+                alert('게시물이 삭제되었습니다.')
+                window.location.href = '/channel/' + channelId + '/manager'
+            }
         }
     }
 

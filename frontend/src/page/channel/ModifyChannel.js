@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
 import ChannelService from '../../api/service/ChannelService'
+import {MemberService} from '../../api/service/MemberService'
 import {Container, Form} from 'react-bootstrap'
-import {uploadFile} from "../../api/service/FileService";
+import {uploadFile} from "../../api/UploadFile";
 import $ from "jquery";
 
 const CreateChannel = () => {
@@ -33,7 +34,7 @@ const CreateChannel = () => {
         let thumbnailImageDir = description.thumbnailImage
 
         if (thumbnail !== null) {
-            thumbnailImageDir = await uploadFile('/api/member/image', 'POST', thumbnail)
+            thumbnailImageDir = await MemberService.uploadProfile(thumbnail)
         }
 
         // let uploadFiles = getUploadFiles(contents);
@@ -191,7 +192,6 @@ const CreateChannel = () => {
                         <Form.Group className="mb-3">
                             <Form.Label>설명</Form.Label>
                             <textarea id='summernote' />
-                            {/*<RichTextEditor setContents={loadContents} contents={description.description} />*/}
                         </Form.Group>
 
                         <Form.Group className="mb-3">

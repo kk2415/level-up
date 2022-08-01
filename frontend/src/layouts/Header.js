@@ -27,7 +27,7 @@ const Header = () => {
 	}
 
 	useEffect(() => {
-		if (sessionStorage.getItem(TOKEN) === 'null' || sessionStorage.getItem(TOKEN) === null) {
+		if (localStorage.getItem(TOKEN) === 'null' || localStorage.getItem(TOKEN) === null) {
 			setSignUpShow(true)
 			setSignInShow(true)
 			setSignOutShow(false)
@@ -39,13 +39,13 @@ const Header = () => {
 			setSignOutShow(true)
 		}
 
-		if (sessionStorage.getItem('role') === 'ADMIN') {
+		if (localStorage.getItem('role') === 'ADMIN') {
 			setOnShowAdmin(true)
 		}
 	})
 
 	const myPageHanlder = () => {
-		if (sessionStorage.getItem(TOKEN)) {
+		if (localStorage.getItem(TOKEN)) {
 			navigate(`/mypage`);
 		}
 		else {

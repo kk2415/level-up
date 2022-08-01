@@ -2,8 +2,6 @@ import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
 import ChannelService from '../../api/service/ChannelService'
 import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
-import {uploadFile} from "../../api/service/FileService";
-import RichTextEditor from '../../component/SummerNote'
 import {createChannelValidation as validation} from "../../api/validation";
 import $ from "jquery";
 
@@ -18,7 +16,7 @@ const CreateChannel = () => {
 
     const handleCreateButton = async () => {
         let formData = new FormData(document.getElementById('form'));
-        let thumbnailImageDir = await uploadFile('/api/channel/thumbnail', 'POST', thumbnail)
+        let thumbnailImageDir = await ChannelService.uploadThumbnail(thumbnail)
 
         let channel = {
             memberEmail : context.member.email,

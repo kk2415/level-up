@@ -36,7 +36,7 @@ const SignIn = ({} ) => {
     return (
         <>
             {
-                sessionStorage.getItem('id') &&
+                localStorage.getItem('id') &&
                 <Container className='mt-5' style={{width: "40%"}}>
                     <Row className='d-flex justify-content-center align-items-center'>
                         <BiUserCircle className='loginIcon'/>

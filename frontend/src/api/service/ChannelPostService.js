@@ -5,7 +5,7 @@ const ChannelPostService = {
     create: async (channelPost, channelId) => {
         let result = null
 
-        await send('/api/channel-post?channel=' + channelId, 'POST', channelPost)
+        await send('/api/v1/channel-post?channel=' + channelId, 'POST', channelPost)
             .then((data) => {
                 result = data
             })
@@ -23,7 +23,7 @@ const ChannelPostService = {
     get: async (articleId) => {
         let post = {}
 
-        await send('/api/channel-post/' + articleId + '?view=true', 'GET')
+        await send('/api/v1/channel-post/' + articleId + '?view=true', 'GET')
             .then((data) => {
                 post = data
             })
@@ -38,7 +38,7 @@ const ChannelPostService = {
     getAll: async (channelId, articleType, pageable, searchCondition) => {
         let result = {}
 
-        let url = '/api/channel-posts?channel=' + channelId + '&articleType=' + articleType + '&' + pageable;
+        let url = '/api/v1/channel-posts?channel=' + channelId + '&articleType=' + articleType + '&' + pageable;
         if (searchCondition !== undefined && searchCondition.field !== undefined) {
             url += '&field=' + searchCondition.field + '&query=' + searchCondition.querys
         }
@@ -57,7 +57,7 @@ const ChannelPostService = {
     getNext: async (articleId, articleType, channelId) => {
         let post = {}
 
-        await send('/api/channel-posts/' + articleId + '/nextPost?articleType=' + articleType + '&channel=' + channelId, 'GET')
+        await send('/api/v1/channel-posts/' + articleId + '/nextPost?articleType=' + articleType + '&channel=' + channelId, 'GET')
             .then((data) => {
                 post = data
             })
@@ -72,7 +72,7 @@ const ChannelPostService = {
     getPrev: async (articleId, articleType, channelId) => {
         let post = {}
 
-        await send('/api/channel-posts/' + articleId + '/prevPost?articleType=' + articleType + '&channel=' + channelId, 'GET')
+        await send('/api/v1/channel-posts/' + articleId + '/prevPost?articleType=' + articleType + '&channel=' + channelId, 'GET')
             .then((data) => {
                 post = data
             })
@@ -91,7 +91,7 @@ const ChannelPostService = {
     modify: async (channelPost, articleId, channelId) => {
         let result = null
 
-        await send('/api/channel-posts/' + articleId, 'PATCH', channelPost)
+        await send('/api/v1/channel-posts/' + articleId, 'PATCH', channelPost)
             .then((data) => {
                 alert('수정되었습니다.')
                 result = data
@@ -105,11 +105,11 @@ const ChannelPostService = {
     },
 
     delete: async (articleId) => {
-        let result = null
+        let result = false
 
-        await send('/api/channel-posts/' + articleId, 'DELETE')
+        await send('/api/v1/channel-posts/' + articleId, 'DELETE')
             .then((data) => {
-                result = data
+                result = true
             })
             .catch((error) => {
                 console.log(error)

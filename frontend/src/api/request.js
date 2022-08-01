@@ -7,7 +7,7 @@ export async function send(url, method, requestBody) {
 		"Content-Type" : "application/json",
 	}
 
-	const accessToken = sessionStorage.getItem(TOKEN)
+	const accessToken = localStorage.getItem(TOKEN)
 	if (accessToken && accessToken !== null) {
 		headers.Authorization = "Bearer "+ accessToken
 	}
@@ -40,7 +40,7 @@ export async function sendMultiPart(url, method, requestBody) {
 	let headers = {
 	}
 
-	const accessToken = sessionStorage.getItem(TOKEN)
+	const accessToken = localStorage.getItem(TOKEN)
 	if (accessToken && accessToken !== null) {
 		headers.Authorization = "Bearer "+ accessToken
 	}

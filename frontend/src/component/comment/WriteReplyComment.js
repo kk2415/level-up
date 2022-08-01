@@ -18,8 +18,6 @@ const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, p
             $('#createReplyContent').val('')
             setWritingReplyComment(true)
             setReplyCount(replyCount + 1)
-
-            window.location.reload()
         }
     }
 

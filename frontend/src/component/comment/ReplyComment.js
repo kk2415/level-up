@@ -7,7 +7,7 @@ const ReplyComment = ({reply}) => {
 
     const createVote = async () => {
         let voteRequest = {
-            'memberId' : sessionStorage.getItem('id'),
+            'memberId' : localStorage.getItem('id'),
             'targetId' : reply.id,
             'voteType' : 'COMMENT',
         }
@@ -29,7 +29,7 @@ const ReplyComment = ({reply}) => {
 
                 <div className="w-100"/>
 
-                <div className="col bg-secondary text-dark bg-opacity-10 d-flex fs-3" id="replyContent">
+                <div className="col bg-secondary text-dark bg-opacity-10 d-flex" id="replyContent">
                     {reply.content}
                     <div className="overflow-auto"/>
                 </div>
