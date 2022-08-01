@@ -5,11 +5,14 @@ import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class CreateReplyCommentRequest {
 
     @NotNull
@@ -48,5 +51,4 @@ public class CreateReplyCommentRequest {
 
         return comment;
     }
-
 }

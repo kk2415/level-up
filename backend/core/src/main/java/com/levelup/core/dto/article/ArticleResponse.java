@@ -32,7 +32,7 @@ public class ArticleResponse {
         this.content = article.getContent();
         this.voteCount = article.getVoteCount();
         this.views = article.getViews();
-        this.commentCount = article.getCommentCount();
+        this.commentCount = (long) article.getComments().size();
         this.articleType = article.getArticleType();
     }
 

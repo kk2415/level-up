@@ -148,7 +148,6 @@ public class ChannelPostService {
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
         channel.removePostCount();
-
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
 

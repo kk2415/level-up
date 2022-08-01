@@ -24,5 +24,4 @@ public class Vote {
     @Id
     @Enumerated(EnumType.STRING)
     private VoteType voteType;
-
 }

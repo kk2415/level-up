@@ -65,7 +65,7 @@ public class ChannelRequest {
                 .thumbnailDescription(thumbnailDescription)
                 .thumbnailImage(thumbnailImage)
                 .category(category)
-                .memberCount(0L)
+                .memberCount(1L)
                 .postCount(0L)
                 .channelMembers(new ArrayList<>())
                 .channelPosts(new ArrayList<>())

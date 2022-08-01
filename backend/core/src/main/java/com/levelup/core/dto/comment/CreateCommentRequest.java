@@ -4,12 +4,15 @@ import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
-@Data
+
+@Getter
+@NoArgsConstructor
 public class CreateCommentRequest {
 
     private String memberEmail;
@@ -47,5 +50,4 @@ public class CreateCommentRequest {
 
         return comment;
     }
-
 }

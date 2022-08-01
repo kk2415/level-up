@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @NoArgsConstructor
-public class UploadFile {
+public class UploadFile implements Serializable {
 
     private String uploadFileName;
     private String storeFileName;
