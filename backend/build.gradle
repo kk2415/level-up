@@ -83,7 +83,13 @@ subprojects {
     }
 
     tasks.named('test') {
+        outputs.dir(snippetDir)
         useJUnitPlatform()
+    }
+
+    asciidoctor {
+        inputs.dir(snippetDir)
+        dependsOn test
     }
 }
 
