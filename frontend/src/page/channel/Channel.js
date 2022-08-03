@@ -3,7 +3,6 @@ import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelService from '../../api/service/ChannelService'
-import PostService from '../../api/service/PostService'
 import {Container, Form, Tabs, Tab, Row} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
 import {TOKEN} from "../../api/token";
@@ -72,12 +71,6 @@ const Channel = () => {
         }
 
         setChannelName(result.name)
-    }
-
-    const loadPostCount = async (channelId, searchCondition) => {
-        let count = await PostService.count(channelId, searchCondition)
-
-        setPostsCount(Number(count))
     }
 
     const handleWriting = () => {

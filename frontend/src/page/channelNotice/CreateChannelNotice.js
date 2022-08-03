@@ -2,11 +2,8 @@ import React, {useState, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/service/ChannelService'
 import ChannelPostService from '../../api/service/ChannelPostService'
-import ArticleService from '../../api/service/ArticleService'
 import {Container, Form} from 'react-bootstrap'
-import RichTextEditor from "../../component/SummerNote";
 
 const CreateChannelNotice = () => {
     const navigate = useNavigate();

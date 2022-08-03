@@ -16,9 +16,7 @@ const CreateChannel = () => {
     const loadDescription = async (channelId) => {
         let result = await ChannelService.get(channelId)
 
-        console.log(result)
         setDescription(result)
-        console.log(description)
     }
 
     const handleChangeThumbnail = (event) => {
@@ -49,9 +47,12 @@ const CreateChannel = () => {
             thumbnailImage : thumbnailImageDir,
             // uploadFiles : uploadFiles,
         }
-        console.log(channel)
 
-        await ChannelService.modify(channel, channelId)
+        let result = await ChannelService.modify(channel, channelId);
+        if (result) {
+            alert('수정되었습니다.')
+            window.location.href = '/channel/description/' + channelId
+        }
     }
 
     function getUploadFiles(htmlCode) {
@@ -95,7 +96,6 @@ const CreateChannel = () => {
         for (let i = 0; i < images.length; i++) {
             uploadFile('/api/channel/descriptionFiles', 'POST', images[i])
                 .then((data) => {
-                    console.log(data)
                 })
                 .catch((error) => {
                     console.log(error)

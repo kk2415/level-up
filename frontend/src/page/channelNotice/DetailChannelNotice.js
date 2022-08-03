@@ -82,9 +82,6 @@ const DetailChannelNotice = () => {
             return
         }
 
-        console.log(memberId)
-        console.log(channelNoticeId)
-
         let voteRequest = {
             'memberId' : memberId,
             'targetId' : channelNoticeId,

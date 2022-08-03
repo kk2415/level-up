@@ -6,24 +6,24 @@ import { Navigation, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import ChannelService from "../api/service/ChannelService";
 
 import CardSlide from "./CardSlide";
 import { send } from "../api/request"
+
 
 const StudySwiper = () => {
 	const [channels, setChannels] = useState([])
 	const [count, setCount] = useState(0)
 
-	useEffect(() => {
-		send('/api/v1/channels/' + 'STUDY', 'GET')
-			.then((data) => {
-				console.log(data)
+	const loadChannels = async (category) => {
+		let result = await ChannelService.getByCategory(category);
 
-				setChannels(data)
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+		setChannels(result)
+	}
+
+	useEffect(() => {
+		loadChannels('STUDY')
 	}, [])
 
 	return (
@@ -66,14 +66,14 @@ const ProjectSwiper = () => {
 	const [channels, setChannels] = useState([])
 	const [count, setCount] = useState(0)
 
+	const loadChannels = async (category) => {
+		let result = await ChannelService.getByCategory(category);
+
+		setChannels(result)
+	}
+
 	useLayoutEffect(() => {
-		send('/api/v1/channels/' + 'PROJECT', 'GET')
-			.then((data) => {
-				setChannels(data)
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+		loadChannels('PROJECT')
 	}, [])
 
 	return (

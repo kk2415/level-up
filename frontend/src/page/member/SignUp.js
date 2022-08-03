@@ -19,7 +19,7 @@ const SignUp = () => {
 
     async function HandleSignUpButton() {
         let formData = new FormData(document.getElementById('signUpForm'));
-        let profileImage = MemberService.uploadProfile(file)
+        let profileImage = await MemberService.uploadProfile(file)
 
         let member = {
             name : formData.get('name'),
@@ -49,7 +49,7 @@ const SignUp = () => {
                 alert(result.name + '님 가입되었습니다')
                 alert('인증번호를 발송 중입니다. 잠시만 기다랴주세요.')
 
-                AuthEmailService.sendSecurityCode();
+                // AuthEmailService.sendSecurityCode();
             }
         }
     }
