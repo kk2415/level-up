@@ -5,14 +5,15 @@ const ArticleService = {
     create: async (article) => {
         let result = null
 
-        await send('/api/v1/article', 'POST', article)
+        await send('/api/v1/articles', 'POST', article)
             .then((data) => {
                 result = data
             })
             .catch((error) => {
                 console.log(error)
-
-                alert(error.responseJSON.message)
+                if (error.status === 403) {
+                    alert('이메일 인증을 해야합니다.')
+                }
             })
 
         return result
@@ -21,7 +22,7 @@ const ArticleService = {
     get: async (articleId) => {
         let post = {}
 
-        await send('/api/v1/article/' + articleId + '?view=true', 'GET')
+        await send('/api/v1/articles/' + articleId + '?view=true', 'GET')
             .then((data) => {
                 post = data
             })
@@ -55,7 +56,7 @@ const ArticleService = {
     getNext: async (articleId, articleType) => {
         let post = {}
 
-        await send('/api/v1/article/' + articleId + '/nextArticle?articleType=' + articleType, 'GET')
+        await send('/api/v1/articles/' + articleId + '/next-article?articleType=' + articleType, 'GET')
             .then((data) => {
                 post = data
             })
@@ -70,7 +71,7 @@ const ArticleService = {
     getPrev: async (articleId, articleType) => {
         let post = {}
 
-        await send('/api/v1/article/' + articleId + '/prevArticle?articleType=' + articleType, 'GET')
+        await send('/api/v1/articles/' + articleId + '/prev-article?articleType=' + articleType, 'GET')
             .then((data) => {
                 post = data
             })
@@ -88,7 +89,7 @@ const ArticleService = {
     modify: async (article, articleId) => {
         let result = false
 
-        await send('/api/v1/article/' + articleId, 'PATCH', article)
+        await send('/api/v1/articles/' + articleId, 'PATCH', article)
             .then(() => {
                 alert('수정되었습니다.')
                 result = true
@@ -103,7 +104,7 @@ const ArticleService = {
     delete: async (articleId) => {
         let result = false
 
-        await send('/api/v1/article/' + articleId, 'DELETE')
+        await send('/api/v1/articles/' + articleId, 'DELETE')
             .then(() => {
                 result = true
                 alert('삭제되었습니다.')
