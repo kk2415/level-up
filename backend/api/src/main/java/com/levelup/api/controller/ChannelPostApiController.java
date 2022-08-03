@@ -16,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "게시글 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -28,7 +27,7 @@ public class ChannelPostApiController {
     /**
      * 생성
      * */
-    @PostMapping("/channel-post")
+    @PostMapping("/channel-posts")
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
                                                       @RequestParam("channel") Long channelId,
                                                       @AuthenticationPrincipal Member member) {
@@ -40,7 +39,7 @@ public class ChannelPostApiController {
     /**
      * 조회
      * */
-    @GetMapping("/channel-post/{articleId}")
+    @GetMapping("/channel-posts/{articleId}")
     public ResponseEntity<ChannelPostResponse> getPost(@PathVariable Long articleId,
                                                        @RequestParam(required = false, defaultValue = "false") String view) {
         ChannelPostResponse response = channelPostService.getChannelPost(articleId, view);
@@ -60,7 +59,7 @@ public class ChannelPostApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/channel-posts/{articleId}/nextPost")
+    @GetMapping("/channel-posts/{articleId}/next-post")
     public ResponseEntity<ChannelPostResponse> findNextPost(@PathVariable Long articleId,
                                                             @RequestParam ArticleType articleType,
                                                             @RequestParam("channel") Long channelId) {
@@ -69,7 +68,7 @@ public class ChannelPostApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/channel-posts/{articleId}/prevPost")
+    @GetMapping("/channel-posts/{articleId}/prev-post")
     public ResponseEntity<ChannelPostResponse> findPrevPost(@PathVariable Long articleId,
                                                             @RequestParam ArticleType articleType,
                                                             @RequestParam("channel") Long channelId) {

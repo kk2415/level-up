@@ -3,14 +3,12 @@ package com.levelup.api.controller;
 import com.levelup.api.service.ArticleService;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.Result;
 import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.article.ChannelPostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +25,7 @@ public class ArticleApiController {
     /**
      * 생성
      * */
-    @PostMapping("/article")
+    @PostMapping("/articles")
     public ResponseEntity<ArticleResponse> create(@Validated @RequestBody ArticleRequest request,
                                                       @AuthenticationPrincipal Member member) {
         ArticleResponse response = articleService.save(request, member.getId());
@@ -39,7 +37,7 @@ public class ArticleApiController {
     /**
      * 조회
      * */
-    @GetMapping("/article/{articleId}")
+    @GetMapping("/articles/{articleId}")
     public ResponseEntity<ArticleResponse> getPost(@PathVariable Long articleId,
                                                    @RequestParam(required = false, defaultValue = "false") String view) {
         ArticleResponse response = articleService.getArticle(articleId, view);
@@ -57,7 +55,7 @@ public class ArticleApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/article/{articleId}/nextArticle")
+    @GetMapping("/articles/{articleId}/next-article")
     public ResponseEntity<ArticleResponse> findNextPost(@PathVariable Long articleId,
                                                         @RequestParam ArticleType articleType) {
         ArticleResponse response = articleService.getNextPageByArticleType(articleId, articleType);
@@ -65,7 +63,7 @@ public class ArticleApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/article/{articleId}/prevArticle")
+    @GetMapping("/articles/{articleId}/prev-article")
     public ResponseEntity<ArticleResponse> findPrevPost(@PathVariable Long articleId,
                                                         @RequestParam ArticleType articleType) {
         ArticleResponse response = articleService.getPrevPageByArticleType(articleId, articleType);
@@ -73,7 +71,7 @@ public class ArticleApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/article/{articleId}/oauth")
+    @GetMapping("/articles/{articleId}/oauth")
     public ResponseEntity<Void> checkMember(@PathVariable Long articleId, @RequestParam Long memberId) {
         articleService.articleOauth(articleId, memberId);
 
@@ -84,7 +82,7 @@ public class ArticleApiController {
     /**
      * 수정
      * */
-    @PatchMapping("/article/{articleId}")
+    @PatchMapping("/articles/{articleId}")
     public ResponseEntity<ArticleResponse> mopdify(@PathVariable Long articleId,
                                                    @RequestBody ChannelPostRequest request,
                                                    @AuthenticationPrincipal Member member) {
@@ -97,7 +95,7 @@ public class ArticleApiController {
     /**
      * 삭제
      * */
-    @DeleteMapping("/article/{articleId}")
+    @DeleteMapping("/articles/{articleId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long articleId) {
         articleService.deleteArticle(articleId);
 

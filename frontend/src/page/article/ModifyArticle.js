@@ -29,7 +29,6 @@ const ModifyArticle = () => {
             content  : $('#summernote').val(),
             articleType : articleType,
         }
-        console.log(article)
 
         if (!validate(article)) {
             return
@@ -80,8 +79,6 @@ const ModifyArticle = () => {
     const loadArticle = async (articleId) => {
         let article = await ArticleService.get(articleId)
 
-        console.log(articleId)
-        console.log(article)
         setArticle(article)
     }
 

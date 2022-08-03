@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
-@Tag(name = "추천 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class VoteApiController {
 
     private final VoteService voteService;
 
-    @PostMapping("/vote")
+    @PostMapping("/votes")
     public ResponseEntity<VoteResponse> create(@RequestBody @Validated CreateVoteRequest voteRequest) {
         VoteResponse response = voteService.save(voteRequest);
 

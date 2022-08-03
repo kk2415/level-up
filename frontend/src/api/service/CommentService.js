@@ -5,7 +5,7 @@ const CommentService = {
     create: async (comment) => {
         let result
 
-        await send('/api/v1/comment', 'POST', comment)
+        await send('/api/v1/comments', 'POST', comment)
             .then((data) => {
                 result = data
             })
@@ -24,7 +24,7 @@ const CommentService = {
     createReply: async (reply) => {
         let result
 
-        await send('/api/v1/comment/reply', 'POST', reply)
+        await send('/api/v1/comments/reply', 'POST', reply)
             .then((data) => {
                 result = data
             })
@@ -43,7 +43,7 @@ const CommentService = {
     get: async (articleId, identity) => {
         let comment = {}
 
-        await send('/api/v1/comment/' + articleId + '?identity=' + identity, 'GET')
+        await send('/api/v1/comments/' + articleId + '?identity=' + identity, 'GET')
             .then((data) => {
                 comment = data
             })
@@ -58,7 +58,7 @@ const CommentService = {
     getReply: async (commentId) => {
         let comment = {}
 
-        await send('/api/v1/comment/' + commentId + '/reply', 'GET')
+        await send('/api/v1/comments/' + commentId + '/reply', 'GET')
             .then((data) => {
                 comment = data
             })
@@ -81,7 +81,7 @@ const CommentService = {
     delete: async (commentId) => {
         let result = false
 
-        await send('/api/v1/comment/' + commentId, 'DELETE')
+        await send('/api/v1/comments/' + commentId, 'DELETE')
             .then(() => {
                 result = true
             })

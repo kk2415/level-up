@@ -18,9 +18,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "회원 API")
 @Slf4j
@@ -35,10 +38,16 @@ public class MemberApiController {
     /**
      * 생성
      * */
-    @PostMapping("/member/image")
-    public ResponseEntity<UploadFile> createProfileImage(@ModelAttribute MultipartFile file) throws IOException {
-        UploadFile response = memberService.createProfileImage(file);
+    @PostMapping("/members/image")
+    public ResponseEntity<UploadFile> createProfileImage(HttpServletRequest request,
+                                                         @ModelAttribute MultipartFile file) throws IOException {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (String s : parameterMap.keySet()) {
+            System.out.println("key : " + s);
+            System.out.println("value : " + Arrays.toString(parameterMap.get(s)));
+        }
 
+        UploadFile response = memberService.createProfileImage(file);
         return ResponseEntity.ok().body(response);
     }
 
@@ -46,33 +55,22 @@ public class MemberApiController {
     /**
      * 조회
      * */
-    @GetMapping("/member/{email}")
+    @GetMapping("/members/{email}")
     public ResponseEntity<MemberResponse> getMember(@PathVariable("email") String email) {
         MemberResponse response = memberService.getByEmail(email);
 
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/members")
-    public ResponseEntity<Result> getAllMembers() {
-        List<MemberResponse> response = memberService.getAllMembers();
-
-        return ResponseEntity.ok(new Result<>(response, response.size()));
-    }
-
-    @GetMapping(path = "/member/{email}/image", produces = "image/jpeg")
+    @GetMapping(path = "/members/{email}/image", produces = "image/jpeg")
     public ResponseEntity<Resource> getProfileImage(@PathVariable String email) throws MalformedURLException {
         UrlResource response = memberService.getProfileImage(email);
 
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/member")
+    @GetMapping("/members")
     public ResponseEntity<MemberResponse> confirmLogin(@AuthenticationPrincipal Member member) {
-        if (member == null) {
-            throw new MemberNotFoundException("'해당하는 회원이 없습니다.");
-        }
-
         return ResponseEntity.ok().body(MemberResponse.from(member));
     }
 
@@ -80,7 +78,7 @@ public class MemberApiController {
     /**
      * 수정
      * */
-    @PatchMapping("/member")
+    @PatchMapping("/members")
     public ResponseEntity<Void> modifyMember(@RequestBody UpdateMemberRequest updateMemberRequest,
                                              @AuthenticationPrincipal Member member) {
         memberService.modify(updateMemberRequest, member.getId());
@@ -88,7 +86,7 @@ public class MemberApiController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/member/{email}/image")
+    @PatchMapping("/members/{email}/image")
     public ResponseEntity<UploadFile> modifyMemberProfile(@PathVariable String email, MultipartFile file) throws IOException {
         UploadFile profileImage = memberService.modifyProfileImage(file, email);
 
@@ -99,7 +97,7 @@ public class MemberApiController {
     /**
      * 삭제
      * */
-    @DeleteMapping("/member/{memberId}")
+    @DeleteMapping("/members/{memberId}")
     public ResponseEntity<Void> delete(@PathVariable Long memberId) throws IOException {
         memberService.delete(memberId);
 

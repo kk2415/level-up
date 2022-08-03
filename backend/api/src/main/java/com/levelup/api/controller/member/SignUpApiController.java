@@ -22,11 +22,10 @@ public class SignUpApiController {
 
     private final MemberService memberService;
 
-
     /**
      * 생성
      * */
-    @PostMapping("/member")
+    @PostMapping("/sign-up")
     public ResponseEntity<CreateMemberResponse> create(HttpServletRequest request,
                                  @RequestBody @Valid CreateMemberRequest memberRequest) throws IOException {
         CreateMemberResponse response = memberService.save(memberRequest);

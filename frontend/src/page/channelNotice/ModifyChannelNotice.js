@@ -35,7 +35,6 @@ const ModifyChannel = () => {
             content  : $('#summernote').val(),
         }
 
-        console.log(channelNotice)
         let result = await ChannelPostService.modify(channelNotice, channelNoticeId, channelId);
         if (result) {
             window.history.back()

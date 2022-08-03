@@ -19,7 +19,6 @@ const SignIn = ({} ) => {
             email : formData.get('email'),
             password : formData.get('password'),
         }
-        console.log(member)
 
         if (validate(member)) {
             let result = await MemberService.signIn(member);

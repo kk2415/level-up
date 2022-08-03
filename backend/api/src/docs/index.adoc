@@ -1,0 +1,43 @@
+= LEVEl UP API 문서
+Andy Wilkinson
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[Member-API]]
+= Member API
+
+[[Member-생성]]
+== /api/v1/sign-up POST
+*회원가입*
+
+* Parameters
+* Request
+include::{snippets}/sign-up-api/http-request.adoc[]
+* Request Body
+include::{snippets}/sign-up-api/request-fields.adoc[]
+* Response
+include::{snippets}/sign-up-api/http-response.adoc[]
+* Response Body
+include::{snippets}/sign-up-api/response-fields.adoc[]
+
+---
+
+[[Member-프로필-생성]]
+== /api/v1/members/image POST
+*회원 프로필 사진 생성*
+
+* Parameters
+* Request
+include::{snippets}/member-post-profile/http-request.adoc[]
+* Request Body
+include::{snippets}/member-post-profile/request-part-file-body.adoc[]
+* Response
+include::{snippets}/member-post-profile/http-response.adoc[]
+* Response Body
+include::{snippets}/member-post-profile/response-fields.adoc[]
+
+

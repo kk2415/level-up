@@ -6,15 +6,19 @@ import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
+
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -27,16 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
-    /**
-     * HttpSecurity : 시큐리티 설정을 위한 오브젝트. 빌더를 제공함
-     * */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // http 시큐리티 빌더
         http.cors() //cors는 따로 설정했으니 기본 설정
                 .and()
                 .formLogin().disable()
-                .csrf().disable() // csrf는 현재 사용하지 않으니 disable
+                .csrf().disable()
                 .httpBasic().disable() // token 방식을 사용하니 basic은 disable
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// session 기반이 아님을 선언
                 .and()
@@ -45,48 +45,54 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler); //권한 에러 처리(관리자 권한 등)
 
         http.authorizeRequests()
-                .antMatchers("/api/channel/{\\d+}/manager", "/channel/{\\d+}/member/**", "/channel/{\\d+}/waiting-member/**")
-                .hasAnyRole("CHANNEL_MANAGER", "ADMIN")
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/api/channel/**").permitAll()
-                .antMatchers("/api/channel/**")
-                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(POST,"/api/v1/sign-up", "/api/v1/members/image", "/api/login").permitAll()
+                .antMatchers("/api/v1/members").authenticated()
 
-                .antMatchers(HttpMethod.POST,"/api/member").permitAll()
-                .antMatchers("/api/member").authenticated()
+                .antMatchers("/api/v1/channels/{\\d+}/manager", "/api/v1/channels/{\\d+}/member/**",
+                        "/api/v1/channels/{\\d+}/waiting-member/**").hasAnyRole("CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/v1/channels/**").permitAll()
+                .antMatchers("/api/v1/channels/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
-                .antMatchers("/api/comment/**")
-                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/v1/comments/**").permitAll()
+                .antMatchers("/api/v1/comments/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/post/**", "/api/{\\d+}/search/count",
-                        "/api/{\\d+}/posts/{\\d+}").permitAll()
-                .antMatchers("/api/post/**")
-                .hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/v1/channel-posts/**").permitAll()
+                .antMatchers("/api/v1/channel-posts/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
-                .antMatchers("/api/notice/**").hasRole("ADMIN")
+                .antMatchers(GET, "/api/v1/articles/**").permitAll()
+                .antMatchers("/api/v1/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .anyRequest().permitAll();
-        http.formLogin().loginPage("/login");
+                .antMatchers("/api/v1/votes/**").authenticated()
 
-        //JWT 토큰 인증필터 추가
+                .anyRequest().authenticated();
+
         http.addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());
-    }
-
-    //select pwd from users where email=?
-    //데이터베이스 pwd와 사용자가 입력한 pwd 비교
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     private LoginFilter getSecurityLoginFilter() throws Exception {
         LoginFilter securityLoginFilter = new LoginFilter(memberRepository, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
+        securityLoginFilter.setFilterProcessesUrl("/api/login");
         return securityLoginFilter;
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui/**");
+    }
 }

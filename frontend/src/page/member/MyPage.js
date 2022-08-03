@@ -19,7 +19,6 @@ const MyPage = () => {
             window.location.href = '/'
         }
 
-        console.log(result)
         setMember(result)
     }
 
@@ -39,7 +38,6 @@ const MyPage = () => {
             let profileImage = member.uploadFile
             if (myPageFile) {
                 profileImage = await MemberService.modifyProfile(member.email, myPageFile)
-                console.log(profileImage)
             }
 
             let updateMember = {

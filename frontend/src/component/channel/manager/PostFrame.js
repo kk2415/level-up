@@ -19,14 +19,6 @@ const PostFrame = ({channelId, postCount}) => {
 
         let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable);
         setPosts(result.content)
-
-        // await send(url, 'GET')
-        //     .then((result) => {
-        //         setPosts(result.data)
-        //     })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
     }
 
     const onNext = (currentPage, lastPagerNum, pagerLength, searchCondition) => {

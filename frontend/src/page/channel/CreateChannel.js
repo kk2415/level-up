@@ -28,8 +28,6 @@ const CreateChannel = () => {
             thumbnailDescription : formData.get('thumbnailDescription'),
             thumbnailImage : thumbnailImageDir,
         }
-        // console.log(channel)
-
         if (validate(channel)) {
             await ChannelService.create(channel);
         }

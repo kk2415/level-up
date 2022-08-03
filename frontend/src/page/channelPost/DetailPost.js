@@ -2,12 +2,10 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import PostService from '../../api/service/PostService'
 import ChannelPostService from '../../api/service/ChannelPostService'
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 import VoteService from "../../api/service/VoteService";
-import ChannelService from "../../api/service/ChannelService";
 
 const DetailPost = () => {
     const navigate = useNavigate();
