@@ -26,7 +26,6 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "채널 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -39,19 +38,19 @@ public class ChannelApiController {
     /**
      * 생성
      * */
-    @PostMapping("/channel")
+    @PostMapping("/channels")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
         return channelService.save(channelRequest);
     }
 
-    @PostMapping("/channel/description/files/base64")
+    @PostMapping("/channels/description/files/base64")
     public ResponseEntity<Void> storeDescriptionFilesByBase64(@RequestBody Base64Dto base64) throws IOException {
         channelService.createFileByBase64(base64);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/channel/thumbnail")
+    @PostMapping("/channels/thumbnail")
     public ResponseEntity<UploadFile> createChannelThumbnail(MultipartFile file) throws IOException {
         UploadFile response = channelService.createChannelThumbnail(file);
 
@@ -63,33 +62,26 @@ public class ChannelApiController {
      * 조회
      * */
     @GetMapping("/channels")
-    public ResponseEntity<Result> getAll() {
-        List<ChannelResponse> response = channelService.getAll();
+    public ResponseEntity<List<ChannelResponse>> getByCategory(@RequestParam ChannelCategory category) {
+        List<ChannelResponse> response = channelService.getByCategory(category);
 
-        return ResponseEntity.ok().body(new Result(response, response.size()));
+        return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/channel/{channelId}")
+    @GetMapping("/channels/{channelId}")
     public ResponseEntity<ChannelResponse> getByChannelId(@PathVariable Long channelId) {
         ChannelResponse response = channelService.getChannel(channelId);
 
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/channels/{category}")
-    public ResponseEntity<List<ChannelResponse>> getByCategory(@PathVariable ChannelCategory category) {
-        List<ChannelResponse> response = channelService.getByCategory(category);
-
-        return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping(path = "/channel/{channelId}/thumbnail", produces = "image/jpeg")
+    @GetMapping(path = "/channels/{channelId}/thumbnail", produces = "image/jpeg")
     public Resource findMemberProfile(@PathVariable Long channelId) throws MalformedURLException {
         return channelService.getThumbNailImage(channelId);
     }
 
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
-    @GetMapping("/channel/{channelId}/manager")
+    @GetMapping("/channels/{channelId}/manager")
     public ResponseEntity<ChannelInfo> getChannelAllInfo(@PathVariable Long channelId,
                                    @AuthenticationPrincipal Member member) {
         ChannelInfo response = channelService.getChannelAllInfo(channelId, member.getId());
@@ -101,7 +93,7 @@ public class ChannelApiController {
     /**
      * 수정
      * */
-    @PatchMapping("/channel/{channelId}")
+    @PatchMapping("/channels/{channelId}")
     public ResponseEntity<ChannelResponse> modifyDetailDescription(@PathVariable Long channelId,
                                                   @RequestBody @Validated UpdateChannelRequest channelRequest) {
         ChannelResponse response = channelService.modify(
@@ -112,7 +104,7 @@ public class ChannelApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PatchMapping("/channel/{channelId}/thumbnail")
+    @PatchMapping("/channels/{channelId}/thumbnail")
     public ResponseEntity<UploadFile> modifyChannelThumbnail(@PathVariable Long channelId,
                                                  MultipartFile file) throws IOException {
         UploadFile response = channelService.modifyChannelThumbNail(file, channelId);
@@ -124,11 +116,10 @@ public class ChannelApiController {
     /**
      * 삭제
      * */
-    @DeleteMapping("/channel/{channelId}")
+    @DeleteMapping("/channels/{channelId}")
     public ResponseEntity<Void> deleteChannel(@PathVariable Long channelId) {
         channelService.deleteChannel(channelId);
 
         return ResponseEntity.ok().build();
     }
-
 }
