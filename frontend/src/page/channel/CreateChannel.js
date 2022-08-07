@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
 import ChannelService from '../../api/service/ChannelService'
-import {Container, Col, Row, Form, Button, Card} from 'react-bootstrap'
+import {Container, Col, Row, Form, Button, Card, FloatingLabel} from 'react-bootstrap'
 import {createChannelValidation as validation} from "../../api/validation";
 import $ from "jquery";
 
@@ -142,27 +142,23 @@ const CreateChannel = () => {
         <>
             <Container>
                 <Form id='form'>
-                    <Form.Group className='mb-4'>
-                        <Form.Label>카테고리</Form.Label>
-                        <Form.Select aria-label="Default select example" name="category" id="category">
-                            <option selected value="NONE">카테고리를 선택해주세요</option>
-                            <option value="STUDY">스터디</option>
-                            <option value="PROJECT">프로젝트</option>
-                        </Form.Select>
-                    </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>이름</Form.Label>
-                        <Form.Control id="name" name="name" />
-                    </Form.Group>
+                    <Form.Select className="mb-3 fs-4 fw-bold" name="category" id="category">
+                        <option className="fs-4" selected value="NONE" placeholder="name@example.com">카테고리를 선택해주세요</option>
+                        <option className="fs-4" value="STUDY">스터디</option>
+                        <option className="fs-4" value="PROJECT">프로젝트</option>
+                    </Form.Select>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>회원 제한 수</Form.Label>
-                        <Form.Control id="limitedMemberNumber" name="limitedMemberNumber" />
-                    </Form.Group>
+                    <FloatingLabel label="채널 이름" className="mb-3">
+                        <Form.Control id="name" name="name" placeholder="name@example.com" />
+                    </FloatingLabel>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>설명</Form.Label>
+                    <FloatingLabel label="회원 제한 수" className="mb-3">
+                        <Form.Control type="number" id="limitedMemberNumber" name="limitedMemberNumber" placeholder="회원 제한 수"/>
+                    </FloatingLabel>
+
+                    <Form.Group className="mb-3 mt-5">
+                        <Form.Label className="fs-3 fw-bold">채널 설명</Form.Label>
                         <textarea id='summernote' />
                         {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
                     </Form.Group>
