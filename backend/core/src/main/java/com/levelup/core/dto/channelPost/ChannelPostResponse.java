@@ -1,9 +1,9 @@
-package com.levelup.core.dto.article;
+package com.levelup.core.dto.channelPost;
 
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
-import com.levelup.core.domain.Article.PostCategory;
+import com.levelup.core.domain.channelPost.ChannelPost;
+import com.levelup.core.domain.channelPost.PostCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,10 +33,10 @@ public class ChannelPostResponse {
         this.id = channelPost.getArticleId();
         this.memberId = channelPost.getMember().getId();
         this.title = channelPost.getTitle();
-        this.writer = channelPost.getWriter();
+        this.writer = channelPost.getMember().getNickname();
         this.content = channelPost.getContent();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelPost.getCreateAt());
-        this.voteCount = channelPost.getVoteCount();
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelPost.getCreatedAt());
+        this.voteCount = (long) channelPost.getArticleVotes().size();
         this.views = channelPost.getViews();
         this.commentCount = (long) channelPost.getComments().size();
         this.postCategory = channelPost.getPostCategory();

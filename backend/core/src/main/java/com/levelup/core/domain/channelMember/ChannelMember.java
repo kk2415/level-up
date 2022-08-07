@@ -1,5 +1,6 @@
-package com.levelup.core.domain.channel;
+package com.levelup.core.domain.channelMember;
 
+import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;

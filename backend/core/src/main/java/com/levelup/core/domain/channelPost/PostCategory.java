@@ -1,4 +1,4 @@
-package com.levelup.core.domain.Article;
+package com.levelup.core.domain.channelPost;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

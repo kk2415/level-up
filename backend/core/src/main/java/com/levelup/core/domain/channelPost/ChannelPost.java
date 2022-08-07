@@ -1,5 +1,6 @@
-package com.levelup.core.domain.Article;
+package com.levelup.core.domain.channelPost;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.channel.Channel;
 import lombok.*;
 

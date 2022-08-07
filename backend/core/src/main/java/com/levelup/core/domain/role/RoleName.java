@@ -1,5 +1,5 @@
 package com.levelup.core.domain.member;
 
-public enum Authority {
+public enum RoleName {
     ADMIN, CHANNEL_MANAGER, MEMBER, ANONYMOUS
 }

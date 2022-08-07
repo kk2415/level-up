@@ -11,12 +11,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-@Entity
-@Table(name = "email_auth")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "email_auth")
+@Entity
 public class EmailAuth extends BaseTimeEntity {
 
     @Id

@@ -1,10 +1,10 @@
-package com.levelup.core.dto.article;
+package com.levelup.core.dto.channelPost;
 
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
+import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.Article.PostCategory;
+import com.levelup.core.domain.channelPost.PostCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,14 +29,9 @@ public class ChannelPostRequest {
 
         channelPost.setMember(member);
         channelPost.setTitle(title);
-        channelPost.setWriter(member.getNickname());
         channelPost.setContent(content);
         channelPost.setViews(0L);
-        channelPost.setVoteCount(0L);
-        channelPost.setCommentCount(0L);
         channelPost.setArticleType(articleType);
-
         return channelPost;
     }
-
 }
