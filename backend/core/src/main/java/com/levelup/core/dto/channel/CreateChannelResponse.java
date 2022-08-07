@@ -18,7 +18,7 @@ public class CreateChannelResponse {
     private CreateChannelResponse(Channel channel) {
         this.id = channel.getId();
         this.name = channel.getName();
-        this.limitedMemberNumber = channel.getLimitedMemberNumber();
+        this.limitedMemberNumber = channel.getMemberMaxNumber();
         this.managerName = channel.getManagerName();
         this.description = channel.getDescription();
     }

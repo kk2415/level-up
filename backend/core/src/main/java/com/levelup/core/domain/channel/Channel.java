@@ -1,6 +1,7 @@
 package com.levelup.core.domain.channel;
 
-import com.levelup.core.domain.Article.ChannelPost;
+import com.levelup.core.domain.channelMember.ChannelMember;
+import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
@@ -25,18 +26,21 @@ public class Channel extends BaseTimeEntity {
     @Lob
     private String description;
 
+    @Column(name = "channel_name", nullable = false)
     private String name;
-    private String managerName;
-    private Long limitedMemberNumber;
 
-    private Long postCount;
-    private Long memberCount;
+    @Column(nullable = false)
+    private String managerName;
+
+    @Column(nullable = false)
+    private Long memberMaxNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "channel_category", nullable = false)
     private ChannelCategory category;
 
-    @Column(name = "thumbnail_description")
-    private String thumbnailDescription;
+    @Column(nullable = false)
+    private String mainDescription;
 
     @Embedded
     private UploadFile thumbnailImage;
@@ -75,24 +79,13 @@ public class Channel extends BaseTimeEntity {
 
     public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         this.name = name;
-        this.limitedMemberNumber = limitNumber;
+        this.memberMaxNumber = limitNumber;
         this.description = description;
-        this.thumbnailDescription = thumbnailDescription;
+        this.mainDescription = thumbnailDescription;
         this.thumbnailImage = thumbnailImage;
     }
 
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
-
-    public void addPostCount() {
-        this.postCount++;
-    }
-
-    public void removePostCount() {
-        if (this.postCount > 0) {
-            this.postCount--;
-        }
-    }
-
 }

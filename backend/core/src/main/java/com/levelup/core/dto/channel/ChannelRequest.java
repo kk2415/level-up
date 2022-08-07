@@ -61,16 +61,13 @@ public class ChannelRequest {
                 .name(name)
                 .managerName(managerName)
                 .description(description)
-                .limitedMemberNumber(limitedMemberNumber)
-                .thumbnailDescription(thumbnailDescription)
+                .memberMaxNumber(limitedMemberNumber)
+                .mainDescription(thumbnailDescription)
                 .thumbnailImage(thumbnailImage)
                 .category(category)
-                .memberCount(1L)
-                .postCount(0L)
                 .channelMembers(new ArrayList<>())
                 .channelPosts(new ArrayList<>())
                 .files(new ArrayList<>())
                 .build();
     }
-
 }

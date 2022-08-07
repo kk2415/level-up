@@ -2,6 +2,7 @@ package com.levelup.core.dto.channel;
 
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -28,11 +29,10 @@ public class ChannelInfo {
                 .count();
 
         this.waitingMemberCount = channel.getChannelMembers().stream()
-                .filter(member -> member.getIsWaitingMember())
+                .filter(ChannelMember::getIsWaitingMember)
                 .count();
 
-        this.postCount = channel.getPostCount();
+        this.postCount = (long) channel.getChannelPosts().size();
         this.thumbnail = channel.getThumbnailImage().getStoreFileName();
     }
-
 }

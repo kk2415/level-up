@@ -3,13 +3,11 @@ package com.levelup.core.dto.article;
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class ArticleResponse {
 
     private Long id;
@@ -23,14 +21,16 @@ public class ArticleResponse {
     private Long commentCount;
     private ArticleType articleType;
 
+    protected ArticleResponse() {}
+
     private ArticleResponse(Article article) {
-        this.id = article.getArticleId();
+        this.id = article.getId();
         this.memberId = article.getMember().getId();
         this.title = article.getTitle();
-        this.writer = article.getWriter();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(article.getCreateAt());
+        this.writer = article.getMember().getNickname();
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(article.getCreatedAt());
         this.content = article.getContent();
-        this.voteCount = article.getVoteCount();
+        this.voteCount = (long) article.getArticleVotes().size();
         this.views = article.getViews();
         this.commentCount = (long) article.getComments().size();
         this.articleType = article.getArticleType();

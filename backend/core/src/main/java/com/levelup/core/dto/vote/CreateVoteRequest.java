@@ -1,12 +1,13 @@
 package com.levelup.core.dto.vote;
 
-import com.levelup.core.domain.vote.Vote;
+import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.comment.Comment;
+import com.levelup.core.domain.vote.ArticleVote;
+import com.levelup.core.domain.vote.CommentVote;
 import com.levelup.core.domain.vote.VoteType;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -22,11 +23,32 @@ public class  CreateVoteRequest {
     @NotNull
     private VoteType voteType;
 
-    public Vote toEntity() {
-        return Vote.builder()
+    private CreateVoteRequest(Long memberId, Long targetId, VoteType voteType) {
+        this.memberId = memberId;
+        this.targetId = targetId;
+        this.voteType = voteType;
+    }
+
+    public static CreateVoteRequest of(Long memberId, Long targetId, VoteType voteType) {
+        return new CreateVoteRequest(memberId, targetId, voteType);
+    }
+
+    public ArticleVote toEntity(Article article) {
+        ArticleVote articleVote = ArticleVote.builder()
                 .memberId(memberId)
-                .targetId(targetId)
-                .voteType(voteType)
                 .build();
+
+        articleVote.setArticle(article);
+        return articleVote;
+    }
+
+    public CommentVote toEntity(Comment comment) {
+        CommentVote commentVote = CommentVote.builder()
+                .memberId(memberId)
+                .comment(comment)
+                .build();
+
+        commentVote.setComment(comment);
+        return commentVote;
     }
 }

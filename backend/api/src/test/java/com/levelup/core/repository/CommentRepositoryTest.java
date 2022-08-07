@@ -100,7 +100,7 @@ public class CommentRepositoryTest extends TestSupporter {
         commentRepository.save(comment3);
 
         // When
-        List<Comment> comments = commentRepository.findByArticleId(article1.getArticleId());
+        List<Comment> comments = commentRepository.findByArticleId(article1.getId());
 
         // Then
         Assertions.assertThat(comments.size()).isEqualTo(3);

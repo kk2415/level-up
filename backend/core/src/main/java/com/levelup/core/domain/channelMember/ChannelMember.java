@@ -1,52 +1,54 @@
 package com.levelup.core.domain.channelMember;
 
+import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.member.Member;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
+@Getter
+@Builder
+@AllArgsConstructor
 @Table(name = "channel_member")
-@Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChannelMember {
+@Entity
+public class ChannelMember extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "channel_member_id")
     private Long id;
 
+    @Setter
+    @Column(nullable = false)
     private Boolean isManager;
+
+    @Setter
+    @Column(nullable = false)
     private Boolean isWaitingMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    //==연관관계 메서드==//
+    protected ChannelMember() {}
+
     public void setMember(Member member) {
         this.member = member;
         member.getChannelMembers().add(this);
     }
 
+    public static ChannelMember of(Member member, Boolean isManager, Boolean isWaitingMember) {
+        ChannelMember channelMember = ChannelMember.builder()
+                .isManager(isManager)
+                .isWaitingMember(isWaitingMember)
+                .build();
 
-    //==생성 메서드==//
-    public static ChannelMember createChannelMember(Member member, Boolean isManager, Boolean isWaitingMember) {
-        ChannelMember channelMember = new ChannelMember();
-
-        //여기서 연관관계 메서드를 실행하지 않으면 channel_member 테이블의 member_id 컬럼에 아무 값도 들어가지 않는다.
         channelMember.setMember(member);
-        channelMember.setIsManager(isManager);
-        channelMember.setIsWaitingMember(isWaitingMember);
-
         return channelMember;
     }
-
 }

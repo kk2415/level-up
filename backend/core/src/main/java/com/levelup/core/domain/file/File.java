@@ -8,15 +8,18 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+@Getter
+@Setter
+@Table(name = "file")
 @Entity
-@Getter @Setter
 public class File extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
+    @Column(name = "file_id")
     private Long id;
 
     @Embedded
+    @Column(nullable = false)
     private UploadFile uploadFile;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,13 +30,11 @@ public class File extends BaseTimeEntity {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    //==연관관계 메서드==//
     public void setChannel(Channel channel) {
         this.channel = channel;
         channel.getFiles().add(this);
     }
 
-    //==생성 메서드==//
     public static File createFile(Object object, UploadFile uploadFile) {
         File file = new File();
 
@@ -48,6 +49,4 @@ public class File extends BaseTimeEntity {
 
         return file;
     }
-
-
 }

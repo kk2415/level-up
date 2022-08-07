@@ -2,15 +2,15 @@ package com.levelup.api.service;
 
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
+import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticleResponse;
-import com.levelup.core.dto.article.ChannelPostRequest;
-import com.levelup.core.dto.article.ChannelPostResponse;
+import com.levelup.core.dto.channelPost.ChannelPostRequest;
+import com.levelup.core.dto.channelPost.ChannelPostResponse;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
@@ -41,10 +41,6 @@ public class ChannelPostService {
     private final ArticleRepository articleRepository;
     private final ChannelPostRepository channelPostRepository;
 
-
-    /**
-     * 게시글 등록
-     * */
     public ChannelPostResponse save(ChannelPostRequest channelPostRequest, Long memberId, Long channelId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
@@ -54,7 +50,6 @@ public class ChannelPostService {
         ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
 
         channelPostRepository.save(channelPost);
-        channel.addPostCount();
 
         return ChannelPostResponse.from(channelPost);
     }
@@ -67,10 +62,6 @@ public class ChannelPostService {
         return fileStore.storeFile(ImageType.POST, file);
     }
 
-
-    /**
-     * 게시글 조회
-     * */
     public ChannelPostResponse getChannelPost(Long articleId, String view) {
         ChannelPost channelPost = channelPostRepository.findByArticleId(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
@@ -122,10 +113,6 @@ public class ChannelPostService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-
-    /**
-     * 게시글 수정
-     * */
     public ChannelPostResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {
         ChannelPost channelPost = articleRepository.findChannelPostById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
@@ -139,23 +126,13 @@ public class ChannelPostService {
         return ChannelPostResponse.from(channelPost);
     }
 
-
-    /**
-     * 게시글 삭제
-     * */
     public void delete(Long articleId) {
         Channel channel = channelRepository.findByArticleId(articleId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
-        channel.removePostCount();
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
 
-
-
-    /**
-     * 게시글 권한
-     * */
     public Long articleOauth(Long articleId, Long memberId) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
@@ -166,5 +143,4 @@ public class ChannelPostService {
 
         return articleId;
     }
-
 }

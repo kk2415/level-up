@@ -23,7 +23,7 @@ public class ChannelPostRequest {
 
     public ChannelPost toEntity(Member member, Channel channel) {
         ChannelPost channelPost = ChannelPost.builder()
-                .postCategory(postCategory)
+                .channelPostCategory(postCategory)
                 .channel(channel)
                 .build();
 

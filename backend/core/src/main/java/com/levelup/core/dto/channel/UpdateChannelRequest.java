@@ -1,6 +1,5 @@
 package com.levelup.core.dto.channel;
 
-import com.levelup.core.domain.category.CategoryChannel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.Data;

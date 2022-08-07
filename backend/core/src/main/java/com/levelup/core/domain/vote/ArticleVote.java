@@ -1,6 +1,7 @@
 package com.levelup.core.domain.vote;
 
 import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.base.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,11 +11,10 @@ import javax.persistence.*;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "article_vote")
 @Entity
-public class ArticleVote {
+public class ArticleVote extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "article_vote_id")
@@ -26,6 +26,8 @@ public class ArticleVote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
     private Article article;
+
+    protected ArticleVote() {}
 
     public void setArticle(Article article) {
         if (article != null) {

@@ -30,7 +30,7 @@ public class ChannelPostResponse {
     private ArticleType articleType;
 
     private ChannelPostResponse(ChannelPost channelPost) {
-        this.id = channelPost.getArticleId();
+        this.id = channelPost.getId();
         this.memberId = channelPost.getMember().getId();
         this.title = channelPost.getTitle();
         this.writer = channelPost.getMember().getNickname();
@@ -39,7 +39,7 @@ public class ChannelPostResponse {
         this.voteCount = (long) channelPost.getArticleVotes().size();
         this.views = channelPost.getViews();
         this.commentCount = (long) channelPost.getComments().size();
-        this.postCategory = channelPost.getPostCategory();
+        this.postCategory = channelPost.getChannelPostCategory();
         this.articleType = channelPost.getArticleType();
     }
 

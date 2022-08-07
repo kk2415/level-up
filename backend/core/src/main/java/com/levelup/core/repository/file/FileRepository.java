@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface FileRepository extends JpaRepository<File, Long> {
 
-    @Query("select f from File f where f.article.articleId =: articleId")
+    @Query("select f from File f where f.article.id =: articleId")
     List<File> findByArticleId(@Param("articleId") Long articleId);
 }

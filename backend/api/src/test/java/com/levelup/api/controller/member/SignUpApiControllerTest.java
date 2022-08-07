@@ -30,6 +30,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -63,7 +65,7 @@ class SignUpApiControllerTest {
     void sign_up_test() throws Exception {
         // Given
         CreateMemberRequest request = CreateMemberRequest.of("test@email.com", "pwd", "test",
-                "test", Gender.MALE, "19970927", "010", new UploadFile("", ""));
+                "test", Gender.MALE, LocalDate.now(), "010", new UploadFile("", ""));
         given(memberService.save(any())).willReturn(CreateMemberResponse.from(request.toEntity()));
 
         // When & Then

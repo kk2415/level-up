@@ -4,40 +4,42 @@ import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.domain.vote.Vote;
+import com.levelup.core.domain.vote.ArticleVote;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DTYPE")
+@Table(name = "article")
+@Entity
 public class Article extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue
-    private Long articleId;
+    @Id @GeneratedValue
+    @Column(name = "article_id")
+    private Long id;
 
-    @Lob
+    @Lob @Column(nullable = false)
     private String content;
-    private String title;
-    private String writer;
 
-    private Long voteCount;
-    private Long commentCount;
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
     private Long views;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ArticleType articleType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
@@ -46,65 +48,32 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<File> files = new ArrayList<>();
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<ArticleVote> articleVotes = new ArrayList<>();
 
-    /**
-     * 생성 메서드
-     * */
     public static Article createArticle(Member member, String title, String content, ArticleType articleType) {
         Article article = new Article();
 
         article.setMember(member);
         article.setTitle(title);
-        article.setWriter(member.getNickname());
         article.setContent(content);
-        article.setVoteCount(0L);
-        article.setCommentCount(0L);
         article.setViews(0L);
         article.setArticleType(articleType);
 
         return article;
     }
 
-
-    /**
-     * 연관관계 매핑
-     * */
     public void setMember(Member member) {
         this.member = member;
         member.getArticles().add(this);
     }
 
-    public void addVote() {
-        addVoteCount();
-    }
-
-
-    /**
-     * 비즈니스 로직
-     * */
     public void addViews() {
         this.views++;
-    }
-
-    public void addVoteCount() {
-        this.voteCount++;
-    }
-
-    public void removeVoteCount() {
-        this.voteCount--;
-    }
-
-    public void addCommentCount() {
-        this.commentCount++;
-    }
-
-    public void removeCommentCount() {
-        this.commentCount--;
     }
 
     public void modifyArticle(String title, String content) {
         this.title = (title);
         this.content = (content);
     }
-
 }

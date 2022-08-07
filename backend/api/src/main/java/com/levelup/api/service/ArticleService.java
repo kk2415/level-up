@@ -2,19 +2,18 @@ package com.levelup.api.service;
 
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
+import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
-import com.levelup.core.dto.article.ChannelPostRequest;
-import com.levelup.core.dto.article.ChannelPostResponse;
+import com.levelup.core.dto.channelPost.ChannelPostRequest;
+import com.levelup.core.dto.channelPost.ChannelPostResponse;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
-import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,10 +36,6 @@ public class ArticleService {
     private final LocalFileStore fileStore;
     private final ArticleRepository articleRepository;
 
-
-    /**
-     * 게시글 등록
-     */
     public ArticleResponse save(ArticleRequest articleRequest, Long memberId) {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
@@ -60,10 +55,6 @@ public class ArticleService {
         return fileStore.storeFile(ImageType.POST, file);
     }
 
-
-    /**
-     * 게시글 조회
-     */
     public ArticleResponse getArticle(Long articleId, String view) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
@@ -83,7 +74,7 @@ public class ArticleService {
         } else if (field.equals("title")) {
             pages = articleRepository.findByArticleTypeAndTitle(articleType, query, pageable);
         } else if (field.equals("writer")) {
-            pages = articleRepository.findByArticleTypeAndWriter(articleType, query, pageable);
+            pages = articleRepository.findByArticleTypeAndNickname(articleType, query, pageable);
         }
 
         return pages.map(ArticleResponse::from);
@@ -105,11 +96,11 @@ public class ArticleService {
         Page<ChannelPost> pages = null;
 
         if (field == null || field.equals("")) {
-            pages = articleRepository.findByChannelId(channelId, pageable);
+            pages = articleRepository.findChannelPostByChannelId(channelId, pageable);
         } else if (field.equals("title")) {
             pages = articleRepository.findByChannelIdAndTitle(channelId, query, pageable);
         } else if (field.equals("writer")) {
-            pages = articleRepository.findByChannelIdAndWriter(channelId, query, pageable);
+            pages = articleRepository.findByChannelIdAndNickname(channelId, query, pageable);
         }
 
         return pages.map(ChannelPostResponse::from);
@@ -156,10 +147,6 @@ public class ArticleService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-
-    /**
-     * 게시글 수정
-     */
     public ArticleResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
@@ -169,18 +156,10 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
-
-    /**
-     * 게시글 삭제
-     */
     public void deleteArticle(Long articleId) {
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
 
-
-    /**
-     * 게시글 권한
-     */
     public Long articleOauth(Long articleId, Long memberId) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
@@ -191,5 +170,4 @@ public class ArticleService {
 
         return articleId;
     }
-
 }

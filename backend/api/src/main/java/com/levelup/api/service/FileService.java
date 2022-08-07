@@ -19,9 +19,6 @@ public class FileService {
 
     private final FileRepository fileRepository;
 
-    /**
-     * 생성
-     * */
     public Long save(Object object, UploadFile uploadFile) {
         File file = File.createFile(object, uploadFile);
 
@@ -40,17 +37,11 @@ public class FileService {
         return ids;
     }
 
-    /**
-     * 조회
-     * */
     public File getById(Long id) {
         return fileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("파일이 존재하지 않습니다."));
     }
 
-    /**
-     * 삭제
-     * */
     public void delete(Long id) {
         File file = fileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("파일이 존재하지 않습니다."));

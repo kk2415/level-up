@@ -6,24 +6,26 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
 @Builder
-@DiscriminatorValue("channel_post")
 @AllArgsConstructor
-@NoArgsConstructor
+@DiscriminatorValue("channel_post")
+@Table(name = "channel_post")
+@Entity
 public class ChannelPost extends Article {
 
     @Enumerated(EnumType.STRING)
-    private PostCategory postCategory;
+    @Column(name = "channel_post_category")
+    private PostCategory channelPostCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    protected ChannelPost() {}
+
     public void modifyChannelPost(String title, String contents, PostCategory postCategory) {
         this.modifyArticle(title, contents);
-        this.postCategory = postCategory;
+        this.channelPostCategory = postCategory;
     }
-
 }

@@ -1,6 +1,8 @@
 package com.levelup.core.repository.article;
 
 import com.levelup.core.domain.Article.*;
+import com.levelup.core.domain.channelPost.ChannelPost;
+import com.levelup.core.domain.channelPost.QChannelPost;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,8 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         Article article = queryFactory.select(QArticle.article)
                 .from(QArticle.article)
                 .where(QArticle.article.articleType.eq(articleType))
-                .where(QArticle.article.articleId.gt(articleId))
-                .orderBy(QArticle.article.articleId.asc())
+                .where(QArticle.article.id.gt(articleId))
+                .orderBy(QArticle.article.id.asc())
                 .fetchFirst();
 
         return Optional.ofNullable(article);
@@ -37,8 +39,8 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         Article article = queryFactory.select(QArticle.article)
                 .from(QArticle.article)
                 .where(QArticle.article.articleType.eq(articleType))
-                .where(QArticle.article.articleId.lt(articleId))
-                .orderBy(QArticle.article.articleId.desc())
+                .where(QArticle.article.id.lt(articleId))
+                .orderBy(QArticle.article.id.desc())
                 .fetchFirst();
 
         return Optional.ofNullable(article);
@@ -51,8 +53,8 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         ChannelPost channelPost = queryFactory.select(QChannelPost.channelPost)
                 .from(QChannelPost.channelPost)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId))
-                .where(QChannelPost.channelPost.articleId.gt(articleId))
-                .orderBy(QChannelPost.channelPost.articleId.asc())
+                .where(QChannelPost.channelPost.id.gt(articleId))
+                .orderBy(QChannelPost.channelPost.id.asc())
                 .fetchFirst();
 
         return Optional.ofNullable(channelPost);
@@ -65,8 +67,8 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         ChannelPost channelPost = queryFactory.select(QChannelPost.channelPost)
                 .from(QChannelPost.channelPost)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId))
-                .where(QChannelPost.channelPost.articleId.lt(articleId))
-                .orderBy(QChannelPost.channelPost.articleId.desc())
+                .where(QChannelPost.channelPost.id.lt(articleId))
+                .orderBy(QChannelPost.channelPost.id.desc())
                 .fetchFirst();
 
         return Optional.ofNullable(channelPost);
@@ -80,7 +82,7 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
                 .from(QChannelPost.channelPost)
                 .join(QChannelPost.channelPost.channel)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QChannelPost.channelPost.createAt.desc())
+                .orderBy(QChannelPost.channelPost.createdAt.desc())
                 .fetch();
     }
 
@@ -94,7 +96,7 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
                 .from(QChannelPost.channelPost)
                 .join(QChannelPost.channelPost.channel)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QChannelPost.channelPost.createAt.desc())
+                .orderBy(QChannelPost.channelPost.createdAt.desc())
                 .offset(firstPage)
                 .limit(postCount)
                 .fetch();
@@ -108,7 +110,7 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
         if (postSearch.getField().equals("title")) {
             return QChannelPost.channelPost.title.contains(postSearch.getQuery());
         }
-        return QChannelPost.channelPost.writer.contains(postSearch.getQuery());
+        return QChannelPost.channelPost.member.nickname.contains(postSearch.getQuery());
     }
 
 }

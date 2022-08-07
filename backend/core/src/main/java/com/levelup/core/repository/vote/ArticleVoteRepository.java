@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface ArticleVoteRepository extends JpaRepository<ArticleVote, Long> {
 
-    @Query("select av from ArticleVote av where av.memberId =:memberId and av.article.articleId =:articleId")
+    @Query("select av from ArticleVote av where av.memberId =:memberId and av.article.id =:articleId")
     List<ArticleVote> findByMemberIdAndArticleId(@Param("memberId") Long memberId, @Param("articleId") Long articleId);
 }

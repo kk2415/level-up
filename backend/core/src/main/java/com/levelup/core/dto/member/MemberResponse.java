@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -21,7 +22,7 @@ public class MemberResponse {
     private String name;
     private String nickname;
     private Gender gender;
-    private String birthday;
+    private LocalDate birthday;
     private String phone;
     private boolean isConfirmed;
     private UploadFile uploadFile;
