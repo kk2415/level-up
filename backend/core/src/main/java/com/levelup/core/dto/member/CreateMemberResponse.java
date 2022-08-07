@@ -5,6 +5,8 @@ import com.levelup.core.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 public class CreateMemberResponse {
@@ -15,7 +17,7 @@ public class CreateMemberResponse {
     private String name;
     private String nickname;
     private Gender gender;
-    private String birthday;
+    private LocalDate birthday;
     private String phone;
 
     private CreateMemberResponse(Member member) {

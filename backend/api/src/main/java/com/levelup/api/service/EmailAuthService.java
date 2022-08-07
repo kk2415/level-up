@@ -1,8 +1,9 @@
 package com.levelup.api.service;
 
 import com.levelup.api.util.EmailService;
-import com.levelup.core.domain.auth.EmailAuth;
-import com.levelup.core.domain.member.Authority;
+import com.levelup.core.domain.emailAuth.EmailAuth;
+import com.levelup.core.domain.role.Role;
+import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.auth.EmailAuthResponse;
 import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
@@ -40,7 +41,7 @@ public class EmailAuthService {
 
             emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
         }, () -> {
-            EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail()); //처음 발송
+            EmailAuth authEmail = EmailAuth.from(member.getEmail()); //처음 발송
             member.setEmailAuth(authEmail);
 
             emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
@@ -57,7 +58,7 @@ public class EmailAuthService {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
-        member.setAuthority(Authority.MEMBER); //인증 후 권한을 회원으로 승급
+        member.addRole(Role.of(RoleName.MEMBER, member)); //인증 후 권한을 회원으로 승급
 
         return EmailAuthResponse.of(securityCode, true);
     }
@@ -77,5 +78,4 @@ public class EmailAuthService {
 
         return between > EXPIRATION_SECOND;
     }
-
 }

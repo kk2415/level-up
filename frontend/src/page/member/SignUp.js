@@ -82,10 +82,10 @@ const SignUp = () => {
             $('#alert').append('<h5>[휴대폰번호] : 유효한 형식이 아닙니다.</h5>')
             valid = false;
         }
-        if (!validation.birthday.test(member.birthday) || member.birthday === null) {
-            $('#alert').append('<h5>[생년월일] : 생년월일은 6자리 이상 입력해주세요</h5>')
-            valid = false;
-        }
+        // if (!validation.birthday.test(member.birthday) || member.birthday === null) {
+        //     $('#alert').append('<h5>[생년월일] : 생년월일은 8자리 이상 입력해주세요</h5>')
+        //     valid = false;
+        // }
 
         if (!valid) {
             showAlertMassageBox()
@@ -144,7 +144,7 @@ const SignUp = () => {
 
             <Form.Group className="mb-3">
                 <Form.Label>생년월일</Form.Label>
-                <Form.Control id="birthday" name="birthday" placeholder="생년월일 6자리를 입력해주세요" />
+                <Form.Control type="date" id="birthday" name="birthday" placeholder="생년월일 6자리를 입력해주세요" />
             </Form.Group>
 
             <Form.Group className="mb-3">

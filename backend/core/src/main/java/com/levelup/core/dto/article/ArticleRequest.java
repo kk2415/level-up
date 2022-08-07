@@ -1,13 +1,24 @@
 package com.levelup.core.dto.article;
 
 import com.levelup.core.domain.Article.ArticleType;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ArticleRequest {
 
     private String title;
     private String content;
     private ArticleType articleType;
 
+    protected ArticleRequest() {}
+
+    private ArticleRequest(String title, String content, ArticleType articleType) {
+        this.title = title;
+        this.content = content;
+        this.articleType = articleType;
+    }
+
+    public static ArticleRequest of(String title, String content, ArticleType articleType) {
+        return new ArticleRequest(title, content, articleType);
+    }
 }

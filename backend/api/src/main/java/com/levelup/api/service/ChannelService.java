@@ -2,10 +2,11 @@ package com.levelup.api.service;
 
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.domain.channel.ChannelInfo;
-import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.role.Role;
+import com.levelup.core.dto.channel.ChannelInfo;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.file.S3FileStore;
-import com.levelup.core.domain.member.Authority;
+import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
@@ -44,25 +45,20 @@ public class ChannelService {
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
     private final S3FileStore fileStore;
-//    private final LocalFileStore fileStore;
 
     @Value("${file.linux_local_dir}")
     private String fileDir;
 
-
-    /**
-     * 생성
-     * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public CreateChannelResponse save(ChannelRequest channelRequest) {
         Member member = memberRepository.findByEmail(channelRequest.getMemberEmail())
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
-        member.setAuthority(Authority.CHANNEL_MANAGER);
+        member.addRole(Role.of(RoleName.CHANNEL_MANAGER, member));
 
         Channel channel = channelRequest.toEntity(member.getNickname());
         channelRepository.save(channel);
 
-        ChannelMember channelMember = ChannelMember.createChannelMember(member, true, false);
+        ChannelMember channelMember = ChannelMember.of(member, true, false);
         channel.setChannelMember(channelMember);
 
         return CreateChannelResponse.from(channel);
@@ -84,10 +80,6 @@ public class ChannelService {
         return fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
     }
 
-
-    /**
-     * 채널 조회
-     * */
     public ChannelResponse getChannel(Long channelId) {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -135,10 +127,6 @@ public class ChannelService {
         return new ChannelInfo(channel);
     }
 
-
-    /**
-     * 채널 수정
-     * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public ChannelResponse modify(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId)
@@ -161,10 +149,6 @@ public class ChannelService {
         return thumbNail;
     }
 
-
-    /**
-     * 채널 삭제
-     * */
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteChannel(Long channelId) {
         Channel channel = channelRepository.findById(channelId)
@@ -199,5 +183,4 @@ public class ChannelService {
             fileStore.deleteS3File(storeFileName);
         }
     }
-
 }

@@ -1,8 +1,8 @@
 package com.levelup.core.repository.article.ChannelPost;
 
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
-import com.levelup.core.domain.Article.QChannelPost;
+import com.levelup.core.domain.channelPost.ChannelPost;
+import com.levelup.core.domain.channelPost.QChannelPost;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,8 +24,8 @@ public class ChannelPostRepositoryImpl implements ChannelPostQueryRepository {
                 .from(QChannelPost.channelPost)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId))
                 .where(QChannelPost.channelPost.articleType.eq(articleType))
-                .where(QChannelPost.channelPost.articleId.gt(articleId))
-                .orderBy(QChannelPost.channelPost.articleId.asc())
+                .where(QChannelPost.channelPost.id.gt(articleId))
+                .orderBy(QChannelPost.channelPost.id.asc())
                 .fetchFirst();
 
         return Optional.ofNullable(channelPost);
@@ -39,8 +39,8 @@ public class ChannelPostRepositoryImpl implements ChannelPostQueryRepository {
                 .from(QChannelPost.channelPost)
                 .where(QChannelPost.channelPost.channel.id.eq(channelId))
                 .where(QChannelPost.channelPost.articleType.eq(articleType))
-                .where(QChannelPost.channelPost.articleId.lt(articleId))
-                .orderBy(QChannelPost.channelPost.articleId.desc())
+                .where(QChannelPost.channelPost.id.lt(articleId))
+                .orderBy(QChannelPost.channelPost.id.desc())
                 .fetchFirst();
 
         return Optional.ofNullable(channelPost);

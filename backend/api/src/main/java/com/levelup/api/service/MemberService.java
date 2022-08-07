@@ -1,14 +1,15 @@
 package com.levelup.api.service;
 
-import com.levelup.api.util.EmailService;
-import com.levelup.core.domain.auth.EmailAuth;
+import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.file.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.domain.role.Role;
+import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.dto.member.CreateMemberRequest;
 import com.levelup.core.dto.member.CreateMemberResponse;
 import com.levelup.core.dto.member.MemberResponse;
@@ -49,35 +50,33 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final ChannelRepository channelRepository;
-    private final EmailAuthService emailAuthService;
-    private final EmailService emailService;
-    private final FileService fileService;
-//    private final LocalFileStore fileStore;
     private final S3FileStore fileStore;
 
-
-    /**
-     * 생성
-     * */
     public CreateMemberResponse save(CreateMemberRequest memberRequest) {
-        validationDuplicateMember(memberRequest.getEmail()); //중복 이메일 검증
+        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname()); //중복 이메일 검증
 
         Member member = memberRequest.toEntity();
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        EmailAuth authEmail = EmailAuth.from(member.getEmail());
+        Role role = Role.of(RoleName.ANONYMOUS, member);
 
-        EmailAuth authEmail = EmailAuth.createAuthEmail(member.getEmail());
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.setEmailAuth(authEmail);
+        member.addRole(role);
 
         memberRepository.save(member);
-
         return CreateMemberResponse.from(member);
     }
 
-    private void validationDuplicateMember(String email) {
+    private void validateDuplicationMember(String email, String nickname) {
         //이 로직은 동시성 문제가 있음. 동시에 같은 아이디가 접근해서 호출하면 통과될 수 있음. 차후에 개선
         memberRepository.findByEmail(email)
                 .ifPresent(user -> {
                     throw new DuplicateEmailException("중복된 이메일입니다.");
+                });
+
+        memberRepository.findByNickname(nickname)
+                .ifPresent(user -> {
+                    throw new DuplicateEmailException("이미 사용중인 닉네임입니다.");
                 });
     }
 
@@ -90,10 +89,6 @@ public class MemberService implements UserDetailsService {
         return fileStore.storeFile(ImageType.MEMBER, file);
     }
 
-
-    /**
-     * 멤버조회
-     * */
     public List<MemberResponse> getAllMembers() {
         return memberRepository.findAll()
                 .stream()
@@ -143,15 +138,11 @@ public class MemberService implements UserDetailsService {
         return new UrlResource("file:" + fullPath);
     }
 
-
-    /**
-     * 멤버 수정
-     * */
     public void modify(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        member.updateMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
+        member.modifyMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
     }
 
     @CacheEvict(cacheNames = "member", allEntries = true)
@@ -168,16 +159,11 @@ public class MemberService implements UserDetailsService {
         }
 
         UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
-        member.modifyProfileImage(uploadFile); //변경 감지의 의한 update문 쿼리 발생
+        member.modifyProfileImage(uploadFile);
 
         return uploadFile;
     }
 
-
-    /**
-     * 멤버 삭제
-     * 삭제하는 멤버가 채널의 매니저일 경우 해당 채널도 같이 삭제 처리
-     * */
     @CacheEvict(cacheNames = {"ChannelCategory", "member"}, allEntries = true)
     public void delete(Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -210,10 +196,6 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-
-    /**
-     * 로그인 처리
-     * */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername start");
@@ -222,10 +204,12 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getAuthority().name()));
+        List<Role> roles = member.getRoles();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName()));
+        }
 
         return new User(member.getEmail(), member.getPassword(), true, true,
                 true, true, authorities);
     }
-
 }

@@ -1,7 +1,7 @@
 package com.levelup.core.dto.member;
 
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Authority;
+import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Data
@@ -42,7 +43,7 @@ public class CreateMemberRequest {
     private Gender gender;
 
     @NotNull
-    private String birthday;
+    private LocalDate birthday;
 
     @NotNull
     private String phone;
@@ -52,7 +53,7 @@ public class CreateMemberRequest {
 
     static public CreateMemberRequest of(
             String email, String password, String name, String nickname,
-            Gender gender, String birthday, String phone, UploadFile uploadFile
+            Gender gender, LocalDate birthday, String phone, UploadFile uploadFile
     ) {
         return new CreateMemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
     }
@@ -66,10 +67,11 @@ public class CreateMemberRequest {
                 .gender(gender)
                 .birthday(birthday)
                 .phone(phone)
-                .authority(Authority.ANONYMOUS)
                 .profileImage(uploadFile)
-                .channelMembers(new ArrayList<>())
                 .articles(new ArrayList<>())
+                .comments(new ArrayList<>())
+                .channelMembers(new ArrayList<>())
+                .roles(new ArrayList<>())
                 .build();
     }
 }

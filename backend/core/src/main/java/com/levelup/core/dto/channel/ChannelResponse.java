@@ -3,7 +3,7 @@ package com.levelup.core.dto.channel;
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,14 +41,16 @@ public class ChannelResponse implements Serializable {
         this.id = channel.getId();
         this.name = channel.getName();
         this.managerName = channel.getManagerName();
-        this.limitedMemberNumber = channel.getLimitedMemberNumber();
+        this.limitedMemberNumber = channel.getMemberMaxNumber();
         this.description = channel.getDescription();
-        this.thumbnailDescription = channel.getThumbnailDescription();
-        this.postCount = channel.getPostCount();
+        this.thumbnailDescription = channel.getMainDescription();
+        this.postCount = (long) channel.getChannelPosts().size();
         this.thumbnailImage = channel.getThumbnailImage();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreateAt());
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreatedAt());
         this.category = channel.getCategory();
-        this.memberCount = channel.getMemberCount();
+        this.memberCount = channel.getChannelMembers().stream()
+                .filter(member -> !member.getIsWaitingMember())
+                .count();
         this.storeFileName = channel.getThumbnailImage().getStoreFileName();
     }
 

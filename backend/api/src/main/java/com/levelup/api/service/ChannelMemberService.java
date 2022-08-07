@@ -1,7 +1,7 @@
 package com.levelup.api.service;
 
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.channelMember.ChannelMemberResponse;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
@@ -43,11 +43,11 @@ public class ChannelMemberService {
         List<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId);
 
         if (channelMembers.isEmpty()) {
-            if (channel.getChannelMembers().size() >= channel.getLimitedMemberNumber() ) {
+            if (channel.getChannelMembers().size() >= channel.getMemberMaxNumber() ) {
                 throw new NoPlaceChnnelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
             }
 
-            ChannelMember channelMember = ChannelMember.createChannelMember(
+            ChannelMember channelMember = ChannelMember.of(
                     member, false, isWaitingMember);
             channel.setChannelMember(channelMember);
 

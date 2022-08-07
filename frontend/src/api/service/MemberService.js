@@ -27,7 +27,9 @@ export const MemberService = {
                 localStorage.setItem(TOKEN, data.token)
                 localStorage.setItem('email', data.email)
                 localStorage.setItem('id', data.id)
-                localStorage.setItem('role', data.authority)
+                localStorage.setItem('isAdmin', data.isAdmin)
+
+                console.log(data)
             })
             .catch((error) => {
                 console.log(error)

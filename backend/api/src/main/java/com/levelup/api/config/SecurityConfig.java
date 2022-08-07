@@ -5,6 +5,7 @@ import com.levelup.api.filter.LoginFilter;
 import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.repository.member.MemberRepository;
+import com.levelup.core.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,7 +16,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.CorsFilter;
+
+import javax.persistence.EntityManager;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -30,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -74,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private LoginFilter getSecurityLoginFilter() throws Exception {
-        LoginFilter securityLoginFilter = new LoginFilter(memberRepository, new TokenProvider());
+        LoginFilter securityLoginFilter = new LoginFilter(memberRepository, roleRepository, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
         securityLoginFilter.setFilterProcessesUrl("/api/login");

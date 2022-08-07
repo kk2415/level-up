@@ -1,7 +1,7 @@
 package com.levelup.core.repository.article.ChannelPost;
 
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.Article.ChannelPost;
+import com.levelup.core.domain.channelPost.ChannelPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +16,7 @@ public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>,
     @Query("SELECT cp FROM ChannelPost cp " +
             "join fetch cp.member m " +
             "join fetch m.emailAuth e " +
-            "where cp.member.id = m.id and cp.articleId = :articleId")
+            "where cp.member.id = m.id and cp.id = :articleId")
     Optional<ChannelPost> findByArticleId(@Param("articleId") Long articleId);
 
     List<ChannelPost> findByChannelId(Long channelId);
@@ -36,7 +36,7 @@ public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>,
                                                             Pageable pageable);
 
     @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.articleType = :articleType " +
-            "and cp.writer like %:writer%")
+            "and cp.member.nickname like %:writer%")
     Page<ChannelPost> findByChannelIdAndWriterAndArticleType(@Param("channelId") Long channelId,
                                                              @Param("articleType") ArticleType articleType,
                                                              @Param("writer") String writer,

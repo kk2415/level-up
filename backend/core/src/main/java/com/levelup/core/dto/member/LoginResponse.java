@@ -1,6 +1,6 @@
 package com.levelup.core.dto.member;
 
-import com.levelup.core.domain.member.Authority;
+import com.levelup.core.domain.role.RoleName;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,16 +10,16 @@ public class LoginResponse {
     private Long id;
     private String email;
     private String token;
-    private Authority authority;
+    private boolean isAdmin;
 
-    private LoginResponse(Long id, String email, String token, Authority authority) {
+    private LoginResponse(Long id, String email, String token, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.token = token;
-        this.authority = authority;
+        this.isAdmin = isAdmin;
     }
 
-    public static LoginResponse of(Long id, String email, String token, Authority authority) {
-        return new LoginResponse(id, email, token, authority);
+    public static LoginResponse of(Long id, String email, String token, boolean isAdmin) {
+        return new LoginResponse(id, email, token, isAdmin);
     }
 }

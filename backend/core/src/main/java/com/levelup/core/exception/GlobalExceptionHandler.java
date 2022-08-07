@@ -8,6 +8,7 @@ import com.levelup.core.exception.member.DuplicateEmailException;
 import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.member.NotConfirmedEmailException;
+import com.levelup.core.exception.vote.DuplicateVoteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,7 +119,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
         );
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoPlaceChnnelException.class)
@@ -130,7 +131,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
         );
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateChannelMemberException.class)
@@ -142,7 +143,7 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
         );
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailCodeExpiredException.class)
@@ -154,6 +155,18 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
         );
 
-        return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateVoteException.class)
+    public ResponseEntity<ExceptionResponse> notLoggedInException(DuplicateVoteException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+        );
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

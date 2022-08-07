@@ -1,15 +1,20 @@
 package com.levelup.core.domain.member;
 
 import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.auth.EmailAuth;
+import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.base.BaseTimeEntity;
-import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.role.Role;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "member")
@@ -19,56 +24,58 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "email")
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
-    private String name;
+
+    @Column(name = "member_name", nullable = false)
+    String name;
+
+    @Column(nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gender gender;
 
-    private String birthday;
+    @Column(nullable = false)
+    private LocalDate birthday;
+
+    @Column(nullable = false)
     private String phone;
 
     @Embedded
     private UploadFile profileImage;
 
-    @Enumerated(EnumType.STRING)
-    private Authority authority;
+    @OneToOne(mappedBy = "member", fetch = LAZY, cascade = CascadeType.ALL)
+    private EmailAuth emailAuth;
 
-    /*
-     * cascade = CascadeType.ALL : member를 persist()하면 member랑 맵핑된 post도 같이 영속화된다.
-     * 하지만 postRepository를 따로 만들어서 em.persist를 할꺼라서 여기서 post를 persist 안해도 된다.
-     * */
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Role> roles;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Article> articles;
 
     @OneToMany(mappedBy = "member")
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<ChannelMember> channelMembers;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
-    private EmailAuth emailAuth;
-
-
-    /**
-     * 연관관계 매핑
-     * */
     public void setEmailAuth(EmailAuth emailAuth) {
         this.emailAuth = emailAuth;
         emailAuth.setMember(this);
     }
 
-    public void setAuthority(Authority authority) {
-        this.authority = authority;
+    public void addRole(Role role) {
+        role.setMember(this);
+        this.roles.add(role);
     }
 
     public void setPassword(String password) {
@@ -79,9 +86,8 @@ public class Member extends BaseTimeEntity {
         this.profileImage = profileImage;
     }
 
-    public void updateMember(String nickname, UploadFile profileImage) {
+    public void modifyMember(String nickname, UploadFile profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
     }
-
 }

@@ -1,25 +1,25 @@
 package com.levelup.core.dto.vote;
 
-import com.levelup.core.domain.vote.Vote;
-import com.levelup.core.domain.vote.VoteType;
-import lombok.AllArgsConstructor;
+import com.levelup.core.domain.vote.ArticleVote;
+import com.levelup.core.domain.vote.CommentVote;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class VoteResponse {
 
     private Long memberId;
     private Long targetId;
-    private VoteType voteType;
 
-    private VoteResponse(Vote vote) {
-        this.memberId = vote.getMemberId();
-        this.targetId = vote.getTargetId();
-        this.voteType = vote.getVoteType();
+    private VoteResponse(Long memberId, Long targetId) {
+        this.memberId = memberId;
+        this.targetId = targetId;
     }
 
-    public static VoteResponse from(Vote vote) {
-        return new VoteResponse(vote);
+    public static VoteResponse from(ArticleVote vote) {
+        return new VoteResponse(vote.getMemberId(), vote.getArticle().getId());
+    }
+
+    public static VoteResponse from(CommentVote vote) {
+        return new VoteResponse(vote.getMemberId(), vote.getComment().getId());
     }
 }

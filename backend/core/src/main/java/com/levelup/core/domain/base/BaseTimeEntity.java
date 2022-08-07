@@ -1,8 +1,6 @@
 package com.levelup.core.domain.base;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,11 +15,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeEntity {
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     @CreatedDate
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     @LastModifiedDate
-    private LocalDateTime updateAt;
-
+    private LocalDateTime updatedAt;
 }

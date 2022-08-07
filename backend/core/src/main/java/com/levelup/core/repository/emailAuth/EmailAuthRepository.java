@@ -1,6 +1,6 @@
 package com.levelup.core.repository.emailAuth;
 
-import com.levelup.core.domain.auth.EmailAuth;
+import com.levelup.core.domain.emailAuth.EmailAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

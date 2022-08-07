@@ -39,7 +39,7 @@ const Header = () => {
 			setSignOutShow(true)
 		}
 
-		if (localStorage.getItem('role') === 'ADMIN') {
+		if (localStorage.getItem('isAdmin') === 'true') {
 			setOnShowAdmin(true)
 		}
 	})

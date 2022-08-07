@@ -1,6 +1,6 @@
 package com.levelup.core.dto.channelMember;
 
-import com.levelup.core.domain.channel.ChannelMember;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import lombok.Data;
 
 @Data

@@ -23,11 +23,11 @@ public class CommentResponse {
     private CommentResponse(Comment comment) {
         this.id = comment.getId();
         this.memberId = comment.getMember().getId();
-        this.writer = comment.getWriter();
+        this.writer = comment.getMember().getNickname();
         this.content = comment.getContent();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(comment.getCreateAt());
-        this.voteCount = comment.getVoteCount();
-        this.replyCount = comment.getReplyCount();
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(comment.getCreatedAt());
+        this.voteCount = (long) comment.getCommentVotes().size();
+        this.replyCount = (long) comment.getChild().size();
     }
 
     public static CommentResponse from(Comment comment) {

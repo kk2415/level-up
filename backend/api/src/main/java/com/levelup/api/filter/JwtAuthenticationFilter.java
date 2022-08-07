@@ -2,12 +2,14 @@ package com.levelup.api.filter;
 
 import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.domain.role.Role;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -42,8 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Member member = memberRepository.findById(memberId)
                         .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
-                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getAuthority().name()));
+                Collection<GrantedAuthority> authorities = new ArrayList<>();
+                List<Role> roles = member.getRoles();
+                for (Role role : roles) {
+                    authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName()));
+                }
 
                 //인증완료. SecurityContextHolder에 등록해야 인증된 사용자라고 생각한다.
                 AbstractAuthenticationToken authenticationToken =

@@ -3,18 +3,15 @@ package com.levelup.api.controller;
 import com.levelup.api.service.ChannelService;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.domain.channel.ChannelInfo;
+import com.levelup.core.dto.channel.ChannelInfo;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.dto.Result;
 import com.levelup.core.dto.channel.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -32,12 +29,7 @@ import java.util.List;
 public class ChannelApiController {
 
     private final ChannelService channelService;
-    private final MemberService memberService;
 
-
-    /**
-     * 생성
-     * */
     @PostMapping("/channels")
     public CreateChannelResponse create(@RequestBody @Validated ChannelRequest channelRequest) {
         return channelService.save(channelRequest);
@@ -58,9 +50,6 @@ public class ChannelApiController {
     }
 
 
-    /**
-     * 조회
-     * */
     @GetMapping("/channels")
     public ResponseEntity<List<ChannelResponse>> getByCategory(@RequestParam ChannelCategory category) {
         List<ChannelResponse> response = channelService.getByCategory(category);
@@ -90,9 +79,7 @@ public class ChannelApiController {
     }
 
 
-    /**
-     * 수정
-     * */
+
     @PatchMapping("/channels/{channelId}")
     public ResponseEntity<ChannelResponse> modifyDetailDescription(@PathVariable Long channelId,
                                                   @RequestBody @Validated UpdateChannelRequest channelRequest) {
@@ -113,9 +100,7 @@ public class ChannelApiController {
     }
 
 
-    /**
-     * 삭제
-     * */
+
     @DeleteMapping("/channels/{channelId}")
     public ResponseEntity<Void> deleteChannel(@PathVariable Long channelId) {
         channelService.deleteChannel(channelId);

@@ -29,10 +29,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
 
-
-    /**
-     * 댓글 작성
-     * */
     public CommentResponse save(CreateCommentRequest commentRequest, Long memberId) {
         Article article = articleRepository.findById(commentRequest.getArticleId())
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
@@ -42,7 +38,6 @@ public class CommentService {
        final Comment findComment = commentRequest.toEntity(findMember, article);
 
        commentRepository.save(findComment);
-       article.addCommentCount();
 
        return CommentResponse.from(findComment);
     }
@@ -62,10 +57,6 @@ public class CommentService {
         return CommentResponse.from(replyComment);
     }
 
-
-    /**
-     * 댓글 조회
-     * */
     public List<CommentResponse> getComments(Long articleId) {
        final List<Comment> comments = commentRepository.findByArticleId(articleId);
 
@@ -83,10 +74,6 @@ public class CommentService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-
-    /**
-     * 댓글 수정
-     * */
     public void modify(Long commentId, String content) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
@@ -94,10 +81,6 @@ public class CommentService {
         findComment.changeComment(content);
     }
 
-
-    /**
-     * 댓글 삭제
-     * */
     public void deleteComment(Long commentId) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));

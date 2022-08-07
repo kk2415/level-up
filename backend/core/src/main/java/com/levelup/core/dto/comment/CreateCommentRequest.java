@@ -40,14 +40,12 @@ public class CreateCommentRequest {
     public Comment toEntity(Member member, Article article) {
         Comment comment = Comment.builder()
                 .member(member)
-                .writer(member.getNickname())
                 .content(content)
-                .voteCount(0L)
-                .replyCount(0L)
                 .child(new ArrayList<>())
+                .commentVotes(new ArrayList<>())
                 .build();
-        comment.setArticle(article);
 
+        comment.setArticle(article);
         return comment;
     }
 }

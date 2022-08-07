@@ -5,7 +5,7 @@ import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
-import com.levelup.core.dto.article.ChannelPostRequest;
+import com.levelup.core.dto.channelPost.ChannelPostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
