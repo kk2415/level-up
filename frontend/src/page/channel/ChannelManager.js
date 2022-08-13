@@ -128,11 +128,6 @@ const ChannelManager = () => {
 
             {
                 manager &&
-                // <div className="row row-cols-1 row-cols-md-3 g-4">
-                //     <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.channelInfo.waitingMemberCount} />
-                //     <MemberFrame channelId={channelId} memberCount={manager.channelInfo.memberCount} />
-                //     <PostFrame channelId={channelId} postCount={manager.channelInfo.postCount} />
-                // </div>
                 <Container className="row row-cols-1 row-cols-md-3 g-4 mb-5">
                     <WaitingMemberFrame channelId={channelId} waitingMemberCount={manager.waitingMemberCount} />
                     <MemberFrame channelId={channelId} memberCount={manager.memberCount} />
