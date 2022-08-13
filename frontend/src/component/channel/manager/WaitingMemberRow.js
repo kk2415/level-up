@@ -20,14 +20,6 @@ const WaitingMemberRow = ({info, channelId}) => {
             alert('채널 가입을 승인하였습니다')
             window.location.href = '/channel/' + channelId + '/manager'
         }
-        // await send('/api/channel/' + channelId + '/member/' + info.email, 'POST', {})
-        //     .then(() => {
-        //         alert('채널 가입을 승인하였습니다.')
-        //         window.location.href = '/channel/' + channelId + '/manager'
-        //     })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
     }
 
     return (

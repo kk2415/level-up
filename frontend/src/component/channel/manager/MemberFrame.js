@@ -14,7 +14,6 @@ const MemberFrame = ({channelId, memberCount}) => {
         const pageable = 'page=' + (curPage - 1) + '&size=' + PAGER_LENGTH + '&sort=id,desc'
 
         let result = await ChannelMemberService.getAll(channelId, false, pageable);
-        console.log(result)
 
         setMembers(result.content)
     }

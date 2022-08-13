@@ -15,5 +15,4 @@ public enum ArticleType {
         }
         return CHANNEL_POST;
     }
-
 }

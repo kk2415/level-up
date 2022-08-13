@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react';
 import PostRow from "../../../component/channel/manager/PostRow";
 import Pager from "../../pager/Pager";
 
-import {send} from "../../../api/request";
-import {Container} from 'react-bootstrap'
 import ChannelPostService from "../../../api/service/ChannelPostService";
 
 const PAGER_LENGTH = 5
