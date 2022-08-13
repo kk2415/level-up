@@ -8,13 +8,15 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Getter
 @Setter
 @Table(name = "file")
 @Entity
 public class File extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "file_id")
     private Long id;
 

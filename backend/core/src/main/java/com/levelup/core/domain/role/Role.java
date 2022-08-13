@@ -19,6 +19,7 @@ public class Role extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
     @Setter

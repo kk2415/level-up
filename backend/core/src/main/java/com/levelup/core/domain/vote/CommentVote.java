@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -17,14 +19,14 @@ import javax.persistence.*;
 @Entity
 public class CommentVote extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "comment_vote_id")
     private Long id;
 
     @Column(nullable = false)
     private Long memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 

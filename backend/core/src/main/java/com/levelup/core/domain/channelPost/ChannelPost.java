@@ -18,7 +18,7 @@ public class ChannelPost extends Article {
     @Column(name = "channel_post_category")
     private PostCategory channelPostCategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 

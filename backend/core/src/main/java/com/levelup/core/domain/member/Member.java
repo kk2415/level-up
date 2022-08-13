@@ -16,19 +16,18 @@ import java.util.List;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Entity
-@Table(name = "member")
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "member")
+@Entity
 public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -37,7 +36,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_name", nullable = false)
     String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -67,6 +66,8 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<ChannelMember> channelMembers;
+
+    protected Member (){}
 
     public void setEmailAuth(EmailAuth emailAuth) {
         this.emailAuth = emailAuth;

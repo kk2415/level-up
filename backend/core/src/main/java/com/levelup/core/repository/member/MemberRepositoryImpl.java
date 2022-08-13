@@ -18,6 +18,7 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
     public Optional<Member> findByEmail(String email) {
         Member member = em.createQuery("select m from Member m " +
                         "join fetch m.emailAuth e " +
+                        "join fetch m.roles rs " +
                         "where m.email = :email", Member.class)
                 .setParameter("email", email)
                 .getResultList()

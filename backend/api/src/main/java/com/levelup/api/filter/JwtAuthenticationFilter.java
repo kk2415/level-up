@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
+            log.info("=======start JwtAuthenticationFilter=======");
             String token = parseBearerToken(request);
 
             // JWT 토큰이 있어야 컨텍스트홀더에 authenticationToken 저장

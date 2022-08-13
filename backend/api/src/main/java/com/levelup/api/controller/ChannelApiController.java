@@ -1,7 +1,7 @@
 package com.levelup.api.controller;
 
+import com.levelup.api.dto.ChannelPagingResponse;
 import com.levelup.api.service.ChannelService;
-import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.dto.channel.ChannelInfo;
 import com.levelup.core.domain.member.Member;
@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -50,16 +52,19 @@ public class ChannelApiController {
     }
 
 
+
     @GetMapping("/channels")
-    public ResponseEntity<List<ChannelResponse>> getByCategory(@RequestParam ChannelCategory category) {
-        List<ChannelResponse> response = channelService.getByCategory(category);
+    public ResponseEntity<Page<ChannelPagingResponse>> getByCategory(@RequestParam ChannelCategory category,
+                                                                     Pageable pageable) {
+        Page<ChannelPagingResponse> response = channelService.getByCategory(category, pageable);
 
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/channels/{channelId}")
-    public ResponseEntity<ChannelResponse> getByChannelId(@PathVariable Long channelId) {
-        ChannelResponse response = channelService.getChannel(channelId);
+    public ResponseEntity<ChannelResponse> getByChannelId(@PathVariable Long channelId,
+                                                          @AuthenticationPrincipal Member member) {
+        ChannelResponse response = channelService.getChannel(channelId, member);
 
         return ResponseEntity.ok().body(response);
     }
@@ -73,6 +78,7 @@ public class ChannelApiController {
     @GetMapping("/channels/{channelId}/manager")
     public ResponseEntity<ChannelInfo> getChannelAllInfo(@PathVariable Long channelId,
                                    @AuthenticationPrincipal Member member) {
+        log.error("=======start getChannelAllInfo========");
         ChannelInfo response = channelService.getChannelAllInfo(channelId, member.getId());
 
         return ResponseEntity.ok().body(response);

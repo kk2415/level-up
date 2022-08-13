@@ -35,24 +35,17 @@ public class MemberRepositoryTest extends TestSupporter {
 
     private final MemberRepository memberRepository;
     private final ChannelRepository channelRepository;
-    private final RoleRepository roleRepository;
-
-    @PersistenceContext
-    private EntityManager em;
 
     @AfterEach
     public void setup() {
         memberRepository.deleteAll();
         channelRepository.deleteAll();
-        roleRepository.deleteAll();
     }
 
     public MemberRepositoryTest(@Autowired MemberRepository memberRepository,
-                                @Autowired ChannelRepository channelRepository,
-                                @Autowired RoleRepository roleRepository) {
+                                @Autowired ChannelRepository channelRepository) {
         this.memberRepository = memberRepository;
         this.channelRepository = channelRepository;
-        this.roleRepository = roleRepository;
     }
 
     @DisplayName("멤버 생성 및 조회 테스트")
@@ -95,29 +88,5 @@ public class MemberRepositoryTest extends TestSupporter {
 
         // Then
         assertThat(findMembers.size()).isEqualTo(3);
-    }
-
-    @Test
-    void roleTest() {
-        Member member = createMember("testEmail@test.com", "testUser");
-        Role role = Role.of(RoleName.MEMBER, member);
-        member.addRole(role);
-
-        memberRepository.save(member);
-
-        Role role2 = Role.of(RoleName.ADMIN, member);
-        Role role3 = Role.of(RoleName.ADMIN, member);
-        Role role4 = Role.of(RoleName.ADMIN, member);
-        Role role5 = Role.of(RoleName.ADMIN, member);
-        System.out.println("===============" + role4.getRoleName().getName() + "================");
-
-        member.addRole(role2);
-        member.addRole(role3);
-        member.addRole(role4);
-        member.addRole(role5);
-
-        em.flush();
-
-        Assertions.assertThat(roleRepository.findAll().size()).isEqualTo(5);
     }
 }

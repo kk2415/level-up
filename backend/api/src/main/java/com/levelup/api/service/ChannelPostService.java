@@ -5,7 +5,7 @@ import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.file.ImageType;
-import com.levelup.core.domain.file.LocalFileStore;
+import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticleResponse;
@@ -102,15 +102,6 @@ public class ChannelPostService {
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ChannelPostResponse.from(channelPost);
-    }
-
-    public List<ArticleResponse> getByMemberId(Long memberId) {
-        List<Article> articles = articleRepository.findByMemberId(memberId).orElseThrow(
-                () -> new PostNotFoundException("존재하는 게시글이 없습니다."));
-
-        return articles.stream()
-                .map(ArticleResponse::from)
-                .collect(Collectors.toUnmodifiableList());
     }
 
     public ChannelPostResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {

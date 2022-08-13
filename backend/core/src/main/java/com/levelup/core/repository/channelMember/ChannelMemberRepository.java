@@ -16,8 +16,13 @@ public interface ChannelMemberRepository extends JpaRepository<ChannelMember, Lo
 
     List<ChannelMember> findByChannelIdAndMemberId(Long channelId, Long memberId);
 
-    @EntityGraph(attributePaths = {"member", "channel"})
-    @Query("select cm from ChannelMember cm where cm.channel.id = :channelId and cm.isWaitingMember = :isWaitingMember")
+    @Query(value = "select cm from ChannelMember cm " +
+            "join fetch cm.member m " +
+            "join fetch m.emailAuth ea " +
+            "join fetch cm.channel c " +
+            "where cm.channel.id = :channelId and cm.isWaitingMember = :isWaitingMember",
+            countQuery = "select count(cm) from ChannelMember cm " +
+                    "where cm.channel.id = :channelId and cm.isWaitingMember = :isWaitingMember")
     Page<ChannelMember> findByChannelIdAndIsWaitingMember(@Param("channelId") Long channelId,
                                                           @Param("isWaitingMember") Boolean isWaitingMember,
                                                           Pageable pageable);

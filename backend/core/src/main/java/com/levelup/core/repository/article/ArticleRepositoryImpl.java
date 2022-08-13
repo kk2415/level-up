@@ -3,13 +3,12 @@ package com.levelup.core.repository.article;
 import com.levelup.core.domain.Article.*;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channelPost.QChannelPost;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +16,30 @@ import java.util.Optional;
 public class ArticleRepositoryImpl implements ArticleQueryRepository {
 
     private final EntityManager em;
+    private final JpaResultMapper jpaResultMapper;
+
+//    @Override
+//    public List<ArticlePagingDto> findByArticleType(ArticleType articleType, Pageable pageable) {
+//        String sql =
+//                "select a.article_id as articleId, " +
+//                        "a.title, " +
+//                        "a.views, " +
+//                        "a.article_type as articleType, " +
+//                        "a.created_at as createdAt, " +
+//                        "m.nickname as writer, " +
+//                        "(select count(1) from comment c where exists " +
+//                            "(select 1 from article where c.article_id = a.article_id)) as commentCount, " +
+//                        "(select count(1) from article_vote av where exists " +
+//                            "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
+//                "from article a left outer join member m on a.member_id = m.member_id " +
+//                "where article_type = '" + articleType.name() + "'" +
+//                    " order by a." + PageableUtil.getProperty(pageable) + " " + PageableUtil.getDirection(pageable) +
+//                    " limit " + pageable.getPageSize() +
+//                    " offset " + pageable.getOffset();
+//
+//        Query nativeQuery = em.createNativeQuery(sql);
+//        return jpaResultMapper.list(nativeQuery, ArticlePagingDto.class);
+//    }
 
     @Override
     public Optional<Article> findNextPageByArticleType(Long articleId, ArticleType articleType) {
@@ -73,44 +96,4 @@ public class ArticleRepositoryImpl implements ArticleQueryRepository {
 
         return Optional.ofNullable(channelPost);
     }
-
-    @Override
-    public List<ChannelPost> findByChannelId(Long channelId, SearchCondition postSearch) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        return queryFactory.select(QChannelPost.channelPost)
-                .from(QChannelPost.channelPost)
-                .join(QChannelPost.channelPost.channel)
-                .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QChannelPost.channelPost.createdAt.desc())
-                .fetch();
-    }
-
-    @Override
-    public List<ChannelPost> findByChannelId(Long channelId, int page, int postCount, SearchCondition postSearch) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        int firstPage = (page - 1) * postCount; //0, 10, 20, 30
-
-        return queryFactory.select(QChannelPost.channelPost)
-                .from(QChannelPost.channelPost)
-                .join(QChannelPost.channelPost.channel)
-                .where(QChannelPost.channelPost.channel.id.eq(channelId), equalQuery(postSearch))
-                .orderBy(QChannelPost.channelPost.createdAt.desc())
-                .offset(firstPage)
-                .limit(postCount)
-                .fetch();
-    }
-
-    private BooleanExpression equalQuery(SearchCondition postSearch) {
-        if (postSearch == null || postSearch.getField() == null || postSearch.getQuery() == null) {
-            return null;
-        }
-
-        if (postSearch.getField().equals("title")) {
-            return QChannelPost.channelPost.title.contains(postSearch.getQuery());
-        }
-        return QChannelPost.channelPost.member.nickname.contains(postSearch.getQuery());
-    }
-
 }

@@ -11,17 +11,21 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DTYPE")
-@Table(name = "article")
+@DiscriminatorValue("article")
+@Table(name = "article", indexes = {
+        @Index(columnList = "title, articleType"),
+        @Index(columnList = "createdAt")
+})
 @Entity
 public class Article extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "article_id")
     private Long id;
 
@@ -38,8 +42,8 @@ public class Article extends BaseTimeEntity {
     @Column(nullable = false)
     private ArticleType articleType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
@@ -51,7 +55,9 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<ArticleVote> articleVotes = new ArrayList<>();
 
-    public static Article createArticle(Member member, String title, String content, ArticleType articleType) {
+    protected Article() {}
+
+    public static Article of(Member member, String title, String content, ArticleType articleType) {
         Article article = new Article();
 
         article.setMember(member);

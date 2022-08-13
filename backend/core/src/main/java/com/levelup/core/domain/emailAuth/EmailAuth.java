@@ -16,7 +16,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "email_auth")
 @Entity
 public class EmailAuth extends BaseTimeEntity {
@@ -25,7 +24,7 @@ public class EmailAuth extends BaseTimeEntity {
     @Column(name = "email_auth_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -37,9 +36,11 @@ public class EmailAuth extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime receivedDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    protected EmailAuth() {}
 
     public void setMember(Member member) {
         this.member = member;

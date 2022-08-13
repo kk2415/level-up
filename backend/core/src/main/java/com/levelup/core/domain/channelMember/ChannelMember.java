@@ -7,6 +7,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -14,7 +16,7 @@ import javax.persistence.*;
 @Entity
 public class ChannelMember extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "channel_member_id")
     private Long id;
 
@@ -26,12 +28,12 @@ public class ChannelMember extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isWaitingMember;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
