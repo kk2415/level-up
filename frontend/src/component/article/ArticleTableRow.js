@@ -26,7 +26,7 @@ const ArticleTableRow = ({info, url}) => {
                     <td>{info.writer}</td>
                     <td>{info.views}</td>
                     <td>{info.voteCount}</td>
-                    <td>{info.dateCreated}</td>
+                    <td>{info.createdAt}</td>
                 </tr>
             }
         </>
