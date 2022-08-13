@@ -1,8 +1,10 @@
-package com.levelup.core.domain.file;
+package com.levelup.api.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.levelup.core.domain.file.ImageType;
+import com.levelup.core.domain.file.UploadFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

@@ -66,7 +66,7 @@ const Channel = () => {
     const loadChannelInfo = async (channelId) => {
         let result = await ChannelService.get(channelId)
 
-        if (result.managerId === Number(localStorage.getItem('id'))) {
+        if (result.manager) {
             setIsManager(true)
         }
 
@@ -170,7 +170,7 @@ const Channel = () => {
         loadChannelInfo(channelId)
         loadChannelPosts(channelId, searchCondition)
 
-    }, [channelName, curPage])
+    }, [curPage])
 
     return (
         <>

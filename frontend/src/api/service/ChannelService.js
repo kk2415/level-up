@@ -42,10 +42,10 @@ const ChannelService = {
         return result;
     },
 
-    getByCategory: async (category) => {
+    getByCategory: async (category, pageable) => {
         let result = {}
 
-        await send('/api/v1/channels?category=' + category, 'GET')
+        await send('/api/v1/channels?category=' + category + '&' + pageable, 'GET')
             .then((data) => {
                 result = data;
             })

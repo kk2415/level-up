@@ -23,8 +23,6 @@ public class TestSecurityConfig {
 
     @BeforeTestMethod
     public void securitySetUp() {
-
-
         //테스트용 계정 정보 하나 저장
         //UserDetailsService에서 userAccountRepository.findById을 사용하니까 미리 데이터를 설정함
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(

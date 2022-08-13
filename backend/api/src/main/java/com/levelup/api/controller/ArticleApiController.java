@@ -1,5 +1,6 @@
 package com.levelup.api.controller;
 
+import com.levelup.api.dto.ArticlePagingResponse;
 import com.levelup.api.service.ArticleService;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
@@ -46,11 +47,11 @@ public class ArticleApiController {
     }
 
     @GetMapping("/articles")
-    public ResponseEntity<Page<ArticleResponse>> getPosts(@RequestParam ArticleType articleType,
-                                                          Pageable pageable,
-                                                          @RequestParam(required = false) String field,
-                                                          @RequestParam(required = false) String query) {
-        Page<ArticleResponse> response = articleService.getArticles(articleType, field, query, pageable);
+    public ResponseEntity<Page<ArticlePagingResponse>> getPosts(@RequestParam ArticleType articleType,
+                                                                 Pageable pageable,
+                                                                 @RequestParam(required = false) String field,
+                                                                 @RequestParam(required = false) String query) {
+        Page<ArticlePagingResponse> response = articleService.getArticles(articleType, field, query, pageable);
 
         return ResponseEntity.ok().body(response);
     }

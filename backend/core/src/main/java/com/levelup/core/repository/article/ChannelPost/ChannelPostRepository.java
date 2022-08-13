@@ -4,6 +4,7 @@ import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,7 +24,10 @@ public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>,
     List<ChannelPost> findByChannelIdAndArticleType(Long channelId, ArticleType articleType);
     Page<ChannelPost> findByChannelId(Long channelId, Pageable pageable);
 
-    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.articleType = :articleType")
+    @Query(value = "select cp from ChannelPost cp " +
+            "join fetch cp.member m " +
+            "where cp.channel.id = :channelId and cp.articleType = :articleType",
+    countQuery = "select count(cp) from ChannelPost cp where cp.channel.id = :channelId and cp.articleType = :articleType")
     Page<ChannelPost> findByChannelIdAndArticleType(@Param("channelId") Long channelId,
                                                     @Param("articleType") ArticleType articleType,
                                                     Pageable pageable);

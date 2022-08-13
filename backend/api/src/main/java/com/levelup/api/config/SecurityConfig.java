@@ -3,23 +3,20 @@ package com.levelup.api.config;
 import com.levelup.api.filter.JwtAuthenticationFilter;
 import com.levelup.api.filter.LoginFilter;
 import com.levelup.api.util.jwt.TokenProvider;
-import com.levelup.api.service.MemberService;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
-
-import javax.persistence.EntityManager;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -32,9 +29,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -56,9 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(POST,"/api/v1/sign-up", "/api/v1/members/image", "/api/login").permitAll()
                 .antMatchers("/api/v1/members").authenticated()
 
+                .antMatchers(GET, "/api/v1/channels/**").permitAll()
                 .antMatchers("/api/v1/channels/{\\d+}/manager", "/api/v1/channels/{\\d+}/member/**",
                         "/api/v1/channels/{\\d+}/waiting-member/**").hasAnyRole("CHANNEL_MANAGER", "ADMIN")
-                .antMatchers(GET, "/api/v1/channels/**").permitAll()
                 .antMatchers("/api/v1/channels/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers(GET, "/api/v1/comments/**").permitAll()
@@ -84,11 +85,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         securityLoginFilter.setAuthenticationManager(authenticationManager());
         securityLoginFilter.setFilterProcessesUrl("/api/login");
         return securityLoginFilter;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override

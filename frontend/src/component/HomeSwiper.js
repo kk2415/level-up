@@ -17,12 +17,13 @@ const StudySwiper = () => {
 	const [count, setCount] = useState(0)
 
 	const loadChannels = async (category) => {
-		let result = await ChannelService.getByCategory(category);
+		const pageable = 'page=0&size=10&sort=channel_id,desc'
+		let result = await ChannelService.getByCategory(category, pageable);
 
-		setChannels(result)
+		setChannels(result.content)
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		loadChannels('STUDY')
 	}, [])
 
@@ -67,9 +68,10 @@ const ProjectSwiper = () => {
 	const [count, setCount] = useState(0)
 
 	const loadChannels = async (category) => {
-		let result = await ChannelService.getByCategory(category);
+		const pageable = 'page=0&size=10&sort=channel_id,desc'
+		let result = await ChannelService.getByCategory(category, pageable);
 
-		setChannels(result)
+		setChannels(result.content)
 	}
 
 	useLayoutEffect(() => {

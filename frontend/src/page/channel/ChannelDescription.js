@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
 import $ from 'jquery'
-import {useNavigate} from 'react-router-dom'
 import ChannelService from '../../api/service/ChannelService'
 import ChannelMemberService from "../../api/service/ChannelMemberService";
 import {Container} from 'react-bootstrap'
@@ -8,7 +7,6 @@ import {TOKEN} from "../../api/token";
 import react from "react";
 import {AiOutlineImport} from "react-icons/ai";
 import '../../css/channel.css'
-import CommentService from "../../api/service/CommentService";
 
 const getChannelId = () => {
     let pathname = decodeURI($(window.location).attr('pathname'))
@@ -40,6 +38,8 @@ const ChannelDescription = () => {
 
     const loadDescription = async (channelId) => {
         let result = await ChannelService.get(channelId)
+        console.log(result)
+
         setDescription(result)
     }
 
@@ -106,13 +106,13 @@ const ChannelDescription = () => {
                         </div>
                         <div className="float-end">
                             {
-                                description.managerId === Number(localStorage.getItem('id')) &&
+                                description.manager &&
                                 <button onClick={handleModifyChannel} className="btn btn-sm btn-secondary" type="button" id="modifyButton">
                                     채널 수정
                                 </button>
                             }
                             {
-                                description.managerId === Number(localStorage.getItem('id')) &&
+                                description.manager &&
                                 <button onClick={handleDeleteChannel} className="btn btn-sm btn-danger" type="button" id="deleteButton">
                                     채널 삭제
                                 </button>
@@ -122,7 +122,7 @@ const ChannelDescription = () => {
                     <br /><br />
 
                     {
-                        !(description.managerId === Number(localStorage.getItem('id'))) &&
+                        !description.manager &&
                         <button onClick={handleRegisterChannel} className="btn btn-lg btn-success" type="button" id="registerStudyButton">
                             가입 신청
                         </button>

@@ -57,6 +57,8 @@ public class CommentService {
         return CommentResponse.from(replyComment);
     }
 
+
+
     public List<CommentResponse> getComments(Long articleId) {
        final List<Comment> comments = commentRepository.findByArticleId(articleId);
 
@@ -74,12 +76,16 @@ public class CommentService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+
+
     public void modify(Long commentId, String content) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
 
         findComment.changeComment(content);
     }
+
+
 
     public void deleteComment(Long commentId) {
         Comment findComment = commentRepository.findById(commentId)

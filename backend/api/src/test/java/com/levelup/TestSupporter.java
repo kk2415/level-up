@@ -10,6 +10,8 @@ import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.domain.role.Role;
+import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.dto.channel.ChannelRequest;
 import com.levelup.core.dto.comment.CreateCommentRequest;
 import com.levelup.core.dto.comment.CreateReplyCommentRequest;
@@ -23,9 +25,11 @@ public class TestSupporter {
         CreateMemberRequest memberRequest = CreateMemberRequest.of(email, "00000000", name,
                 "testNickname", Gender.MALE, LocalDate.now(), "010-2354-9960", new UploadFile("", ""));
         EmailAuth authEmail = EmailAuth.from(memberRequest.getEmail());
-
         Member member = memberRequest.toEntity();
+        Role role = Role.of(RoleName.MEMBER, member);
+
         member.setEmailAuth(authEmail);
+        member.addRole(role);
 
         return member;
     }
@@ -42,7 +46,7 @@ public class TestSupporter {
     }
 
     protected Article createArticle(Member member, String title, ArticleType articleType) {
-        return Article.createArticle(member, title, "test", articleType);
+        return Article.of(member, title, "test", articleType);
     }
 
     protected Comment createComment(Member member, Article article) {

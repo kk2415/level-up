@@ -11,6 +11,7 @@ import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ public class CommentRepositoryTest extends TestSupporter {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
-    @BeforeEach
+    @AfterEach
     public void setup() {
         memberRepository.deleteAll();
         channelRepository.deleteAll();

@@ -108,7 +108,7 @@ const ArticleList = () => {
             '&query=' + searchCondition.querys
 
         if (searchCondition.field === "" || searchCondition.querys === "") {
-            url = '/article/list?articleType=' + articleType + 'page=' + previousPage
+            url = '/article/list?articleType=' + articleType + '&page=' + previousPage
         }
 
         if (previousPage > 0) {
@@ -130,8 +130,9 @@ const ArticleList = () => {
     }
 
     const loadArticles = async (articleType, searchCondition) => {
-        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
+        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=article_id,desc'
         let result = await ArticleService.getAll(articleType, pageable, searchCondition)
+        console.log(result)
 
         setArticle(result.content)
         setArticleCount(result.totalElements)

@@ -7,6 +7,7 @@ import com.levelup.core.dto.Result;
 import com.levelup.core.dto.channelPost.ChannelPostRequest;
 import com.levelup.core.dto.channelPost.ChannelPostResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -22,10 +24,6 @@ public class ChannelPostApiController {
 
     private final ChannelPostService channelPostService;
 
-
-    /**
-     * 생성
-     * */
     @PostMapping("/channel-posts")
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
                                                       @RequestParam("channel") Long channelId,
@@ -35,9 +33,8 @@ public class ChannelPostApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    /**
-     * 조회
-     * */
+
+
     @GetMapping("/channel-posts/{articleId}")
     public ResponseEntity<ChannelPostResponse> getPost(@PathVariable Long articleId,
                                                        @RequestParam(required = false, defaultValue = "false") String view) {
@@ -52,6 +49,7 @@ public class ChannelPostApiController {
                                                               Pageable pageable,
                                                               @RequestParam(required = false) String field,
                                                               @RequestParam(required = false) String query) {
+        log.error("=======start getChannelPosts========");
         Page<ChannelPostResponse> response = channelPostService.getChannelPosts(
                 channelId, articleType, field, query, pageable);
 
@@ -84,9 +82,7 @@ public class ChannelPostApiController {
     }
 
 
-    /**
-     * 수정
-     * */
+
     @PatchMapping("/channel-posts/{articleId}")
     public ResponseEntity<ChannelPostResponse> updatePost(@PathVariable Long articleId,
                                      @RequestBody ChannelPostRequest request,
@@ -97,9 +93,7 @@ public class ChannelPostApiController {
     }
 
 
-    /**
-     * 삭제
-     * */
+
     @DeleteMapping("/channel-posts/{articleId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long articleId) {
         channelPostService.delete(articleId);

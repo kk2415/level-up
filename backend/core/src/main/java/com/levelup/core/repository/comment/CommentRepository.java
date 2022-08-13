@@ -1,6 +1,5 @@
 package com.levelup.core.repository.comment;
 
-
 import com.levelup.core.domain.comment.Comment;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

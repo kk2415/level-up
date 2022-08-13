@@ -1,12 +1,14 @@
 package com.levelup.api.service;
 
+import com.levelup.api.dto.ArticlePagingResponse;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.file.ImageType;
-import com.levelup.core.domain.file.LocalFileStore;
+import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.dto.article.ArticlePagingDto;
 import com.levelup.core.dto.article.ArticleRequest;
 import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.channelPost.ChannelPostRequest;
@@ -24,8 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,7 +40,7 @@ public class ArticleService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
-        final Article article = Article.createArticle(member, articleRequest.getTitle(), articleRequest.getContent(),
+        final Article article = Article.of(member, articleRequest.getTitle(), articleRequest.getContent(),
                 articleRequest.getArticleType());
         articleRepository.save(article);
 
@@ -66,18 +66,18 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
-    public Page<ArticleResponse> getArticles(ArticleType articleType, String field, String query, Pageable pageable) {
-        Page<Article> pages = null;
+    public Page<ArticlePagingResponse> getArticles(ArticleType articleType, String field, String query, Pageable pageable) {
+        Page<ArticlePagingDto> pages = null;
 
         if (field == null || field.equals("")) {
-            pages = articleRepository.findByArticleType(articleType, pageable);
-        } else if (field.equals("title")) {
-            pages = articleRepository.findByArticleTypeAndTitle(articleType, query, pageable);
-        } else if (field.equals("writer")) {
-            pages = articleRepository.findByArticleTypeAndNickname(articleType, query, pageable);
+            pages = articleRepository.findByArticleType(articleType.name(), pageable);
+        } else if ("title".equals(field)) {
+            pages = articleRepository.findByTitleAndArticleType(query, articleType.name(), pageable);
+        } else if ("writer".equals(field)) {
+            pages = articleRepository.findByNicknameAndArticleType(query, articleType.name(), pageable);
         }
 
-        return pages.map(ArticleResponse::from);
+        return pages.map(ArticlePagingResponse::from);
     }
 
     public ChannelPostResponse getChannelPost(Long articleId, String view) {
@@ -97,17 +97,13 @@ public class ArticleService {
 
         if (field == null || field.equals("")) {
             pages = articleRepository.findChannelPostByChannelId(channelId, pageable);
-        } else if (field.equals("title")) {
+        } else if ("title".equals(field)) {
             pages = articleRepository.findByChannelIdAndTitle(channelId, query, pageable);
-        } else if (field.equals("writer")) {
+        } else if ("writer".equals(field)) {
             pages = articleRepository.findByChannelIdAndNickname(channelId, query, pageable);
         }
 
         return pages.map(ChannelPostResponse::from);
-    }
-
-    public void getChannelPostsCount(Long channelId, String field, String query) {
-
     }
 
     public ArticleResponse getNextPageByArticleType(Long articleId, ArticleType articleType) {
@@ -136,15 +132,6 @@ public class ArticleService {
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ChannelPostResponse.from(channelPost);
-    }
-
-    public List<ArticleResponse> getByMemberId(Long memberId) {
-        List<Article> articles = articleRepository.findByMemberId(memberId).orElseThrow(
-                () -> new PostNotFoundException("존재하는 게시글이 없습니다."));
-
-        return articles.stream()
-                .map(ArticleResponse::from)
-                .collect(Collectors.toUnmodifiableList());
     }
 
     public ArticleResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {

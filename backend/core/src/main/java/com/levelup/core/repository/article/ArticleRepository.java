@@ -3,6 +3,7 @@ package com.levelup.core.repository.article;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
+import com.levelup.core.dto.article.ArticlePagingDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -10,27 +11,68 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleQueryRepository {
 
-    Optional<List<Article>> findByMemberId(Long memberId);
+    @EntityGraph(attributePaths = {"member", "member.emailAuth", "comments"})
+    Optional<Article> findById(Long id);
 
-    @EntityGraph(attributePaths = "member")
-    Page<Article> findByArticleType(ArticleType articleType, Pageable pageable);
+    @Query(value =
+            "select a.article_id as articleId, " +
+                    "a.title, " +
+                    "a.views, " +
+                    "a.article_type as articleType, " +
+                    "a.created_at as createdAt, " +
+                    "m.nickname as writer, " +
+                    "(select count(1) from comment c where exists " +
+                    "(select 1 from article where c.article_id = a.article_id)) as commentCount, " +
+                    "(select count(1) from article_vote av where exists " +
+                    "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
+                    "from article a left outer join member m on a.member_id = m.member_id " +
+                    "where article_type = :articleType",
+            countQuery = "select count(*) from article a where a.article_type = :articleType",
+            nativeQuery = true)
+    Page<ArticlePagingDto> findByArticleType(@Param("articleType") String articleType, Pageable pageable);
 
-    @EntityGraph(attributePaths = "member")
-    @Query("select a from Article a where a.articleType = :articleType and a.title like %:title%")
-    Page<Article> findByArticleTypeAndTitle(@Param("articleType") ArticleType articleType,
-                                            @Param("title") String title,
-                                            Pageable pageable);
+    @Query(value =
+            "select a.article_id as articleId, " +
+                    "a.title, " +
+                    "a.views, " +
+                    "a.article_type as articleType, " +
+                    "a.created_at as createdAt, " +
+                    "m.nickname as writer, " +
+                    "(select count(1) from comment c where exists " +
+                    "(select 1 from article where c.article_id = a.article_id)) as commentCount, " +
+                    "(select count(1) from article_vote av where exists " +
+                    "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
+                    "from article a left outer join member m on a.member_id = m.member_id " +
+                    "where a.title like %:title% and a.article_type = :articleType",
+            countQuery = "select count(*) from article a where a.title like %:title% and a.article_type = :articleType",
+            nativeQuery = true)
+    Page<ArticlePagingDto> findByTitleAndArticleType(@Param("title") String title,
+                                                     @Param("articleType") String articleType,
+                                                     Pageable pageable);
 
-    @EntityGraph(attributePaths = "member")
-    @Query("select a from Article a where a.articleType = :articleType and a.member.nickname like %:nickname%")
-    Page<Article> findByArticleTypeAndNickname(@Param("articleType") ArticleType articleType,
-                                               @Param("nickname") String nickname,
-                                               Pageable pageable);
+    @Query(value =
+            "select a.article_id as articleId, " +
+                    "a.title, " +
+                    "a.views, " +
+                    "a.article_type as articleType, " +
+                    "a.created_at as createdAt, " +
+                    "m.nickname as writer, " +
+                    "(select count(1) from comment c where exists " +
+                    "(select 1 from article where c.article_id = a.article_id)) as commentCount, " +
+                    "(select count(1) from article_vote av where exists " +
+                    "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
+                    "from article a left outer join member m on a.member_id = m.member_id " +
+                    "where m.nickname like %:nickname% and a.article_type = :articleType",
+            countQuery = "select count(*) from article a join member m on m.member_id = a.member_id " +
+                    "where m.nickname like %:nickname% and a.article_type = :articleType",
+            nativeQuery = true)
+    Page<ArticlePagingDto> findByNicknameAndArticleType(@Param("nickname") String nickname,
+                                                        @Param("articleType") String articleType,
+                                                        Pageable pageable);
 
     @EntityGraph(attributePaths = "member")
     @Query("select cp from ChannelPost cp where cp.id = :articleId")

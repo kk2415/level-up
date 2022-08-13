@@ -1,14 +1,15 @@
 package com.levelup.api.service;
 
+import com.levelup.api.dto.ChannelPagingResponse;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.dto.channel.ChannelInfo;
 import com.levelup.core.domain.channelMember.ChannelMember;
-import com.levelup.core.domain.file.S3FileStore;
+import com.levelup.api.util.S3FileStore;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.dto.file.Base64Dto;
-import com.levelup.core.domain.file.LocalFileStore;
+import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
@@ -24,6 +25,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +39,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,26 +86,43 @@ public class ChannelService {
         return fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
     }
 
-    public ChannelResponse getChannel(Long channelId) {
+
+
+    public ChannelResponse getChannel(Long channelId, Member member) {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+        boolean isManager = getIsManager(findChannel, member);
 
-        return ChannelResponse.from(findChannel);
+        return ChannelResponse.of(findChannel, isManager);
+    }
+
+    private boolean getIsManager(Channel channel, Member member) {
+        if (member != null) {
+            Optional<ChannelMember> optionalMember = channel.getChannelMembers()
+                    .stream()
+                    .filter(ChannelMember::getIsManager)
+                    .findFirst();
+
+            if (optionalMember.isPresent()) {
+                Member manager = optionalMember.get().getMember();
+                return manager.getId().equals(member.getId());
+            }
+        }
+        return false;
     }
 
     @Cacheable(cacheNames = "ChannelCategory")
-    public List<ChannelResponse> getByCategory(ChannelCategory category) {
-        return channelRepository.findByCategory(category)
-                .stream().map(ChannelResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+    public Page<ChannelPagingResponse> getByCategory(ChannelCategory category, Pageable pageable) {
+        return channelRepository.findByCategory(category.name(), pageable)
+                .map(ChannelPagingResponse::from);
     }
 
-    public List<ChannelResponse> getAll() {
-        return channelRepository.findAll().stream()
-                .map(ChannelResponse::from)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
+    /*
+     * @ResponseBody + byte[]또는, Resource 를 반환하는 경우 바이트 정보가 반환됩니다.
+     * <img> 에서는 이 바이트 정보를 읽어서 이미지로 반환하게 됩니다.
+     *
+     * Resource 를 리턴할 때 ResourceHttpMessageConverter 가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
+     * */
     public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -111,12 +134,6 @@ public class ChannelService {
         UploadFile uploadFile = findChannel.getThumbnailImage();
         String fullPath = fileStore.getFullPath(uploadFile.getStoreFileName());
 
-        /*
-         * @ResponseBody + byte[]또는, Resource를 반환하는 경우 바이트 정보가 반환됩니다.
-         * <img> 에서는 이 바이트 정보를 읽어서 이미지로 반환하게 됩니다.
-         *
-         * Resource를 리턴할 때 ResourceHttpMessageConverter가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
-         * */
         return new UrlResource("file:" + fullPath);
     }
 
@@ -126,6 +143,8 @@ public class ChannelService {
 
         return new ChannelInfo(channel);
     }
+
+
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public ChannelResponse modify(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
