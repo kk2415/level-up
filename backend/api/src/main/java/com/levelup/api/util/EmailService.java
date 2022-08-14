@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
@@ -31,6 +32,7 @@ public class EmailService {
         sender.send(message);
     }
 
+    @Async
     public void sendConfirmEmail(String toEmail, String securityCode) {
         String subject = "회원가입 이메일 인증";
         String body = "";
@@ -52,5 +54,4 @@ public class EmailService {
 
         send(toEmail, subject, body);
     }
-
 }
