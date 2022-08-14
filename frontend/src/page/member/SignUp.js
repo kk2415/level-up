@@ -49,7 +49,7 @@ const SignUp = () => {
                 alert(result.name + '님 가입되었습니다')
                 alert('인증번호를 발송 중입니다. 잠시만 기다랴주세요.')
 
-                // AuthEmailService.sendSecurityCode();
+                // await AuthEmailService.sendSecurityCode();
             }
         }
     }
