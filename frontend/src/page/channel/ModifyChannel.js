@@ -149,7 +149,7 @@ const CreateChannel = () => {
 
     useEffect(() => {
         showChannel()
-
+        configSummernote()
         if (description) {
             $('#summernote').val(description.description)
         }
@@ -158,7 +158,6 @@ const CreateChannel = () => {
     useLayoutEffect(() => {
         setChannelId(getChannelId())
         loadDescription(channelId)
-        configSummernote()
     }, [])
 
     return (

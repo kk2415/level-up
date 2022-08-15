@@ -2,6 +2,7 @@ package com.levelup.core.repository;
 
 import com.levelup.TestSupporter;
 import com.levelup.api.ApiApplication;
+import com.levelup.api.dto.ChannelPagingResponse;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.member.Member;
@@ -26,6 +27,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -144,8 +146,10 @@ public class ChannelRepositoryTest extends TestSupporter {
         Page<ChannelPagingDto> result = channelRepository.findByCategory(
                         ChannelCategory.STUDY.name(),
                 PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "channel_id")));
-
+        List<ChannelPagingResponse> collect = result.map(ChannelPagingResponse::from)
+                .stream()
+                .collect(Collectors.toList());
         // Then
-        Assertions.assertThat(result.getTotalElements()).isEqualTo(2);
+        Assertions.assertThat(collect.size()).isEqualTo(2);
     }
 }
