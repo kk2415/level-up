@@ -44,14 +44,13 @@ class VoteApiControllerTest extends TestSupporter {
 
     private final MemberRepository memberRepository;
     private final ArticleRepository articleRepository;
-    private final ArticleService articleService;
     private final ArticleVoteRepository articleVoteRepository;
 
-    public VoteApiControllerTest(@Autowired MemberRepository memberRepository, @Autowired ArticleRepository articleRepository,
-                                 @Autowired ArticleService articleService, @Autowired ArticleVoteRepository articleVoteRepository) {
+    public VoteApiControllerTest(@Autowired MemberRepository memberRepository,
+                                 @Autowired ArticleRepository articleRepository,
+                                 @Autowired ArticleVoteRepository articleVoteRepository) {
         this.memberRepository = memberRepository;
         this.articleRepository = articleRepository;
-        this.articleService = articleService;
         this.articleVoteRepository = articleVoteRepository;
     }
 
