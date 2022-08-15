@@ -88,6 +88,7 @@
         <!-- =================================================================== -->
         <!-- off, fatal, error, warn, info, debug, trace, all -->
         <Root level="info" additivity="false">
+            <AppenderRef ref="console" />
             <AppenderRef ref="file" level="info" />
             <AppenderRef ref="errorFile" level="warn" />
         </Root>
