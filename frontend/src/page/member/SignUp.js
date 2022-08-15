@@ -63,7 +63,7 @@ const SignUp = () => {
             valid = false;
         }
         if (!validation.nickname.test(member.nickname) || member.nickname === null) {
-            $('#alert').append('<h5>[닉네임] : 이름은 2자리 이상 15이하, 영문, 숫자 또는 한글만 입력하세요</h5>')
+            $('#alert').append('<h5>[닉네임] : 닉네임은 2자리 이상 15이하, 영문 대소문자, 숫자, 한글만 입력하세요</h5>')
             valid = false;
         }
         if (!validation.email.test(member.email) || member.email === null) {
@@ -82,10 +82,10 @@ const SignUp = () => {
             $('#alert').append('<h5>[휴대폰번호] : 유효한 형식이 아닙니다.</h5>')
             valid = false;
         }
-        // if (!validation.birthday.test(member.birthday) || member.birthday === null) {
-        //     $('#alert').append('<h5>[생년월일] : 생년월일은 8자리 이상 입력해주세요</h5>')
-        //     valid = false;
-        // }
+        if (member.birthday === null) {
+            $('#alert').append('<h5>[생년월일] : 생년월일을 입력해주세요</h5>')
+            valid = false;
+        }
 
         if (!valid) {
             showAlertMassageBox()
