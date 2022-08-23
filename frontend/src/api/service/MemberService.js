@@ -58,6 +58,21 @@ export const MemberService = {
         return member
     },
 
+    getById : async function getMember(memberId) {
+        let member = {}
+
+        await send('/api/v1/members/' + memberId, 'GET')
+            .then((data) => {
+                member = data
+            })
+            .catch((error) => {
+                member = null
+                console.log(error)
+            })
+
+        return member
+    },
+
     confirmEmail : async function confirmEmail(auth) {
         let members = {}
 
