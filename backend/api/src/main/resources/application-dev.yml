@@ -28,10 +28,5 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher #actuator 설정실패 때문에 삽입
 
-  redis:
-    host: 3.37.129.182
-    port: 6379
-    password: Dudrhkd10ck!
-
 logging:
   config: classpath:log4j2-dev.xml
