@@ -18,10 +18,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DTYPE")
 @DiscriminatorValue("article")
-@Table(name = "article", indexes = {
-        @Index(columnList = "title, articleType"),
-        @Index(columnList = "createdAt")
-})
+@Table(name = "article")
 @Entity
 public class Article extends BaseTimeEntity {
 
@@ -55,7 +52,7 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<ArticleVote> articleVotes = new ArrayList<>();
 
-    protected Article() {}
+    public Article() {}
 
     public static Article of(Member member, String title, String content, ArticleType articleType) {
         Article article = new Article();
@@ -65,7 +62,6 @@ public class Article extends BaseTimeEntity {
         article.setContent(content);
         article.setViews(0L);
         article.setArticleType(articleType);
-
         return article;
     }
 
