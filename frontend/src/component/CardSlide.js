@@ -40,9 +40,9 @@ const CardSlide = ({ channel }) => {
 							<div className="card-title col-lg-6 col-sm-12 text-lg-start text-center">
 								{channel.managerName}
 							</div>
-							<div className="card-title col-lg-6 col-sm-12 text-lg-end text-center">
-								<small className="text-muted">{channel.memberCount} / {channel.memberMaxNumber}</small>
-							</div>
+							{/*<div className="card-title col-lg-6 col-sm-12 text-lg-end text-center">*/}
+							{/*	<small className="text-muted">{channel.memberCount} / {channel.memberMaxNumber}</small>*/}
+							{/*</div>*/}
 						</div>
 
 					</Card.Footer>
