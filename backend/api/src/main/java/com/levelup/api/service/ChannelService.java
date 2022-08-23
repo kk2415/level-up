@@ -176,7 +176,6 @@ public class ChannelService {
         channelRepository.delete(channel);
     }
 
-    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteMember(Long channelId, String email) {
         Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
