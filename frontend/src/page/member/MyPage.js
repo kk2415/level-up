@@ -13,7 +13,7 @@ const MyPage = () => {
     let navigate = new useNavigate();
 
     const loadMember = async () => {
-        let result = await MemberService.get()
+        let result = await MemberService.getById(localStorage.getItem('id'))
         if (!result) {
             alert('권한이 없습니다')
             window.location.href = '/'
