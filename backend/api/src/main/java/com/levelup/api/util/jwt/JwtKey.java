@@ -37,5 +37,4 @@ public class JwtKey {
 
         return key == null ? null : Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
-
 }

@@ -8,7 +8,6 @@ import com.levelup.core.domain.file.ImageType;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.article.ArticleResponse;
 import com.levelup.core.dto.channelPost.ChannelPostRequest;
 import com.levelup.core.dto.channelPost.ChannelPostResponse;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
@@ -27,8 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -50,7 +47,6 @@ public class ChannelPostService {
         ChannelPost channelPost = channelPostRequest.toEntity(member, channel);
 
         channelPostRepository.save(channelPost);
-
         return ChannelPostResponse.from(channelPost);
     }
 

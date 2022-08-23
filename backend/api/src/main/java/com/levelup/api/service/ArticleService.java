@@ -69,7 +69,7 @@ public class ArticleService {
     public Page<ArticlePagingResponse> getArticles(ArticleType articleType, String field, String query, Pageable pageable) {
         Page<ArticlePagingDto> pages = null;
 
-        if (field == null || field.equals("")) {
+        if (field == null || "".equals(field)) {
             pages = articleRepository.findByArticleType(articleType.name(), pageable);
         } else if ("title".equals(field)) {
             pages = articleRepository.findByTitleAndArticleType(query, articleType.name(), pageable);

@@ -3,11 +3,8 @@ package com.levelup.api.controller.member;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.Result;
 import com.levelup.core.dto.member.MemberResponse;
 import com.levelup.core.dto.member.UpdateMemberRequest;
-import com.levelup.core.exception.member.MemberNotFoundException;
-import com.levelup.core.repository.member.MemberRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 @Tag(name = "회원 API")
 @Slf4j
@@ -41,12 +35,6 @@ public class MemberApiController {
     @PostMapping("/members/image")
     public ResponseEntity<UploadFile> createProfileImage(HttpServletRequest request,
                                                          @ModelAttribute MultipartFile file) throws IOException {
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        for (String s : parameterMap.keySet()) {
-            System.out.println("key : " + s);
-            System.out.println("value : " + Arrays.toString(parameterMap.get(s)));
-        }
-
         UploadFile response = memberService.createProfileImage(file);
         return ResponseEntity.ok().body(response);
     }
@@ -55,12 +43,19 @@ public class MemberApiController {
     /**
      * 조회
      * */
-    @GetMapping("/members/{email}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable("email") String email) {
-        MemberResponse response = memberService.getByEmail(email);
+    @GetMapping("/members/{memberId}")
+    public ResponseEntity<MemberResponse> getMemberById(@PathVariable("memberId") Long memberId) {
+        MemberResponse response = memberService.getById(memberId);
 
         return ResponseEntity.ok().body(response);
     }
+
+//    @GetMapping("/members/{email}")
+//    public ResponseEntity<MemberResponse> getMember(@PathVariable("email") String email) {
+//        MemberResponse response = memberService.getByEmail(email);
+//
+//        return ResponseEntity.ok().body(response);
+//    }
 
     @GetMapping(path = "/members/{email}/image", produces = "image/jpeg")
     public ResponseEntity<Resource> getProfileImage(@PathVariable String email) throws MalformedURLException {
