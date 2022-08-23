@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum ArticleType {
 
-    CHANNEL_POST, CHANNEL_NOTICE, NOTICE, QNA, POST, COMMENT;
+    CHANNEL_POST, CHANNEL_NOTICE, NOTICE, QNA;
 
     @JsonCreator
     public static ArticleType enumMatching(String enumName) {
