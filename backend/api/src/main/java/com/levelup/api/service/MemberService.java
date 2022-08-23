@@ -100,10 +100,6 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        if (member == null) {
-            throw new MemberNotFoundException("가입된 회원이 아닙니다");
-        }
-
         return MemberResponse.from(member);
     }
 
@@ -112,9 +108,6 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
-        if (member == null) {
-            throw new MemberNotFoundException("가입된 회원이 아닙니다");
-        }
         return MemberResponse.from(member);
     }
 
