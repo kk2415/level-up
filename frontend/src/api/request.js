@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { BACKEND_URL } from "./backEndHost.js"
+import {BACKEND_URL} from "./backEndHost.js"
 import {TOKEN} from './token'
 
 export async function send(url, method, requestBody) {
@@ -7,9 +7,15 @@ export async function send(url, method, requestBody) {
 		"Content-Type" : "application/json",
 	}
 
-	const accessToken = localStorage.getItem(TOKEN)
-	if (accessToken && accessToken !== null) {
-		headers.Authorization = "Bearer "+ accessToken
+	const accessToken = JSON.parse(localStorage.getItem(TOKEN))
+	if (accessToken) {
+		let validationResult = await validateAccessToken(accessToken);
+		if (validationResult) {
+			headers.Authorization = "Bearer " + accessToken.token
+		} else {
+			localStorage.clear();
+			window.location.href = "/signin"
+		}
 	}
 
 	let options = {
@@ -19,30 +25,92 @@ export async function send(url, method, requestBody) {
 		async: false,
 	}
 
-	if (requestBody && requestBody !== null) {
+	if (requestBody) {
 		options.data = JSON.stringify(requestBody)
-		// options.data = requestBody
 	}
 
 	return await new Promise((resolve, reject) => {
 		$.ajax(options)
-		.done(function (response, textStatus, request) {
-			resolve(response)
-		})
-		.fail(function (error) {
-			reject(error)
-		})
+			.done(function (response, textStatus, request) {
+				resolve(response)
+			})
+			.fail(function (error) {
+				reject(error)
+			})
 	})
 }
 
+const validateAccessToken = async (accessToken) => {
+	if (accessToken) {
+		if (isExpired(accessToken.expiration)) {
+			return false
+		} else if (isOneMinuteBeforeExpiration(accessToken.expiration)) {
+			//토큰 연장
+			let newAccessToken = await requestAccessToken(accessToken)
+			if (newAccessToken) {
+				accessToken = newAccessToken
+				localStorage.setItem(TOKEN, JSON.stringify(newAccessToken))
+			}
+		}
+		return true
+	}
+	return false
+}
+
+const isExpired = (expiration) => {
+	let now = new Date;
+	let duration = expiration - now.getTime();
+
+	return duration <= 1000
+}
+
+const isOneMinuteBeforeExpiration = (expiration) => {
+	let now = new Date;
+	let duration = expiration - now.getTime();
+
+	return duration > 0 && duration < 60000
+}
+
+const requestAccessToken = (accessToken) => {
+	let newAccessToken = {}
+
+	let data = {
+		memberId : localStorage.getItem('id'),
+		token : accessToken.token,
+		expiration : accessToken.expiration,
+		issuedAt : accessToken.issuedAt,
+	}
+
+	$.ajax({
+		url: BACKEND_URL + '/api/v1/access-token',
+		type: 'POST',
+		data: JSON.stringify(data),
+		contentType: 'application/json',
+		dataType: 'json',
+		async: false,
+		success: function(res) {
+			newAccessToken = res
+		},
+		error: function(error) {
+			console.log(error)
+		}
+	})
+	return newAccessToken
+}
 
 export async function sendMultiPart(url, method, requestBody) {
 	let headers = {
 	}
 
-	const accessToken = localStorage.getItem(TOKEN)
-	if (accessToken && accessToken !== null) {
-		headers.Authorization = "Bearer "+ accessToken
+	const accessToken = JSON.parse(localStorage.getItem(TOKEN))
+	if (accessToken) {
+		let validationResult = await validateAccessToken(accessToken);
+		if (validationResult) {
+			headers.Authorization = "Bearer " + accessToken.token
+		} else {
+			localStorage.clear();
+			window.location.href = "/signin"
+		}
 	}
 
 	let options = {
@@ -56,7 +124,7 @@ export async function sendMultiPart(url, method, requestBody) {
 		enctype: 'multipart/form-data',
 	}
 
-	if (requestBody && requestBody !== null) {
+	if (requestBody) {
 		options.data = requestBody
 	}
 

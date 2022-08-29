@@ -24,7 +24,7 @@ export const MemberService = {
         await send('/api/login', 'POST', member)
             .then((data) => {
                 result = true
-                localStorage.setItem(TOKEN, data.token)
+                localStorage.setItem(TOKEN, JSON.stringify(data.accessToken))
                 localStorage.setItem('email', data.email)
                 localStorage.setItem('id', data.id)
                 localStorage.setItem('isAdmin', data.isAdmin)

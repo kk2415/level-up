@@ -9,8 +9,6 @@ import "swiper/css/pagination";
 import ChannelService from "../api/service/ChannelService";
 
 import CardSlide from "./CardSlide";
-import { send } from "../api/request"
-
 
 const StudySwiper = () => {
 	const [channels, setChannels] = useState([])

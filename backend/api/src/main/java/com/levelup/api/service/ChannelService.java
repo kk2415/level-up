@@ -88,25 +88,23 @@ public class ChannelService {
 
 
 
-    public ChannelResponse getChannel(Long channelId, Member member) {
+    public ChannelResponse getChannel(Long channelId, Long memberId) {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
-        boolean isManager = getIsManager(findChannel, member);
+        boolean isManager = getIsManager(findChannel, memberId);
 
         return ChannelResponse.of(findChannel, isManager);
     }
 
-    private boolean getIsManager(Channel channel, Member member) {
-        if (member != null) {
-            Optional<ChannelMember> optionalMember = channel.getChannelMembers()
-                    .stream()
-                    .filter(ChannelMember::getIsManager)
-                    .findFirst();
+    private boolean getIsManager(Channel channel, Long memberId) {
+        Optional<ChannelMember> optionalMember = channel.getChannelMembers()
+                .stream()
+                .filter(ChannelMember::getIsManager)
+                .findAny();
 
-            if (optionalMember.isPresent()) {
-                Member manager = optionalMember.get().getMember();
-                return manager.getId().equals(member.getId());
-            }
+        if (optionalMember.isPresent()) {
+            Member manager = optionalMember.get().getMember();
+            return manager.getId().equals(memberId);
         }
         return false;
     }
