@@ -12,6 +12,7 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
         classpath "org.asciidoctor:asciidoctor-gradle-jvm:3.3.2"
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.5.3"
     }
 }
 
@@ -20,6 +21,7 @@ subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: "org.asciidoctor.jvm.convert"
+    apply plugin: "me.champeau.gradle.jmh"
 
     group = 'com.together'
     version = 'v1.0'
@@ -69,6 +71,9 @@ subprojects {
 
         implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+        jmhImplementation 'org.openjdk.jmh:jmh-core:1.35'
+        jmhImplementation 'org.openjdk.jmh:jmh-generator-annprocess:1.35'
+
         runtimeOnly 'com.h2database:h2'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -92,6 +97,12 @@ subprojects {
     asciidoctor {
         inputs.dir(snippetDir)
         dependsOn test
+    }
+
+    jmh {
+        fork = 1
+        warmupIterations = 1
+        iterations = 1
     }
 }
 
