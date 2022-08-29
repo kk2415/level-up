@@ -1,15 +1,17 @@
 package com.levelup.api.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.levelup.api.util.jwt.AccessToken;
 import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.dto.member.LoginRequest;
-import com.levelup.core.dto.member.LoginResponse;
+import com.levelup.api.dto.member.LoginResponse;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.role.RoleRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -66,14 +67,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper mapper = new ObjectMapper();
 
         String email = ((User)authResult.getPrincipal()).getUsername();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         Set<Role> roles = roleRepository.findByMemberId(member.getId());
         boolean isAdmin = roles.stream().anyMatch(role -> role.getRoleName().equals(RoleName.ADMIN));
 
-        String token = tokenProvider.create(member);
-        LoginResponse loginResponse = LoginResponse.of(member.getId(), email, token, isAdmin);
+        String token = tokenProvider.createAccessToken(member.getId());
+        Claims tokenBody = tokenProvider.getBody(token);
+        AccessToken accessToken = AccessToken.of(token, tokenBody.getExpiration(), tokenBody.getIssuedAt());
+
+        LoginResponse loginResponse = LoginResponse.of(member.getId(), email, accessToken, isAdmin);
 
         response.setContentType("application/json");
         response.getWriter().write(mapper.writeValueAsString(loginResponse));

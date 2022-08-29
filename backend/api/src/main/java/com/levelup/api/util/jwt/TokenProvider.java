@@ -1,34 +1,31 @@
 package com.levelup.api.util.jwt;
 
-import com.levelup.core.domain.member.Member;
 import io.jsonwebtoken.*;
+import lombok.Getter;
 import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-@Service
+@Getter
+@Component
 public class TokenProvider {
 
-    private static final String SECRET_KEY = "NMA8JPctFuna59f5";// HS512 + 비밀키로 시그니쳐 값 생성
+    private Date expireDate;
 
-    /*
-    * JWT 토큰 생성
-    * */
-    public String create(Member member) {
+    public String createAccessToken(Long memberId) {
         Pair<String, Key> key = JwtKey.getRandomKey();
-        Claims subject = Jwts.claims().setSubject(String.valueOf(member.getId())); //subject
-        Date expireDate = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
+        Claims subject = Jwts.claims().setSubject(String.valueOf(memberId)); //subject
+        this.expireDate = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES)); //ExpiredJwtException
 
-        //JWT Token 생성
         return Jwts.builder()
                 .setHeaderParam(JwsHeader.KEY_ID, key.getFirst()) //header
 
                 .setClaims(subject) //subject
-                .setIssuer("demo app") //iis
+                .setIssuer("level up") //iis
                 .setIssuedAt(new Date()) //iat
                 .setExpiration(expireDate) //exp
 
@@ -36,31 +33,36 @@ public class TokenProvider {
                 .compact();
     }
 
-    /*
-     * JWT 토큰 검증 및 토큰 subject 에 저정했던 데이터 반환
-     * */
-    public String getMemberId(String token) {
+    public JwtException validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKeyResolver(SigningKeyResolver.instance) //JWT 만들었을 때 사용했던 비밀키를 넣어줘야됨
+                    .build()
+                    .parseClaimsJws(token);
+
+            return JwtException.SUCCESS;
+        } catch (ExpiredJwtException e) {
+            return JwtException.EXPIRED;
+        } catch (SignatureException e) {
+            return JwtException.SIGNATURE;
+        }
+    }
+
+    public String getSubject(String token) {
         return Jwts.parserBuilder()
                 .setSigningKeyResolver(SigningKeyResolver.instance) //JWT 만들었을 때 사용했던 비밀키를 넣어줘야됨
                 .build()
-                .parseClaimsJws(token) //토큰 파싱 -> 토큰 검증 실패 시 에외 발생
+                .parseClaimsJws(token)
+                //토큰 파싱 -> 토큰 검증 실패 시 에외 발생 (SignatureException) JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.
                 .getBody()
                 .getSubject();
     }
-}
 
-//   [Header]
-//   {
-//    "alg" : "HS521",
-//   }.
-//
-//   [payload]
-//   {
-//    "sub" : "40288093784915d20174916a40c0001",
-//    "iis" : "demo app",
-//    "iat" : 15973367,
-//    "exp" : 15973367,
-//   }.
-//
-//   [signature]
-//   Nn4d1MOVLZg79sfFACTIpCPKqWmpZMZQsbNdJJNWKRv50_l7bPLQPwhMobT4BOG6Q3JYjhDrKFLBSaUxz
+    public Claims getBody(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKeyResolver(SigningKeyResolver.instance)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+}

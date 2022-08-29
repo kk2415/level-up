@@ -1,5 +1,6 @@
 package com.levelup.api.filter;
 
+import com.levelup.api.util.jwt.JwtException;
 import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -35,44 +37,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            log.info("=======start JwtAuthenticationFilter=======");
-            String token = parseBearerToken(request);
+        log.info("=======Start Jwt Authentication Filter=======");
+        parseBearerToken(request)
+                .ifPresent((token) -> {
+                    JwtException validationResult = tokenProvider.validateToken(token);
 
-            // JWT 토큰이 있어야 컨텍스트홀더에 authenticationToken 저장
-            if (token != null && !token.equalsIgnoreCase("null")) {
-                //id 가져오기
-                Long memberId = Long.valueOf(tokenProvider.getMemberId(token));
-                Member member = memberRepository.findById(memberId)
-                        .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+                    switch (validationResult) {
+                        case SUCCESS:
+                            Long memberId = Long.valueOf(tokenProvider.getSubject(token));
+                            Member member = memberRepository.findById(memberId)
+                                    .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
-                Collection<GrantedAuthority> authorities = new ArrayList<>();
-                List<Role> roles = member.getRoles();
-                for (Role role : roles) {
-                    authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName()));
-                }
+                            Collection<GrantedAuthority> authorities = new ArrayList<>();
+                            List<Role> roles = member.getRoles();
+                            for (Role role : roles) {
+                                authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName()));
+                            }
 
-                //인증완료. SecurityContextHolder에 등록해야 인증된 사용자라고 생각한다.
-                AbstractAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(member, null, authorities);
+                            AbstractAuthenticationToken authenticationToken =
+                                    new UsernamePasswordAuthenticationToken(member, null, authorities);
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        }
-        catch(Exception e) {
-            log.error("Could not set user authentication in security context", e);
-        }
-
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                            break;
+                        case EXPIRED:
+                            log.error("Token's expired");
+                            break;
+                        default:
+                            log.error("Token isn't valid");
+                    }
+                });
         filterChain.doFilter(request, response);
     }
 
-    private String parseBearerToken(HttpServletRequest request) {
+    private Optional<String> parseBearerToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        String token = null;
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+            token = bearerToken.substring(7);
         }
-        return null;
+        return Optional.ofNullable(token);
     }
-
 }
