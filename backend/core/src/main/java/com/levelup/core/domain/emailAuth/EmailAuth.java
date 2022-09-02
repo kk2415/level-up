@@ -1,6 +1,7 @@
 package com.levelup.core.domain.emailAuth;
 
 import com.levelup.core.domain.base.BaseTimeEntity;
+import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -83,4 +85,15 @@ public class EmailAuth extends BaseTimeEntity {
         return securityCode;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof EmailAuth)) return false;
+        return id != null && id.equals(((EmailAuth) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

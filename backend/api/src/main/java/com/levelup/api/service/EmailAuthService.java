@@ -1,11 +1,11 @@
 package com.levelup.api.service;
 
-import com.levelup.api.util.EmailService;
+import com.levelup.api.util.EmailSender;
 import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.auth.EmailAuthResponse;
+import com.levelup.api.dto.auth.EmailAuthResponse;
 import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.emailAuth.NotMatchSecurityCodeException;
@@ -28,7 +28,7 @@ public class EmailAuthService {
 
     private final MemberRepository memberRepository;
     private final EmailAuthRepository emailAuthRepository;
-    private final EmailService emailService;
+    private final EmailSender emailService;
 
     public void sendSecurityCode(Long memberId) {
         Member member = memberRepository.findById(memberId)

@@ -58,8 +58,8 @@ public class CacheConfig {
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .computePrefixWith(name -> name + ":")
-                .entryTtl(Duration.ofSeconds(TTL))
-                .serializeKeysWith(fromSerializer(new StringRedisSerializer()));
+                .entryTtl(Duration.ofSeconds(TTL));
+//                .serializeKeysWith(fromSerializer(new StringRedisSerializer()));
     }
 
     private ObjectMapper objectMapper() {

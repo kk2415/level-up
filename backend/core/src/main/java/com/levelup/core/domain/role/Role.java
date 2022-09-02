@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -36,5 +38,17 @@ public class Role extends BaseTimeEntity {
 
     public static Role of(RoleName roleName, Member member) {
         return new Role(roleName, member);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Role)) return false;
+        return id != null && id.equals(((Role) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

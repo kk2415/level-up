@@ -1,14 +1,13 @@
 package com.levelup.api.controller;
 
-import com.levelup.api.dto.ChannelPagingResponse;
+import com.levelup.api.dto.channel.*;
 import com.levelup.api.service.ChannelService;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.dto.channel.ChannelInfo;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.file.Base64Dto;
+import com.levelup.api.dto.file.Base64Dto;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.dto.channel.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -22,8 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
+@Tag(name = "채널 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -64,7 +63,7 @@ public class ChannelApiController {
     @GetMapping("/channels/{channelId}")
     public ResponseEntity<ChannelResponse> getByChannelId(@PathVariable Long channelId,
                                                           @AuthenticationPrincipal Member member) {
-        ChannelResponse response = channelService.getChannel(channelId, member);
+        ChannelResponse response = channelService.getChannel(channelId, member == null ? null : member.getId());
 
         return ResponseEntity.ok().body(response);
     }
@@ -76,10 +75,9 @@ public class ChannelApiController {
 
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
     @GetMapping("/channels/{channelId}/manager")
-    public ResponseEntity<ChannelInfo> getChannelAllInfo(@PathVariable Long channelId,
-                                   @AuthenticationPrincipal Member member) {
-        log.error("=======start getChannelAllInfo========");
-        ChannelInfo response = channelService.getChannelAllInfo(channelId, member.getId());
+    public ResponseEntity<ChannelInfo> getChannelAllInfo(@PathVariable("channelId") Long channelId,
+                                                         @RequestParam("member") Long memberId) {
+        ChannelInfo response = channelService.getChannelAllInfo(channelId, memberId);
 
         return ResponseEntity.ok().body(response);
     }

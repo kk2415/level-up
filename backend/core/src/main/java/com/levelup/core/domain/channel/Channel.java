@@ -1,5 +1,6 @@
 package com.levelup.core.domain.channel;
 
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.base.BaseTimeEntity;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -88,5 +90,17 @@ public class Channel extends BaseTimeEntity {
 
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Channel)) return false;
+        return id != null && id.equals(((Channel) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

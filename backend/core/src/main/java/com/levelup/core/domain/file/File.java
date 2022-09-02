@@ -3,10 +3,13 @@ package com.levelup.core.domain.file;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
+import com.levelup.core.domain.emailAuth.EmailAuth;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -50,5 +53,17 @@ public class File extends BaseTimeEntity {
         }
 
         return file;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof File)) return false;
+        return id != null && id.equals(((File) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -1,18 +1,17 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.ArticlePagingResponse;
+import com.levelup.api.dto.article.ArticlePagingResponse;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticlePagingDto;
-import com.levelup.core.dto.article.ArticleRequest;
-import com.levelup.core.dto.article.ArticleResponse;
-import com.levelup.core.dto.channelPost.ChannelPostRequest;
-import com.levelup.core.dto.channelPost.ChannelPostResponse;
+import com.levelup.api.dto.article.ArticleRequest;
+import com.levelup.api.dto.article.ArticleResponse;
+import com.levelup.api.dto.channelPost.ChannelPostRequest;
+import com.levelup.core.exception.AuthorityException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
@@ -55,11 +54,13 @@ public class ArticleService {
         return fileStore.storeFile(ImageType.POST, file);
     }
 
-    public ArticleResponse getArticle(Long articleId, String view) {
+
+
+    public ArticleResponse getArticle(Long articleId, boolean view) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
 
-        if (view.equals("true")) {
+        if (view) {
             article.addViews();
         }
 
@@ -80,32 +81,6 @@ public class ArticleService {
         return pages.map(ArticlePagingResponse::from);
     }
 
-    public ChannelPostResponse getChannelPost(Long articleId, String view) {
-        ChannelPost channelPost = articleRepository.findChannelPostById(articleId)
-                .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
-
-        if (view.equals("true")) {
-            channelPost.addViews();
-            ;
-        }
-
-        return ChannelPostResponse.from(channelPost);
-    }
-
-    public Page<ChannelPostResponse> getChannelPosts(Long channelId, String field, String query, Pageable pageable) {
-        Page<ChannelPost> pages = null;
-
-        if (field == null || field.equals("")) {
-            pages = articleRepository.findChannelPostByChannelId(channelId, pageable);
-        } else if ("title".equals(field)) {
-            pages = articleRepository.findByChannelIdAndTitle(channelId, query, pageable);
-        } else if ("writer".equals(field)) {
-            pages = articleRepository.findByChannelIdAndNickname(channelId, query, pageable);
-        }
-
-        return pages.map(ChannelPostResponse::from);
-    }
-
     public ArticleResponse getNextPageByArticleType(Long articleId, ArticleType articleType) {
         final Article article = articleRepository.findNextPageByArticleType(articleId, articleType)
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
@@ -120,26 +95,17 @@ public class ArticleService {
         return ArticleResponse.from(article);
     }
 
-    public ChannelPostResponse getNextPageByChannelId(Long articleId, Long channelId) {
-        final ChannelPost channelPost = articleRepository.findNextPageByChannelId(articleId, channelId)
-                .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
-        return ChannelPostResponse.from(channelPost);
-    }
-
-    public ChannelPostResponse getPrevPageByChannelId(Long articleId, Long channelId) {
-        final ChannelPost channelPost = articleRepository.findPrevPageChannelId(articleId, channelId)
-                .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
-
-        return ChannelPostResponse.from(channelPost);
-    }
 
     public ArticleResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
 
-        article.modifyArticle(request.getTitle(), request.getContent());
+        if (!article.getMember().getId().equals(memberId)) {
+            throw new AuthorityException("작성자만 게시글을 수정할 수 있습니다.");
+        }
 
+        article.modifyArticle(request.getTitle(), request.getContent());
         return ArticleResponse.from(article);
     }
 

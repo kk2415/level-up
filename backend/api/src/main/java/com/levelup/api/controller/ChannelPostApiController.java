@@ -3,19 +3,19 @@ package com.levelup.api.controller;
 import com.levelup.api.service.ChannelPostService;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.Result;
-import com.levelup.core.dto.channelPost.ChannelPostRequest;
-import com.levelup.core.dto.channelPost.ChannelPostResponse;
+import com.levelup.api.dto.channelPost.ChannelPostRequest;
+import com.levelup.api.dto.channelPost.ChannelPostResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "채널 게시글 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +23,15 @@ import org.springframework.web.bind.annotation.*;
 public class ChannelPostApiController {
 
     private final ChannelPostService channelPostService;
+
+    @PostMapping("/channel-posts-for-test")
+    public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
+                                                      @RequestParam("channel") Long channelId,
+                                                      @RequestParam Long memberId) {
+        ChannelPostResponse response = channelPostService.save(request, memberId, channelId);
+
+        return ResponseEntity.ok().body(response);
+    }
 
     @PostMapping("/channel-posts")
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
@@ -37,7 +46,7 @@ public class ChannelPostApiController {
 
     @GetMapping("/channel-posts/{articleId}")
     public ResponseEntity<ChannelPostResponse> getPost(@PathVariable Long articleId,
-                                                       @RequestParam(required = false, defaultValue = "false") String view) {
+                                                       @RequestParam(required = false, defaultValue = "false") boolean view) {
         ChannelPostResponse response = channelPostService.getChannelPost(articleId, view);
 
         return ResponseEntity.ok().body(response);
@@ -49,7 +58,6 @@ public class ChannelPostApiController {
                                                               Pageable pageable,
                                                               @RequestParam(required = false) String field,
                                                               @RequestParam(required = false) String query) {
-        log.error("=======start getChannelPosts========");
         Page<ChannelPostResponse> response = channelPostService.getChannelPosts(
                 channelId, articleType, field, query, pageable);
 
@@ -74,14 +82,16 @@ public class ChannelPostApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/channel-posts/{articleId}/oauth")
-    public ResponseEntity checkMember(@PathVariable Long articleId, @RequestParam Long memberId) {
-        channelPostService.articleOauth(articleId, memberId);
 
-        return new ResponseEntity(new Result("인증 성공", 1), HttpStatus.OK);
+
+    @PatchMapping("/channel-posts-for-test/{articleId}")
+    public ResponseEntity<ChannelPostResponse> updatePost(@PathVariable Long articleId,
+                                                          @RequestBody ChannelPostRequest request,
+                                                          @RequestParam Long memberId) {
+        ChannelPostResponse response = channelPostService.modify(articleId, memberId, request);
+
+        return ResponseEntity.ok().body(response);
     }
-
-
 
     @PatchMapping("/channel-posts/{articleId}")
     public ResponseEntity<ChannelPostResponse> updatePost(@PathVariable Long articleId,
@@ -100,5 +110,4 @@ public class ChannelPostApiController {
 
         return ResponseEntity.ok().build();
     }
-
 }

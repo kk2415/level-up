@@ -1,14 +1,14 @@
 package com.levelup.api.controller;
 
 import com.levelup.api.service.EmailAuthService;
-import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.auth.EmailAuthRequest;
-import com.levelup.core.dto.auth.EmailAuthResponse;
+import com.levelup.api.dto.auth.EmailAuthRequest;
+import com.levelup.api.dto.auth.EmailAuthResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "이메일 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -20,10 +20,10 @@ public class EmailAuthApiController {
     /**
      * 이메일 인증
      * */
-    @PostMapping("/confirm-email")
+    @PatchMapping("/email")
     public ResponseEntity<EmailAuthResponse> confirmEmail(@RequestBody EmailAuthRequest request,
-                                       @AuthenticationPrincipal Member member) {
-        EmailAuthResponse response = emailAuthService.confirmEmail(request.getSecurityCode(), member.getId());
+                                                          @RequestParam("member") Long memberId) {
+        EmailAuthResponse response = emailAuthService.confirmEmail(request.getSecurityCode(), memberId);
 
         return ResponseEntity.ok().body(response);
     }
@@ -32,11 +32,10 @@ public class EmailAuthApiController {
     /**
      * 인증번호 전송
      * */
-    @GetMapping("/send/auth-email")
-    public ResponseEntity<Void> sendSecurityCode(@AuthenticationPrincipal Member member) {
-        emailAuthService.sendSecurityCode(member.getId());
+    @PostMapping("/email")
+    public ResponseEntity<Void> sendSecurityCode(@RequestParam("member") Long memberId) {
+        emailAuthService.sendSecurityCode(memberId);
 
         return ResponseEntity.ok().build();
     }
-
 }

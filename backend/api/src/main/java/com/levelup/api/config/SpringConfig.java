@@ -1,7 +1,6 @@
 package com.levelup.api.config;
 
 import com.levelup.core.domain.base.Auditor;
-import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -14,11 +13,6 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public AuditorAware<String> auditorProvider() {
         return new Auditor();
-    }
-
-    @Bean
-    public JpaResultMapper jpaResultMapper() {
-        return new JpaResultMapper();
     }
 
     @Override

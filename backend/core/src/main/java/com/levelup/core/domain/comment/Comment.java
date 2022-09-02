@@ -2,12 +2,14 @@ package com.levelup.core.domain.comment;
 
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
+import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.vote.CommentVote;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -61,5 +63,17 @@ public class Comment extends BaseTimeEntity {
     }
     public void changeComment(String content) {
         this.content = (content);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Comment)) return false;
+        return id != null && id.equals(((Comment) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

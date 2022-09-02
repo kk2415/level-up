@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             Member member = memberRepository.findById(memberId)
                                     .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
-                            Collection<GrantedAuthority> authorities = new ArrayList<>();
+                            Collection<GrantedAuthority> authorities = new ArrayList<>(10);
                             List<Role> roles = member.getRoles();
                             for (Role role : roles) {
                                 authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName()));

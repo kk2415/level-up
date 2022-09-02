@@ -1,8 +1,8 @@
 package com.levelup.api.controller.member;
 
 import com.levelup.api.service.MemberService;
-import com.levelup.core.dto.member.CreateMemberRequest;
-import com.levelup.core.dto.member.CreateMemberResponse;
+import com.levelup.api.dto.member.CreateMemberRequest;
+import com.levelup.api.dto.member.CreateMemberResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 
-@Tag(name = "회원 API")
+@Tag(name = "회원가입 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor

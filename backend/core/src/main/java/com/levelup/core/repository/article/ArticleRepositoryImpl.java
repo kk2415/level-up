@@ -5,7 +5,6 @@ import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channelPost.QChannelPost;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,30 +15,6 @@ import java.util.Optional;
 public class ArticleRepositoryImpl implements ArticleQueryRepository {
 
     private final EntityManager em;
-    private final JpaResultMapper jpaResultMapper;
-
-//    @Override
-//    public List<ArticlePagingDto> findByArticleType(ArticleType articleType, Pageable pageable) {
-//        String sql =
-//                "select a.article_id as articleId, " +
-//                        "a.title, " +
-//                        "a.views, " +
-//                        "a.article_type as articleType, " +
-//                        "a.created_at as createdAt, " +
-//                        "m.nickname as writer, " +
-//                        "(select count(1) from comment c where exists " +
-//                            "(select 1 from article where c.article_id = a.article_id)) as commentCount, " +
-//                        "(select count(1) from article_vote av where exists " +
-//                            "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
-//                "from article a left outer join member m on a.member_id = m.member_id " +
-//                "where article_type = '" + articleType.name() + "'" +
-//                    " order by a." + PageableUtil.getProperty(pageable) + " " + PageableUtil.getDirection(pageable) +
-//                    " limit " + pageable.getPageSize() +
-//                    " offset " + pageable.getOffset();
-//
-//        Query nativeQuery = em.createNativeQuery(sql);
-//        return jpaResultMapper.list(nativeQuery, ArticlePagingDto.class);
-//    }
 
     @Override
     public Optional<Article> findNextPageByArticleType(Long articleId, ArticleType articleType) {

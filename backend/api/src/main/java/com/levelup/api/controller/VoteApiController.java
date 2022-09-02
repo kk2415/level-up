@@ -3,14 +3,16 @@ package com.levelup.api.controller;
 import com.levelup.api.service.vote.ArticleVoteService;
 import com.levelup.api.service.vote.CommentVoteService;
 import com.levelup.core.domain.vote.VoteType;
-import com.levelup.core.dto.vote.CreateVoteRequest;
-import com.levelup.core.dto.vote.VoteResponse;
+import com.levelup.api.dto.vote.CreateVoteRequest;
+import com.levelup.api.dto.vote.VoteResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "추천 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor

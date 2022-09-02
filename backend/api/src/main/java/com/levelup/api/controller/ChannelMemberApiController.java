@@ -2,7 +2,8 @@ package com.levelup.api.controller;
 
 import com.levelup.api.service.ChannelMemberService;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.channelMember.ChannelMemberResponse;
+import com.levelup.api.dto.channelMember.ChannelMemberResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "채널 멤버 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,14 @@ public class ChannelMemberApiController {
     /**
      * 생성
      * */
+    @PostMapping("channel-members-for-test")
+    public ResponseEntity<ChannelMemberResponse> createChannelMember(@RequestParam Long channelId,
+                                                                     @RequestParam Long memberId) {
+        ChannelMemberResponse response = channelMemberService.create(channelId, memberId, true);
+
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping("channel-members")
     public ResponseEntity<ChannelMemberResponse> createChannelMember(@RequestParam Long channelId,
                                               @AuthenticationPrincipal Member member) {

@@ -1,6 +1,5 @@
 package com.levelup.core.domain.file;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
