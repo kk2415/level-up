@@ -1,20 +1,20 @@
 package com.levelup.api.controller;
 
-import com.levelup.api.dto.ArticlePagingResponse;
+import com.levelup.api.dto.article.ArticlePagingResponse;
 import com.levelup.api.service.ArticleService;
 import com.levelup.core.domain.Article.ArticleType;
-import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.article.ArticleRequest;
-import com.levelup.core.dto.article.ArticleResponse;
-import com.levelup.core.dto.channelPost.ChannelPostRequest;
+import com.levelup.api.dto.article.ArticleRequest;
+import com.levelup.api.dto.article.ArticleResponse;
+import com.levelup.api.dto.channelPost.ChannelPostRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "게시글 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -22,25 +22,19 @@ public class ArticleApiController {
 
     private final ArticleService articleService;
 
-
-    /**
-     * 생성
-     * */
     @PostMapping("/articles")
     public ResponseEntity<ArticleResponse> create(@Validated @RequestBody ArticleRequest request,
-                                                      @AuthenticationPrincipal Member member) {
-        ArticleResponse response = articleService.save(request, member.getId());
+                                                  @RequestParam("member") Long memberId) {
+        ArticleResponse response = articleService.save(request, memberId);
 
         return ResponseEntity.ok().body(response);
     }
 
 
-    /**
-     * 조회
-     * */
+
     @GetMapping("/articles/{articleId}")
     public ResponseEntity<ArticleResponse> getPost(@PathVariable Long articleId,
-                                                   @RequestParam(required = false, defaultValue = "false") String view) {
+                                                   @RequestParam(required = false, defaultValue = "false") boolean view) {
         ArticleResponse response = articleService.getArticle(articleId, view);
 
         return ResponseEntity.ok().body(response);
@@ -72,30 +66,19 @@ public class ArticleApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/articles/{articleId}/oauth")
-    public ResponseEntity<Void> checkMember(@PathVariable Long articleId, @RequestParam Long memberId) {
-        articleService.articleOauth(articleId, memberId);
-
-        return ResponseEntity.ok().build();
-    }
 
 
-    /**
-     * 수정
-     * */
     @PatchMapping("/articles/{articleId}")
-    public ResponseEntity<ArticleResponse> mopdify(@PathVariable Long articleId,
-                                                   @RequestBody ChannelPostRequest request,
-                                                   @AuthenticationPrincipal Member member) {
-        ArticleResponse response = articleService.modify(articleId, member.getId(), request);
+    public ResponseEntity<ArticleResponse> testModify(@PathVariable Long articleId,
+                                                   @RequestParam("member") Long memberId,
+                                                   @RequestBody ChannelPostRequest request) {
+        ArticleResponse response = articleService.modify(articleId, memberId, request);
 
         return ResponseEntity.ok().body(response);
     }
 
 
-    /**
-     * 삭제
-     * */
+
     @DeleteMapping("/articles/{articleId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long articleId) {
         articleService.deleteArticle(articleId);

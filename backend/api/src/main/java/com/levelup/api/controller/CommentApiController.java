@@ -3,10 +3,10 @@ package com.levelup.api.controller;
 import com.levelup.api.service.*;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.Result;
-import com.levelup.core.dto.comment.CommentResponse;
-import com.levelup.core.dto.comment.CreateCommentRequest;
-import com.levelup.core.dto.comment.CreateReplyCommentRequest;
+import com.levelup.api.dto.Result;
+import com.levelup.api.dto.comment.CommentResponse;
+import com.levelup.api.dto.comment.CreateCommentRequest;
+import com.levelup.api.dto.comment.CreateReplyCommentRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "댓글 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -26,6 +27,14 @@ public class CommentApiController {
     /***
      * 댓글 생성
      */
+    @PostMapping("/comments-for-test")
+    public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
+                                                  @RequestParam("member") Long memberId) {
+        CommentResponse response = commentService.save(commentRequest, memberId);
+
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping("/comments")
     public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
                                                   @AuthenticationPrincipal Member member) {
@@ -71,6 +80,4 @@ public class CommentApiController {
 
         return ResponseEntity.ok().build();
     }
-
-
 }

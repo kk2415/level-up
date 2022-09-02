@@ -1,19 +1,17 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.ChannelPagingResponse;
+import com.levelup.api.dto.channel.*;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.role.Role;
-import com.levelup.core.dto.channel.ChannelInfo;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.api.util.S3FileStore;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.core.dto.file.Base64Dto;
+import com.levelup.api.dto.file.Base64Dto;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.channel.*;
 import com.levelup.core.exception.ImageNotFoundException;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.exception.member.MemberNotFoundException;
@@ -27,8 +25,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,20 +36,19 @@ import java.net.MalformedURLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ChannelService {
 
+    @Value("${file.linux_local_dir}")
+    private String fileDir;
+
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
     private final S3FileStore fileStore;
-
-    @Value("${file.linux_local_dir}")
-    private String fileDir;
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public CreateChannelResponse save(ChannelRequest channelRequest) {
@@ -165,6 +160,8 @@ public class ChannelService {
         channel.modifyThumbNail(thumbNail);
         return thumbNail;
     }
+
+
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void deleteChannel(Long channelId) {

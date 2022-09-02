@@ -2,10 +2,9 @@ package com.levelup.api.service.vote;
 
 
 import com.levelup.core.domain.comment.Comment;
-import com.levelup.core.domain.vote.ArticleVote;
 import com.levelup.core.domain.vote.CommentVote;
-import com.levelup.core.dto.vote.CreateVoteRequest;
-import com.levelup.core.dto.vote.VoteResponse;
+import com.levelup.api.dto.vote.CreateVoteRequest;
+import com.levelup.api.dto.vote.VoteResponse;
 import com.levelup.core.exception.vote.DuplicateVoteException;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.vote.CommentVoteRepository;

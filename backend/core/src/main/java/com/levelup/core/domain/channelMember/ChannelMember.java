@@ -7,6 +7,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -52,5 +54,17 @@ public class ChannelMember extends BaseTimeEntity {
 
         channelMember.setMember(member);
         return channelMember;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ChannelMember)) return false;
+        return id != null && id.equals(((ChannelMember) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

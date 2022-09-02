@@ -1,7 +1,6 @@
 package com.levelup.api.service;
 
 import com.levelup.core.domain.emailAuth.EmailAuth;
-import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
@@ -10,10 +9,10 @@ import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.core.dto.member.CreateMemberRequest;
-import com.levelup.core.dto.member.CreateMemberResponse;
-import com.levelup.core.dto.member.MemberResponse;
-import com.levelup.core.dto.member.UpdateMemberRequest;
+import com.levelup.api.dto.member.CreateMemberRequest;
+import com.levelup.api.dto.member.CreateMemberResponse;
+import com.levelup.api.dto.member.MemberResponse;
+import com.levelup.api.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
 import com.levelup.core.exception.member.DuplicateEmailException;
 import com.levelup.core.exception.member.MemberNotFoundException;
@@ -53,7 +52,7 @@ public class MemberService implements UserDetailsService {
     private final S3FileStore fileStore;
 
     public CreateMemberResponse save(CreateMemberRequest memberRequest) {
-        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname()); //중복 이메일 검증
+//        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname()); //중복 이메일 검증
 
         Member member = memberRequest.toEntity();
         EmailAuth authEmail = EmailAuth.from(member.getEmail());
@@ -80,12 +79,12 @@ public class MemberService implements UserDetailsService {
                 });
     }
 
+    /**
+     * json이랑 이미지 파일을 동시에 서버에 보낼 수가 없으니
+     * 먼저 이 api로 이미지를 저장한 후 이미지의 경로명을 클라이언트에게 리턴(ResponseEntity(uploadFile, HttpStatus.OK))
+     * 그러면 클라이언트는 받은 경로를 객체에 저장한 후 회원가입 api를 호출함
+     * */
     public UploadFile createProfileImage(MultipartFile file) throws IOException {
-        /**
-         * json이랑 이미지 파일을 동시에 서버에 보낼 수가 없으니
-         * 먼저 이 api로 이미지를 저장한 후 이미지의 경로명을 클라이언트에게 리턴(ResponseEntity(uploadFile, HttpStatus.OK))
-         * 그러면 클라이언트는 받은 경로를 객체에 저장한 후 회원가입 api를 호출함
-         * */
         return fileStore.storeFile(ImageType.MEMBER, file);
     }
 
@@ -96,6 +95,7 @@ public class MemberService implements UserDetailsService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    @Cacheable(cacheNames = "member", key = "#memberId") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'memberId'
     public MemberResponse getById(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
@@ -103,14 +103,12 @@ public class MemberService implements UserDetailsService {
         return MemberResponse.from(member);
     }
 
-    @Cacheable(cacheNames = "member") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'email'
-    public MemberResponse getByEmail(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
-
-        return MemberResponse.from(member);
-    }
-
+    /*
+     * @ResponseBody + byte[]또는, Resource 를 반환하는 경우 바이트 정보가 반환됩니다.
+     * <img> 에서는 이 바이트 정보를 읽어서 이미지로 반환하게 됩니다.
+     *
+     * Resource 를 리턴할 때 ResourceHttpMessageConverter 가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
+     * */
     public UrlResource getProfileImage(String email) throws MalformedURLException {
         Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
@@ -122,15 +120,10 @@ public class MemberService implements UserDetailsService {
         UploadFile uploadFile = findMember.getProfileImage();
         String fullPath = fileStore.getFullPath(uploadFile.getStoreFileName());
 
-        /*
-         * @ResponseBody + byte[]또는, Resource를 반환하는 경우 바이트 정보가 반환됩니다.
-         * <img> 에서는 이 바이트 정보를 읽어서 이미지로 반환하게 됩니다.
-         *
-         * Resource를 리턴할 때 ResourceHttpMessageConverter가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
-         * */
         return new UrlResource("file:" + fullPath);
     }
 
+    @CacheEvict(cacheNames = "member", key = "#memberId")
     public void modify(UpdateMemberRequest updateMemberRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
@@ -138,17 +131,17 @@ public class MemberService implements UserDetailsService {
         member.modifyMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
     }
 
-    @CacheEvict(cacheNames = "member", allEntries = true)
-    public UploadFile modifyProfileImage(MultipartFile file, String email) throws IOException {
+    @CacheEvict(cacheNames = "member", key = "#memberId")
+    public UploadFile modifyProfile(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }
 
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         if (member.getProfileImage() != null) {
-            deleteS3Profile(member.getProfileImage().getStoreFileName());
+            deleteProfileInS3(member.getProfileImage().getStoreFileName());
         }
 
         UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
@@ -159,28 +152,25 @@ public class MemberService implements UserDetailsService {
 
     @CacheEvict(cacheNames = {"ChannelCategory", "member"}, allEntries = true)
     public void delete(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         List<ChannelMember> channelMembers = member.getChannelMembers().stream()
                 .filter(ChannelMember::getIsManager)
                 .collect(Collectors.toUnmodifiableList());
 
-        channelMembers.forEach(channelMember -> {
-            Channel channel = channelMember.getChannel();
-            channelRepository.delete(channel);
-        });
+        channelMembers.forEach(channelMember -> channelRepository.delete(channelMember.getChannel()));
 
         memberRepository.delete(member);
     }
 
-    private void deleteS3Profile(String storeFileName) {
+    private void deleteProfileInS3(String storeFileName) {
         if (!storeFileName.equals(S3FileStore.DEFAULT_IMAGE)) {
             fileStore.deleteS3File(storeFileName);
         }
     }
 
-    private void deleteLocalProfile(String storeFileName) {
+    private void deleteProfileInLocal(String storeFileName) {
         if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
             File imageFile = new File(fileStore.getFullPath(storeFileName));
             if (imageFile.exists()) {
@@ -191,16 +181,12 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("loadUserByUsername start");
-
        final Member member = memberRepository.findByEmail(username)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        Collection<GrantedAuthority> authorities = new ArrayList<>(10);
         List<Role> roles = member.getRoles();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName()));
-        }
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName().getName())));
 
         return new User(member.getEmail(), member.getPassword(), true, true,
                 true, true, authorities);

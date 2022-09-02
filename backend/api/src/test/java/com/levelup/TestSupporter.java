@@ -12,10 +12,10 @@ import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.core.dto.channel.ChannelRequest;
-import com.levelup.core.dto.comment.CreateCommentRequest;
-import com.levelup.core.dto.comment.CreateReplyCommentRequest;
-import com.levelup.core.dto.member.CreateMemberRequest;
+import com.levelup.api.dto.channel.ChannelRequest;
+import com.levelup.api.dto.comment.CreateCommentRequest;
+import com.levelup.api.dto.comment.CreateReplyCommentRequest;
+import com.levelup.api.dto.member.CreateMemberRequest;
 
 import java.time.LocalDate;
 

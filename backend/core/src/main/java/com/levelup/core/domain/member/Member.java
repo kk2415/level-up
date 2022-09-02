@@ -5,6 +5,7 @@ import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
+import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.role.Role;
 import lombok.*;
@@ -12,6 +13,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -90,5 +92,17 @@ public class Member extends BaseTimeEntity {
     public void modifyMember(String nickname, UploadFile profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Member)) return false;
+        return id != null && id.equals(((Member) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

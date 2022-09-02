@@ -10,6 +10,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -77,5 +78,17 @@ public class Article extends BaseTimeEntity {
     public void modifyArticle(String title, String content) {
         this.title = (title);
         this.content = (content);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Article)) return false;
+        return id != null && id.equals(((Article) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

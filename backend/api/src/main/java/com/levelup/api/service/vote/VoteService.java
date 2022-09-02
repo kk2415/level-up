@@ -1,8 +1,8 @@
 package com.levelup.api.service.vote;
 
 
-import com.levelup.core.dto.vote.CreateVoteRequest;
-import com.levelup.core.dto.vote.VoteResponse;
+import com.levelup.api.dto.vote.CreateVoteRequest;
+import com.levelup.api.dto.vote.VoteResponse;
 
 public interface VoteService {
 

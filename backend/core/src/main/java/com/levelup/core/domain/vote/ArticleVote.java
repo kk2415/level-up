@@ -2,12 +2,15 @@ package com.levelup.core.domain.vote;
 
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
+import com.levelup.core.domain.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -38,5 +41,17 @@ public class ArticleVote extends BaseTimeEntity {
 
         this.article = article;
         article.getArticleVotes().add(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ArticleVote)) return false;
+        return id != null && id.equals(((ArticleVote) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

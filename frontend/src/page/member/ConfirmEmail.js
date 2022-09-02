@@ -2,16 +2,14 @@ import React, {useState} from 'react';
 import {Button, Form, Container, Row} from 'react-bootstrap';
 
 import {BiUserCircle} from "react-icons/bi";
-import {MemberService} from "../../api/service/MemberService";
-import {AuthEmailService} from "../../api/service/AuthEmailService";
+import {EmailService} from "../../api/service/EmailService";
 import '../../css/login.css'
 
 const SignIn = ({} ) => {
     const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
-    const [memberId, setMemberId] = useState(null)
 
     const HandleReConfirmButton = async () => {
-        let result = await AuthEmailService.sendSecurityCode();
+        let result = await EmailService.sendSecurityCode(localStorage.getItem('id'));
 
         if (result) {
             alert('인증번호가 전송되었습니다.')
@@ -25,7 +23,7 @@ const SignIn = ({} ) => {
             securityCode : formData.get('security'),
         }
 
-        let result = await MemberService.confirmEmail(auth);
+        let result = await EmailService.confirmEmail(localStorage.getItem('id'), auth);
 
         if (result) {
             alert('인증되었습니다.')

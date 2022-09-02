@@ -43,22 +43,7 @@ export const MemberService = {
         window.location.href = "/"
     },
 
-    get : async function getMember() {
-        let member = {}
-
-        await send('/api/v1/members', 'GET')
-            .then((data) => {
-                member = data
-            })
-            .catch((error) => {
-                member = null
-                console.log(error)
-            })
-
-        return member
-    },
-
-    getById : async function getMember(memberId) {
+    get : async function getMember(memberId) {
         let member = {}
 
         await send('/api/v1/members/' + memberId, 'GET')
@@ -68,32 +53,16 @@ export const MemberService = {
             .catch((error) => {
                 member = null
                 console.log(error)
+                alert('hello')
             })
 
         return member
     },
 
-    confirmEmail : async function confirmEmail(auth) {
-        let members = {}
-
-        await send('/api/v1/confirm-email', 'POST', auth)
-            .then((data) => {
-                members = data
-            })
-            .catch((error) => {
-                members = null
-
-                console.log(error)
-                alert(error.responseJSON.message)
-            })
-
-        return members
-    },
-
-    modify: async function modifyMember(member) {
+    modify: async function modifyMember(memberId, member) {
         let result = false
 
-        await send('/api/v1/members', 'PATCH', member)
+        await send('/api/v1/members/' + memberId, 'PATCH', member)
             .then((data) => {
                 result = true
             })
@@ -121,10 +90,10 @@ export const MemberService = {
     },
 
     uploadProfile : async (thumbnail) => {
-        return await uploadFile('/api/v1/members/image', 'POST', thumbnail)
+        return await uploadFile('/api/v1/members/profile', 'POST', thumbnail)
     },
 
-    modifyProfile: async (email, profile) => {
-        return await uploadFile('/api/v1/members/' + email + '/image', 'PATCH', profile)
+    modifyProfile: async (id, profile) => {
+        return await uploadFile('/api/v1/members/' + id + '/profile', 'PATCH', profile)
     },
 }

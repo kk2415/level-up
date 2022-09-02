@@ -70,25 +70,25 @@
         </logger>
 
         <logger name="org.hibernate.SQL" level="info" additivity="false">
-            <AppenderRef ref="console" />
+<!--            <AppenderRef ref="console" />-->
         </logger>
 
         <!-- =================================================================== -->
         <!-- PROJECT Setting												 -->
         <!-- =================================================================== -->
         <logger name="com.levelup" level="debug" additivity="false">
-            <AppenderRef ref="console" />
+<!--            <AppenderRef ref="console" />-->
             <AppenderRef ref="file" level="info" />
             <AppenderRef ref="errorFile" level="warn" />
         </logger>
 
         <logger name="com.levelup.api.controller.member.SignUpApiController" level="debug" additivity="false">
-            <AppenderRef ref="console" />
+<!--            <AppenderRef ref="console" />-->
             <AppenderRef ref="signUpFile" />
         </logger>
 
         <logger name="com.levelup.api.filter.LoginFilter" level="debug" additivity="false">
-            <AppenderRef ref="console" />
+<!--            <AppenderRef ref="console" />-->
             <AppenderRef ref="signInFile" />
         </logger><!--아래에 위치한게 우선순위가 다 높다-->
 

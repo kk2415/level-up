@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -37,5 +39,17 @@ public class CommentVote extends BaseTimeEntity {
 
         this.comment = comment;
         comment.getCommentVotes().add(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof CommentVote)) return false;
+        return id != null && id.equals(((CommentVote) obj).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -6,7 +6,7 @@ import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.core.dto.member.LoginRequest;
+import com.levelup.api.dto.member.LoginRequest;
 import com.levelup.api.dto.member.LoginResponse;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
@@ -51,7 +51,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),
                             creds.getPassword(),
-                            new ArrayList<>()
+                            new ArrayList<>(10)
                     )
             );
         } catch (IOException e) {

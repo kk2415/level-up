@@ -2,7 +2,7 @@ package com.levelup.core.repository;
 
 import com.levelup.TestSupporter;
 import com.levelup.api.ApiApplication;
-import com.levelup.api.dto.ArticlePagingResponse;
+import com.levelup.api.dto.article.ArticlePagingResponse;
 import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.Article.ArticleType;
 import com.levelup.core.domain.comment.Comment;

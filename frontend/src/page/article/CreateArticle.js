@@ -28,7 +28,7 @@ const CreateArticle = () => {
             return
         }
 
-        let result = await ArticleService.create(article)
+        let result = await ArticleService.create(localStorage.getItem('id'), article)
 
         if (result) {
             navigate('/article/list?articleType=' + articleType + '&page=1')
