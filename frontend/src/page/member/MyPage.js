@@ -13,10 +13,10 @@ const MyPage = () => {
     let navigate = new useNavigate();
 
     const loadMember = async () => {
-        let result = await MemberService.getById(localStorage.getItem('id'))
+        let result = await MemberService.get(localStorage.getItem('id'))
         if (!result) {
             alert('권한이 없습니다')
-            window.location.href = '/'
+            // window.location.href = '/'
         }
 
         setMember(result)
@@ -37,7 +37,7 @@ const MyPage = () => {
         if (onModifyButton) {
             let profileImage = member.uploadFile
             if (myPageFile) {
-                profileImage = await MemberService.modifyProfile(member.email, myPageFile)
+                profileImage = await MemberService.modifyProfile(member.id, myPageFile)
             }
 
             let updateMember = {
@@ -49,7 +49,7 @@ const MyPage = () => {
                 updateMember.nickname = member.nickname
             }
 
-            let result = await MemberService.modify(updateMember);
+            let result = await MemberService.modify(member.id, updateMember);
             if (result) {
                 alert('수정되었습니다')
             }

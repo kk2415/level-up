@@ -33,7 +33,7 @@ const ChannelManager = () => {
     }
 
     const loadManager = async (channelId) => {
-        let result = await ChannelService.getManager(channelId)
+        let result = await ChannelService.getManager(localStorage.getItem('id'), channelId)
 
         setManager(result)
     }

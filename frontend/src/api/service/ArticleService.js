@@ -2,10 +2,10 @@ import { send } from "../request"
 
 const ArticleService = {
 
-    create: async (article) => {
+    create: async (memberId, article) => {
         let result = null
 
-        await send('/api/v1/articles', 'POST', article)
+        await send('/api/v1/articles?member=' + memberId, 'POST', article)
             .then((data) => {
                 result = data
             })
@@ -86,10 +86,10 @@ const ArticleService = {
     count: async () => {
     },
 
-    modify: async (article, articleId) => {
+    modify: async (memberId, article, articleId) => {
         let result = false
 
-        await send('/api/v1/articles/' + articleId, 'PATCH', article)
+        await send('/api/v1/articles/' + articleId + '?member=' + memberId, 'PATCH', article)
             .then(() => {
                 alert('수정되었습니다.')
                 result = true

@@ -136,7 +136,9 @@ const ChannelDescription = () => {
                         <Container className="d-grid gap-2">
                             <button onClick={handleEnterChannel} className="btn btn-info" type="button" id="enterStudyButton">
                                 <AiOutlineImport className='enterChannel' />
-                                <span className='fs-3 fw-bold mx-2 '>접속</span>
+                                <span className='fs-3 fw-bold mx-2 '>
+                                    접속
+                                </span>
                             </button>
                             <button onClick={handleBack} className="btn btn-secondary float-start" type="button" id="toAllStudyChannelButton">
                                 홈으로

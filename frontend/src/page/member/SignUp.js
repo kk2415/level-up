@@ -7,7 +7,7 @@ import $ from 'jquery'
 import HorizonLine from "../../component/HorizonLine";
 import { MemberService } from '../../api/service/MemberService'
 import {createMemberValidation as validation} from '../../api/validation'
-import {AuthEmailService} from "../../api/service/AuthEmailService";
+import {EmailService} from "../../api/service/EmailService";
 
 const SignUp = () => {
     const [file, setFile] = useState(null)
@@ -35,9 +35,9 @@ const SignUp = () => {
         }
 
         if (validate(member)) {
-            let result = await MemberService.signUp(member);
+            let newMember = await MemberService.signUp(member);
 
-            if (result) {
+            if (newMember) {
                 let logInMember = {
                     email : formData.get('email'),
                     password : formData.get('password'),
@@ -46,10 +46,10 @@ const SignUp = () => {
                 await MemberService.signIn(logInMember);
                 window.location.href = '/confirm-email'
 
-                alert(result.name + '님 가입되었습니다')
-                alert('인증번호를 발송 중입니다. 잠시만 기다랴주세요.')
+                alert(newMember.name + '님 가입되었습니다')
+                alert('인증번호를 발송 중입니다. 잠시만 기다려주세요.')
 
-                // await AuthEmailService.sendSecurityCode();
+                await EmailService.sendSecurityCode(newMember.id);
             }
         }
     }

@@ -34,7 +34,7 @@ const ModifyArticle = () => {
             return
         }
 
-        let result = await ArticleService.modify(article, articleId)
+        let result = await ArticleService.modify(localStorage.getItem('id'), article, articleId)
 
         if (result) {
             navigate('/article/list?articleType=' + articleType + '&page=1')

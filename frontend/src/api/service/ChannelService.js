@@ -72,10 +72,10 @@ const ChannelService = {
         return result;
     },
 
-    getManager: async (channelId) => {
+    getManager: async (memberId, channelId) => {
         let result = {}
 
-        await send('/api/v1/channels/' + channelId + '/manager', 'GET')
+        await send('/api/v1/channels/' + channelId + '/manager?member=' + memberId, 'GET')
             .then((data) => {
                 result = data
             })
