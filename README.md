@@ -7,16 +7,12 @@
 ## 프로젝트 실행환경  
 
 ### Backend
-+ Java(11)
-+ Spring boot, Spring Cloud Config, Spring Data JPA,
-+ Spring Security
-+ MySQL(8)
++ Java(OpenJDK 11)  
++ Spring Boot, Spring Data JPA, Spring Security (2.6.8)  
++ MySQL(8.0.29)  
   
 ### Frontend
-+ HTML, CSS, JavaScript
-+ React  
++ HTML, CSS, JavaScript, React  
 
-### DevOps
-+ AWS EC2, S3, Route 53
-
-
+### Infra
++ AWS EC2, S3, RDS, ALB
