@@ -24,18 +24,16 @@ public class TestSupporter {
     protected Member createMember(String email, String name) {
         CreateMemberRequest memberRequest = CreateMemberRequest.of(email, "00000000", name,
                 "testNickname", Gender.MALE, LocalDate.now(), "010-2354-9960", new UploadFile("", ""));
-        EmailAuth authEmail = EmailAuth.from(memberRequest.getEmail());
         Member member = memberRequest.toEntity();
+        EmailAuth authEmail = EmailAuth.from(member);
         Role role = Role.of(RoleName.MEMBER, member);
 
-        member.setEmailAuth(authEmail);
         member.addRole(role);
-
         return member;
     }
 
     protected Channel createChannel(Member manager, String channelName, ChannelCategory category) {
-        ChannelRequest channelRequest = ChannelRequest.of(manager.getEmail(), channelName, 5L, "testChannel",
+        ChannelRequest channelRequest = ChannelRequest.of(manager.getId(), channelName, 5L, "testChannel",
                 category, "test", new UploadFile("", ""), null);
 
         Channel channel = channelRequest.toEntity(manager.getNickname());
