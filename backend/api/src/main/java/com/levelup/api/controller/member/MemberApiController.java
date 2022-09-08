@@ -2,14 +2,12 @@ package com.levelup.api.controller.member;
 
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.core.domain.member.Member;
 import com.levelup.api.dto.member.MemberResponse;
 import com.levelup.api.dto.member.UpdateMemberRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,11 +35,6 @@ public class MemberApiController {
         MemberResponse response = memberService.getById(memberId);
 
         return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping("/members")
-    public ResponseEntity<MemberResponse> confirmLogin(@AuthenticationPrincipal Member member) {
-        return ResponseEntity.ok().body(MemberResponse.from(member));
     }
 
 
