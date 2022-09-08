@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleQueryRepository {
 
-    @EntityGraph(attributePaths = {"member", "member.emailAuth", "comments"})
+    @EntityGraph(attributePaths = {"member", "comments"})
     Optional<Article> findById(Long id);
 
     @Query(value =
@@ -52,6 +52,20 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
     Page<ArticlePagingDto> findByTitleAndArticleType(@Param("title") String title,
                                                      @Param("articleType") String articleType,
                                                      Pageable pageable);
+
+
+    @Query(value =
+            "select a.* from article a " +
+                    "where a.article_type = :articleType and match(a.title) against(:title in boolean mode)",
+            countQuery = "select count(*) from article a where a.article_type = :articleType and match(a.title) against(:title in boolean mode)",
+            nativeQuery = true)
+    Page<Article> findByTitleAndArticleTypeTest(@Param("title") String title,
+                                                @Param("articleType") String articleType,
+                                                Pageable pageable);
+
+    @Query(value = "select * from article a where a.article_type = :articleType",
+            countQuery = "select count from article_count ac where ac.article_type = :articleType", nativeQuery = true)
+    Page<Article> findByArticleTypeTest(@Param("articleType") String articleType, Pageable pageable);
 
     @Query(value =
             "select a.article_id as articleId, " +

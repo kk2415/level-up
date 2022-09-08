@@ -1,6 +1,7 @@
 package com.levelup.api.dto.article;
 
 import com.levelup.core.DateFormat;
+import com.levelup.core.domain.Article.Article;
 import com.levelup.core.dto.article.ArticlePagingDto;
 import lombok.Getter;
 
@@ -48,6 +49,19 @@ public class ArticlePagingResponse {
                 DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(articlePagingDto.getCreatedAt()),
                 articlePagingDto.getVoteCount(),
                 articlePagingDto.getCommentCount()
+        );
+    }
+
+    public static ArticlePagingResponse from(Article article) {
+        return new ArticlePagingResponse(
+                article.getId(),
+                article.getTitle(),
+                article.getMember().getNickname(),
+                article.getViews(),
+                article.getArticleType().name(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(article.getCreatedAt()),
+                (long) article.getArticleVotes().size(),
+                (long) article.getComments().size()
         );
     }
 }
