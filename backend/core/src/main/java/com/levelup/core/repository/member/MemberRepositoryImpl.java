@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,7 +16,6 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
     @Override
     public Optional<Member> findByEmail(String email) {
         Member member = em.createQuery("select m from Member m " +
-                        "join fetch m.emailAuth e " +
                         "join fetch m.roles rs " +
                         "where m.email = :email", Member.class)
                 .setParameter("email", email)

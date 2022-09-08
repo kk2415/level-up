@@ -41,9 +41,9 @@ public class EmailAuthService {
 
             emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
         }, () -> {
-            EmailAuth authEmail = EmailAuth.from(member.getEmail()); //처음 발송
-            member.setEmailAuth(authEmail);
+            EmailAuth authEmail = EmailAuth.from(member); //처음 발송
 
+            emailAuthRepository.save(authEmail);
             emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
         });
     }

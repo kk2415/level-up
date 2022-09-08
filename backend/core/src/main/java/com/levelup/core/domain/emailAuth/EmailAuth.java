@@ -60,9 +60,10 @@ public class EmailAuth extends BaseTimeEntity {
         this.receivedDate = receivedDate;
     }
 
-    public static EmailAuth from(String email) {
+    public static EmailAuth from(Member member) {
         return EmailAuth.builder()
-                .email(email)
+                .member(member)
+                .email(member.getEmail())
                 .securityCode(createSecurityCode())
                 .isConfirmed(false)
                 .receivedDate(LocalDateTime.now())

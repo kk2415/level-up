@@ -17,6 +17,7 @@ import com.levelup.core.exception.*;
 import com.levelup.core.exception.member.DuplicateEmailException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
+import com.levelup.core.repository.emailAuth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,21 +49,22 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final EmailAuthRepository emailAuthRepository;
     private final ChannelRepository channelRepository;
     private final S3FileStore fileStore;
 
     public CreateMemberResponse save(CreateMemberRequest memberRequest) {
-//        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname()); //중복 이메일 검증
+        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname()); //중복 이메일 검증
 
         Member member = memberRequest.toEntity();
-        EmailAuth authEmail = EmailAuth.from(member.getEmail());
+        EmailAuth authEmail = EmailAuth.from(member);
         Role role = Role.of(RoleName.ANONYMOUS, member);
 
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setEmailAuth(authEmail);
         member.addRole(role);
 
         memberRepository.save(member);
+        emailAuthRepository.save(authEmail);
         return CreateMemberResponse.from(member);
     }
 
@@ -88,19 +90,14 @@ public class MemberService implements UserDetailsService {
         return fileStore.storeFile(ImageType.MEMBER, file);
     }
 
-    public List<MemberResponse> getAllMembers() {
-        return memberRepository.findAll()
-                .stream()
-                .map(MemberResponse::from)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
     @Cacheable(cacheNames = "member", key = "#memberId") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'memberId'
     public MemberResponse getById(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        return MemberResponse.from(member);
+        Optional<EmailAuth> emailAuth = emailAuthRepository.findByMemberId(memberId);
+
+        return MemberResponse.from(member, emailAuth.orElse(EmailAuth.from(member)).getIsConfirmed());
     }
 
     /*

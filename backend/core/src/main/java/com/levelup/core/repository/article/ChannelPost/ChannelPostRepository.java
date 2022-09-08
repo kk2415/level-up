@@ -16,7 +16,6 @@ public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>,
 
     @Query("SELECT cp FROM ChannelPost cp " +
             "join fetch cp.member m " +
-            "join fetch m.emailAuth e " +
             "where cp.member.id = m.id and cp.id = :articleId")
     Optional<ChannelPost> findByArticleId(@Param("articleId") Long articleId);
 

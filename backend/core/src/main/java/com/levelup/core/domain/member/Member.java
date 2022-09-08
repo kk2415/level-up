@@ -54,9 +54,6 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private UploadFile profileImage;
 
-    @OneToOne(mappedBy = "member", fetch = LAZY, cascade = CascadeType.ALL)
-    private EmailAuth emailAuth;
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Role> roles;
 
@@ -70,11 +67,6 @@ public class Member extends BaseTimeEntity {
     private List<ChannelMember> channelMembers;
 
     protected Member (){}
-
-    public void setEmailAuth(EmailAuth emailAuth) {
-        this.emailAuth = emailAuth;
-        emailAuth.setMember(this);
-    }
 
     public void addRole(Role role) {
         role.setMember(this);
