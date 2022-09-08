@@ -19,7 +19,7 @@ import java.util.List;
 public class ChannelRequest {
 
     @NotNull
-    private String memberEmail;
+    private Long memberId;
 
     @NotNull
     private String name;
@@ -42,11 +42,11 @@ public class ChannelRequest {
     private List<UploadFile> uploadFiles;
 
     static public ChannelRequest of(
-            String memberEmail, String name, Long limitedMemberNumber, String description, ChannelCategory category,
+            Long memberId, String name, Long limitedMemberNumber, String description, ChannelCategory category,
             String thumbnailDescription, UploadFile thumbnailImage, List<UploadFile> uploadFiles
     ) {
         return new ChannelRequest(
-                memberEmail,
+                memberId,
                 name,
                 limitedMemberNumber,
                 description,

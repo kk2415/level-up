@@ -19,7 +19,7 @@ const CreateChannel = () => {
         let thumbnailImageDir = await ChannelService.uploadThumbnail(thumbnail)
 
         let channel = {
-            memberEmail : context.member.email,
+            memberEmail : context.member.id,
             name : formData.get('name'),
             limitedMemberNumber : formData.get('limitedMemberNumber'),
             // description : contents,
