@@ -1,7 +1,7 @@
 package com.levelup.api.controller;
 
 import com.levelup.api.service.ChannelPostService;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.member.Member;
 import com.levelup.api.dto.channelPost.ChannelPostRequest;
 import com.levelup.api.dto.channelPost.ChannelPostResponse;

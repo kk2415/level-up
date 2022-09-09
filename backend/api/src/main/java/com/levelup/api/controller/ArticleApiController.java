@@ -1,8 +1,9 @@
 package com.levelup.api.controller;
 
 import com.levelup.api.dto.article.ArticlePagingResponse;
+import com.levelup.api.dto.article.ArticleUpdateResponse;
 import com.levelup.api.service.ArticleService;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.api.dto.article.ArticleRequest;
 import com.levelup.api.dto.article.ArticleResponse;
 import com.levelup.api.dto.channelPost.ChannelPostRequest;
@@ -69,10 +70,10 @@ public class ArticleApiController {
 
 
     @PatchMapping("/articles/{articleId}")
-    public ResponseEntity<ArticleResponse> testModify(@PathVariable Long articleId,
+    public ResponseEntity<ArticleUpdateResponse> modify(@PathVariable Long articleId,
                                                    @RequestParam("member") Long memberId,
                                                    @RequestBody ChannelPostRequest request) {
-        ArticleResponse response = articleService.modify(articleId, memberId, request);
+        ArticleUpdateResponse response = articleService.modify(articleId, memberId, request);
 
         return ResponseEntity.ok().body(response);
     }

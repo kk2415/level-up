@@ -1,9 +1,8 @@
 package com.levelup.core.domain.file;
 
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.emailAuth.EmailAuth;
 import lombok.Getter;
 import lombok.Setter;
 

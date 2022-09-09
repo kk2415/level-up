@@ -1,7 +1,7 @@
 package com.levelup.core.repository.article;
 
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.Article;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 
 import java.util.Optional;

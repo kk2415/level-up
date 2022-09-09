@@ -1,8 +1,8 @@
 package com.levelup.api.dto.article;
 
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.Article;
+import com.levelup.core.domain.article.ArticleType;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;

@@ -16,7 +16,7 @@ const MyPage = () => {
         let result = await MemberService.get(localStorage.getItem('id'))
         if (!result) {
             alert('권한이 없습니다')
-            // window.location.href = '/'
+            window.location.href = '/'
         }
 
         setMember(result)
@@ -90,78 +90,79 @@ const MyPage = () => {
         <>
             {
                 member &&
-                <Container>
-                    <Form id='signUpForm' className='mt-5'>
-                        {
-                            member.uploadFile &&
-                            <Container className='w-100' style={{ textAlign: "center", width: "10xp", height: "10xp" }}>
-                                <Image thumbnail roundedCircle fluid
-                                       src={S3_URL + member.uploadFile.storeFileName}
-                                       className='mb-5 img-fluid'
-                                       id='profileImage'
-                                       style={{width: "30%", height: "30%", objectFit: "contain"}}
-                                />
-                            </Container>
+                <Container style={{width: "100%", fontFamily: "sans-serif"}}>
+                    <Row className='d-flex justify-content-center align-items-center'>
+                        <Form id='signUpForm' className='mt-5' style={{width: "80%"}}>
+                            {
+                                member.uploadFile &&
+                                <Container className='w-100' style={{ textAlign: "center", width: "10xp", height: "10xp" }}>
+                                    <Image thumbnail roundedCircle fluid
+                                           src={S3_URL + member.uploadFile.storeFileName}
+                                           className='mb-5 img-fluid'
+                                           id='profileImage'
+                                           style={{width: "30%", height: "30%", objectFit: "contain"}}
+                                    />
+                                </Container>
 
-                        }
+                            }
 
-                        {
-                            member.confirmed === false &&
-                            <button onClick={handleConfirmEmail} className='btn btn-info w-100 mb-5'>
-                                이메일 인증 하기
+                            {
+                                <button onClick={handleConfirmEmail} className='btn btn-info w-100 mb-5'>
+                                    이메일 인증 하기
+                                </button>
+                            }
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>이메일</Form.Label>
+                                <Form.Control placeholder={member.email} id="email" name="email" disabled={true} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>이름</Form.Label>
+                                <Form.Control placeholder={member.name} id="name" name="name" disabled={true} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>닉네임</Form.Label>
+                                <Form.Control placeholder={member.nickname} id="nickname" name="nickname" disabled={true} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>전화번호</Form.Label>
+                                <Form.Control placeholder={member.phone} id="phone" name="phone" disabled={true} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>생년월일</Form.Label>
+                                <Form.Control placeholder={member.birthday} id="birthday" name="birthday" disabled={true} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>성별</Form.Label>
+                                <Form.Control placeholder={member.gender} id="gender" name="gender" disabled={true} />
+                            </Form.Group>
+
+                            <Form.Group>
+                                <Form.Label>프로필 사진 선택</Form.Label>
+                                <Form.Control onChange={handleChangeFile} id='file' type='file' disabled={true} />
+                            </Form.Group>
+
+                            <HorizonLine text={""} />
+
+                            <button onClick={handleDeleteMemberButton} className='btn btn-danger w-100 mb-5'>
+                                탈퇴
                             </button>
-                        }
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>이메일</Form.Label>
-                            <Form.Control placeholder={member.email} id="email" name="email" disabled={true} />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label>이름</Form.Label>
-                            <Form.Control placeholder={member.name} id="name" name="name" disabled={true} />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label>닉네임</Form.Label>
-                            <Form.Control placeholder={member.nickname} id="nickname" name="nickname" disabled={true} />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label>전화번호</Form.Label>
-                            <Form.Control placeholder={member.phone} id="phone" name="phone" disabled={true} />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label>생년월일</Form.Label>
-                            <Form.Control placeholder={member.birthday} id="birthday" name="birthday" disabled={true} />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label>성별</Form.Label>
-                            <Form.Control placeholder={member.gender} id="gender" name="gender" disabled={true} />
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>프로필 사진 선택</Form.Label>
-                            <Form.Control onChange={handleChangeFile} id='file' type='file' disabled={true} />
-                        </Form.Group>
-
-                        <HorizonLine text={""} />
-
-                        <button onClick={handleDeleteMemberButton} className='btn btn-danger w-100 mb-5'>
-                            탈퇴
-                        </button>
-
-                        <Row>
-                            <Col className='col'>
-                                <Button onClick={handleModify} className='w-100 btn btn-primary btn-lg' type='button' id='updateButton'>수정</Button>
-                            </Col>
-                            <Col>
-                                <Button onClick={handleAccess} className='w-100 btn btn-primary btn-lg' type='button' id='modifyButton'>확인</Button>
-                            </Col>
-                        </Row>
-                    </Form>
+                            <Row>
+                                <Col className='col'>
+                                    <Button onClick={handleModify} className='w-100 btn btn-primary btn-lg' type='button' id='updateButton'>수정</Button>
+                                </Col>
+                                <Col>
+                                    <Button onClick={handleAccess} className='w-100 btn btn-primary btn-lg' type='button' id='modifyButton'>확인</Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Row>
                 </Container>
             }
         </>

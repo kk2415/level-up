@@ -27,13 +27,7 @@ import static org.springframework.data.redis.serializer.RedisSerializationContex
 @Configuration
 public class CacheConfig {
 
-    @Value("${spring.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.redis.port}")
-    private int redisPort;
-
-    private static final Integer TTL = 30 * 1 * 1;
+    private static final Integer TTL = 60 * 60 * 1;
 
     @Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisCacheConnectionFactory) {
@@ -58,8 +52,8 @@ public class CacheConfig {
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .computePrefixWith(name -> name + ":")
-                .entryTtl(Duration.ofSeconds(TTL));
-//                .serializeKeysWith(fromSerializer(new StringRedisSerializer()));
+                .entryTtl(Duration.ofSeconds(TTL))
+                .serializeKeysWith(fromSerializer(new StringRedisSerializer()));
     }
 
     private ObjectMapper objectMapper() {

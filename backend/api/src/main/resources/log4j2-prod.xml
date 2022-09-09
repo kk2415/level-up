@@ -67,6 +67,10 @@
             <AppenderRef ref="errorFile" level="warn" />
         </logger>
 
+<!--        <logger name="org.hibernate.SQL" level="info" additivity="false">-->
+<!--            <AppenderRef ref="console" />-->
+<!--        </logger>-->
+
         <!-- =================================================================== -->
         <!-- PROJECT Setting												 -->
         <!-- =================================================================== -->

@@ -1,8 +1,9 @@
 package com.levelup.api.service;
 
 import com.levelup.api.dto.article.ArticlePagingResponse;
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.api.dto.article.ArticleUpdateResponse;
+import com.levelup.core.domain.article.Article;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
@@ -97,7 +98,7 @@ public class ArticleService {
 
 
 
-    public ArticleResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {
+    public ArticleUpdateResponse modify(Long articleId, Long memberId, ChannelPostRequest request) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
 
@@ -106,7 +107,7 @@ public class ArticleService {
         }
 
         article.modifyArticle(request.getTitle(), request.getContent());
-        return ArticleResponse.from(article);
+        return ArticleUpdateResponse.from(article);
     }
 
     public void deleteArticle(Long articleId) {

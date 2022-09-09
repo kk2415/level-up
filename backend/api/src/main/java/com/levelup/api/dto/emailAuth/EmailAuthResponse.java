@@ -1,4 +1,4 @@
-package com.levelup.api.dto.auth;
+package com.levelup.api.dto.emailAuth;
 
 import lombok.Data;
 

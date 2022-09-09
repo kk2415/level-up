@@ -2,8 +2,8 @@ package com.levelup.core.repository;
 
 import com.levelup.TestSupporter;
 import com.levelup.api.ApiApplication;
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.Article;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.repository.article.ArticleRepository;
@@ -12,7 +12,6 @@ import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -6,6 +6,8 @@ import MyPage from '../page/member/MyPage'
 import CreateChannel from '../page/channel/CreateChannel'
 import SignIn from '../page/member/SignIn'
 import SignUp from '../page/member/SignUp'
+import FindingPassword from '../page/member/FindingPassword'
+
 import ChannelDescription from "../page/channel/ChannelDescription";
 import ModifyChannel from "../page/channel/ModifyChannel";
 import Channel from "../page/channel/Channel"
@@ -33,6 +35,7 @@ const AppRouter = () => {
 		<Route path="/signup" element={<SignUp />}></Route>
 		<Route path="/mypage" element={<MyPage />}></Route>
 		<Route path="/confirm-email" element={<ConfirmEmail />}></Route>
+		<Route path="/finding-password" element={<FindingPassword />}></Route>
 
 		<Route path="/channel/:channelId" element={<Channel />}></Route>
 		<Route path="/channel/create" element={<CreateChannel />}></Route>

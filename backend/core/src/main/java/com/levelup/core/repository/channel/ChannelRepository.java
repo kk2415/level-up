@@ -17,7 +17,6 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     @Query("select ch from Channel ch " +
             "join fetch ch.channelMembers chm " +
             "join fetch chm.member m " +
-            "join fetch m.emailAuth ea " +
             "where ch.id = :id")
     Optional<Channel> findById(@Param("id") Long id);
 

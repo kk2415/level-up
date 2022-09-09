@@ -1,6 +1,6 @@
 package com.levelup.api.dto.article;
 
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import lombok.Getter;
 
 @Getter

@@ -1,7 +1,7 @@
 package com.levelup;
 
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.Article;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
@@ -24,18 +24,15 @@ public class TestSupporter {
     protected Member createMember(String email, String name) {
         CreateMemberRequest memberRequest = CreateMemberRequest.of(email, "00000000", name,
                 "testNickname", Gender.MALE, LocalDate.now(), "010-2354-9960", new UploadFile("", ""));
-        EmailAuth authEmail = EmailAuth.from(memberRequest.getEmail());
         Member member = memberRequest.toEntity();
         Role role = Role.of(RoleName.MEMBER, member);
 
-        member.setEmailAuth(authEmail);
         member.addRole(role);
-
         return member;
     }
 
     protected Channel createChannel(Member manager, String channelName, ChannelCategory category) {
-        ChannelRequest channelRequest = ChannelRequest.of(manager.getEmail(), channelName, 5L, "testChannel",
+        ChannelRequest channelRequest = ChannelRequest.of(manager.getId(), channelName, 5L, "testChannel",
                 category, "test", new UploadFile("", ""), null);
 
         Channel channel = channelRequest.toEntity(manager.getNickname());

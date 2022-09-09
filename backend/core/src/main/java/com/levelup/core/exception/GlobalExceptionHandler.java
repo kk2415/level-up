@@ -2,8 +2,9 @@ package com.levelup.core.exception;
 
 import com.levelup.core.dto.exception.ExceptionResponse;
 import com.levelup.core.exception.article.PostNotFoundException;
-import com.levelup.core.exception.channel.NoPlaceChnnelException;
+import com.levelup.core.exception.channel.NoPlaceChannelException;
 import com.levelup.core.exception.channelMember.DuplicateChannelMemberException;
+import com.levelup.core.exception.emailAuth.NotMatchSecurityCodeException;
 import com.levelup.core.exception.member.DuplicateEmailException;
 import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
 import com.levelup.core.exception.member.MemberNotFoundException;
@@ -41,7 +42,10 @@ public class GlobalExceptionHandler {
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
@@ -53,7 +57,10 @@ public class GlobalExceptionHandler {
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
@@ -68,7 +75,10 @@ public class GlobalExceptionHandler {
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
@@ -80,7 +90,10 @@ public class GlobalExceptionHandler {
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
@@ -92,7 +105,10 @@ public class GlobalExceptionHandler {
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
@@ -104,67 +120,100 @@ public class GlobalExceptionHandler {
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NotConfirmedEmailException.class)
-    public ResponseEntity<ExceptionResponse> notLoggedInException(NotConfirmedEmailException e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> notConfirmedEmailException(NotConfirmedEmailException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NoPlaceChnnelException.class)
-    public ResponseEntity<ExceptionResponse> notLoggedInException(NoPlaceChnnelException e, HttpServletRequest request) {
+    @ExceptionHandler(NoPlaceChannelException.class)
+    public ResponseEntity<ExceptionResponse> noPlaceChannelException(NoPlaceChannelException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateChannelMemberException.class)
-    public ResponseEntity<ExceptionResponse> notLoggedInException(DuplicateChannelMemberException e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> duplicateChannelMemberException(DuplicateChannelMemberException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailCodeExpiredException.class)
-    public ResponseEntity<ExceptionResponse> notLoggedInException(EmailCodeExpiredException e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> emailCodeExpiredException(EmailCodeExpiredException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DuplicateVoteException.class)
-    public ResponseEntity<ExceptionResponse> notLoggedInException(DuplicateVoteException e, HttpServletRequest request) {
+    public ResponseEntity<ExceptionResponse> duplicateVoteException(DuplicateVoteException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();
         ExceptionResponse exceptionResponse = ExceptionResponse.of(
-                LocalDateTime.now(), e.getMessage(), exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1), request.getRequestURI()
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotMatchSecurityCodeException.class)
+    public ResponseEntity<ExceptionResponse> notMatchSecurityCodeException(NotMatchSecurityCodeException e, HttpServletRequest request) {
+        log.error(e.getClass().getName(), e.getMessage());
+
+        String exceptionDir = e.getClass().getName();
+        ExceptionResponse exceptionResponse = ExceptionResponse.of(
+                LocalDateTime.now(),
+                e.getMessage(),
+                exceptionDir.substring(exceptionDir.lastIndexOf(".") + 1),
+                request.getRequestURI()
         );
 
         return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);

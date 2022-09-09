@@ -1,6 +1,5 @@
 package com.levelup.core.domain.channel;
 
-import com.levelup.core.domain.Article.Article;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.base.BaseTimeEntity;

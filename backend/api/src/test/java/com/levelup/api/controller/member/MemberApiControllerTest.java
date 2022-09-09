@@ -11,15 +11,11 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -48,7 +44,7 @@ class MemberApiControllerTest {
     @Test
     void createProfileImage() throws Exception {
         // Given
-        given(memberService.createProfileImage(any(MultipartFile.class))).willReturn(new UploadFile(
+        given(memberService.createMemberProfileImage(any(MultipartFile.class))).willReturn(new UploadFile(
                 "myProfile.png",
                 "profile/2cdcf2f4-be3d-4a29-9163-70342d4a375e.png"
                 ));

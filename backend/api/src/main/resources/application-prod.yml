@@ -7,7 +7,7 @@ spring:
       name: levelup
 
   config:
-    import: optional:configserver:http://43.200.179.145:8888
+    import: optional:configserver:http://13.124.15.142:8888
 
   mvc:
     pathmatch:

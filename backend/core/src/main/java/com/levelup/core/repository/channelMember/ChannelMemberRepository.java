@@ -4,7 +4,6 @@ package com.levelup.core.repository.channelMember;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +17,6 @@ public interface ChannelMemberRepository extends JpaRepository<ChannelMember, Lo
 
     @Query(value = "select cm from ChannelMember cm " +
             "join fetch cm.member m " +
-            "join fetch m.emailAuth ea " +
             "join fetch cm.channel c " +
             "where cm.channel.id = :channelId and cm.isWaitingMember = :isWaitingMember",
             countQuery = "select count(cm) from ChannelMember cm " +

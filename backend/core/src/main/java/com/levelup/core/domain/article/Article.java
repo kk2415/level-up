@@ -1,4 +1,4 @@
-package com.levelup.core.domain.Article;
+package com.levelup.core.domain.article;
 
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.comment.Comment;

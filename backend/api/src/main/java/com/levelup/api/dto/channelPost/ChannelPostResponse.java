@@ -1,7 +1,7 @@
 package com.levelup.api.dto.channelPost;
 
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channelPost.PostCategory;
 import lombok.AllArgsConstructor;

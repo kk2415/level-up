@@ -52,8 +52,8 @@ public class ChannelService {
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public CreateChannelResponse save(ChannelRequest channelRequest) {
-        Member member = memberRepository.findByEmail(channelRequest.getMemberEmail())
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
+        Member member = memberRepository.findById(channelRequest.getMemberId())
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
         member.addRole(Role.of(RoleName.CHANNEL_MANAGER, member));
 
         Channel channel = channelRequest.toEntity(member.getNickname());

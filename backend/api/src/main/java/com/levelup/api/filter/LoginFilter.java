@@ -67,7 +67,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper mapper = new ObjectMapper();
 
         String email = ((User)authResult.getPrincipal()).getUsername();
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
         Set<Role> roles = roleRepository.findByMemberId(member.getId());
         boolean isAdmin = roles.stream().anyMatch(role -> role.getRoleName().equals(RoleName.ADMIN));
