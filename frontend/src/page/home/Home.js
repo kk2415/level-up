@@ -20,23 +20,13 @@ const Home = () => {
   return (
       <>
         <Container>
-          <h2 class="page-section-heading text-center text-uppercase text-secondary my-4">등록된 스터디</h2>
+          <h2 class="page-section-heading text-center text-uppercase text-secondary my-4">최근 등록된 스터디</h2>
           <div className='w-100' style={{ textAlign: "center" }}>
             <button onClick={handleCreateChannel} className="btn btn-info" type="button" id="createProjectButton">
               스터디 모집하기
             </button>
           </div>
           <StudySwiper />
-
-          <br></br>
-          <br></br>
-          <br></br>
-
-          <h2 class="page-section-heading text-center text-uppercase text-secondary my-4">등록된 프로젝트</h2>
-          <div className='w-100' style={{ textAlign: "center" }}>
-            <button onClick={handleCreateChannel} className="btn btn-info" type="button" id="createProjectButton">프로젝트 모집하기</button>
-          </div>
-          <ProjectSwiper />
         </Container>
       </>
   )
