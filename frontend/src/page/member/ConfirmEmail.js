@@ -9,7 +9,11 @@ const SignIn = ({} ) => {
     const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
 
     const HandleReConfirmButton = async () => {
-        let result = await EmailService.sendSecurityCode(localStorage.getItem('id'));
+        const emailAuthRequest = {
+            securityCode : "",
+            authType : "SIGN_UP",
+        }
+        let result = await EmailService.sendSecurityCode(emailAuthRequest, localStorage.getItem('email'));
 
         if (result) {
             alert('인증번호가 전송되었습니다.')
@@ -18,12 +22,12 @@ const SignIn = ({} ) => {
 
     const HandleConfirmButton = async () => {
         let formData = new FormData(document.getElementById('form'));
-
         let auth = {
             securityCode : formData.get('security'),
+            authType : "SIGN_UP",
         }
 
-        let result = await EmailService.confirmEmail(localStorage.getItem('id'), auth);
+        let result = await EmailService.confirmEmail(auth, localStorage.getItem('id'));
 
         if (result) {
             alert('인증되었습니다.')

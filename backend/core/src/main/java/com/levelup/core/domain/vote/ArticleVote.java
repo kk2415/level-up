@@ -1,12 +1,10 @@
 package com.levelup.core.domain.vote;
 
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
-import com.levelup.core.domain.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 

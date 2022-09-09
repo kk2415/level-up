@@ -1,10 +1,9 @@
 package com.levelup.core.repository.article.ChannelPost;
 
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

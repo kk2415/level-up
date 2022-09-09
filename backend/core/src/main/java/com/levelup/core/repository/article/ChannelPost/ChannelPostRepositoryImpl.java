@@ -1,6 +1,6 @@
 package com.levelup.core.repository.article.ChannelPost;
 
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channelPost.QChannelPost;
 import com.querydsl.jpa.impl.JPAQueryFactory;

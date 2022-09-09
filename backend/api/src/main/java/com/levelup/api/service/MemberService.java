@@ -1,6 +1,6 @@
 package com.levelup.api.service;
 
-import com.levelup.core.domain.emailAuth.EmailAuth;
+import com.levelup.api.dto.member.*;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
@@ -9,21 +9,15 @@ import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.api.dto.member.CreateMemberRequest;
-import com.levelup.api.dto.member.CreateMemberResponse;
-import com.levelup.api.dto.member.MemberResponse;
-import com.levelup.api.dto.member.UpdateMemberRequest;
 import com.levelup.core.exception.*;
 import com.levelup.core.exception.member.DuplicateEmailException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
-import com.levelup.core.repository.emailAuth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -37,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,87 +42,63 @@ public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final EmailAuthRepository emailAuthRepository;
     private final ChannelRepository channelRepository;
     private final S3FileStore fileStore;
 
     public CreateMemberResponse save(CreateMemberRequest memberRequest) {
-        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname()); //중복 이메일 검증
+        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname());
 
         Member member = memberRequest.toEntity();
-        EmailAuth authEmail = EmailAuth.from(member);
         Role role = Role.of(RoleName.ANONYMOUS, member);
 
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.addRole(role);
 
         memberRepository.save(member);
-        emailAuthRepository.save(authEmail);
         return CreateMemberResponse.from(member);
     }
 
     private void validateDuplicationMember(String email, String nickname) {
-        //이 로직은 동시성 문제가 있음. 동시에 같은 아이디가 접근해서 호출하면 통과될 수 있음. 차후에 개선
         memberRepository.findByEmail(email)
-                .ifPresent(user -> {
-                    throw new DuplicateEmailException("중복된 이메일입니다.");
-                });
+                .ifPresent(user -> {throw new DuplicateEmailException("중복된 이메일입니다.");});
 
         memberRepository.findByNickname(nickname)
-                .ifPresent(user -> {
-                    throw new DuplicateEmailException("이미 사용중인 닉네임입니다.");
-                });
+                .ifPresent(user -> {throw new DuplicateEmailException("이미 사용중인 닉네임입니다.");});
     }
 
-    /**
-     * json이랑 이미지 파일을 동시에 서버에 보낼 수가 없으니
-     * 먼저 이 api로 이미지를 저장한 후 이미지의 경로명을 클라이언트에게 리턴(ResponseEntity(uploadFile, HttpStatus.OK))
-     * 그러면 클라이언트는 받은 경로를 객체에 저장한 후 회원가입 api를 호출함
-     * */
-    public UploadFile createProfileImage(MultipartFile file) throws IOException {
+    public UploadFile createMemberProfileImage(MultipartFile file) throws IOException {
         return fileStore.storeFile(ImageType.MEMBER, file);
     }
 
-    @Cacheable(cacheNames = "member", key = "#memberId") //'member'라는 이름의 캐시에 MemberResponse를 저장함. 키는 파라미터 이름인 'memberId'
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "member", key = "#memberId")
     public MemberResponse getById(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        Optional<EmailAuth> emailAuth = emailAuthRepository.findByMemberId(memberId);
-
-        return MemberResponse.from(member, emailAuth.orElse(EmailAuth.from(member)).getIsConfirmed());
+        return MemberResponse.from(member);
     }
 
-    /*
-     * @ResponseBody + byte[]또는, Resource 를 반환하는 경우 바이트 정보가 반환됩니다.
-     * <img> 에서는 이 바이트 정보를 읽어서 이미지로 반환하게 됩니다.
-     *
-     * Resource 를 리턴할 때 ResourceHttpMessageConverter 가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
-     * */
-    public UrlResource getProfileImage(String email) throws MalformedURLException {
-        Member findMember = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
 
-        if (findMember.getProfileImage() == null) {
-            throw new ImageNotFoundException("프로필 사진을 찾을 수 없습니다");
-        }
-
-        UploadFile uploadFile = findMember.getProfileImage();
-        String fullPath = fileStore.getFullPath(uploadFile.getStoreFileName());
-
-        return new UrlResource("file:" + fullPath);
-    }
 
     @CacheEvict(cacheNames = "member", key = "#memberId")
-    public void modify(UpdateMemberRequest updateMemberRequest, Long memberId) {
+    public void modify(ModifyMemberRequest updateMemberRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         member.modifyMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
     }
 
+    public void modifyPassword(ModifyPasswordRequest request, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+
+        member.setPassword(passwordEncoder.encode(request.getPassword()));
+    }
+
     @CacheEvict(cacheNames = "member", key = "#memberId")
-    public UploadFile modifyProfile(MultipartFile file, Long memberId) throws IOException {
+    public UploadFile modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }
@@ -146,6 +115,8 @@ public class MemberService implements UserDetailsService {
 
         return uploadFile;
     }
+
+
 
     @CacheEvict(cacheNames = {"ChannelCategory", "member"}, allEntries = true)
     public void delete(Long memberId) {
@@ -175,6 +146,8 @@ public class MemberService implements UserDetailsService {
             }
         }
     }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

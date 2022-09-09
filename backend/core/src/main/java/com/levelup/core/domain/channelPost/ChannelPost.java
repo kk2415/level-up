@@ -1,12 +1,10 @@
 package com.levelup.core.domain.channelPost;
 
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.channelMember.ChannelMember;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Getter
 @Builder

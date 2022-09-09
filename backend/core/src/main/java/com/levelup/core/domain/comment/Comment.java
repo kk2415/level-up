@@ -1,8 +1,7 @@
 package com.levelup.core.domain.comment;
 
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
-import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.vote.CommentVote;
 import lombok.*;

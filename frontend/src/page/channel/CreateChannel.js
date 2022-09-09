@@ -8,7 +8,6 @@ import $ from "jquery";
 const CreateChannel = () => {
     const context = useContext(AuthContext);
     const [thumbnail, setThumbnail] = useState(null)
-    const [contents, setContents] = useState('채널 설명')
 
     const handleChangeThumbnail = (event) => {
         setThumbnail(event.target.files[0])
@@ -22,7 +21,6 @@ const CreateChannel = () => {
             memberEmail : context.member.id,
             name : formData.get('name'),
             limitedMemberNumber : formData.get('limitedMemberNumber'),
-            // description : contents,
             description : $('#summernote').val(),
             category : formData.get('category'),
             thumbnailDescription : formData.get('thumbnailDescription'),
@@ -140,54 +138,57 @@ const CreateChannel = () => {
 
     return (
         <>
-            <Container>
-                <Form id='form'>
+            <Container style={{width: "100%", fontFamily: "sans-serif"}}>
+                <Row className='d-flex justify-content-center align-items-center'>
+                    <Form id='form' style={{width: "70%"}}>
+                        <FloatingLabel label="채널 정원" className="mb-3 " style={{width: "11%", display: 'inline-block', marginRight: 20}}>
+                            <Form.Control defaultValue='1' type="number" id="limitedMemberNumber" name="limitedMemberNumber" placeholder="회원 제한 수"/>
+                        </FloatingLabel>
 
-                    <Form.Select className="mb-3 fs-4 fw-bold" name="category" id="category">
-                        <option className="fs-4" selected value="NONE" placeholder="name@example.com">카테고리를 선택해주세요</option>
-                        <option className="fs-4" value="STUDY">스터디</option>
-                        <option className="fs-4" value="PROJECT">프로젝트</option>
-                    </Form.Select>
+                        <Form.Select className="mb-3 form-control" name="category" id="category"
+                                     style={{width: "86%", display: 'inline-block'}}>
+                            <option className="fs-4" selected value="NONE" placeholder="name@example.com">카테고리를 선택해주세요</option>
+                            <option className="fs-4" value="STUDY">스터디</option>
+                            <option className="fs-4" value="PROJECT">프로젝트</option>
+                        </Form.Select>
 
-                    <FloatingLabel label="채널 이름" className="mb-3">
-                        <Form.Control id="name" name="name" placeholder="name@example.com" />
-                    </FloatingLabel>
+                        <FloatingLabel label="스터디 이름" className="mb-3" style={{width: "100%"}}>
+                            <Form.Control id="name" name="name" />
+                        </FloatingLabel>
 
-                    <FloatingLabel label="회원 제한 수" className="mb-3">
-                        <Form.Control type="number" id="limitedMemberNumber" name="limitedMemberNumber" placeholder="회원 제한 수"/>
-                    </FloatingLabel>
+                        <FloatingLabel label="스터디 소개" className="mb-3" style={{width: "100%"}}>
+                            <Form.Control id="thumbnailDescription" name="thumbnailDescription" />
+                        </FloatingLabel>
 
-                    <Form.Group className="mb-3 mt-5">
-                        <Form.Label className="fs-3 fw-bold">채널 설명</Form.Label>
-                        <textarea id='summernote' />
-                        {/*<RichTextEditor setContents={setContents} contents={contents} />*/}
-                    </Form.Group>
+                        <Form.Group style={{width: "100%"}}>
+                            <Form.Label>대표 사진</Form.Label>
+                            <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
+                        </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>썸네일 인사말</Form.Label>
-                        <Form.Control id="thumbnailDescription" name="thumbnailDescription" />
-                    </Form.Group>
+                        <Form.Group className="mb-3 mt-5" style={{width: "100%"}}>
+                            <Form.Label className="fs-3 fw-bold">스터디 설명</Form.Label>
+                            <textarea id='summernote' />
+                        </Form.Group>
 
-                    <Form.Group>
-                        <Form.Label>대표 사진</Form.Label>
-                        <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
-                    </Form.Group>
-
-                    <div className="alert alert-danger mt-5" id="alert" role="alert">
-                        <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
-                        <hr/>
-                    </div>
-
-                    <div className="row mt-5">
-                        <div className="col">
-                            <button onClick={handleCreateButton} className="w-100 btn btn-primary btn-lg" type="button"
-                                    id="createButton">생성</button>
+                        <div className="alert alert-danger mt-5" id="alert" role="alert">
+                            <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                            <hr/>
                         </div>
-                        <div className="col">
-                            <button onClick={handleBackButton} className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
-                        </div>
-                    </div>
-                </Form>
+
+                        <Row className="row mt-5">
+                            <Col className="col">
+                                <button onClick={handleCreateButton} className="w-100 btn btn-primary btn-lg" type="button" id="createButton">
+                                    생성
+                                </button>
+                            </Col>
+                            <Col className="col">
+                                <button onClick={handleBackButton} className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">
+                                    뒤로가기
+                                </button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Row>
             </Container>
         </>
     );

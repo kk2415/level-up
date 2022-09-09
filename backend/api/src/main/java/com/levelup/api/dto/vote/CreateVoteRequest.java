@@ -1,6 +1,6 @@
 package com.levelup.api.dto.vote;
 
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.vote.ArticleVote;
 import com.levelup.core.domain.vote.CommentVote;

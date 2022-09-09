@@ -3,12 +3,16 @@ package com.levelup.api.dto.member;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
+import com.levelup.core.domain.role.Role;
+import com.levelup.core.domain.role.RoleName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -22,8 +26,8 @@ public class MemberResponse implements Serializable {
     private Gender gender;
     private LocalDate birthday;
     private String phone;
-    private boolean isConfirmed;
     private UploadFile uploadFile;
+    private List<RoleName> roles;
 
     public MemberResponse(Long id,
                           String email,
@@ -32,8 +36,8 @@ public class MemberResponse implements Serializable {
                           Gender gender,
                           LocalDate birthday,
                           String phone,
-                          boolean isConfirmed,
-                          UploadFile uploadFile) {
+                          UploadFile uploadFile,
+                          List<RoleName> roles) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -41,14 +45,23 @@ public class MemberResponse implements Serializable {
         this.gender = gender;
         this.birthday = birthday;
         this.phone = phone;
-        this.isConfirmed = isConfirmed;
         this.uploadFile = uploadFile;
+        this.roles = roles;
     }
 
-    public static MemberResponse from(Member member, boolean isConfirmed) {
+    public static MemberResponse from(Member member) {
         return new MemberResponse(
-                member.getId(),member.getEmail(), member.getName(), member.getNickname(),
-                member.getGender(), member.getBirthday(), member.getPhone(), isConfirmed, member.getProfileImage()
-        );
+                member.getId(),
+                member.getEmail(),
+                member.getName(),
+                member.getNickname(),
+                member.getGender(),
+                member.getBirthday(),
+                member.getPhone(),
+                member.getProfileImage(),
+                member.getRoles().stream()
+                        .map(Role::getRoleName)
+                        .collect(Collectors.toUnmodifiableList())
+                );
     }
 }

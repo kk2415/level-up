@@ -1,7 +1,7 @@
 package com.levelup.api.controller;
 
 import com.levelup.api.service.*;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.member.Member;
 import com.levelup.api.dto.Result;
 import com.levelup.api.dto.comment.CommentResponse;

@@ -1,11 +1,14 @@
 package com.levelup.api.service;
 
-import com.levelup.api.util.EmailSender;
+import com.levelup.api.dto.emailAuth.EmailAuthRequest;
+import com.levelup.api.util.email.EmailSender;
+import com.levelup.api.util.email.EmailStuff;
+import com.levelup.api.util.email.EmailSubject;
+import com.levelup.api.util.email.EmailTemplateName;
 import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.auth.EmailAuthResponse;
 import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.emailAuth.NotMatchSecurityCodeException;
@@ -16,7 +19,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -24,47 +26,38 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class EmailAuthService {
 
-    private final Long EXPIRATION_SECOND = 500L;
-
+    private final EmailSender emailSender;
     private final MemberRepository memberRepository;
     private final EmailAuthRepository emailAuthRepository;
-    private final EmailSender emailService;
 
-    public void sendSecurityCode(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+    public void save(EmailAuthRequest request, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
 
-        emailAuthRepository.findByMemberId(memberId).ifPresentOrElse((authEmail) -> { //재발송
-            String securityCode = EmailAuth.createSecurityCode();
-            authEmail.setSecurityCode(securityCode);
-            authEmail.setReceivedDate(LocalDateTime.now());
+        EmailAuth emailAuth = request.toEntity(member);
+        emailSender.sendEmail(
+                EmailStuff.of(
+                        member.getEmail(),
+                        EmailSubject.AUTHENTICATE_MAIL,
+                        emailAuth.getSecurityCode(),
+                        EmailTemplateName.AUTHENTICATE_MAIL)
+        );
 
-            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
-        }, () -> {
-            EmailAuth authEmail = EmailAuth.from(member); //처음 발송
-
-            emailAuthRepository.save(authEmail);
-            emailService.sendConfirmEmail(member.getEmail(), authEmail.getSecurityCode());
-        });
+        emailAuthRepository.save(emailAuth);
     }
 
-    @CacheEvict(cacheNames = "member", allEntries = true)
-    public EmailAuthResponse confirmEmail(String securityCode, Long memberId) {
-        EmailAuth emailAuth = emailAuthRepository.findByMemberId(memberId)
-                .orElseThrow(() -> {throw new MemberNotFoundException("해당하는 회원을 찾을 수 없습니다");});
+    public void authenticateEmail(EmailAuthRequest request, String email) {
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndAuthType(email, request.getAuthType().name());
 
-        validateSecurityCode(securityCode, emailAuth);
-        emailAuth.setConfirmed(true);
+        validateSecurityCode(request.getSecurityCode(), emailAuth);
+        emailAuth.setIsAuthenticated(true);
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+        Member member = emailAuth.getMember();
         member.addRole(Role.of(RoleName.MEMBER, member)); //인증 후 권한을 회원으로 승급
-
-        return EmailAuthResponse.of(securityCode, true);
     }
 
     private void validateSecurityCode(String securityCode, EmailAuth emailAuth) {
-        if (isExpired(emailAuth.getReceivedDate())) {
+        if (isExpired(emailAuth.getExpireDate())) {
             throw new EmailCodeExpiredException("인증코드가 만료되었습니다.");
         }
 
@@ -73,9 +66,7 @@ public class EmailAuthService {
         }
     }
 
-    private boolean isExpired(LocalDateTime receivedDate) {
-        long between = Duration.between(receivedDate, LocalDateTime.now()).getSeconds();
-
-        return between > EXPIRATION_SECOND;
+    private boolean isExpired(LocalDateTime expireDate) {
+        return LocalDateTime.now().isAfter(expireDate);
     }
 }

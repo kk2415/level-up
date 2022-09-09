@@ -1,7 +1,7 @@
 package com.levelup.api.dto.article;
 
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.dto.article.ArticlePagingDto;
 import lombok.Getter;
 

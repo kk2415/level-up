@@ -2,8 +2,8 @@ package com.levelup.api.service;
 
 import com.levelup.api.dto.article.ArticlePagingResponse;
 import com.levelup.api.dto.article.ArticleUpdateResponse;
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.Article.ArticleType;
+import com.levelup.core.domain.article.Article;
+import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;

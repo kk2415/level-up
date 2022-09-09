@@ -48,6 +48,12 @@ const SignIn = ({} ) => {
         return valid
     }
 
+    const enterKeyEventHandler = async (event) => {
+        if (event.keyCode === 13) {
+            await HandleSignInButton()
+        }
+    }
+
     const removeAlertMassageBox = () => {
         $('#alert').children('h5').remove();
     }
@@ -70,11 +76,11 @@ const SignIn = ({} ) => {
                 <BiUserCircle className='loginIcon' />
                 <Form id='signInForm'>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Control name="email" type="email" placeholder="이메일을 입력해주세요" />
+                        <Form.Control onKeyDown={enterKeyEventHandler} name="email" type="email" placeholder="이메일을 입력해주세요" />
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Control name="password" type="password" placeholder="비밀번호를 입력해주세요" />
+                        <Form.Control onKeyDown={enterKeyEventHandler} name="password" type="password" placeholder="비밀번호를 입력해주세요" />
                     </Form.Group>
 
                     <div className="alert alert-danger mt-5" id="alert" role="alert">
@@ -109,16 +115,11 @@ const SignIn = ({} ) => {
                         <div className='text-left mt-3'>
                             <Link to="/signup"><small className='reset mx-2'>회원가입</small></Link>
                             ||
-                            <Link to=""><small className='reset mx-2'>아이디/비밀번호 찾기</small></Link>
+                            <Link to="/finding-password"><small className='reset mx-2'>비밀번호 찾기</small></Link>
                         </div>
                     </Container>
                 </Form>
             </Row>
-
-            {/*<Helmet>*/}
-            {/*    <script src='../../component/TestSummerNote.js' type="text/javascript"/>*/}
-            {/*</Helmet>*/}
-
         </Container>
     );
 };

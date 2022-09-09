@@ -1,6 +1,6 @@
 package com.levelup.core.repository.article;
 
-import com.levelup.core.domain.Article.Article;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.dto.article.ArticlePagingDto;
 import org.springframework.data.domain.Page;
@@ -79,9 +79,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
                     "(select count(1) from article_vote av where exists " +
                     "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
                     "from article a left outer join member m on a.member_id = m.member_id " +
-                    "where a.article_type = :articleType and m.nickname like :nickname%",
+                    "where a.article_type = :articleType and m.nickname like :nickname",
             countQuery = "select count(*) from article a join member m on m.member_id = a.member_id " +
-                    "where a.article_type = :articleType and m.nickname like :nickname%",
+                    "where a.article_type = :articleType and m.nickname like :nickname",
             nativeQuery = true)
     Page<ArticlePagingDto> findByNicknameAndArticleType(@Param("nickname") String nickname,
                                                         @Param("articleType") String articleType,

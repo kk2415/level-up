@@ -1,35 +1,33 @@
 import { send } from "../request"
-import {TOKEN} from '../token'
 
 export const EmailService = {
-        sendSecurityCode : async function (memberId) {
-        let result = true
+    sendSecurityCode : async (emailAuthRequest, email) => {
+        let result = false
 
-        await send('/api/v1/email?member=' + memberId, 'POST')
+        await send('/api/v1/email-auth?email=' + email, 'POST', emailAuthRequest)
             .then(() => {
+                result = true
             })
             .catch((error) => {
-                result = false
                 console.log(error)
+                alert(error.responseJSON.message)
             })
 
         return result
     },
 
-    confirmEmail : async function confirmEmail(memberId, auth) {
-        let members = {}
+    confirmEmail : async (emailAuthRequest, email) => {
+        let result = false
 
-        await send('/api/v1/email?member=' + memberId, 'PATCH', auth)
-            .then((data) => {
-                members = data
+        await send('/api/v1/email-auth?email=' + email, 'PATCH', emailAuthRequest)
+            .then(() => {
+                result = true
             })
             .catch((error) => {
-                members = null
-
                 console.log(error)
                 alert(error.responseJSON.message)
             })
 
-        return members
+        return result
     },
 }

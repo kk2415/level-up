@@ -1,4 +1,4 @@
-package com.levelup.core.domain.Article;
+package com.levelup.core.domain.article;
 
 import lombok.Data;
 

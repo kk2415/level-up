@@ -1,12 +1,11 @@
 package com.levelup.core.domain.emailAuth;
 
 import com.levelup.core.domain.base.BaseTimeEntity;
-import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,19 +25,29 @@ public class EmailAuth extends BaseTimeEntity {
     @Column(name = "email_auth_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, name = "email_auth_type")
+    @Enumerated(EnumType.STRING)
+    private EmailAuthType authType;
+
+    @Column(nullable = false)
     private String email;
 
+    @Setter
     @Column(nullable = false)
     private String securityCode;
 
+    @Setter
     @Column(nullable = false)
-    private Boolean isConfirmed;
+    private Boolean isAuthenticated;
 
+    @Setter
     @Column(nullable = false)
     private LocalDateTime receivedDate;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @Column(nullable = false)
+    private LocalDateTime expireDate;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -48,42 +57,20 @@ public class EmailAuth extends BaseTimeEntity {
         this.member = member;
     }
 
-    public void setConfirmed(boolean confirmed) {
-        isConfirmed = confirmed;
-    }
-
-    public void setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
-    }
-
-    public void setReceivedDate(LocalDateTime receivedDate) {
-        this.receivedDate = receivedDate;
-    }
-
-    public static EmailAuth from(Member member) {
-        return EmailAuth.builder()
-                .member(member)
-                .email(member.getEmail())
-                .securityCode(createSecurityCode())
-                .isConfirmed(false)
-                .receivedDate(LocalDateTime.now())
-                .build();
-    }
-
     public static String createSecurityCode() {
         Random rand = new Random();
-        String securityCode = "";
+        StringBuilder securityCode = new StringBuilder();
 
         int idx = 0;
         while (idx < 6) {
             String randomInt = Integer.toString(rand.nextInt(10));
-            if (!securityCode.contains(randomInt)) {
-                securityCode += randomInt;
+            if (!securityCode.toString().contains(randomInt)) {
+                securityCode.append(randomInt);
                 idx++;
             }
         }
 
-        return securityCode;
+        return securityCode.toString();
     }
 
     @Override

@@ -6,6 +6,10 @@ server:
       timeout: 1800
 
 spring:
+  thymeleaf:
+    cache: false
+    prefix: file:api/src/main/resources/templates/
+
   application:
     name: level-up-backend
 
@@ -20,7 +24,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -32,10 +36,6 @@ spring:
     host: localhost
     port: 6379
     password: ''
-#    host: 52.78.116.47
-#    port: 6379
-#    password: Dudrhkd10ck!
-
 
   config:
     import: optional:configserver:http://localhost:8888

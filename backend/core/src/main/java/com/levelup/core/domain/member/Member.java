@@ -1,11 +1,9 @@
 package com.levelup.core.domain.member;
 
-import com.levelup.core.domain.Article.Article;
-import com.levelup.core.domain.emailAuth.EmailAuth;
+import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.comment.Comment;
-import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.role.Role;
 import lombok.*;
@@ -15,7 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter

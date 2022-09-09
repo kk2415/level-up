@@ -49,7 +49,11 @@ const SignUp = () => {
                 alert(newMember.name + '님 가입되었습니다')
                 alert('인증번호를 발송 중입니다. 잠시만 기다려주세요.')
 
-                await EmailService.sendSecurityCode(newMember.id);
+                const emailAuthRequest = {
+                    securityCode : "",
+                    authType : "SIGN_UP",
+                }
+                await EmailService.sendSecurityCode(emailAuthRequest, newMember.email);
             }
         }
     }
