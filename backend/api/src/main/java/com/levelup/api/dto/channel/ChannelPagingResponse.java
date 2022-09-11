@@ -1,5 +1,6 @@
 package com.levelup.api.dto.channel;
 
+import com.levelup.core.util.HtmlParser;
 import com.levelup.core.dto.channel.ChannelPagingDto;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ public class ChannelPagingResponse implements Serializable {
     private Long channelId;
     private String channelName;
     private Long memberMaxNumber;
-    private String mainDescription;
+    private String descriptionSummary;
     private String managerName;
     private String storeFileName;
     private Long memberCount;
@@ -21,25 +22,31 @@ public class ChannelPagingResponse implements Serializable {
     private ChannelPagingResponse(Long channelId,
                                   String channelName,
                                   Long memberMaxNumber,
-                                  String mainDescription,
+                                  String descriptionSummary,
                                   String managerName,
                                   String storeFileName,
                                   Long memberCount) {
         this.channelId = channelId;
         this.channelName = channelName;
         this.memberMaxNumber = memberMaxNumber;
-        this.mainDescription = mainDescription;
+        this.descriptionSummary = descriptionSummary;
         this.managerName = managerName;
         this.storeFileName = storeFileName;
         this.memberCount = memberCount;
     }
 
     public static ChannelPagingResponse from(ChannelPagingDto channelPagingDto) {
+        String descriptionSummary = HtmlParser.removeTag(
+                channelPagingDto.getDescription().substring(0, channelPagingDto.getDescription().length()));
+        if (descriptionSummary.length() > 10) {
+            descriptionSummary = descriptionSummary.substring(0, 10) + "...";
+        }
+
         return new ChannelPagingResponse(
                 channelPagingDto.getChannelId(),
                 channelPagingDto.getChannelName(),
                 channelPagingDto.getMemberMaxNumber(),
-                channelPagingDto.getMainDescription(),
+                descriptionSummary,
                 channelPagingDto.getManagerName(),
                 channelPagingDto.getStoreFileName(),
                 channelPagingDto.getMemberCount()

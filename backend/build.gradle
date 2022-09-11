@@ -50,17 +50,16 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
         implementation 'org.springframework.boot:spring-boot-starter-validation'
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+        implementation 'mysql:mysql-connector-java'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-cache'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-        implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-
-        implementation 'com.fasterxml.jackson.core:jackson-core'
-        implementation 'com.fasterxml.jackson.core:jackson-databind'
-        implementation 'com.fasterxml.jackson.core:jackson-annotations'
-        implementation 'mysql:mysql-connector-java'
+        implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4'
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+        implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
@@ -70,8 +69,11 @@ subprojects {
 
         implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+        implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.2'
         jmhImplementation 'org.openjdk.jmh:jmh-core:1.35'
         jmhImplementation 'org.openjdk.jmh:jmh-generator-annprocess:1.35'
+
+        implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
         runtimeOnly 'com.h2database:h2'
         compileOnly 'org.projectlombok:lombok'

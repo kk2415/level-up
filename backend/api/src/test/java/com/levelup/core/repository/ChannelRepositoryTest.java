@@ -2,11 +2,9 @@ package com.levelup.core.repository;
 
 import com.levelup.TestSupporter;
 import com.levelup.api.ApiApplication;
-import com.levelup.api.dto.channel.ChannelPagingResponse;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.channel.ChannelPagingDto;
 import com.levelup.api.dto.channel.ChannelResponse;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.repository.channel.ChannelRepository;
@@ -105,7 +103,7 @@ public class ChannelRepositoryTest extends TestSupporter {
         Page<Channel> channelPage = channelRepository.findJoinFetchByCategory(
                 ChannelCategory.STUDY, PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"))
         );
-        List<ChannelResponse> channelResponses = channelPage.map(ChannelResponse::from).toList();
+        List<ChannelResponse> channelResponses = channelPage.map(c -> ChannelResponse.of(c, false)).toList();
 
         // Then
         assertThat(channelResponses.size()).isEqualTo(2);
@@ -142,10 +140,10 @@ public class ChannelRepositoryTest extends TestSupporter {
         channelRepository.save(channel11);
 
         // When
-        Page<ChannelPagingDto> result = channelRepository.findByCategory(
-                        ChannelCategory.STUDY.name(),
+        Page<Channel> result = channelRepository.findByCategory(
+                        ChannelCategory.STUDY,
                 PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "channel_id")));
-        List<ChannelPagingResponse> collect = result.map(ChannelPagingResponse::from)
+        List<ChannelResponse> collect = result.map(ChannelResponse::from)
                 .stream()
                 .collect(Collectors.toList());
         // Then

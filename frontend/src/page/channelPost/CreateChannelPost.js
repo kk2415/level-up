@@ -5,7 +5,7 @@ import $ from 'jquery'
 import ChannelPostService from '../../api/service/ChannelPostService'
 import {Container, Form} from 'react-bootstrap'
 
-const CreatePost = () => {
+const CreateChannelPost = () => {
     const navigate = useNavigate();
 
     const getChannelId = () => {
@@ -15,16 +15,13 @@ const CreatePost = () => {
     }
 
     const [channelId, setChannelId] = useState(getChannelId())
-    const [contents, setContents] = useState('내용')
 
     const handleCreatePost = async () => {
         let formData = new FormData(document.getElementById('form'));
 
         let post = {
-            channelId : channelId,
             title : formData.get('title'),
             content  : $('#summernote').val(),
-            category : formData.get('category'),
             postCategory : formData.get('category'),
             articleType : 'CHANNEL_POST',
         }
@@ -33,7 +30,8 @@ const CreatePost = () => {
             return
         }
 
-        let result = await ChannelPostService.create(post, channelId);
+        console.log(channelId)
+        let result = await ChannelPostService.create(post, channelId, localStorage.getItem('id'));
 
         if (result) {
             window.location.href = '/channel/' + channelId + '?page=1'
@@ -178,4 +176,4 @@ const CreatePost = () => {
     );
 };
 
-export default CreatePost;
+export default CreateChannelPost;

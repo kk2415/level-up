@@ -5,6 +5,7 @@ import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.member.Member;
 import com.levelup.api.dto.channelPost.ChannelPostRequest;
 import com.levelup.api.dto.channelPost.ChannelPostResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,20 +25,11 @@ public class ChannelPostApiController {
 
     private final ChannelPostService channelPostService;
 
-    @PostMapping("/channel-posts-for-test")
-    public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
-                                                      @RequestParam("channel") Long channelId,
-                                                      @RequestParam Long memberId) {
-        ChannelPostResponse response = channelPostService.save(request, memberId, channelId);
-
-        return ResponseEntity.ok().body(response);
-    }
-
     @PostMapping("/channel-posts")
     public ResponseEntity<ChannelPostResponse> create(@Validated @RequestBody ChannelPostRequest request,
                                                       @RequestParam("channel") Long channelId,
-                                                      @AuthenticationPrincipal Member member) {
-        ChannelPostResponse response = channelPostService.save(request, member.getId(), channelId);
+                                                      @RequestParam("member") Long memberId) {
+        ChannelPostResponse response = channelPostService.save(request, memberId, channelId);
 
         return ResponseEntity.ok().body(response);
     }
@@ -96,7 +88,7 @@ public class ChannelPostApiController {
     @PatchMapping("/channel-posts/{articleId}")
     public ResponseEntity<ChannelPostResponse> updatePost(@PathVariable Long articleId,
                                      @RequestBody ChannelPostRequest request,
-                                     @AuthenticationPrincipal Member member) {
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
         ChannelPostResponse response = channelPostService.modify(articleId, member.getId(), request);
 
         return ResponseEntity.ok().body(response);

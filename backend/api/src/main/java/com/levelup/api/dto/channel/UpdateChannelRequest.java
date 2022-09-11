@@ -22,9 +22,6 @@ public class UpdateChannelRequest {
     private ChannelCategory category;
 
     @NotNull
-    private String thumbnailDescription;
-
-    @NotNull
     private UploadFile thumbnailImage;
 
 }

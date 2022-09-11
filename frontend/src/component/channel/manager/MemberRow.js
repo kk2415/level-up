@@ -1,24 +1,26 @@
-import React from 'react';
-import ChannelMemberService from "../../../api/service/ChannelMemberService";
+import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 
-const MemberRow = ({info, channelId}) => {
-    const deniedMember = async () => {
-        let result = await ChannelMemberService.delete(info.channelMemberId, channelId);
+import { S3_URL } from "../../../api/backEndHost"
 
-        if (result) {
-            alert('회원을 강제퇴장시켰습니다.')
-            window.location.href = '/channel/' + channelId + '/manager'
-        }
-    }
+const MemberRow = ({member}) => {
+    const IMG_DIR = S3_URL + member.storeFileName
 
     return (
         <>
             {
-                !info.manager &&
-                <li id="member" className="list-group-item">
-                    <span className="float-start">{info.email}</span>
-                    <button onClick={deniedMember} className="btn-sm btn-primary btn float-end">퇴장</button>
-                </li>
+                <div className="card mb-3">
+                    <div className="row g-0">
+                        <div className="col-md-4">
+                            <img src={IMG_DIR} className="img-fluid rounded-start" style={{ height: '100%', objectFit: "fill"}}/>
+                        </div>
+                        <div className="col-md-8">
+                            <div className="card-body">
+                                <h5 className="card-title">{member.nickname}</h5>
+                                <p className="card-text">백엔드</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
         </>
     );

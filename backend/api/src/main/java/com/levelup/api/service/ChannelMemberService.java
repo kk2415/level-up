@@ -13,6 +13,7 @@ import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,7 @@ public class ChannelMemberService {
     /**
      * 수정
      * */
+    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public void approvalMember(Long channelMemberId) {
         ChannelMember channelMember = channelMemberRepository.findById(channelMemberId)
                 .orElseThrow(() -> new MemberNotFoundException("채널 멤버를 찾을 수 없습니다."));

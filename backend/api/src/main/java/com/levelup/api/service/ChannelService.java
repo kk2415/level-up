@@ -24,7 +24,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +38,7 @@ import java.net.MalformedURLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +86,7 @@ public class ChannelService {
 
 
 
+    @Transactional(readOnly = true)
     public ChannelResponse getChannel(Long channelId, Long memberId) {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -104,10 +108,17 @@ public class ChannelService {
         return false;
     }
 
-    @Cacheable(cacheNames = "ChannelCategory")
-    public Page<ChannelPagingResponse> getByCategory(ChannelCategory category, Pageable pageable) {
-        return channelRepository.findByCategory(category.name(), pageable)
-                .map(ChannelPagingResponse::from);
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "ChannelCategory", key = "{#category, #order}")
+    public Page<ChannelResponse> getByCategory(ChannelCategory category, String order, Pageable pageable) {
+        if ("memberCount".equals(order)) {
+            System.out.println("property : " + order);
+            List<Channel> channels = channelRepository.findByCategoryAndOrderByMemberCount(category.toString());
+            PageImpl<Channel> channelPage = new PageImpl<>(channels);
+            return channelPage.map(ChannelResponse::from);
+        }
+
+        return channelRepository.findByCategory(category, pageable).map(ChannelResponse::from);
     }
 
     /*
@@ -116,6 +127,7 @@ public class ChannelService {
      *
      * Resource 를 리턴할 때 ResourceHttpMessageConverter 가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
      * */
+    @Transactional(readOnly = true)
     public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -130,6 +142,7 @@ public class ChannelService {
         return new UrlResource("file:" + fullPath);
     }
 
+    @Transactional(readOnly = true)
     public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
         final Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -140,13 +153,11 @@ public class ChannelService {
 
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public ChannelResponse modify(Long channelId, String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
+    public void modify(Long channelId, String name, Long limitNumber, String description, UploadFile thumbnailImage) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
-        channel.modifyChannel(name, limitNumber, description, thumbnailDescription, thumbnailImage);
-
-        return ChannelResponse.from(channel);
+        channel.modifyChannel(name, limitNumber, description, thumbnailImage);
     }
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)

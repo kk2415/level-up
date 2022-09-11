@@ -15,7 +15,6 @@ const CreateChannelNotice = () => {
     }
 
     const [channelId, setChannelId] = useState(getChannelId())
-    // const [contents, setContents] = useState('내용')
 
     const handleCreateNotice = async () => {
         let formData = new FormData(document.getElementById('form'));
@@ -26,7 +25,7 @@ const CreateChannelNotice = () => {
             articleType : 'CHANNEL_NOTICE',
         }
 
-        let result = await ChannelPostService.create(notice, channelId);
+        let result = await ChannelPostService.create(notice, channelId, localStorage.getItem('id'));
         if (result) {
             navigate('/channel/' + channelId + '?page=1')
         }
@@ -36,7 +35,7 @@ const CreateChannelNotice = () => {
         navigate('/channel/' + channelId + '?page=1')
     }
 
-    function configSummernote() {
+    const configSummernote = () => {
         $(document).ready(function() {
             $('#summernote').summernote({
                 height: 400,

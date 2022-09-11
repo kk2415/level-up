@@ -18,7 +18,7 @@ const CardSlide = ({ channel }) => {
 	}
 
 	const handleCardImage = () => {
-		window.location.href = `/channel/description/` + channel.channelId
+		window.location.href = `/channel/description/` + channel.id
 	}
 
 	return (
@@ -28,21 +28,18 @@ const CardSlide = ({ channel }) => {
 					<Card.Img onClick={handleCardImage} onMouseOver={onMouseOver} className="cardImg"
 							  variant="top" src={IMG_DIR} style={{ height: '25vh', objectFit: "fill"}} />
 					<Card.Body className="card-body">
-						<Link to={'/channel/description/' + channel.channelId}>
+						<Link to={'/channel/description/' + channel.id}>
 							<Card.Title className="card-title">
-								{channel.channelName}
+								{channel.name}
 							</Card.Title>
 						</Link>
-						<Card.Text className="card-text"  style={ {minHeight: "10vh"} }>{channel.mainDescription}</Card.Text>
+						<Card.Text className="card-text"  style={ {minHeight: "10vh"} }>{channel.descriptionSummary}</Card.Text>
 					</Card.Body>
 					<Card.Footer className="card-footer">
 						<div className="row">
 							<div className="card-title col-lg-6 col-sm-12 text-lg-start text-center">
 								{channel.managerName}
 							</div>
-							{/*<div className="card-title col-lg-6 col-sm-12 text-lg-end text-center">*/}
-							{/*	<small className="text-muted">{channel.memberCount} / {channel.memberMaxNumber}</small>*/}
-							{/*</div>*/}
 						</div>
 
 					</Card.Footer>

@@ -25,7 +25,7 @@ public class CommentResponse {
         this.memberId = comment.getMember().getId();
         this.writer = comment.getMember().getNickname();
         this.content = comment.getContent();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(comment.getCreatedAt());
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(comment.getCreatedAt());
         this.voteCount = (long) comment.getCommentVotes().size();
         this.replyCount = (long) comment.getChild().size();
     }

@@ -33,6 +33,7 @@ import java.util.Set;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
     private final RoleRepository roleRepository;
     private final TokenProvider tokenProvider;
 
@@ -64,8 +65,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException {
         log.info("login filter successfulAuthentication() start = url : {}", request.getRequestURL());
 
-        ObjectMapper mapper = new ObjectMapper();
-
         String email = ((User)authResult.getPrincipal()).getUsername();
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
@@ -80,6 +79,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         LoginResponse loginResponse = LoginResponse.of(member.getId(), email, accessToken, isAdmin);
 
         response.setContentType("application/json");
-        response.getWriter().write(mapper.writeValueAsString(loginResponse));
+        response.getWriter().write(objectMapper.writeValueAsString(loginResponse));
     }
 }

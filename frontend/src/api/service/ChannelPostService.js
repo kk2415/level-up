@@ -2,10 +2,10 @@ import { send } from "../request"
 
 const ChannelPostService = {
 
-    create: async (channelPost, channelId) => {
+    create: async (channelPost, channelId, memberId) => {
         let result = null
 
-        await send('/api/v1/channel-posts?channel=' + channelId, 'POST', channelPost)
+        await send('/api/v1/channel-posts?channel=' + channelId + '&member=' + memberId, 'POST', channelPost)
             .then((data) => {
                 result = data
             })

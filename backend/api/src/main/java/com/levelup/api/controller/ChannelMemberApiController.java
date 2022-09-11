@@ -49,7 +49,6 @@ public class ChannelMemberApiController {
     public ResponseEntity<Page<ChannelMemberResponse>> getChannelMembers(@RequestParam Long channelId,
                                                                          @RequestParam Boolean isWaitingMember,
                                                                          Pageable pageable) {
-        log.error("=======start getChannelMembers========");
         Page<ChannelMemberResponse> responses = channelMemberService.getChannelMembers(channelId, isWaitingMember, pageable);
 
         return ResponseEntity.ok().body(responses);

@@ -28,7 +28,7 @@ public class ArticleResponse {
         this.memberId = article.getMember().getId();
         this.title = article.getTitle();
         this.writer = article.getMember().getNickname();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(article.getCreatedAt());
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(article.getCreatedAt());
         this.content = article.getContent();
         this.voteCount = (long) article.getArticleVotes().size();
         this.views = article.getViews();

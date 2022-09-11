@@ -14,6 +14,7 @@ const MyPage = () => {
 
     const loadMember = async () => {
         let result = await MemberService.get(localStorage.getItem('id'))
+        console.log(result)
         if (!result) {
             alert('권한이 없습니다')
             window.location.href = '/'
