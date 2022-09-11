@@ -1,8 +1,7 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import { AuthContext } from '../../App';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import ChannelService from '../../api/service/ChannelService'
 import {MemberService} from '../../api/service/MemberService'
-import {Container, Form} from 'react-bootstrap'
+import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
 import {uploadFile} from "../../api/UploadFile";
 import $ from "jquery";
 
@@ -28,24 +27,17 @@ const CreateChannel = () => {
     }
 
     const handleModifyButton = async () => {
-        let formData = new FormData(document.getElementById('form'));
         let thumbnailImageDir = description.thumbnailImage
-
         if (thumbnail !== null) {
             thumbnailImageDir = await MemberService.uploadProfile(thumbnail)
         }
 
-        // let uploadFiles = getUploadFiles(contents);
-
         let channel = {
             name : $('#name').val(),
             limitedMemberNumber : $('#limitedMemberNumber').val(),
-            // description : contents,
             description : $('#summernote').val(),
             category : $('#category').val(),
-            thumbnailDescription : $('#thumbnailDescription').val(),
             thumbnailImage : thumbnailImageDir,
-            // uploadFiles : uploadFiles,
         }
 
         let result = await ChannelService.modify(channel, channelId);
@@ -55,7 +47,7 @@ const CreateChannel = () => {
         }
     }
 
-    function getUploadFiles(htmlCode) {
+    const getUploadFiles = (htmlCode) => {
         let uploadFiles = []
         let offset = 0
 
@@ -77,20 +69,9 @@ const CreateChannel = () => {
         return uploadFiles;
     }
 
-    const handleName = () => {
-
-    }
-
-    const context = useContext(AuthContext);
     const [thumbnail, setThumbnail] = useState(null)
-    const [contents, setContents] = useState(null)
-    const [onLoading, setOnLoading] = useState(true)
     const [channelId, setChannelId] = useState(getChannelId())
     const [description, setDescription] = useState(null)
-
-    const loadContents = (data) => {
-        setContents(data)
-    }
 
     const uploadImage = (images, insertImage) => {
         for (let i = 0; i < images.length; i++) {
@@ -105,9 +86,6 @@ const CreateChannel = () => {
     }
 
     const showChannel = () => {
-        // let e = $.Event('keypress')
-        // e.which = 13;
-
         if (description) {
             $('#name').val(description.name)
             $('#limitedMemberNumber').val(description.limitedMemberNumber)
@@ -115,7 +93,7 @@ const CreateChannel = () => {
         }
     }
 
-    function configSummernote() {
+    const configSummernote = () => {
         $(document).ready(function() {
             $('#summernote').summernote({
                 height: 400,
@@ -162,59 +140,47 @@ const CreateChannel = () => {
 
     return (
         <>
-            <Container>
+            <Container style={{width: "100%", fontFamily: "sans-serif"}}>
                 {
                     description &&
-                    <Form id='form'>
-                        <Form.Group className='mb-4'>
-                            <Form.Label>카테고리</Form.Label>
-                            <Form.Select value={description.category} aria-label="Default select example" name="category" id="category">
-                                <option selected value="NONE">카테고리를 선택해주세요</option>
-                                <option value="STUDY">스터디</option>
-                                <option value="PROJECT">프로젝트</option>
+                    <Row className='d-flex justify-content-center align-items-center'>
+                        <Form id='form' style={{width: "70%"}}>
+                            <FloatingLabel label="채널 정원" className="mb-3 " style={{width: "11%", display: 'inline-block', marginRight: 20}}>
+                                <Form.Control type="number" id="limitedMemberNumber" name="limitedMemberNumber" placeholder="회원 제한 수"/>
+                            </FloatingLabel>
+
+                            <Form.Select className="mb-3 form-control" name="category" id="category" value={description.category}
+                                         style={{width: "86%", display: 'inline-block'}}>
+                                <option className="fs-4" selected value="NONE" placeholder="name@example.com">카테고리를 선택해주세요</option>
+                                <option className="fs-4" value="STUDY">스터디</option>
+                                <option className="fs-4" value="PROJECT">프로젝트</option>
                             </Form.Select>
-                        </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>이름</Form.Label>
-                            <input className="form-control" id="name" type="text" placeholder="Enter channel name..."
-                                   maxLength="20" data-sb-validations="required"/>
-                        </Form.Group>
+                            <FloatingLabel label="스터디 이름" className="mb-3" style={{width: "100%"}}>
+                                <Form.Control id="name" name="name" />
+                            </FloatingLabel>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>회원 제한 수</Form.Label>
-                            <input className="form-control" id="limitedMemberNumber" type="text"
-                                   placeholder="Enter channel limited number..."
-                                   maxLength="3" data-sb-validations="required"/>
-                        </Form.Group>
+                            <Form.Group style={{width: "100%"}}>
+                                <Form.Label>대표 사진</Form.Label>
+                                <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
+                            </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>설명</Form.Label>
-                            <textarea id='summernote' />
-                        </Form.Group>
+                            <Form.Group className="mb-3 mt-5" style={{width: "100%"}}>
+                                <Form.Label className="fs-3 fw-bold">스터디 설명</Form.Label>
+                                <textarea id='summernote' />
+                            </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label>썸네일 인사말</Form.Label>
-                            <input className="form-control" id="thumbnailDescription" type="text"
-                                   placeholder="짤막한 소개글 작성해주세요!"
-                                   maxLength="30"/>
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>대표 사진</Form.Label>
-                            <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
-                        </Form.Group>
-
-                        <div className="row mt-5">
-                            <div className="col">
-                                <button onClick={handleModifyButton} className="w-100 btn btn-primary btn-lg" type="button"
-                                        id="modifyButton">수정</button>
+                            <div className="row mt-5">
+                                <div className="col">
+                                    <button onClick={handleModifyButton} className="w-100 btn btn-primary btn-lg" type="button"
+                                            id="modifyButton">수정</button>
+                                </div>
+                                <div className="col">
+                                    <button onClick={handleBackButton} className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
+                                </div>
                             </div>
-                            <div className="col">
-                                <button onClick={handleBackButton} className="w-100 btn btn-secondary btn-lg" type="button" id="cancel">뒤로가기</button>
-                            </div>
-                        </div>
-                    </Form>
+                        </Form>
+                    </Row>
                 }
             </Container>
         </>

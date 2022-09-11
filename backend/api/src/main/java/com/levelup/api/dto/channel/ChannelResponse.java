@@ -4,16 +4,12 @@ import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.file.UploadFile;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
-import static lombok.AccessLevel.PROTECTED;
-
-@Data
-@NoArgsConstructor(access = PROTECTED)
+@Getter
 public class ChannelResponse implements Serializable {
 
     private Long id;
@@ -22,51 +18,82 @@ public class ChannelResponse implements Serializable {
     private String managerName;
     private Long limitedMemberNumber;
     private String description;
-    private String thumbnailDescription;
+    private String descriptionSummary;
     private Long memberCount;
-    private String dateCreated;
     private String storeFileName;
     private ChannelCategory category;
     private UploadFile thumbnailImage;
+    private String dateCreated;
+    private String expectedStartDate;
+    private String expectedEndDate;
 
-    private ChannelResponse(Channel channel) {
-        this.id = channel.getId();
-        this.name = channel.getName();
-        this.managerName = channel.getManagerName();
-        this.limitedMemberNumber = channel.getMemberMaxNumber();
-        this.description = channel.getDescription();
-        this.thumbnailDescription = channel.getMainDescription();
-        this.thumbnailImage = channel.getThumbnailImage();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreatedAt());
-        this.category = channel.getCategory();
-        this.memberCount = channel.getChannelMembers().stream()
-                .filter(member -> !member.getIsWaitingMember())
-                .count();
-        this.storeFileName = channel.getThumbnailImage().getStoreFileName();
-    }
+    protected ChannelResponse() {}
 
-    private ChannelResponse(Channel channel, boolean isManager) {
-        this.id = channel.getId();
-        this.name = channel.getName();
+    private ChannelResponse(Long id,
+                            boolean isManager,
+                            String name,
+                            String managerName,
+                            Long limitedMemberNumber,
+                            String description,
+                            String descriptionSummary,
+                            Long memberCount,
+                            String dateCreated,
+                            String storeFileName,
+                            String expectedStartDate,
+                            String expectedEndDate,
+                            ChannelCategory category,
+                            UploadFile thumbnailImage) {
+        this.id = id;
         this.isManager = isManager;
-        this.managerName = channel.getManagerName();
-        this.limitedMemberNumber = channel.getMemberMaxNumber();
-        this.description = channel.getDescription();
-        this.thumbnailDescription = channel.getMainDescription();
-        this.thumbnailImage = channel.getThumbnailImage();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreatedAt());
-        this.category = channel.getCategory();
-        this.memberCount = channel.getChannelMembers().stream()
-                .filter(member -> !member.getIsWaitingMember())
-                .count();
-        this.storeFileName = channel.getThumbnailImage().getStoreFileName();
+        this.name = name;
+        this.managerName = managerName;
+        this.limitedMemberNumber = limitedMemberNumber;
+        this.description = description;
+        this.descriptionSummary = descriptionSummary;
+        this.memberCount = memberCount;
+        this.dateCreated = dateCreated;
+        this.storeFileName = storeFileName;
+        this.expectedStartDate = expectedStartDate;
+        this.expectedEndDate = expectedEndDate;
+        this.category = category;
+        this.thumbnailImage = thumbnailImage;
     }
 
     public static ChannelResponse from(Channel channel) {
-        return new ChannelResponse(channel);
+        return new ChannelResponse(
+                channel.getId(),
+                false,
+                channel.getName(),
+                channel.getManagerNickname(),
+                channel.getMemberMaxNumber(),
+                channel.getDescription(),
+                channel.getDescriptionSummary(),
+                channel.getMemberCount(),
+                channel.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getThumbnailImage().getStoreFileName(),
+                channel.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getCategory(),
+                channel.getThumbnailImage()
+        );
     }
 
     public static ChannelResponse of(Channel channel, boolean isManager) {
-        return new ChannelResponse(channel, isManager);
+        return new ChannelResponse(
+                channel.getId(),
+                isManager,
+                channel.getName(),
+                channel.getManagerNickname(),
+                channel.getMemberMaxNumber(),
+                channel.getDescription(),
+                channel.getDescriptionSummary(),
+                channel.getMemberCount(),
+                channel.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getThumbnailImage().getStoreFileName(),
+                channel.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getCategory(),
+                channel.getThumbnailImage()
+        );
     }
 }

@@ -53,9 +53,10 @@ public class ChannelApiController {
 
 
     @GetMapping("/channels")
-    public ResponseEntity<Page<ChannelPagingResponse>> getByCategory(@RequestParam ChannelCategory category,
-                                                                     Pageable pageable) {
-        Page<ChannelPagingResponse> response = channelService.getByCategory(category, pageable);
+    public ResponseEntity<Page<ChannelResponse>> getByCategory(@RequestParam ChannelCategory category,
+                                                               @RequestParam(defaultValue = "id") String order,
+                                                               Pageable pageable) {
+        Page<ChannelResponse> response = channelService.getByCategory(category, order, pageable);
 
         return ResponseEntity.ok().body(response);
     }
@@ -85,14 +86,16 @@ public class ChannelApiController {
 
 
     @PatchMapping("/channels/{channelId}")
-    public ResponseEntity<ChannelResponse> modifyDetailDescription(@PathVariable Long channelId,
+    public ResponseEntity<Void> modifyDetailDescription(@PathVariable Long channelId,
                                                   @RequestBody @Validated UpdateChannelRequest channelRequest) {
-        ChannelResponse response = channelService.modify(
-                channelId, channelRequest.getName(), channelRequest.getLimitedMemberNumber(),
-                channelRequest.getDescription(), channelRequest.getThumbnailDescription(),
+        channelService.modify(
+                channelId,
+                channelRequest.getName(),
+                channelRequest.getLimitedMemberNumber(),
+                channelRequest.getDescription(),
                 channelRequest.getThumbnailImage());
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/channels/{channelId}/thumbnail")

@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import {Container, Form, Tabs, Tab, Row} from 'react-bootstrap'
+import {Container, Form, Row} from 'react-bootstrap'
 import { ArticleTable } from '../../component/article/ArticleTable'
 import {TOKEN} from "../../api/token";
 import Pager from "../../component/pager/Pager";
@@ -10,6 +10,19 @@ import ArticleService from "../../api/service/ArticleService";
 
 const ArticleList = () => {
     const navigate = useNavigate();
+
+    const getBoardTitle = (articleType) => {
+        switch (articleType) {
+            case 'QNA' :
+                return 'Q&A'
+            case 'NOTICE' :
+                return '공지사항'
+            case 'CHANNEL_NOTICE' :
+                return '채널 공지사항'
+            default :
+                return '채널'
+        }
+    }
 
     const getArticleType = () => {
         let queryString = decodeURI($(window.location).attr('search'))
@@ -132,17 +145,15 @@ const ArticleList = () => {
     const loadArticles = async (articleType, searchCondition) => {
         const pageable = 'page=' + (curPage - 1) + '&size=10&sort=article_id,desc'
         let result = await ArticleService.getAll(articleType, pageable, searchCondition)
-        console.log(result)
 
         setArticle(result.content)
         setArticleCount(result.totalElements)
     }
 
-    const POST_NUM_ON_SCREEN = 10
-    const NOTICE_NUM_ON_SCREEN = 5
     const PAGER_LENGTH = 5
 
     const [articleType, setArticleType] = useState(getArticleType())
+    const [boardTitle, setBoardTitle] = useState(getBoardTitle(getArticleType()))
     const [searchCondition, setSearchCondition] = useState(getSearchCondition())
 
     const [curPage, setCurPage] = useState(getCurrentPage())
@@ -161,7 +172,7 @@ const ArticleList = () => {
                     <Container>
                         <Row className='d-flex justify-content-center align-items-center'>
                             <h2 className="page-section-heading text-center text-uppercase text-secondary mb-3" id="channelName">
-                                {articleType} 게시판
+                                {boardTitle} 게시판
                             </h2>
                         </Row>
                     </Container>

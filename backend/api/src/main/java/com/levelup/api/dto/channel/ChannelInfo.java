@@ -23,7 +23,7 @@ public class ChannelInfo {
     public ChannelInfo(Channel channel) {
         this.channelName = channel.getName();
         this.manager = channel.getManagerName();
-        this.date = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channel.getCreatedAt());
+        this.date = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(channel.getCreatedAt());
         this.memberCount = channel.getChannelMembers().stream()
                 .filter(member -> !member.getIsWaitingMember())
                 .count();

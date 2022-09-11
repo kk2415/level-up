@@ -27,7 +27,7 @@ const SignIn = ({} ) => {
             authType : "SIGN_UP",
         }
 
-        let result = await EmailService.confirmEmail(auth, localStorage.getItem('id'));
+        let result = await EmailService.confirmEmail(auth, localStorage.getItem('email'));
 
         if (result) {
             alert('인증되었습니다.')

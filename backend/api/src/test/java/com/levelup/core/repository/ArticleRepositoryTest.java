@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -74,6 +75,8 @@ public class ArticleRepositoryTest extends TestSupporter {
         Page<ArticlePagingDto> articlePage = articleRepository.findByTitleAndArticleType(
                 "test", ArticleType.NOTICE.name(),
                 PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "article_id")));
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "article_id"));
 
         // Then
         Assertions.assertThat(articlePage.getTotalElements()).isEqualTo(3);

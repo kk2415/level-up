@@ -1,12 +1,10 @@
 package com.levelup.api.dto.channel;
 
 import com.levelup.core.domain.channel.Channel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 
-@Data
-@AllArgsConstructor
+@Getter
 public class CreateChannelResponse {
 
     private Long id;
@@ -14,6 +12,8 @@ public class CreateChannelResponse {
     private Long limitedMemberNumber;
     private String managerName;
     private String description;
+
+    protected CreateChannelResponse() {}
 
     private CreateChannelResponse(Channel channel) {
         this.id = channel.getId();

@@ -71,10 +71,13 @@ const SignIn = ({} ) => {
     }, [])
 
     return (
-        <Container className='mt-5'>
+        <Container className='mt-5' style={{width: '100%'}}>
             <Row className='d-flex justify-content-center align-items-center'>
                 <BiUserCircle className='loginIcon' />
-                <Form id='signInForm'>
+            </Row>
+            <Row className='d-flex justify-content-center align-items-center'>
+                <Form style={{width: '40%', marginTop: 10}} id='signInForm'>
+
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Control onKeyDown={enterKeyEventHandler} name="email" type="email" placeholder="이메일을 입력해주세요" />
                     </Form.Group>
@@ -88,36 +91,39 @@ const SignIn = ({} ) => {
                         <hr/>
                     </div>
 
-                    <Container className="d-grid gap-2">
-                        <Button onClick={HandleSignInButton} className='my-3' variant='info' type='button' >
+                    <Form.Group>
+                        <Button style={{width: '100%'}} onClick={HandleSignInButton} className='my-3 btn-primary' type='button' >
                             로그인
                         </Button>
-                        <HorizonLine text={"OR"} />
-                        <GoogleLogin
-                            render={renderProps=>{
-                                return (
-                                    <Button
-                                        onClick={renderProps.onClick}
-                                        disabled={renderProps.disabled}
-                                        style={{
-                                            backgroundColor: "#176BEF",
-                                            borderColor: "#176BEF"
-                                        }}
-                                    >
-                                        <i className='fab fa-google'/>&nbsp; Sign In with Google
-                                    </Button>
-                                )
-                            }}
-                        />
-                    </Container>
+                    </Form.Group>
 
-                    <Container className='d-flex justify-content-center align-items-center'>
+                    <HorizonLine text={"OR"} />
+                    {/*<div style={{width: '100%'}}>*/}
+                    {/*    <GoogleLogin*/}
+                    {/*        render={renderProps=>{*/}
+                    {/*            return (*/}
+                    {/*                <Button*/}
+                    {/*                    onClick={renderProps.onClick}*/}
+                    {/*                    disabled={renderProps.disabled}*/}
+                    {/*                    style={{*/}
+                    {/*                        backgroundColor: "#176BEF",*/}
+                    {/*                        borderColor: "#176BEF"*/}
+                    {/*                    }}*/}
+                    {/*                >*/}
+                    {/*                    <i className='fab fa-google'/>&nbsp; Sign In with Google*/}
+                    {/*                </Button>*/}
+                    {/*            )*/}
+                    {/*        }}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+
+                    <div className='d-flex justify-content-center align-items-center'>
                         <div className='text-left mt-3'>
                             <Link to="/signup"><small className='reset mx-2'>회원가입</small></Link>
                             ||
                             <Link to="/finding-password"><small className='reset mx-2'>비밀번호 찾기</small></Link>
                         </div>
-                    </Container>
+                    </div>
                 </Form>
             </Row>
         </Container>

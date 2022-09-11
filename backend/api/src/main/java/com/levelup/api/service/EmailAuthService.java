@@ -47,7 +47,8 @@ public class EmailAuthService {
     }
 
     public void authenticateEmail(EmailAuthRequest request, String email) {
-        EmailAuth emailAuth = emailAuthRepository.findByEmailAndAuthType(email, request.getAuthType().name());
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndAuthType(email, request.getAuthType().name())
+                        .orElseThrow();
 
         validateSecurityCode(request.getSecurityCode(), emailAuth);
         emailAuth.setIsAuthenticated(true);

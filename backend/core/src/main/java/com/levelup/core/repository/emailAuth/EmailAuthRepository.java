@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmailAuthRepository extends JpaRepository<EmailAuth, Long> {
 
@@ -13,7 +14,7 @@ public interface EmailAuthRepository extends JpaRepository<EmailAuth, Long> {
             "join member m on m.member_id = ea.member_id " +
             "where m.email = :email and ea.email_auth_type = :authType " +
             "order by ea.email_auth_id desc limit 1", nativeQuery = true)
-    EmailAuth findByEmailAndAuthType(@Param("email") String email, @Param("authType") String authType);
+    Optional<EmailAuth> findByEmailAndAuthType(@Param("email") String email, @Param("authType") String authType);
 
     List<EmailAuth> findByEmail(String email);
 }

@@ -1,40 +1,39 @@
 package com.levelup.api.dto.member;
 
+import com.levelup.core.DateFormat;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
-@Builder
-@NoArgsConstructor
+@Getter
 public class MemberResponse implements Serializable {
 
     private Long id;
     private String email;
     private String name;
     private String nickname;
+    private String birthday;
     private Gender gender;
-    private LocalDate birthday;
     private String phone;
     private UploadFile uploadFile;
     private List<RoleName> roles;
+
+    protected MemberResponse() {}
 
     public MemberResponse(Long id,
                           String email,
                           String name,
                           String nickname,
                           Gender gender,
-                          LocalDate birthday,
+                          String birthday,
                           String phone,
                           UploadFile uploadFile,
                           List<RoleName> roles) {
@@ -56,7 +55,7 @@ public class MemberResponse implements Serializable {
                 member.getName(),
                 member.getNickname(),
                 member.getGender(),
-                member.getBirthday(),
+                member.getBirthday().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
                 member.getPhone(),
                 member.getProfileImage(),
                 member.getRoles().stream()

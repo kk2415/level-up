@@ -5,20 +5,22 @@ import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.base.BaseTimeEntity;
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
+import com.levelup.core.domain.member.Member;
 import lombok.*;
+import org.jsoup.Jsoup;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Entity
-@Table(name = "channel")
 @Getter
 @Builder
+@Entity
+@Table(name = "channel")
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -41,11 +43,14 @@ public class Channel extends BaseTimeEntity {
     @Column(name = "channel_category", nullable = false)
     private ChannelCategory category;
 
-    @Column(nullable = false)
-    private String mainDescription;
-
     @Embedded
     private UploadFile thumbnailImage;
+
+    @Column(nullable = false)
+    private LocalDate expectedStartDate;
+
+    @Column(nullable = false)
+    private LocalDate expectedEndDate;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     private List<ChannelMember> channelMembers;
@@ -56,22 +61,13 @@ public class Channel extends BaseTimeEntity {
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<ChannelPost> channelPosts;
 
+    protected Channel() {}
 
-    /**
-     * 연관관계 메서드는 한쪽에서만 해주면된다.
-     * 연관관계 메서드로 각 테이블(객체)에 컬럼(변수)를 매핑시켜줘야된다.
-     * 여기서는 지금 channel_member 테이블에 channel_id 컬럼에
-     * 특정 channel 레코드를 매핑시키려는 것이다.
-     * 만약 이렇게 연관관계 메서드를 호출하지 않으면 컬럼에 값이 들어가지 않는다.
-     * */
-    //==연관관계 메서드==//
     public void setChannelMember(ChannelMember channelMember) {
         this.getChannelMembers().add(channelMember);
         channelMember.setChannel(this);
     }
 
-
-    //==비즈니스 로직==//
     public void removeMember(List<ChannelMember> channelMembers) {
         for (ChannelMember channelMember : channelMembers) {
             this.getChannelMembers().remove(channelMember);
@@ -79,17 +75,41 @@ public class Channel extends BaseTimeEntity {
         }
     }
 
-    public void modifyChannel(String name, Long limitNumber, String description, String thumbnailDescription, UploadFile thumbnailImage) {
+    public long getMemberCount() {
+        return this.getChannelMembers().stream()
+                .filter(member -> !member.getIsWaitingMember())
+                .count();
+    }
+
+    public String getManagerNickname() {
+        return this.getChannelMembers().stream()
+                .filter(ChannelMember::getIsManager)
+                .map(ChannelMember::getMember)
+                .map(Member::getNickname)
+                .findAny().orElse("none");
+    }
+
+    public String getDescriptionSummary() {
+        String descriptionSummary = Jsoup.parse(this.description).text();
+
+        if (descriptionSummary.length() > 20) {
+            descriptionSummary = descriptionSummary.substring(0, 20) + "...";
+        }
+        return descriptionSummary;
+    }
+
+    public void modifyChannel(String name, Long limitNumber, String description, UploadFile thumbnailImage) {
         this.name = name;
         this.memberMaxNumber = limitNumber;
         this.description = description;
-        this.mainDescription = thumbnailDescription;
         this.thumbnailImage = thumbnailImage;
     }
 
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
+
+
 
     @Override
     public boolean equals(Object obj) {

@@ -144,8 +144,6 @@ const ChannelDescription = () => {
                                 홈으로
                             </button>
                         </Container>
-
-
                     </div>
                 </Container>
             }

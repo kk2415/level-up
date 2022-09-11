@@ -35,7 +35,7 @@ public class ChannelPostResponse {
         this.title = channelPost.getTitle();
         this.writer = channelPost.getMember().getNickname();
         this.content = channelPost.getContent();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(channelPost.getCreatedAt());
+        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(channelPost.getCreatedAt());
         this.voteCount = (long) channelPost.getArticleVotes().size();
         this.views = channelPost.getViews();
         this.commentCount = (long) channelPost.getComments().size();

@@ -55,12 +55,10 @@ const Header = () => {
 
 	const qnaHandler = () => {
 		window.location.href = `/article/list?articleType=QNA&page=1`
-		// navigate(`/article/list?articleType=QNA&page=1`);
 	}
 
 	const noticeHandler = () => {
 		window.location.href = `/article/list?articleType=NOTICE&page=1`
-		// navigate(`/article/list?articleType=NOTICE&page=1`);
 	}
 
 	return (
@@ -104,6 +102,11 @@ const Header = () => {
 								<Nav.Link>
 									<Button onClick={myPageHanlder} size="md" className='btn-info'>
 										마이페이지
+									</Button>
+								</Nav.Link>
+								<Nav.Link>
+									<Button size="md" className='btn-info'>
+										스터디
 									</Button>
 								</Nav.Link>
 								<Nav.Link>

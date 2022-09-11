@@ -26,15 +26,14 @@ const SignUp = () => {
             nickname : formData.get('nickname'),
             email : formData.get('email'),
             password : formData.get('password'),
-            confirmPassword : formData.get('confirmPassword'),
             phone: formData.get('tel'),
             birthday : formData.get('birthday'),
             gender : formData.get('gender'),
             uploadFile : profileImage,
-            authority : 'NORMAL',
         }
 
         if (validate(member)) {
+            console.log(member)
             let newMember = await MemberService.signUp(member);
 
             if (newMember) {
@@ -78,7 +77,7 @@ const SignUp = () => {
             $('#alert').append('<h5>[비밀번호] : 비밀번호는 8자리이상 24이하, 영문자/숫자만 및 특수문자만 입력하세요</h5>')
             valid = false;
         }
-        if (member.password !== member.confirmPassword) {
+        if (member.password !== $('#confirmPassword').val()) {
             $('#alert').append('<h5>[비밀번호] : 비밀번호와 비밀번호 확인이 일치하지 않습니다.</h5>')
             valid = false;
         }
@@ -115,83 +114,84 @@ const SignUp = () => {
     }, [])
 
     return (
-        <Form id='signUpForm'>
-            <Form.Group className="mb-3">
-                <Form.Label>이름</Form.Label>
-                <Form.Control id="name" name="name" placeholder="이름을 입력해주세요" />
-            </Form.Group>
+        <Container className='d-flex justify-content-center align-items-center' style={{width: '100%'}}>
+            <Form id='signUpForm' style={{width: '70%'}}>
+                <Form.Group className="mb-3">
+                    <Form.Label>이름</Form.Label>
+                    <Form.Control id="name" name="name" placeholder="이름을 입력해주세요" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>이메일</Form.Label>
-                <Form.Control id="email" name="email" type="email" placeholder="이메일을 입력해주세요" />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>이메일</Form.Label>
+                    <Form.Control id="email" name="email" type="email" placeholder="이메일을 입력해주세요" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>비밀번호</Form.Label>
-                <Form.Control id="password" name="password" type="password" placeholder="비밀번호를 입력해주세요" />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>비밀번호</Form.Label>
+                    <Form.Control id="password" name="password" type="password" placeholder="비밀번호를 입력해주세요" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>비밀번호 확인</Form.Label>
-                <Form.Control id="confirmPassword" name="confirmPassword" type="password" placeholder="비밀번호를 재입력해주세요" />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>비밀번호 확인</Form.Label>
+                    <Form.Control id="confirmPassword" name="confirmPassword" type="password" placeholder="비밀번호를 재입력해주세요" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>닉네임</Form.Label>
-                <Form.Control id="nickname" name="nickname" placeholder="닉네임을 입력해주세요" />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>닉네임</Form.Label>
+                    <Form.Control id="nickname" name="nickname" placeholder="닉네임을 입력해주세요" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>전화번호</Form.Label>
-                <Form.Control id="tel" name="tel" type="tel" placeholder="010-0000-0000" />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>전화번호</Form.Label>
+                    <Form.Control id="tel" name="tel" type="tel" placeholder="010-0000-0000" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>생년월일</Form.Label>
-                <Form.Control type="date" id="birthday" name="birthday" placeholder="생년월일 6자리를 입력해주세요" />
-            </Form.Group>
+                <Form.Group className="mb-3" style={{width: '48%', display: 'inline-block', marginRight: 30}}>
+                    <Form.Label>생년월일</Form.Label>
+                    <Form.Control type="date" id="birthday" name="birthday" placeholder="생년월일 6자리를 입력해주세요" />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>성별</Form.Label>
-                <Form.Select name="gender">
-                    <option value="MALE">남성</option>
-                    <option value="FEMALE">여성</option>
-                </Form.Select>
-            </Form.Group>
+                <Form.Group className="mb-3" style={{width: '48%', display: 'inline-block'}}>
+                    <Form.Label>성별</Form.Label>
+                    <Form.Select name="gender">
+                        <option value="MALE">남성</option>
+                        <option value="FEMALE">여성</option>
+                    </Form.Select>
+                </Form.Group>
 
-            <Form.Group>
-                <Form.Label>프로필 사진 선택</Form.Label>
-                <Form.Control onChange={handleChangeFile} id='file' type='file' />
-            </Form.Group>
+                <Form.Group>
+                    <Form.Label>프로필 사진 선택</Form.Label>
+                    <Form.Control onChange={handleChangeFile} id='file' type='file' />
+                </Form.Group>
 
-            <div className="alert alert-danger mt-5" id="alert" role="alert">
-                <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
-                <hr/>
-            </div>
+                <div className="alert alert-danger mt-5" id="alert" role="alert">
+                    <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                    <hr/>
+                </div>
 
-            <Container className="d-grid gap-2">
-                <Button className='my-3' variant='info' type='button' onClick={() => {HandleSignUpButton()}} >
+                <Button style={{width: '100%'}} className='mt-5' variant='info' type='button' onClick={() => {HandleSignUpButton()}} >
                     회원가입
                 </Button>
-                <HorizonLine text={"OR"} />
-                <GoogleLogin
-                    render={renderProps=>{
-                        return (
-                            <Button
-                                onClick={renderProps.onClick}
-                                disabled={renderProps.disabled}
-                                style={{
-                                    backgroundColor: "#176BEF",
-                                    borderColor: "#176BEF"
-                                }}
-                            >
-                                <i className='fab fa-google'/>&nbsp; Sign Up with Google
-                            </Button>
-                        )
-                    }}
-                />
-            </Container>
-        </Form>
+
+                {/*<HorizonLine text={"OR"} />*/}
+                {/*<GoogleLogin*/}
+                {/*    render={renderProps=>{*/}
+                {/*        return (*/}
+                {/*            <Button*/}
+                {/*                onClick={renderProps.onClick}*/}
+                {/*                disabled={renderProps.disabled}*/}
+                {/*                style={{*/}
+                {/*                    backgroundColor: "#176BEF",*/}
+                {/*                    borderColor: "#176BEF"*/}
+                {/*                }}*/}
+                {/*            >*/}
+                {/*                <i className='fab fa-google'/>&nbsp; Sign Up with Google*/}
+                {/*            </Button>*/}
+                {/*        )*/}
+                {/*    }}*/}
+                {/*/>*/}
+            </Form>
+        </Container>
     );
 };
 

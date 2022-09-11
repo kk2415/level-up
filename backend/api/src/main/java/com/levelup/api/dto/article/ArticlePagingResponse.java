@@ -46,7 +46,7 @@ public class ArticlePagingResponse {
                 articlePagingDto.getWriter(),
                 articlePagingDto.getViews(),
                 articlePagingDto.getArticleType(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(articlePagingDto.getCreatedAt()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(articlePagingDto.getCreatedAt()),
                 articlePagingDto.getVoteCount(),
                 articlePagingDto.getCommentCount()
         );
@@ -59,7 +59,7 @@ public class ArticlePagingResponse {
                 article.getMember().getNickname(),
                 article.getViews(),
                 article.getArticleType().name(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT).format(article.getCreatedAt()),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(article.getCreatedAt()),
                 (long) article.getArticleVotes().size(),
                 (long) article.getComments().size()
         );

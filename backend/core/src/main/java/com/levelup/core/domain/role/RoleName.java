@@ -4,11 +4,16 @@ import lombok.Getter;
 
 @Getter
 public enum RoleName {
-    ADMIN("ROLE_ADMIN"), CHANNEL_MANAGER("ROLE_CHANNEL_MANAGER"), MEMBER("ROLE_MEMBER"), ANONYMOUS("ROLE_ANONYMOUS");
+    ADMIN("ROLE_ADMIN", 1),
+    CHANNEL_MANAGER("ROLE_CHANNEL_MANAGER", 2),
+    MEMBER("ROLE_MEMBER", 3),
+    ANONYMOUS("ROLE_ANONYMOUS", 4);
 
     private String name;
+    private int priority;
 
-    RoleName(String roleName) {
+    RoleName(String roleName, int priority) {
         this.name = roleName;
+        this.priority = priority;
     }
 }

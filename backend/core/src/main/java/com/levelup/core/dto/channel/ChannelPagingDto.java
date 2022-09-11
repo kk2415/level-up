@@ -5,7 +5,7 @@ public interface ChannelPagingDto {
     Long getChannelId();
     String getChannelName();
     Long getMemberMaxNumber();
-    String getMainDescription();
+    String getDescription();
     String getStoreFileName();
     String getManagerName();
     Long getMemberCount();

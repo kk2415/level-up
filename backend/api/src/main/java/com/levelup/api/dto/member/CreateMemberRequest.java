@@ -1,5 +1,11 @@
 package com.levelup.api.dto.member;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.levelup.core.DateFormat;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
@@ -7,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -42,6 +49,7 @@ public class CreateMemberRequest {
     private Gender gender;
 
     @NotNull
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthday;
 
     @NotNull
@@ -51,8 +59,14 @@ public class CreateMemberRequest {
     private UploadFile uploadFile;
 
     static public CreateMemberRequest of(
-            String email, String password, String name, String nickname,
-            Gender gender, LocalDate birthday, String phone, UploadFile uploadFile
+            String email,
+            String password,
+            String name,
+            String nickname,
+            Gender gender,
+            LocalDate birthday,
+            String phone,
+            UploadFile uploadFile
     ) {
         return new CreateMemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
     }

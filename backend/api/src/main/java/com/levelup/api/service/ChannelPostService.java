@@ -119,15 +119,4 @@ public class ChannelPostService {
 
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }
-
-    public Long articleOauth(Long articleId, Long memberId) {
-        final Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new PostNotFoundException("존재하는 게시글이 없습니다."));
-
-        if (!article.getMember().getId().equals(memberId)) {
-            throw new PostNotFoundException("게시글의 대한 권한이 없습니다");
-        }
-
-        return articleId;
-    }
 }

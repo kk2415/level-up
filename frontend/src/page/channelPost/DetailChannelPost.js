@@ -7,7 +7,7 @@ import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
 import VoteService from "../../api/service/VoteService";
 
-const DetailPost = () => {
+const DetailChannelPost = () => {
     const navigate = useNavigate();
 
     const getPostId = () => {
@@ -21,7 +21,6 @@ const DetailPost = () => {
     }
 
     const [post, setPost] = useState(null)
-    const [channelPost, setChannelPost] = useState(null)
     const [postId, setPostId] = useState(getPostId())
     const [channelId, setChannelId] = useState(getChannelId())
     const [authentication, setAuthentication] = useState(false)
@@ -190,4 +189,4 @@ const DetailPost = () => {
     );
 };
 
-export default DetailPost;
+export default DetailChannelPost;

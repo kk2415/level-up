@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import MemberRow from "../../../component/channel/manager/MemberRow"
+import MemberRowNoImage from "./MemberRowNoImage"
 import Pager from "../../pager/Pager";
 import ChannelMemberService from "../../../api/service/ChannelMemberService";
 
@@ -56,7 +56,7 @@ const MemberFrame = ({channelId, memberCount}) => {
                         <div id="waitingMemberList" className=" card-body list-group list-group-flush">
                             {
                                 members.map((member) => (
-                                    <MemberRow info={member} channelId={channelId} />
+                                    <MemberRowNoImage info={member} channelId={channelId} />
                                 ))
                             }
                         </div>

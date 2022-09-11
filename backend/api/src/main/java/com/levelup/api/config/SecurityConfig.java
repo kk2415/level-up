@@ -1,5 +1,6 @@
 package com.levelup.api.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.levelup.api.filter.JwtAccessDeniedHandler;
 import com.levelup.api.filter.JwtAuthenticationEntryPoint;
 import com.levelup.api.filter.JwtAuthenticationFilter;
@@ -29,6 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -76,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private LoginFilter getSecurityLoginFilter() throws Exception {
-        LoginFilter securityLoginFilter = new LoginFilter(memberRepository, roleRepository, new TokenProvider());
+        LoginFilter securityLoginFilter = new LoginFilter(memberRepository, objectMapper, roleRepository, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
         securityLoginFilter.setFilterProcessesUrl("/api/login");

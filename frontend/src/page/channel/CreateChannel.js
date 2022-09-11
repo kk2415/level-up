@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import { AuthContext } from '../../App';
 import ChannelService from '../../api/service/ChannelService'
-import {Container, Col, Row, Form, Button, Card, FloatingLabel} from 'react-bootstrap'
+import {Container, Col, Row, Form, FloatingLabel} from 'react-bootstrap'
 import {createChannelValidation as validation} from "../../api/validation";
 import $ from "jquery";
+import {DateRange} from "@mui/icons-material";
 
 const CreateChannel = () => {
     const context = useContext(AuthContext);
@@ -18,38 +19,18 @@ const CreateChannel = () => {
         let thumbnailImageDir = await ChannelService.uploadThumbnail(thumbnail)
 
         let channel = {
-            memberEmail : context.member.id,
+            memberId : context.member.id,
             name : formData.get('name'),
             limitedMemberNumber : formData.get('limitedMemberNumber'),
             description : $('#summernote').val(),
             category : formData.get('category'),
-            thumbnailDescription : formData.get('thumbnailDescription'),
+            expectedStartDate : formData.get('expectedStartDate'),
+            expectedEndDate : formData.get('expectedEndDate'),
             thumbnailImage : thumbnailImageDir,
         }
         if (validate(channel)) {
             await ChannelService.create(channel);
         }
-    }
-
-    function getUploadFiles(htmlCode) {
-        let uploadFiles = []
-        let offset = 0
-
-        while (htmlCode.indexOf('img src', offset) !== -1) {
-            let uploadFile = {}
-
-            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
-            let firstIdx = imgTagStr.indexOf('"') + 1
-            let lastIdx = imgTagStr.indexOf('"', firstIdx)
-
-            uploadFile.storeFileName = imgTagStr.substring(firstIdx, lastIdx)
-            uploadFile.uploadFileName = 'image'
-
-            uploadFiles.push(uploadFile)
-
-            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
-        }
-        return uploadFiles;
     }
 
     const validate = (channel) => {
@@ -64,12 +45,16 @@ const CreateChannel = () => {
             $('#alert').append('<h5>[프로젝트 인원] : 숫자만 입력가능하며 일의자리수부터 백의자리수까지 입력 가능합니다.</h5>')
             valid = false;
         }
-        if (!validation.thumbnailDescription.test(channel.thumbnailDescription) || channel.thumbnailDescription == null) {
-            $('#alert').append('<h5>[프로젝트 썸네일 인사말] : 1자리 이상 30이하 자리수만 입력 가능합니다.</h5>')
-            valid = false;
-        }
         if (channel.category === 'NONE') {
             $('#alert').append('<h5>[카테고리] : 카테고리를 정해주세요.</h5>')
+            valid = false;
+        }
+        if (channel.expectedStartDate === '') {
+            $('#alert').append('<h5>[시작 예정일] : 시작 예정일을 정해주세요.</h5>')
+            valid = false;
+        }
+        if (channel.expectedEndDate === '') {
+            $('#alert').append('<h5>[종료 예정일] : 종료 예정일을 정해주세요.</h5>')
             valid = false;
         }
 
@@ -95,7 +80,28 @@ const CreateChannel = () => {
         window.history.back()
     }
 
-    function configSummernote() {
+    const getUploadFiles = (htmlCode) => {
+        let uploadFiles = []
+        let offset = 0
+
+        while (htmlCode.indexOf('img src', offset) !== -1) {
+            let uploadFile = {}
+
+            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
+            let firstIdx = imgTagStr.indexOf('"') + 1
+            let lastIdx = imgTagStr.indexOf('"', firstIdx)
+
+            uploadFile.storeFileName = imgTagStr.substring(firstIdx, lastIdx)
+            uploadFile.uploadFileName = 'image'
+
+            uploadFiles.push(uploadFile)
+
+            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
+        }
+        return uploadFiles;
+    }
+
+    const configSummernote = () => {
         $(document).ready(function() {
             $('#summernote').summernote({
                 height: 400,
@@ -156,11 +162,17 @@ const CreateChannel = () => {
                             <Form.Control id="name" name="name" />
                         </FloatingLabel>
 
-                        <FloatingLabel label="스터디 소개" className="mb-3" style={{width: "100%"}}>
-                            <Form.Control id="thumbnailDescription" name="thumbnailDescription" />
-                        </FloatingLabel>
+                        <Form.Group className="mb-3 mt-3" style={{width: "49%", display: 'inline-block', marginRight: 10}}>
+                            <Form.Label>시작 예정일</Form.Label>
+                            <Form.Control type="date" id="expectedStartDate" name="expectedStartDate" placeholder="생년월일 6자리를 입력해주세요" />
+                        </Form.Group>
 
-                        <Form.Group style={{width: "100%"}}>
+                        <Form.Group className="mb-3" style={{width: "49%", display: 'inline-block'}}>
+                            <Form.Label>종료 예정일</Form.Label>
+                            <Form.Control type="date" id="expectedEndDate" name="expectedEndDate" placeholder="생년월일 6자리를 입력해주세요" />
+                        </Form.Group>
+
+                        <Form.Group className='mt-3' style={{width: "100%"}}>
                             <Form.Label>대표 사진</Form.Label>
                             <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
                         </Form.Group>

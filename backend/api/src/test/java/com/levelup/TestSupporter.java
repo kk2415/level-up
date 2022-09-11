@@ -18,6 +18,7 @@ import com.levelup.api.dto.comment.CreateReplyCommentRequest;
 import com.levelup.api.dto.member.CreateMemberRequest;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class TestSupporter {
 
@@ -32,8 +33,16 @@ public class TestSupporter {
     }
 
     protected Channel createChannel(Member manager, String channelName, ChannelCategory category) {
-        ChannelRequest channelRequest = ChannelRequest.of(manager.getId(), channelName, 5L, "testChannel",
-                category, "test", new UploadFile("", ""), null);
+        ChannelRequest channelRequest = ChannelRequest.of(
+                manager.getId(),
+                channelName,
+                5L,
+                "testChannel",
+                category,
+                new UploadFile("", ""),
+                LocalDate.now(),
+                LocalDate.now(),
+                List.of());
 
         Channel channel = channelRequest.toEntity(manager.getNickname());
         ChannelMember channelMember = ChannelMember.of(manager, true, false);
