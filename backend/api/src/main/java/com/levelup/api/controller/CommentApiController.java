@@ -1,20 +1,19 @@
 package com.levelup.api.controller;
 
+import com.levelup.api.dto.service.comment.ReplyCommentDto;
 import com.levelup.api.service.*;
-import com.levelup.core.domain.article.ArticleType;
-import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.Result;
-import com.levelup.api.dto.comment.CommentResponse;
-import com.levelup.api.dto.comment.CreateCommentRequest;
-import com.levelup.api.dto.comment.CreateReplyCommentRequest;
+import com.levelup.api.dto.response.comment.CommentResponse;
+import com.levelup.api.dto.request.comment.CommentRequest;
+import com.levelup.api.dto.request.comment.ReplyCommentRequest;
+import com.levelup.api.dto.service.comment.CommentDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "댓글 API")
 @RestController
@@ -24,56 +23,48 @@ public class CommentApiController {
 
     private final CommentService commentService;
 
-    /***
-     * 댓글 생성
-     */
-    @PostMapping("/comments-for-test")
-    public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
-                                                  @RequestParam("member") Long memberId) {
-        CommentResponse response = commentService.save(commentRequest, memberId);
-
-        return ResponseEntity.ok().body(response);
-    }
-
     @PostMapping("/comments")
-    public ResponseEntity<CommentResponse> create(@RequestBody @Validated CreateCommentRequest commentRequest,
-                                                  @AuthenticationPrincipal Member member) {
-        CommentResponse response = commentService.save(commentRequest, member.getId());
+    public ResponseEntity<CommentResponse> create(
+            @RequestBody @Validated CommentRequest request,
+            @RequestParam("member") Long memberId)
+    {
+        CommentDto dto = commentService.save(request.toDto(), memberId);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(CommentResponse.from(dto));
     }
 
     @PostMapping("/comments/reply")
-    public ResponseEntity<CommentResponse> createReplyComment(@RequestBody @Validated CreateReplyCommentRequest commentRequest,
-                                                              @AuthenticationPrincipal Member member) {
-        CommentResponse response = commentService.saveReplyComment(commentRequest, member.getId());
+    public ResponseEntity<CommentResponse> createReply(
+            @RequestBody @Validated ReplyCommentRequest request,
+            @RequestParam("member") Long memberId)
+    {
+        ReplyCommentDto dto = commentService.saveReply(request.toDto(), memberId);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(CommentResponse.from(dto));
     }
 
 
-    /**
-     * 댓글 조회
-     */
-    @GetMapping("/comments/{articleId}")
-    public ResponseEntity<Result<CommentResponse>> find(@PathVariable Long articleId,
-                       @RequestParam ArticleType identity) {
-        List<CommentResponse> response = commentService.getComments(articleId);
 
-        return ResponseEntity.ok().body(new Result(response, response.size()));
+    @GetMapping("/comments/{articleId}")
+    public ResponseEntity<List<CommentResponse>> get(@PathVariable Long articleId) {
+        List<CommentResponse> responses = commentService.getComments(articleId).stream()
+                .map(CommentResponse::from)
+                .collect(Collectors.toUnmodifiableList());
+
+        return ResponseEntity.ok().body(responses);
     }
 
     @GetMapping("/comments/{commentId}/reply")
-    public ResponseEntity<Result<CommentResponse>> findReply(@PathVariable Long commentId) {
-        List<CommentResponse> response = commentService.getReplyCommentByParentId(commentId);
+    public ResponseEntity<List<CommentResponse>> getReply(@PathVariable Long commentId) {
+        List<CommentResponse> responses = commentService.getReplyCommentByParentId(commentId).stream()
+                .map(CommentResponse::from)
+                .collect(Collectors.toUnmodifiableList());
 
-        return ResponseEntity.ok().body(new Result(response, response.size()));
+        return ResponseEntity.ok().body(responses);
     }
 
 
-    /**
-     * 댓글 삭제
-     */
+
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> delete(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);

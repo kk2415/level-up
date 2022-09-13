@@ -1,10 +1,9 @@
 package com.levelup.api.controller;
 
-import com.levelup.api.service.vote.ArticleVoteService;
-import com.levelup.api.service.vote.CommentVoteService;
-import com.levelup.core.domain.vote.VoteType;
-import com.levelup.api.dto.vote.CreateVoteRequest;
-import com.levelup.api.dto.vote.VoteResponse;
+import com.levelup.api.dto.service.vote.VoteDto;
+import com.levelup.api.service.vote.VoteService;
+import com.levelup.api.dto.request.vote.VoteRequest;
+import com.levelup.api.dto.response.vote.VoteResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class VoteApiController {
 
-    private final ArticleVoteService articleVoteService;
-    private final CommentVoteService commentVoteService;
+    private final VoteService voteServiceImpl;
 
     @PostMapping("/votes")
-    public ResponseEntity<VoteResponse> create(@RequestBody @Validated CreateVoteRequest voteRequest) {
-        VoteResponse response;
+    public ResponseEntity<VoteResponse> create(@RequestBody @Validated VoteRequest request) {
+        VoteDto dto = voteServiceImpl.save(request.toDto());
 
-        if (voteRequest.getVoteType() == VoteType.ARTICLE) {
-            response = articleVoteService.save(voteRequest);
-        } else {
-            response = commentVoteService.save(voteRequest);
-        }
-
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(VoteResponse.from(dto));
     }
 }

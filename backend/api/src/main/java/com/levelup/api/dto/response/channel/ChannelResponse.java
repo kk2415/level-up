@@ -1,7 +1,7 @@
-package com.levelup.api.dto.channel;
+package com.levelup.api.dto.response.channel;
 
+import com.levelup.api.dto.service.channel.ChannelDto;
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class ChannelResponse implements Serializable {
 
     private Long id;
-    private boolean isManager;
+    private Long managerId;
     private String name;
     private String managerName;
     private Long limitedMemberNumber;
@@ -30,7 +30,7 @@ public class ChannelResponse implements Serializable {
     protected ChannelResponse() {}
 
     private ChannelResponse(Long id,
-                            boolean isManager,
+                            Long managerId,
                             String name,
                             String managerName,
                             Long limitedMemberNumber,
@@ -44,7 +44,7 @@ public class ChannelResponse implements Serializable {
                             ChannelCategory category,
                             UploadFile thumbnailImage) {
         this.id = id;
-        this.isManager = isManager;
+        this.managerId = managerId;
         this.name = name;
         this.managerName = managerName;
         this.limitedMemberNumber = limitedMemberNumber;
@@ -59,41 +59,22 @@ public class ChannelResponse implements Serializable {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public static ChannelResponse from(Channel channel) {
+    public static ChannelResponse from(ChannelDto dto) {
         return new ChannelResponse(
-                channel.getId(),
-                false,
-                channel.getName(),
-                channel.getManagerNickname(),
-                channel.getMemberMaxNumber(),
-                channel.getDescription(),
-                channel.getDescriptionSummary(),
-                channel.getMemberCount(),
-                channel.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                channel.getThumbnailImage().getStoreFileName(),
-                channel.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                channel.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                channel.getCategory(),
-                channel.getThumbnailImage()
-        );
-    }
-
-    public static ChannelResponse of(Channel channel, boolean isManager) {
-        return new ChannelResponse(
-                channel.getId(),
-                isManager,
-                channel.getName(),
-                channel.getManagerNickname(),
-                channel.getMemberMaxNumber(),
-                channel.getDescription(),
-                channel.getDescriptionSummary(),
-                channel.getMemberCount(),
-                channel.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                channel.getThumbnailImage().getStoreFileName(),
-                channel.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                channel.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                channel.getCategory(),
-                channel.getThumbnailImage()
+                dto.getChannelId(),
+                dto.getManagerId(),
+                dto.getName(),
+                dto.getManagerNickname(),
+                dto.getLimitedMemberNumber(),
+                dto.getDescription(),
+                dto.getDescriptionSummary(),
+                dto.getMemberCount(),
+                dto.getCreatedAt(),
+                dto.getThumbnailImage().getStoreFileName(),
+                dto.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                dto.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                dto.getCategory(),
+                dto.getThumbnailImage()
         );
     }
 }

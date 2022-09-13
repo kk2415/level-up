@@ -1,6 +1,6 @@
 package com.levelup.api.dto.request.comment;
 
-import com.levelup.api.dto.business.comment.ReplyCommentDto;
+import com.levelup.api.dto.service.comment.ReplyCommentDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.comment.Comment;

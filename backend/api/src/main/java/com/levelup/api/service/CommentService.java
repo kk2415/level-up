@@ -1,12 +1,11 @@
 package com.levelup.api.service;
 
 
+import com.levelup.api.dto.service.comment.ReplyCommentDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.comment.CommentResponse;
-import com.levelup.api.dto.comment.CreateCommentRequest;
-import com.levelup.api.dto.comment.CreateReplyCommentRequest;
+import com.levelup.api.dto.service.comment.CommentDto;
 import com.levelup.core.exception.comment.CommentNotFoundException;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
@@ -29,50 +28,51 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
 
-    public CommentResponse save(CreateCommentRequest commentRequest, Long memberId) {
-        Article article = articleRepository.findById(commentRequest.getArticleId())
+    public CommentDto save(CommentDto dto, Long memberId) {
+        Article article = articleRepository.findById(dto.getArticleId())
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
-
        final Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
-       final Comment findComment = commentRequest.toEntity(findMember, article);
+       final Comment findComment = dto.toEntity(findMember, article);
 
        commentRepository.save(findComment);
 
-       return CommentResponse.from(findComment);
+       return CommentDto.from(findComment);
     }
 
-    public CommentResponse saveReplyComment(CreateReplyCommentRequest commentRequest, Long memberId) {
+    public ReplyCommentDto saveReply(ReplyCommentDto dto, Long memberId) {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
-        final Article article = articleRepository.findById(commentRequest.getArticleId())
+        final Article article = articleRepository.findById(dto.getArticleId())
                 .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
-        Comment parentComment = commentRepository.findById(commentRequest.getParentId())
+        Comment parentComment = commentRepository.findById(dto.getParentId())
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
-        Comment replyComment = commentRequest.toEntity(member, article);
+        Comment replyComment = dto.toEntity(member, article);
 
         commentRepository.save(replyComment);
         parentComment.addChildComment(replyComment);
 
-        return CommentResponse.from(replyComment);
+        return ReplyCommentDto.from(replyComment);
     }
 
 
 
-    public List<CommentResponse> getComments(Long articleId) {
+    @Transactional(readOnly = true)
+    public List<CommentDto> getComments(Long articleId) {
        final List<Comment> comments = commentRepository.findByArticleId(articleId);
 
         return comments.stream()
                 .filter(c -> c.getParent() == null)
-                .map(CommentResponse::from)
+                .map(CommentDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<CommentResponse> getReplyCommentByParentId(Long commentId) {
+    @Transactional(readOnly = true)
+    public List<CommentDto> getReplyCommentByParentId(Long commentId) {
         final List<Comment> reply = commentRepository.findReplyByParentId(commentId);
 
         return reply.stream()
-                .map(CommentResponse::from)
+                .map(CommentDto::from)
                 .collect(Collectors.toUnmodifiableList());
     }
 

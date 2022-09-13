@@ -4,10 +4,10 @@ import {uploadFile} from "../UploadFile";
 
 const ChannelService = {
 
-    create: async (channel) => {
+    create: async (channel, memberId) => {
         let reuslt = false
 
-        await send('/api/v1/channels', 'POST', channel)
+        await send('/api/v1/channels?member=' + memberId, 'POST', channel)
             .then((data) => {
                 alert('채널을 만들었습니다.')
                 reuslt = true

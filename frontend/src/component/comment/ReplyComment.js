@@ -8,13 +8,13 @@ const ReplyComment = ({reply}) => {
     const createVote = async () => {
         let voteRequest = {
             'memberId' : localStorage.getItem('id'),
-            'targetId' : reply.id,
+            'targetId' : reply.commentId,
             'voteType' : 'COMMENT',
         }
 
         let result = await VoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(voteCount + 1)
+            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
         }
     }
 

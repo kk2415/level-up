@@ -44,7 +44,7 @@ class MemberApiControllerTest {
     @Test
     void createProfileImage() throws Exception {
         // Given
-        given(memberService.createMemberProfileImage(any(MultipartFile.class))).willReturn(new UploadFile(
+        given(memberService.createProfileImage(any(MultipartFile.class))).willReturn(new UploadFile(
                 "myProfile.png",
                 "profile/2cdcf2f4-be3d-4a29-9163-70342d4a375e.png"
                 ));

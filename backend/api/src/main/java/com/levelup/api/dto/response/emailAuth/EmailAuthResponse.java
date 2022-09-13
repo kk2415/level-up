@@ -1,12 +1,14 @@
-package com.levelup.api.dto.emailAuth;
+package com.levelup.api.dto.response.emailAuth;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class EmailAuthResponse {
 
     private String securityCode;
     private Boolean isConfirmed;
+
+    protected EmailAuthResponse() {}
 
     private EmailAuthResponse(String securityCode, Boolean isConfirmed) {
         this.securityCode = securityCode;

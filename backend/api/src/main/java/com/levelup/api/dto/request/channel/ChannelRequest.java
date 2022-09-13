@@ -1,23 +1,18 @@
-package com.levelup.api.dto.channel;
+package com.levelup.api.dto.request.channel;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.levelup.core.domain.channel.Channel;
+import com.levelup.api.dto.service.channel.ChannelDto;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.file.UploadFile;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Builder
 public class ChannelRequest {
-
-    @NotNull
-    private Long memberId;
 
     @NotNull
     private String name;
@@ -42,21 +37,16 @@ public class ChannelRequest {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate expectedEndDate;
 
-    private List<UploadFile> uploadFiles;
-
     protected ChannelRequest() {}
 
     private ChannelRequest(
-            Long memberId,
             String name,
             Long limitedMemberNumber,
             String description,
             ChannelCategory category,
             UploadFile thumbnailImage,
             LocalDate expectedStartDate,
-            LocalDate expectedEndDate,
-            List<UploadFile> uploadFiles) {
-        this.memberId = memberId;
+            LocalDate expectedEndDate) {
         this.name = name;
         this.limitedMemberNumber = limitedMemberNumber;
         this.description = description;
@@ -64,44 +54,42 @@ public class ChannelRequest {
         this.thumbnailImage = thumbnailImage;
         this.expectedStartDate = expectedStartDate;
         this.expectedEndDate = expectedEndDate;
-        this.uploadFiles = uploadFiles;
     }
 
-    public static ChannelRequest of(
-            Long memberId,
-            String name,
-            Long limitedMemberNumber,
-            String description,
-            ChannelCategory category,
-            UploadFile thumbnailImage,
-            LocalDate expectedStartDate,
-            LocalDate expectedEndDate,
-            List<UploadFile> uploadFiles) {
+    public static ChannelRequest of(String name,
+                                    Long limitedMemberNumber,
+                                    String description,
+                                    ChannelCategory category,
+                                    UploadFile thumbnailImage,
+                                    LocalDate expectedStartDate,
+                                    LocalDate expectedEndDate)
+    {
         return new ChannelRequest(
-                memberId,
                 name,
                 limitedMemberNumber,
                 description,
                 category,
                 thumbnailImage,
                 expectedStartDate,
-                expectedEndDate,
-                uploadFiles);
+                expectedEndDate);
     }
 
-    public Channel toEntity(String managerName) {
-        return Channel.builder()
+    public ChannelDto toDto() {
+        return ChannelDto.builder()
+                .channelId(null)
+                .managerId(null)
                 .name(name)
-                .managerName(managerName)
+                .managerNickname(null)
+                .limitedMemberNumber(limitedMemberNumber)
                 .description(description)
-                .memberMaxNumber(limitedMemberNumber)
-                .thumbnailImage(thumbnailImage)
+                .descriptionSummary(null)
+                .memberCount(0L)
+                .storeFileName(thumbnailImage.getStoreFileName())
                 .category(category)
+                .thumbnailImage(thumbnailImage)
+                .createdAt(null)
                 .expectedStartDate(expectedStartDate)
                 .expectedEndDate(expectedEndDate)
-                .channelMembers(new ArrayList<>((int) (limitedMemberNumber + 1)))
-                .channelPosts(new ArrayList<>())
-                .files(new ArrayList<>())
                 .build();
     }
 }

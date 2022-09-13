@@ -1,6 +1,8 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.member.*;
+import com.levelup.api.dto.service.member.MemberDto;
+import com.levelup.api.dto.service.member.UpdateMemberDto;
+import com.levelup.api.dto.response.member.MemberResponse;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
@@ -45,17 +47,17 @@ public class MemberService implements UserDetailsService {
     private final ChannelRepository channelRepository;
     private final S3FileStore fileStore;
 
-    public CreateMemberResponse save(CreateMemberRequest memberRequest) {
-        validateDuplicationMember(memberRequest.getEmail(), memberRequest.getNickname());
+    public MemberDto save(MemberDto dto) {
+        validateDuplicationMember(dto.getEmail(), dto.getNickname());
 
-        Member member = memberRequest.toEntity();
+        Member member = dto.toEntity();
         Role role = Role.of(RoleName.ANONYMOUS, member);
 
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         member.addRole(role);
 
         memberRepository.save(member);
-        return CreateMemberResponse.from(member);
+        return MemberDto.from(member);
     }
 
     private void validateDuplicationMember(String email, String nickname) {
@@ -66,7 +68,7 @@ public class MemberService implements UserDetailsService {
                 .ifPresent(user -> {throw new DuplicateEmailException("이미 사용중인 닉네임입니다.");});
     }
 
-    public UploadFile createMemberProfileImage(MultipartFile file) throws IOException {
+    public UploadFile createProfileImage(MultipartFile file) throws IOException {
         return fileStore.storeFile(ImageType.MEMBER, file);
     }
 
@@ -83,22 +85,22 @@ public class MemberService implements UserDetailsService {
 
 
     @CacheEvict(cacheNames = "member", key = "#memberId")
-    public void modify(ModifyMemberRequest updateMemberRequest, Long memberId) {
+    public void update(UpdateMemberDto dto, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        member.modifyMember(updateMemberRequest.getNickname(), updateMemberRequest.getProfileImage());
+        member.modifyMember(dto.getNickname(), dto.getProfileImage());
     }
 
-    public void modifyPassword(ModifyPasswordRequest request, String email) {
+    public void updatePassword(UpdateMemberDto dto, String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        member.setPassword(passwordEncoder.encode(request.getPassword()));
+        member.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
 
     @CacheEvict(cacheNames = "member", key = "#memberId")
-    public UploadFile modifyProfileImage(MultipartFile file, Long memberId) throws IOException {
+    public UploadFile updateProfileImage(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
             throw new ImageNotFoundException("존재하지 않는 이미지파일입니다.");
         }

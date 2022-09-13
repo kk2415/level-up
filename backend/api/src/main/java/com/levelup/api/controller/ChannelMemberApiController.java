@@ -1,8 +1,9 @@
 package com.levelup.api.controller;
 
+import com.levelup.api.dto.service.chanelMember.ChannelMemberDto;
 import com.levelup.api.service.ChannelMemberService;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.channelMember.ChannelMemberResponse;
+import com.levelup.api.dto.response.channelMember.ChannelMemberResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,60 +22,49 @@ public class ChannelMemberApiController {
 
     private final ChannelMemberService channelMemberService;
 
-
-    /**
-     * 생성
-     * */
-    @PostMapping("channel-members-for-test")
-    public ResponseEntity<ChannelMemberResponse> createChannelMember(@RequestParam Long channelId,
-                                                                     @RequestParam Long memberId) {
-        ChannelMemberResponse response = channelMemberService.create(channelId, memberId, true);
-
-        return ResponseEntity.ok().body(response);
-    }
-
     @PostMapping("channel-members")
-    public ResponseEntity<ChannelMemberResponse> createChannelMember(@RequestParam Long channelId,
-                                              @AuthenticationPrincipal Member member) {
-        ChannelMemberResponse response = channelMemberService.create(channelId, member.getId(), true);
+    public ResponseEntity<ChannelMemberResponse> create(
+            @RequestParam("channel") Long channelId,
+            @RequestParam("member") Long memberId)
+    {
+        ChannelMemberDto dto = channelMemberService.create(channelId, memberId, true);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(ChannelMemberResponse.from(dto));
     }
 
 
-    /**
-     * 조회
-     * */
+
     @GetMapping("/channel-members")
-    public ResponseEntity<Page<ChannelMemberResponse>> getChannelMembers(@RequestParam Long channelId,
-                                                                         @RequestParam Boolean isWaitingMember,
-                                                                         Pageable pageable) {
-        Page<ChannelMemberResponse> responses = channelMemberService.getChannelMembers(channelId, isWaitingMember, pageable);
+    public ResponseEntity<Page<ChannelMemberResponse>> getByPaging(
+            @RequestParam Long channelId,
+            @RequestParam Boolean isWaitingMember,
+            Pageable pageable)
+    {
+        Page<ChannelMemberResponse> responses
+                = channelMemberService.getByPaging(channelId, isWaitingMember, pageable)
+                .map(ChannelMemberResponse::from);
 
         return ResponseEntity.ok().body(responses);
     }
 
 
-    /**
-     * 수정
-     * */
+
     @PatchMapping("/channel-members/{channelMemberId}")
-    public ResponseEntity approvalMember(@PathVariable Long channelMemberId) {
+    public ResponseEntity<Void> approvalMember(@PathVariable Long channelMemberId) {
         channelMemberService.approvalMember(channelMemberId);
 
         return ResponseEntity.ok().build();
     }
 
 
-    /**
-     * 삭제
-     * */
+
     @DeleteMapping("/channel-members/{channelMemberId}")
-    public ResponseEntity deleteChannelMembers(@PathVariable Long channelMemberId,
-                                                 @RequestParam Long channelId) {
+    public ResponseEntity<Void> delete(
+            @PathVariable Long channelMemberId,
+            @RequestParam Long channelId)
+    {
         channelMemberService.delete(channelMemberId, channelId);
 
         return ResponseEntity.ok().build();
     }
-
 }

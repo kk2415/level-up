@@ -1,4 +1,4 @@
-package com.levelup.api.dto.file;
+package com.levelup.api.dto.response.file;
 
 import com.levelup.core.domain.file.UploadFile;
 import lombok.AllArgsConstructor;

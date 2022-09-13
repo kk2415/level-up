@@ -1,11 +1,9 @@
 package com.levelup.api.service.vote;
 
 
+import com.levelup.api.dto.service.vote.VoteDto;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.vote.CommentVote;
-import com.levelup.api.dto.vote.CreateVoteRequest;
-import com.levelup.api.dto.vote.VoteResponse;
-import com.levelup.core.exception.vote.DuplicateVoteException;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.vote.CommentVoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,30 +23,28 @@ public class CommentVoteService implements VoteService {
     private final CommentRepository commentRepository;
     private final CommentVoteRepository commentVoteRepository;
 
-    public VoteResponse save(CreateVoteRequest voteRequest) {
-        validate(voteRequest.getMemberId(), voteRequest.getTargetId());
+    public VoteDto save(VoteDto dto) {
+        if (validateDuplicationAndDelete(dto.getMemberId(), dto.getTargetId())) {
+            Comment article = commentRepository.findById(dto.getTargetId())
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
 
-        Comment article = commentRepository.findById(voteRequest.getTargetId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+            CommentVote vote = dto.toEntity(article);
+            commentVoteRepository.save(vote);
 
-        CommentVote vote = voteRequest.toEntity(article);
-        commentVoteRepository.save(vote);
+            return VoteDto.of(vote, true);
+        }
 
-        return VoteResponse.from(vote);
+        return VoteDto.of(dto.getMemberId(), dto.getTargetId(), dto.getVoteType(), false);
     }
 
-    public void validate(Long memberId, Long commentId) {
+    public boolean validateDuplicationAndDelete(Long memberId, Long commentId) {
         final List<CommentVote> votes = commentVoteRepository.findByMemberIdAndCommentId(memberId, commentId);
 
         if (!votes.isEmpty()) {
-            throw new DuplicateVoteException("추천은 한 번만 할 수 있습니다.");
+            CommentVote vote = votes.get(0);
+            commentVoteRepository.delete(vote);
+            return false;
         }
-    }
-
-    public void delete(Long voteId) {
-        final CommentVote vote = commentVoteRepository.findById(voteId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 추천 엔티티를 찾을 수 없습니다."));
-
-        commentVoteRepository.delete(vote);
+        return true;
     }
 }

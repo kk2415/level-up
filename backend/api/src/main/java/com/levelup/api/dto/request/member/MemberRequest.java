@@ -2,7 +2,7 @@ package com.levelup.api.dto.request.member;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.levelup.api.dto.business.member.MemberDto;
+import com.levelup.api.dto.service.member.MemberDto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;

@@ -1,5 +1,6 @@
-package com.levelup.api.dto.emailAuth;
+package com.levelup.api.dto.request.emailAuth;
 
+import com.levelup.api.dto.service.emailAuth.EmailAuthDto;
 import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.emailAuth.EmailAuthType;
 import com.levelup.core.domain.member.Member;
@@ -22,6 +23,10 @@ public class EmailAuthRequest {
 
     public static EmailAuthRequest of(String securityCode, EmailAuthType authType) {
         return new EmailAuthRequest(securityCode, authType);
+    }
+
+    public EmailAuthDto toDto() {
+        return EmailAuthDto.of(authType, securityCode, false);
     }
 
     public EmailAuth toEntity(Member member) {

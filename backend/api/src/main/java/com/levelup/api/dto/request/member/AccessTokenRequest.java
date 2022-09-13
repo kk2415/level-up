@@ -1,4 +1,4 @@
-package com.levelup.api.dto.member;
+package com.levelup.api.dto.request.member;
 
 import lombok.Getter;
 

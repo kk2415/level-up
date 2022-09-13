@@ -1,25 +1,28 @@
-package com.levelup.api.dto.vote;
+package com.levelup.api.dto.response.vote;
 
-import com.levelup.core.domain.vote.ArticleVote;
-import com.levelup.core.domain.vote.CommentVote;
-import lombok.Data;
+import com.levelup.api.dto.service.vote.VoteDto;
+import lombok.Getter;
 
-@Data
+@Getter
 public class VoteResponse {
 
     private Long memberId;
     private Long targetId;
+    private boolean isSuccessful;
 
-    private VoteResponse(Long memberId, Long targetId) {
+    protected VoteResponse() {}
+
+    private VoteResponse(Long memberId, Long targetId, boolean isSuccessful) {
         this.memberId = memberId;
         this.targetId = targetId;
+        this.isSuccessful = isSuccessful;
     }
 
-    public static VoteResponse from(ArticleVote vote) {
-        return new VoteResponse(vote.getMemberId(), vote.getArticle().getId());
+    public static VoteResponse of(Long memberId, Long targetId, boolean isSuccessful) {
+        return new VoteResponse(memberId, targetId, isSuccessful);
     }
 
-    public static VoteResponse from(CommentVote vote) {
-        return new VoteResponse(vote.getMemberId(), vote.getComment().getId());
+    public static VoteResponse from(VoteDto dto) {
+        return new VoteResponse(dto.getMemberId(), dto.getTargetId(), dto.isSuccessful());
     }
 }

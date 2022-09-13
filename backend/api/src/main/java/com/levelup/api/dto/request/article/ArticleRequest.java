@@ -1,5 +1,6 @@
-package com.levelup.api.dto.article;
+package com.levelup.api.dto.request.article;
 
+import com.levelup.api.dto.service.article.ArticleDto;
 import com.levelup.core.domain.article.ArticleType;
 import lombok.Getter;
 
@@ -20,5 +21,20 @@ public class ArticleRequest {
 
     public static ArticleRequest of(String title, String content, ArticleType articleType) {
         return new ArticleRequest(title, content, articleType);
+    }
+
+    public ArticleDto toDto() {
+        return ArticleDto.builder()
+                .articleId(null)
+                .memberId(null)
+                .title(title)
+                .writer(null)
+                .content(content)
+                .createdAt(null)
+                .voteCount(0L)
+                .views(0L)
+                .commentCount(0L)
+                .articleType(articleType)
+                .build();
     }
 }

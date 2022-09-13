@@ -1,4 +1,4 @@
-package com.levelup.api.dto.file;
+package com.levelup.api.dto.request.file;
 
 import lombok.Data;
 

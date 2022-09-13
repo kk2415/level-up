@@ -2,10 +2,10 @@ import { send } from "../request"
 
 const CommentService = {
 
-    create: async (comment) => {
+    create: async (comment, memberId) => {
         let result
 
-        await send('/api/v1/comments', 'POST', comment)
+        await send('/api/v1/comments?member=' + memberId, 'POST', comment)
             .then((data) => {
                 result = data
             })
@@ -21,10 +21,10 @@ const CommentService = {
         return result
     },
 
-    createReply: async (reply) => {
+    createReply: async (reply, memberId) => {
         let result
 
-        await send('/api/v1/comments/reply', 'POST', reply)
+        await send('/api/v1/comments/reply?member=' + memberId, 'POST', reply)
             .then((data) => {
                 result = data
             })
@@ -43,7 +43,7 @@ const CommentService = {
     get: async (articleId, identity) => {
         let comment = {}
 
-        await send('/api/v1/comments/' + articleId + '?identity=' + identity, 'GET')
+        await send('/api/v1/comments/' + articleId, 'GET')
             .then((data) => {
                 comment = data
             })

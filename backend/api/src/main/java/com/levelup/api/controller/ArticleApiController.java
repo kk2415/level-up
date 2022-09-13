@@ -1,12 +1,12 @@
 package com.levelup.api.controller;
 
-import com.levelup.api.dto.article.ArticlePagingResponse;
-import com.levelup.api.dto.article.ArticleUpdateResponse;
+import com.levelup.api.dto.response.article.ArticlePagingResponse;
+import com.levelup.api.dto.response.article.ArticleUpdateResponse;
+import com.levelup.api.dto.service.article.ArticleDto;
 import com.levelup.api.service.ArticleService;
 import com.levelup.core.domain.article.ArticleType;
-import com.levelup.api.dto.article.ArticleRequest;
-import com.levelup.api.dto.article.ArticleResponse;
-import com.levelup.api.dto.channelPost.ChannelPostRequest;
+import com.levelup.api.dto.request.article.ArticleRequest;
+import com.levelup.api.dto.response.article.ArticleResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,65 +24,77 @@ public class ArticleApiController {
     private final ArticleService articleService;
 
     @PostMapping("/articles")
-    public ResponseEntity<ArticleResponse> create(@Validated @RequestBody ArticleRequest request,
-                                                  @RequestParam("member") Long memberId) {
-        ArticleResponse response = articleService.save(request, memberId);
+    public ResponseEntity<ArticleResponse> create(
+            @Validated @RequestBody ArticleRequest request,
+            @RequestParam("member") Long memberId)
+    {
+        ArticleDto dto = articleService.save(request.toDto(), memberId);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(ArticleResponse.from(dto));
     }
 
 
 
     @GetMapping("/articles/{articleId}")
-    public ResponseEntity<ArticleResponse> getPost(@PathVariable Long articleId,
-                                                   @RequestParam(required = false, defaultValue = "false") boolean view) {
-        ArticleResponse response = articleService.getArticle(articleId, view);
+    public ResponseEntity<ArticleResponse> get(
+            @PathVariable Long articleId,
+            @RequestParam(required = false, defaultValue = "false") boolean view)
+    {
+        ArticleDto dto = articleService.get(articleId, view);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(ArticleResponse.from(dto));
     }
 
     @GetMapping("/articles")
-    public ResponseEntity<Page<ArticlePagingResponse>> getPosts(@RequestParam ArticleType articleType,
-                                                                 Pageable pageable,
-                                                                 @RequestParam(required = false) String field,
-                                                                 @RequestParam(required = false) String query) {
-        Page<ArticlePagingResponse> response = articleService.getArticles(articleType, field, query, pageable);
+    public ResponseEntity<Page<ArticlePagingResponse>> getByPaging(
+            @RequestParam ArticleType articleType,
+            Pageable pageable,
+            @RequestParam(required = false) String field,
+            @RequestParam(required = false) String query)
+    {
+        Page<ArticlePagingResponse> response = articleService.getByPaging(articleType, field, query, pageable);
 
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/articles/{articleId}/next-article")
-    public ResponseEntity<ArticleResponse> findNextPost(@PathVariable Long articleId,
-                                                        @RequestParam ArticleType articleType) {
-        ArticleResponse response = articleService.getNextPageByArticleType(articleId, articleType);
+    public ResponseEntity<ArticleResponse> getNext(
+            @PathVariable Long articleId,
+            @RequestParam ArticleType articleType)
+    {
+        ArticleDto dto = articleService.getNext(articleId, articleType);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(ArticleResponse.from(dto));
     }
 
     @GetMapping("/articles/{articleId}/prev-article")
-    public ResponseEntity<ArticleResponse> findPrevPost(@PathVariable Long articleId,
-                                                        @RequestParam ArticleType articleType) {
-        ArticleResponse response = articleService.getPrevPageByArticleType(articleId, articleType);
+    public ResponseEntity<ArticleResponse> getPrev(
+            @PathVariable Long articleId,
+            @RequestParam ArticleType articleType)
+    {
+        ArticleDto dto = articleService.getPrev(articleId, articleType);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(ArticleResponse.from(dto));
     }
 
 
 
     @PatchMapping("/articles/{articleId}")
-    public ResponseEntity<ArticleUpdateResponse> modify(@PathVariable Long articleId,
-                                                   @RequestParam("member") Long memberId,
-                                                   @RequestBody ChannelPostRequest request) {
-        ArticleUpdateResponse response = articleService.modify(articleId, memberId, request);
+    public ResponseEntity<ArticleUpdateResponse> update(
+            @PathVariable Long articleId,
+            @RequestParam("member") Long memberId,
+            @RequestBody ArticleRequest request)
+    {
+        ArticleDto dto = articleService.update(request.toDto(), articleId, memberId);
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(ArticleUpdateResponse.from(dto));
     }
 
 
 
     @DeleteMapping("/articles/{articleId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long articleId) {
-        articleService.deleteArticle(articleId);
+    public ResponseEntity<Void> delete(@PathVariable Long articleId) {
+        articleService.delete(articleId);
 
         return ResponseEntity.ok().build();
     }

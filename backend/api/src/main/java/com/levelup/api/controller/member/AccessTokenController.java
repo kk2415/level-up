@@ -1,6 +1,6 @@
 package com.levelup.api.controller.member;
 
-import com.levelup.api.dto.member.AccessTokenRequest;
+import com.levelup.api.dto.request.member.AccessTokenRequest;
 import com.levelup.api.service.AccessTokenService;
 import com.levelup.api.util.jwt.AccessToken;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,7 @@ public class AccessTokenController {
     private final AccessTokenService accessTokenService;
 
     @PostMapping("/access-token")
-    public ResponseEntity<AccessToken> getAccessToken(@RequestBody AccessTokenRequest accessTokenRequest) {
+    public ResponseEntity<AccessToken> get(@RequestBody AccessTokenRequest accessTokenRequest) {
         AccessToken accessToken = accessTokenService.getAccessToken(accessTokenRequest);
 
         return ResponseEntity.ok().body(accessToken);

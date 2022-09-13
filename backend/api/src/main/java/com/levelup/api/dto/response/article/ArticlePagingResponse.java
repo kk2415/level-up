@@ -1,4 +1,4 @@
-package com.levelup.api.dto.article;
+package com.levelup.api.dto.response.article;
 
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.article.Article;

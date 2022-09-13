@@ -7,7 +7,6 @@ import com.levelup.core.domain.vote.ArticleVote;
 import com.levelup.core.domain.vote.CommentVote;
 import com.levelup.core.domain.vote.VoteType;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
@@ -36,7 +35,7 @@ public class VoteRequest {
     }
 
     public VoteDto toDto() {
-        return VoteDto.of(memberId, targetId, voteType);
+        return VoteDto.of(memberId, targetId, voteType, false);
     }
 
     public ArticleVote toEntity(Article article) {

@@ -1,5 +1,6 @@
-package com.levelup.api.dto.member;
+package com.levelup.api.dto.response.member;
 
+import com.levelup.api.dto.service.member.MemberDto;
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
@@ -46,6 +47,20 @@ public class MemberResponse implements Serializable {
         this.phone = phone;
         this.uploadFile = uploadFile;
         this.roles = roles;
+    }
+
+    public static MemberResponse from(MemberDto dto) {
+        return new MemberResponse(
+                dto.getMemberId(),
+                dto.getEmail(),
+                dto.getName(),
+                dto.getNickname(),
+                dto.getGender(),
+                dto.getBirthday().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                dto.getPhone(),
+                dto.getProfileImage(),
+                dto.getRoles()
+        );
     }
 
     public static MemberResponse from(Member member) {

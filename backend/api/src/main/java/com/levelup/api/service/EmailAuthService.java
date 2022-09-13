@@ -1,6 +1,7 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.emailAuth.EmailAuthRequest;
+import com.levelup.api.dto.request.emailAuth.EmailAuthRequest;
+import com.levelup.api.dto.service.emailAuth.EmailAuthDto;
 import com.levelup.api.util.email.EmailSender;
 import com.levelup.api.util.email.EmailStuff;
 import com.levelup.api.util.email.EmailSubject;
@@ -15,7 +16,6 @@ import com.levelup.core.exception.emailAuth.NotMatchSecurityCodeException;
 import com.levelup.core.repository.emailAuth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,27 +30,30 @@ public class EmailAuthService {
     private final MemberRepository memberRepository;
     private final EmailAuthRepository emailAuthRepository;
 
-    public void save(EmailAuthRequest request, String email) {
+    public void save(EmailAuthDto dto, String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
 
-        EmailAuth emailAuth = request.toEntity(member);
-        emailSender.sendEmail(
-                EmailStuff.of(
-                        member.getEmail(),
-                        EmailSubject.AUTHENTICATE_MAIL,
-                        emailAuth.getSecurityCode(),
-                        EmailTemplateName.AUTHENTICATE_MAIL)
-        );
+        EmailAuth emailAuth = dto.toEntity(member);
+        sendEmail(member.getEmail(), emailAuth.getSecurityCode());
 
         emailAuthRepository.save(emailAuth);
     }
 
-    public void authenticateEmail(EmailAuthRequest request, String email) {
-        EmailAuth emailAuth = emailAuthRepository.findByEmailAndAuthType(email, request.getAuthType().name())
+    private void sendEmail(String email, String securityCode) {
+        EmailStuff emailStuff
+                = EmailStuff.of(email, EmailSubject.AUTHENTICATE_MAIL, securityCode, EmailTemplateName.AUTHENTICATE_MAIL);
+
+        emailSender.sendEmail(emailStuff);
+    }
+
+
+
+    public void authenticateEmail(EmailAuthDto dto, String email) {
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndAuthType(email, dto.getAuthType().name())
                         .orElseThrow();
 
-        validateSecurityCode(request.getSecurityCode(), emailAuth);
+        validateSecurityCode(dto.getSecurityCode(), emailAuth);
         emailAuth.setIsAuthenticated(true);
 
         Member member = emailAuth.getMember();

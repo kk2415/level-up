@@ -1,20 +1,16 @@
-package com.levelup.api.dto.channelPost;
+package com.levelup.api.dto.response.channelPost;
 
+import com.levelup.api.dto.service.channelPost.ChannelPostDto;
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channelPost.PostCategory;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.format.DateTimeFormatter;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ChannelPostResponse {
 
     private Long id;
@@ -28,6 +24,49 @@ public class ChannelPostResponse {
     private Long commentCount;
     private PostCategory postCategory;
     private ArticleType articleType;
+
+    protected ChannelPostResponse() {}
+
+    public ChannelPostResponse(Long id,
+                               Long memberId,
+                               String title,
+                               String writer,
+                               String content,
+                               String dateCreated,
+                               Long voteCount,
+                               Long views,
+                               Long commentCount,
+                               PostCategory postCategory,
+                               ArticleType articleType)
+    {
+        this.id = id;
+        this.memberId = memberId;
+        this.title = title;
+        this.writer = writer;
+        this.content = content;
+        this.dateCreated = dateCreated;
+        this.voteCount = voteCount;
+        this.views = views;
+        this.commentCount = commentCount;
+        this.postCategory = postCategory;
+        this.articleType = articleType;
+    }
+
+    public static ChannelPostResponse from(ChannelPostDto dto) {
+        return new ChannelPostResponse(
+                dto.getChannelPostId(),
+                dto.getMemberId(),
+                dto.getTitle(),
+                dto.getWriter(),
+                dto.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(dto.getCreatedAt()),
+                dto.getVoteCount(),
+                dto.getViews(),
+                dto.getCommentCount(),
+                dto.getPostCategory(),
+                dto.getArticleType()
+        );
+    }
 
     private ChannelPostResponse(ChannelPost channelPost) {
         this.id = channelPost.getId();

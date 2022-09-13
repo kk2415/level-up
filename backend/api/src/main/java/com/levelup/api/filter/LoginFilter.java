@@ -6,8 +6,8 @@ import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.api.dto.member.LoginRequest;
-import com.levelup.api.dto.member.LoginResponse;
+import com.levelup.api.dto.request.member.LogInMemberRequest;
+import com.levelup.api.dto.response.member.LogInMemberResponse;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.role.RoleRepository;
@@ -43,7 +43,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("login filter start = url : {}", request.getRequestURL());
 
         try {
-            LoginRequest creds = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+            LogInMemberRequest creds = new ObjectMapper().readValue(request.getInputStream(), LogInMemberRequest.class);
 
             //ProviderManager
             AuthenticationManager authenticationManager = getAuthenticationManager();
@@ -76,7 +76,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Claims tokenBody = tokenProvider.getBody(token);
         AccessToken accessToken = AccessToken.of(token, tokenBody.getExpiration(), tokenBody.getIssuedAt());
 
-        LoginResponse loginResponse = LoginResponse.of(member.getId(), email, accessToken, isAdmin);
+        LogInMemberResponse loginResponse = LogInMemberResponse.of(member.getId(), email, accessToken, isAdmin);
 
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(loginResponse));

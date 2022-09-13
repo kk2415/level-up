@@ -1,5 +1,6 @@
-package com.levelup.api.dto.channelMember;
+package com.levelup.api.dto.response.channelMember;
 
+import com.levelup.api.dto.service.chanelMember.ChannelMemberDto;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import lombok.Getter;
 
@@ -15,18 +16,31 @@ public class ChannelMemberResponse {
 
     protected ChannelMemberResponse() {}
 
-    public ChannelMemberResponse(Long channelMemberId,
-                                 Long memberId,
-                                 String email,
-                                 String nickname,
-                                 String storeFileName,
-                                 boolean isManager) {
+    public ChannelMemberResponse(
+            Long channelMemberId,
+            Long memberId,
+            String email,
+            String nickname,
+            String storeFileName,
+            boolean isManager)
+    {
         this.channelMemberId = channelMemberId;
         this.memberId = memberId;
         this.email = email;
         this.nickname = nickname;
         this.storeFileName = storeFileName;
         this.isManager = isManager;
+    }
+
+    public static ChannelMemberResponse from(ChannelMemberDto dto) {
+        return new ChannelMemberResponse(
+                dto.getChannelMemberId(),
+                dto.getMemberId(),
+                dto.getEmail(),
+                dto.getNickname(),
+                dto.getStoreFileName(),
+                dto.isManager()
+        );
     }
 
     public static ChannelMemberResponse from(ChannelMember channelMember) {

@@ -4,7 +4,7 @@ import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.business.comment.CommentDto;
+import com.levelup.api.dto.service.comment.CommentDto;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;

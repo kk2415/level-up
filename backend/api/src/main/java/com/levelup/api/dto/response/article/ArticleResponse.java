@@ -1,7 +1,7 @@
-package com.levelup.api.dto.article;
+package com.levelup.api.dto.response.article;
 
+import com.levelup.api.dto.service.article.ArticleDto;
 import com.levelup.core.DateFormat;
-import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import lombok.Getter;
 
@@ -23,20 +23,41 @@ public class ArticleResponse {
 
     protected ArticleResponse() {}
 
-    private ArticleResponse(Article article) {
-        this.id = article.getId();
-        this.memberId = article.getMember().getId();
-        this.title = article.getTitle();
-        this.writer = article.getMember().getNickname();
-        this.dateCreated = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(article.getCreatedAt());
-        this.content = article.getContent();
-        this.voteCount = (long) article.getArticleVotes().size();
-        this.views = article.getViews();
-        this.commentCount = (long) article.getComments().size();
-        this.articleType = article.getArticleType();
+    private ArticleResponse(Long id,
+                           Long memberId,
+                           String title,
+                           String writer,
+                           String content,
+                           String dateCreated,
+                           Long voteCount,
+                           Long views,
+                           Long commentCount,
+                           ArticleType articleType)
+    {
+        this.id = id;
+        this.memberId = memberId;
+        this.title = title;
+        this.writer = writer;
+        this.content = content;
+        this.dateCreated = dateCreated;
+        this.voteCount = voteCount;
+        this.views = views;
+        this.commentCount = commentCount;
+        this.articleType = articleType;
     }
 
-    public static ArticleResponse from(Article article) {
-        return new ArticleResponse(article);
+    public static ArticleResponse from(ArticleDto dto) {
+        return new ArticleResponse(
+                dto.getArticleId(),
+                dto.getMemberId(),
+                dto.getTitle(),
+                dto.getWriter(),
+                dto.getContent(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(dto.getCreatedAt()),
+                dto.getVoteCount(),
+                dto.getViews(),
+                dto.getCommentCount(),
+                dto.getArticleType()
+        );
     }
 }
