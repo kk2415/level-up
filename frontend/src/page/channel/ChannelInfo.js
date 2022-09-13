@@ -41,7 +41,7 @@ const ChannelInfo = () => {
 
     const handleRegisterChannel = async () => {
         if (localStorage.getItem(TOKEN)) {
-            let result = await ChannelMemberService.create(channelId);
+            let result = await ChannelMemberService.create(channelId, localStorage.getItem('id'));
 
             if (result) {
                 alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
@@ -82,11 +82,11 @@ const ChannelInfo = () => {
                         <div style={{marginBottom: 20}}>
                             <p id='channelName' className='h1'>{channelInfo.name}</p>
                             {
-                                channelInfo.manager &&
+                                channelInfo.managerId === Number(localStorage.getItem('id')) &&
                                 <button onClick={handleModifyChannel} type='button' className='btn btn-secondary float-end'>수정</button>
                             }
                             {
-                                channelInfo.manager &&
+                                channelInfo.managerId === Number(localStorage.getItem('id')) &&
                                 <button onClick={handleDeleteChannel} type='button' className='btn btn-danger float-end'>삭제</button>
                             }
                             <p id='managerName' className='h3' style={{display: 'inline-block', marginRight: 30}}>{channelInfo.managerName}</p>

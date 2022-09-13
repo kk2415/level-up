@@ -12,10 +12,10 @@ const CommentFrame = ({articleId, identity}) => {
 
     const loadComment = async (articleId, identity) => {
         let result = await CommentService.get(articleId, identity)
-        setComments(result.data)
+        setComments(result)
     }
 
-    const createComment = () => {
+    const createComment = async () => {
         let comment = {
             articleId : articleId,
             content : $('#contentOfWritingComment').val(),
@@ -23,7 +23,7 @@ const CommentFrame = ({articleId, identity}) => {
         }
 
         if (localStorage.getItem(TOKEN)) {
-            CommentService.create(comment)
+            await CommentService.create(comment, localStorage.getItem('id'))
             $('#contentOfWritingComment').val('')
             setOnComments(!onComments)
         }

@@ -1,11 +1,11 @@
 package com.levelup.api.service.vote;
 
 
+import com.levelup.api.dto.service.vote.VoteDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.vote.ArticleVote;
-import com.levelup.api.dto.vote.CreateVoteRequest;
-import com.levelup.api.dto.vote.VoteResponse;
-import com.levelup.core.exception.vote.DuplicateVoteException;
+import com.levelup.api.dto.request.vote.VoteRequest;
+import com.levelup.api.dto.response.vote.VoteResponse;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.vote.ArticleVoteRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,30 +25,28 @@ public class ArticleVoteService implements VoteService {
     private final ArticleRepository articleRepository;
     private final ArticleVoteRepository articleVoteRepository;
 
-    public VoteResponse save(CreateVoteRequest voteRequest) {
-        validate(voteRequest.getMemberId(), voteRequest.getTargetId());
+    public VoteDto save(VoteDto dto) {
+        if (validateDuplicationAndDelete(dto.getMemberId(), dto.getTargetId())) {
+            Article article = articleRepository.findById(dto.getTargetId())
+                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
 
-        Article article = articleRepository.findById(voteRequest.getTargetId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+            ArticleVote vote = dto.toEntity(article);
+            articleVoteRepository.save(vote);
 
-        ArticleVote vote = voteRequest.toEntity(article);
-        articleVoteRepository.save(vote);
+            return VoteDto.of(vote, true);
+        }
 
-        return VoteResponse.from(vote);
+        return VoteDto.of(dto.getMemberId(), dto.getTargetId(), dto.getVoteType(), false);
     }
 
-    public void validate(Long memberId, Long articleId) {
+    public boolean validateDuplicationAndDelete(Long memberId, Long articleId) {
         final List<ArticleVote> votes = articleVoteRepository.findByMemberIdAndArticleId(memberId, articleId);
 
         if (!votes.isEmpty()) {
-            throw new DuplicateVoteException("추천은 한 번만 할 수 있습니다.");
+            ArticleVote vote = votes.get(0);
+            articleVoteRepository.delete(vote);
+            return false;
         }
-    }
-
-    public void delete(Long voteId) {
-        final ArticleVote vote = articleVoteRepository.findById(voteId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 추천 엔티티를 찾을 수 없습니다."));
-
-        articleVoteRepository.delete(vote);
+        return true;
     }
 }

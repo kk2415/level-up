@@ -2,11 +2,12 @@ package com.levelup.api.controller.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.levelup.api.ApiApplication;
+import com.levelup.api.dto.service.member.MemberDto;
+import com.levelup.api.dto.response.member.MemberResponse;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
-import com.levelup.api.dto.member.CreateMemberRequest;
-import com.levelup.api.dto.member.CreateMemberResponse;
+import com.levelup.api.dto.request.member.MemberRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,9 +49,11 @@ class SignUpApiControllerTest {
     @Test
     void sign_up_test() throws Exception {
         // Given
-        CreateMemberRequest request = CreateMemberRequest.of("test@email.com", "pwd", "test",
+        MemberRequest request = MemberRequest.of("test@email.com", "pwd", "test",
                 "test", Gender.MALE, LocalDate.now(), "010", new UploadFile("", ""));
-        given(memberService.save(any())).willReturn(CreateMemberResponse.from(request.toEntity()));
+
+        MemberResponse response = MemberResponse.from(MemberDto.from(request.toEntity()));
+//        given(memberService.save(any())).willReturn(response);
 
         // When & Then
         mvc.perform(

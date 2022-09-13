@@ -7,7 +7,6 @@ import ArticleService from "../../api/service/ArticleService";
 
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
-import ChannelPostService from "../../api/service/ChannelPostService";
 
 const Article = () => {
     const navigate = useNavigate();
@@ -80,7 +79,7 @@ const Article = () => {
 
         let result = await VoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(voteCount + 1)
+            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
         }
     }
 

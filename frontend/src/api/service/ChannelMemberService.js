@@ -2,9 +2,9 @@ import { send } from "../request"
 
 const ChannelMemberService = {
 
-    create: async (channelId) => {
+    create: async (channelId, memberId) => {
         let result = false
-        let url = '/api/v1/channel-members?channelId=' + channelId
+        let url = '/api/v1/channel-members?channel=' + channelId + '&member=' + memberId
 
         await send(url, 'POST')
             .then(() => {

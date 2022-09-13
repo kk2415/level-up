@@ -16,20 +16,20 @@ const Comment = ({comment, articleId, identity}) => {
     const createVote = async () => {
         let voteRequest = {
             'memberId' : localStorage.getItem('id'),
-            'targetId' : comment.id,
+            'targetId' : comment.commentId,
             'voteType' : 'COMMENT',
         }
 
         let result = await VoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(voteCount + 1)
+            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
         }
     }
 
     const loadReplyComment = async () => {
-        let reply = await CommentService.getReply(comment.id)
+        let reply = await CommentService.getReply(comment.commentId)
 
-        setReplyComment(reply.data)
+        setReplyComment(reply)
     }
 
     const showReplyCommentList = async () => {
@@ -38,7 +38,7 @@ const Comment = ({comment, articleId, identity}) => {
 
     const handleDeleteComment = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            let result = await CommentService.delete(comment.id)
+            let result = await CommentService.delete(comment.commentId)
 
             if (result) {
                 window.location.reload()
@@ -47,7 +47,7 @@ const Comment = ({comment, articleId, identity}) => {
     }
 
     useEffect(() => {
-        loadReplyComment(comment.id)
+        loadReplyComment(comment.commentId)
     }, [onHideReplyComment, writingReplyComment])
 
     return (
@@ -95,7 +95,7 @@ const Comment = ({comment, articleId, identity}) => {
                             <WriteReplyComment setWritingReplyComment={setWritingReplyComment}
                                                setReplyCount={setReplyCount}
                                                replyCount={replyCount}
-                                               parentCommentId={comment.id}
+                                               parentCommentId={comment.commentId}
                                                articleId={articleId}
                                                identity={identity} />
                         </Container>

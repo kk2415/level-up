@@ -1,6 +1,6 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.member.AccessTokenRequest;
+import com.levelup.api.dto.request.member.AccessTokenRequest;
 import com.levelup.api.util.jwt.AccessToken;
 import com.levelup.api.util.jwt.TokenProvider;
 import io.jsonwebtoken.Claims;

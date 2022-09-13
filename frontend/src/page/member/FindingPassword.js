@@ -219,7 +219,7 @@ const FindingPassword = ({} ) => {
                         <div style={{display: "inline-block", width: "25%"}}>
                             <span className='float-left h4' style={{marginRight: 100}}>신규 비밀번호</span>
                         </div>
-                        <input id='newPassword' type={"text"} className="form-control mb-2 mr-sm-2"/>
+                        <input id='newPassword' type='password' className="form-control mb-2 mr-sm-2"/>
                         <p id='passwordAlert' style={{display: "none", marginLeft: 15}} className="text-danger h5">
                             비밀번호는 8자리이상 24이하, 영문자/숫자만 및 특수문자만 입력하세요
                         </p>
@@ -229,7 +229,7 @@ const FindingPassword = ({} ) => {
                         <div style={{display: "inline-block", width: "25%"}}>
                             <span className='float-left h4' style={{marginRight: 100}}>신규 비밀번호 확인</span>
                         </div>
-                        <input id='newPasswordConfirm' type={"text"} className="form-control mb-2 mr-sm-2"/>
+                        <input id='newPasswordConfirm' type='password' className="form-control mb-2 mr-sm-2"/>
                     </div>
                     <HorizonLine text={""} />
 

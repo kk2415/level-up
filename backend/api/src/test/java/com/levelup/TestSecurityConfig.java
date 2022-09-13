@@ -3,7 +3,7 @@ package com.levelup;
 import com.levelup.api.config.SecurityConfig;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
-import com.levelup.api.dto.member.CreateMemberRequest;
+import com.levelup.api.dto.request.member.MemberRequest;
 import com.levelup.core.repository.member.MemberRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -25,7 +25,7 @@ public class TestSecurityConfig {
         //테스트용 계정 정보 하나 저장
         //UserDetailsService에서 userAccountRepository.findById을 사용하니까 미리 데이터를 설정함
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(
-                CreateMemberRequest.of(
+                MemberRequest.of(
                         "test@test",
                         "00000000",
                         "test",

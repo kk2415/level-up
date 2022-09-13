@@ -19,7 +19,6 @@ const CreateChannel = () => {
         let thumbnailImageDir = await ChannelService.uploadThumbnail(thumbnail)
 
         let channel = {
-            memberId : context.member.id,
             name : formData.get('name'),
             limitedMemberNumber : formData.get('limitedMemberNumber'),
             description : $('#summernote').val(),
@@ -29,7 +28,7 @@ const CreateChannel = () => {
             thumbnailImage : thumbnailImageDir,
         }
         if (validate(channel)) {
-            await ChannelService.create(channel);
+            await ChannelService.create(channel, context.member.id);
         }
     }
 

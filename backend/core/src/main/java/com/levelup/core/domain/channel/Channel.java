@@ -63,22 +63,19 @@ public class Channel extends BaseTimeEntity {
 
     protected Channel() {}
 
-    public void setChannelMember(ChannelMember channelMember) {
-        this.getChannelMembers().add(channelMember);
-        channelMember.setChannel(this);
-    }
-
-    public void removeMember(List<ChannelMember> channelMembers) {
-        for (ChannelMember channelMember : channelMembers) {
-            this.getChannelMembers().remove(channelMember);
-            channelMember.getMember().getChannelMembers().remove(channelMember);
-        }
-    }
-
     public long getMemberCount() {
         return this.getChannelMembers().stream()
                 .filter(member -> !member.getIsWaitingMember())
                 .count();
+    }
+
+    public Long getManagerId() {
+        return this.getChannelMembers().stream()
+                .filter(ChannelMember::getIsManager)
+                .map(ChannelMember::getMember)
+                .findAny()
+                .map(Member::getId)
+                .orElse(null);
     }
 
     public String getManagerNickname() {
@@ -98,15 +95,32 @@ public class Channel extends BaseTimeEntity {
         return descriptionSummary;
     }
 
-    public void modifyChannel(String name, Long limitNumber, String description, UploadFile thumbnailImage) {
-        this.name = name;
-        this.memberMaxNumber = limitNumber;
-        this.description = description;
-        this.thumbnailImage = thumbnailImage;
+    public void setChannelMember(ChannelMember channelMember) {
+        this.getChannelMembers().add(channelMember);
+        channelMember.setChannel(this);
+    }
+
+    public void modifyChannel(String name,
+                              ChannelCategory category,
+                              Long memberMaxNumber,
+                              String description,
+                              UploadFile thumbnailImage) {
+        this.name = name == null ? this.name : name;
+        this.category = category == null ? this.category : category;
+        this.memberMaxNumber = memberMaxNumber == null ? this.memberMaxNumber : memberMaxNumber;
+        this.description = description == null ? this.description : description;
+        this.thumbnailImage = thumbnailImage == null ? this.thumbnailImage : thumbnailImage;
     }
 
     public void modifyThumbNail(UploadFile thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
+    }
+
+    public void removeMember(List<ChannelMember> channelMembers) {
+        for (ChannelMember channelMember : channelMembers) {
+            this.getChannelMembers().remove(channelMember);
+            channelMember.getMember().getChannelMembers().remove(channelMember);
+        }
     }
 
 

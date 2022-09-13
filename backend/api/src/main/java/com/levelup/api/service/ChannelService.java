@@ -1,13 +1,13 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.channel.*;
+import com.levelup.api.dto.service.channel.ChannelDto;
+import com.levelup.api.dto.response.channel.ChannelStatInfoResponse;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.api.util.S3FileStore;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.api.dto.file.Base64Dto;
 import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.ImageType;
 import com.levelup.core.domain.file.UploadFile;
@@ -26,19 +26,14 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -54,71 +49,44 @@ public class ChannelService {
     private final S3FileStore fileStore;
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public CreateChannelResponse save(ChannelRequest channelRequest) {
-        Member member = memberRepository.findById(channelRequest.getMemberId())
+    public ChannelDto save(ChannelDto dto, Long memberId) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
         member.addRole(Role.of(RoleName.CHANNEL_MANAGER, member));
 
-        Channel channel = channelRequest.toEntity(member.getNickname());
+        Channel channel = dto.toEntity(member.getNickname());
         channelRepository.save(channel);
 
         ChannelMember channelMember = ChannelMember.of(member, true, false);
         channel.setChannelMember(channelMember);
 
-        return CreateChannelResponse.from(channel);
+        return ChannelDto.from(channel);
     }
 
-    public void createFileByBase64(Base64Dto base64) throws IOException {
-        File file = new File(fileDir + "/" + base64.getName()); //파일 생성 경로 수정해야됨
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-
-        Base64.Decoder decoder = Base64.getDecoder();
-
-        byte[] decodedBytes = decoder.decode(base64.getBase64().getBytes());
-        fileOutputStream.write(decodedBytes);
-
-        fileOutputStream.close();
-    }
-
-    public UploadFile createChannelThumbnail(MultipartFile file) throws IOException {
+    public UploadFile createThumbnailImage(MultipartFile file) throws IOException {
         return fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
     }
 
 
 
     @Transactional(readOnly = true)
-    public ChannelResponse getChannel(Long channelId, Long memberId) {
+    public ChannelDto getChannel(Long channelId, Long memberId) {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
-        boolean isManager = getIsManager(findChannel, memberId);
 
-        return ChannelResponse.of(findChannel, isManager);
-    }
-
-    private boolean getIsManager(Channel channel, Long memberId) {
-        Optional<ChannelMember> optionalMember = channel.getChannelMembers()
-                .stream()
-                .filter(ChannelMember::getIsManager)
-                .findAny();
-
-        if (optionalMember.isPresent()) {
-            Member manager = optionalMember.get().getMember();
-            return manager.getId().equals(memberId);
-        }
-        return false;
+        return ChannelDto.from(findChannel);
     }
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ChannelCategory", key = "{#category, #order}")
-    public Page<ChannelResponse> getByCategory(ChannelCategory category, String order, Pageable pageable) {
+    public Page<ChannelDto> getByPaging(ChannelCategory category, String order, Pageable pageable) {
         if ("memberCount".equals(order)) {
-            System.out.println("property : " + order);
-            List<Channel> channels = channelRepository.findByCategoryAndOrderByMemberCount(category.toString());
-            PageImpl<Channel> channelPage = new PageImpl<>(channels);
-            return channelPage.map(ChannelResponse::from);
+            PageImpl<Channel> channelPage
+                    = new PageImpl<>(channelRepository.findByCategoryAndOrderByMemberCount(category.toString()));
+            return channelPage.map(ChannelDto::from);
         }
 
-        return channelRepository.findByCategory(category, pageable).map(ChannelResponse::from);
+        return channelRepository.findByCategory(category, pageable).map(ChannelDto::from);
     }
 
     /*
@@ -128,7 +96,7 @@ public class ChannelService {
      * Resource 를 리턴할 때 ResourceHttpMessageConverter 가 해당 리소스의 바이트 정보를 응답 바디에 담아줍니다.
      * */
     @Transactional(readOnly = true)
-    public UrlResource getThumbNailImage(Long channelId) throws MalformedURLException {
+    public UrlResource getThumbnailImage(Long channelId) throws MalformedURLException {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
@@ -143,21 +111,21 @@ public class ChannelService {
     }
 
     @Transactional(readOnly = true)
-    public ChannelInfo getChannelAllInfo(Long channelId, Long memberId) {
+    public ChannelStatInfoResponse getStatInfo(Long channelId, Long memberId) {
         final Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
-        return new ChannelInfo(channel);
+        return new ChannelStatInfoResponse(channel);
     }
 
 
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public void modify(Long channelId, String name, Long limitNumber, String description, UploadFile thumbnailImage) {
+    public void modify(ChannelDto dto, Long channelId) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
-        channel.modifyChannel(name, limitNumber, description, thumbnailImage);
+        channel.modifyChannel(dto.getName(), dto.getCategory(), dto.getLimitedMemberNumber(), dto.getDescription(), dto.getThumbnailImage());
     }
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)

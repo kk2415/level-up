@@ -4,6 +4,7 @@ import {MemberService} from '../../api/service/MemberService'
 import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
 import {uploadFile} from "../../api/UploadFile";
 import $ from "jquery";
+import {createChannelValidation as validation} from "../../api/validation";
 
 const CreateChannel = () => {
     const getChannelId = () => {
@@ -38,13 +39,60 @@ const CreateChannel = () => {
             description : $('#summernote').val(),
             category : $('#category').val(),
             thumbnailImage : thumbnailImageDir,
+            expectedStartDate : $('#expectedStartDate').val(),
+            expectedEndDate : $('#expectedEndDate').val(),
         }
 
-        let result = await ChannelService.modify(channel, channelId);
-        if (result) {
-            alert('수정되었습니다.')
-            window.location.href = '/channel/description/' + channelId
+        if (validate(channel)) {
+            let result = await ChannelService.modify(channel, channelId);
+            if (result) {
+                alert('수정되었습니다.')
+                window.location.href = '/channel/description/' + channelId
+            }
         }
+    }
+
+    const validate = (channel) => {
+        let valid = true;
+
+        removeAlertMassageBox()
+        if (!validation.name.test(channel.name) || channel.name == null) {
+            $('#alert').append('<h5>[프로젝트 이름] : 이름은 2자리 이상 20이하 자리수만 입력 가능합니다.</h5>')
+            valid = false;
+        }
+        if (!validation.limitedMemberNumber.test(channel.limitedMemberNumber) || channel.limitedMemberNumber == null) {
+            $('#alert').append('<h5>[프로젝트 인원] : 숫자만 입력가능하며 일의자리수부터 백의자리수까지 입력 가능합니다.</h5>')
+            valid = false;
+        }
+        if (channel.category === 'NONE') {
+            $('#alert').append('<h5>[카테고리] : 카테고리를 정해주세요.</h5>')
+            valid = false;
+        }
+        if (channel.expectedStartDate === '') {
+            $('#alert').append('<h5>[시작 예정일] : 시작 예정일을 정해주세요.</h5>')
+            valid = false;
+        }
+        if (channel.expectedEndDate === '') {
+            $('#alert').append('<h5>[종료 예정일] : 종료 예정일을 정해주세요.</h5>')
+            valid = false;
+        }
+
+        if (!valid) {
+            showAlertMassageBox()
+        }
+        return valid
+    }
+
+    const removeAlertMassageBox = () => {
+        $('#alert').children('h5').remove();
+    }
+
+    const showAlertMassageBox = () => {
+        $('#alert').css('display', 'block')
+    }
+
+    const hideAlertMassageBox = () => {
+        $('#alert').css('display', 'none')
     }
 
     const getUploadFiles = (htmlCode) => {
@@ -126,6 +174,7 @@ const CreateChannel = () => {
     }
 
     useEffect(() => {
+        hideAlertMassageBox()
         showChannel()
         configSummernote()
         if (description) {
@@ -149,7 +198,7 @@ const CreateChannel = () => {
                                 <Form.Control type="number" id="limitedMemberNumber" name="limitedMemberNumber" placeholder="회원 제한 수"/>
                             </FloatingLabel>
 
-                            <Form.Select className="mb-3 form-control" name="category" id="category" value={description.category}
+                            <Form.Select className="mb-3 form-control" name="category" id="category" defaultValue={description.category}
                                          style={{width: "86%", display: 'inline-block'}}>
                                 <option className="fs-4" selected value="NONE" placeholder="name@example.com">카테고리를 선택해주세요</option>
                                 <option className="fs-4" value="STUDY">스터디</option>
@@ -160,6 +209,16 @@ const CreateChannel = () => {
                                 <Form.Control id="name" name="name" />
                             </FloatingLabel>
 
+                            <Form.Group className="mb-3 mt-3" style={{width: "49%", display: 'inline-block', marginRight: 10}}>
+                                <Form.Label>시작 예정일</Form.Label>
+                                <Form.Control defaultValue={description.expectedStartDate} type="date" id="expectedStartDate" name="expectedStartDate" placeholder="생년월일 6자리를 입력해주세요" />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" style={{width: "49%", display: 'inline-block'}}>
+                                <Form.Label>종료 예정일</Form.Label>
+                                <Form.Control defaultValue={description.expectedEndDate} type="date" id="expectedEndDate" name="expectedEndDate" placeholder="생년월일 6자리를 입력해주세요" />
+                            </Form.Group>
+
                             <Form.Group style={{width: "100%"}}>
                                 <Form.Label>대표 사진</Form.Label>
                                 <Form.Control onChange={handleChangeThumbnail} id='file' type='file' />
@@ -169,6 +228,11 @@ const CreateChannel = () => {
                                 <Form.Label className="fs-3 fw-bold">스터디 설명</Form.Label>
                                 <textarea id='summernote' />
                             </Form.Group>
+
+                            <div className="alert alert-danger mt-5" id="alert" role="alert">
+                                <h4 className="alert-heading">입력한 정보에 문제가 있네요!</h4>
+                                <hr/>
+                            </div>
 
                             <div className="row mt-5">
                                 <div className="col">

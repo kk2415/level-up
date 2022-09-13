@@ -86,7 +86,7 @@ const ArticleService = {
     count: async () => {
     },
 
-    modify: async (memberId, article, articleId) => {
+    modify: async (article, memberId, articleId) => {
         let result = false
 
         await send('/api/v1/articles/' + articleId + '?member=' + memberId, 'PATCH', article)

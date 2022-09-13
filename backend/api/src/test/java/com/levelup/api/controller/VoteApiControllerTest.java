@@ -7,7 +7,7 @@ import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.vote.VoteType;
-import com.levelup.api.dto.vote.CreateVoteRequest;
+import com.levelup.api.dto.request.vote.VoteRequest;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import com.levelup.core.repository.vote.ArticleVoteRepository;
@@ -70,7 +70,7 @@ class VoteApiControllerTest extends TestSupporter {
         Article article1 = createArticle(member1, "test article1", ArticleType.NOTICE);
         articleRepository.save(article1);
 
-        CreateVoteRequest voteRequest1 = CreateVoteRequest.of(member1.getId(), article1.getId(), VoteType.ARTICLE);
+        VoteRequest voteRequest1 = VoteRequest.of(member1.getId(), article1.getId(), VoteType.ARTICLE);
 
         mvc.perform(post("/api/v1/votes")
                 .contentType("application/json")

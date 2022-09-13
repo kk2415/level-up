@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="kr">
+<head>
+    <title>이메일 인증</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+    <div style='margin:100px;'>
+        <h1> Level Up. </h1>
+        <br/>
+        <div align='center' style='border:1px solid black; font-family:verdana,serif'></div>
+
+        <h3 style='color:blue;'>이메일 인증 코드입니다.</h3>
+        <div style='font-size:130%'>
+            CODE : <strong th:text="${securityCode}"></strong>
+            <br/>
+        </div>
+    </div>
+</body>
+</html>

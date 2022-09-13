@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface CommentVoteRepository extends JpaRepository<CommentVote, Long> {
 
-    @Query("select cv from CommentVote cv where cv.memberId =:memberId and cv.comment.id =:commentId")
+    @Query("select cv from CommentVote cv where cv.memberId =:memberId and cv.comment.id =:commentId order by cv.id desc")
     List<CommentVote> findByMemberIdAndCommentId(@Param("memberId") Long memberId, @Param("commentId") Long commentId);
 }

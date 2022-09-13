@@ -1,10 +1,10 @@
 package com.levelup.api.controller.member;
 
-import com.levelup.api.dto.member.ModifyPasswordRequest;
+import com.levelup.api.dto.request.member.ModifyPasswordRequest;
 import com.levelup.api.service.MemberService;
 import com.levelup.core.domain.file.UploadFile;
-import com.levelup.api.dto.member.MemberResponse;
-import com.levelup.api.dto.member.ModifyMemberRequest;
+import com.levelup.api.dto.response.member.MemberResponse;
+import com.levelup.api.dto.request.member.ModifyMemberRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +25,15 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/members/profile")
-    public ResponseEntity<UploadFile> createMemberProfileImage(MultipartFile file) throws IOException {
-        UploadFile response = memberService.createMemberProfileImage(file);
+    public ResponseEntity<UploadFile> createProfileImage(MultipartFile file) throws IOException {
+        UploadFile response = memberService.createProfileImage(file);
         return ResponseEntity.ok().body(response);
     }
 
 
 
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable Long memberId) {
+    public ResponseEntity<MemberResponse> get(@PathVariable Long memberId) {
         MemberResponse response = memberService.getById(memberId);
 
         return ResponseEntity.ok().body(response);
@@ -42,24 +42,24 @@ public class MemberApiController {
 
 
     @PatchMapping("/members/{memberId}")
-    public ResponseEntity<Void> modifyMember(@RequestBody ModifyMemberRequest request,
+    public ResponseEntity<Void> update(@RequestBody ModifyMemberRequest request,
                                              @PathVariable Long memberId) {
-        memberService.modify(request, memberId);
+        memberService.update(request.toDto(), memberId);
 
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/members/{email}/password")
-    public ResponseEntity<Void> modifyMemberPassword(@Valid @RequestBody ModifyPasswordRequest request,
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody ModifyPasswordRequest request,
                                                      @PathVariable String email) {
-        memberService.modifyPassword(request, email);
+        memberService.updatePassword(request.toDto(), email);
 
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/members/{memberId}/profile")
-    public ResponseEntity<UploadFile> modifyMemberProfileImage(MultipartFile file, @PathVariable Long memberId) throws IOException {
-        UploadFile profileImage = memberService.modifyProfileImage(file, memberId);
+    public ResponseEntity<UploadFile> updateProfileImage(MultipartFile file, @PathVariable Long memberId) throws IOException {
+        UploadFile profileImage = memberService.updateProfileImage(file, memberId);
 
         return ResponseEntity.ok().body(profileImage);
     }
@@ -67,7 +67,7 @@ public class MemberApiController {
 
 
     @DeleteMapping("/members/{memberId}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long memberId) throws IOException {
+    public ResponseEntity<Void> delete(@PathVariable Long memberId) throws IOException {
         memberService.delete(memberId);
 
         return ResponseEntity.ok().build();

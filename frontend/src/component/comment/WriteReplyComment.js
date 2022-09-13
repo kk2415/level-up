@@ -13,8 +13,8 @@ const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, p
             identity : identity,
         }
 
-        let reuslt = await CommentService.createReply(replyRequest)
-        if (reuslt !== null) {
+        let result = await CommentService.createReply(replyRequest, localStorage.getItem('id'))
+        if (result !== null) {
             $('#createReplyContent').val('')
             setWritingReplyComment(true)
             setReplyCount(replyCount + 1)
