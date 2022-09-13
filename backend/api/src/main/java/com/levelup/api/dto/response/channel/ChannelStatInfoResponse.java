@@ -1,4 +1,4 @@
-package com.levelup.api.dto.channel;
+package com.levelup.api.dto.response.channel;
 
 import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
-public class ChannelInfo {
+public class ChannelStatInfoResponse {
 
     private String channelName;
     private String manager;
@@ -20,7 +20,7 @@ public class ChannelInfo {
     private Long postCount;
     private String thumbnail;
 
-    public ChannelInfo(Channel channel) {
+    public ChannelStatInfoResponse(Channel channel) {
         this.channelName = channel.getName();
         this.manager = channel.getManagerName();
         this.date = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(channel.getCreatedAt());

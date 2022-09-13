@@ -1,4 +1,4 @@
-package com.levelup.api.dto.member;
+package com.levelup.api.dto.request.member;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class LoginRequest {
+public class LogInMemberRequest {
 
     @NotNull
     @NotBlank

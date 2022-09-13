@@ -1,19 +1,12 @@
-package com.levelup.api.dto.member;
+package com.levelup.api.dto.request.member;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.levelup.core.DateFormat;
+import com.levelup.api.dto.business.member.MemberDto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.core.domain.member.Member;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.*;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -22,11 +15,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class CreateMemberRequest {
+@Getter
+public class MemberRequest {
 
     @NotNull
     @NotBlank
@@ -58,7 +48,27 @@ public class CreateMemberRequest {
     @NotNull
     private UploadFile uploadFile;
 
-    static public CreateMemberRequest of(
+    protected MemberRequest() {}
+
+    private MemberRequest(String email,
+                          String password,
+                          String name,
+                          String nickname,
+                          Gender gender,
+                          LocalDate birthday,
+                          String phone,
+                          UploadFile uploadFile) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.uploadFile = uploadFile;
+    }
+
+    static public MemberRequest of(
             String email,
             String password,
             String name,
@@ -68,7 +78,21 @@ public class CreateMemberRequest {
             String phone,
             UploadFile uploadFile
     ) {
-        return new CreateMemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
+        return new MemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
+    }
+
+    public MemberDto toDto() {
+        return MemberDto.builder()
+                .memberId(null)
+                .email(email)
+                .password(password)
+                .name(name)
+                .nickname(nickname)
+                .gender(gender)
+                .birthday(birthday)
+                .phone(phone)
+                .profileImage(uploadFile)
+                .build();
     }
 
     public Member toEntity() {

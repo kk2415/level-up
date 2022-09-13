@@ -1,5 +1,6 @@
-package com.levelup.api.dto.vote;
+package com.levelup.api.dto.request.vote;
 
+import com.levelup.api.dto.service.vote.VoteDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.vote.ArticleVote;
@@ -11,8 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor
-public class  CreateVoteRequest {
+public class VoteRequest {
 
     @NotNull
     private Long memberId;
@@ -23,14 +23,20 @@ public class  CreateVoteRequest {
     @NotNull
     private VoteType voteType;
 
-    private CreateVoteRequest(Long memberId, Long targetId, VoteType voteType) {
+    protected VoteRequest() {}
+
+    private VoteRequest(Long memberId, Long targetId, VoteType voteType) {
         this.memberId = memberId;
         this.targetId = targetId;
         this.voteType = voteType;
     }
 
-    public static CreateVoteRequest of(Long memberId, Long targetId, VoteType voteType) {
-        return new CreateVoteRequest(memberId, targetId, voteType);
+    public static VoteRequest of(Long memberId, Long targetId, VoteType voteType) {
+        return new VoteRequest(memberId, targetId, voteType);
+    }
+
+    public VoteDto toDto() {
+        return VoteDto.of(memberId, targetId, voteType);
     }
 
     public ArticleVote toEntity(Article article) {

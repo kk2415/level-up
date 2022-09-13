@@ -1,21 +1,20 @@
-package com.levelup.api.dto.comment;
+package com.levelup.api.dto.request.comment;
 
+import com.levelup.api.dto.business.comment.ReplyCommentDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
-
 @Getter
-@NoArgsConstructor
-public class CreateCommentRequest {
+public class ReplyCommentRequest {
 
-    private String memberEmail;
+    @NotNull
+    private Long parentId;
 
     @NotNull
     private Long articleId;
@@ -26,15 +25,21 @@ public class CreateCommentRequest {
     @NotNull
     private ArticleType identity;
 
-    private CreateCommentRequest(String memberEmail, Long articleId, String content, ArticleType identity) {
-        this.memberEmail = memberEmail;
+    protected ReplyCommentRequest() {}
+
+    private ReplyCommentRequest(Long parentId, Long articleId, String content, ArticleType identity) {
+        this.parentId = parentId;
         this.articleId = articleId;
         this.content = content;
         this.identity = identity;
     }
 
-    public static CreateCommentRequest of(String memberEmail, Long articleId, String content, ArticleType identity) {
-        return new CreateCommentRequest(memberEmail, articleId, content, identity);
+    public ReplyCommentDto toDto() {
+        return ReplyCommentDto.of(articleId, parentId, content, identity);
+    }
+
+    public static ReplyCommentRequest of(Long parentId, Long articleId, String content, ArticleType identity) {
+        return new ReplyCommentRequest(parentId, articleId, content, identity);
     }
 
     public Comment toEntity(Member member, Article article) {
