@@ -2,7 +2,6 @@ package com.levelup.core.repository.channel;
 
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
-import com.levelup.core.dto.channel.ChannelPagingDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -36,7 +35,4 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
             countQuery = "select count(*) from channel c where c.channel_category = :category",
             nativeQuery = true)
     List<Channel> findByCategoryAndOrderByMemberCount(@Param("category") String category);
-
-    @EntityGraph(attributePaths = {"channelMembers", "channelMembers.member"})
-    Page<Channel> findJoinFetchByCategory(@Param("category") ChannelCategory category, Pageable pageable);
 }

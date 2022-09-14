@@ -1,4 +1,4 @@
-package com.levelup.core.repository.article.ChannelPost;
+package com.levelup.core.repository.ChannelPost;
 
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>, ChannelPostQueryRepository {
@@ -17,10 +16,6 @@ public interface ChannelPostRepository extends JpaRepository<ChannelPost, Long>,
             "join fetch cp.member m " +
             "where cp.member.id = m.id and cp.id = :articleId")
     Optional<ChannelPost> findByArticleId(@Param("articleId") Long articleId);
-
-    List<ChannelPost> findByChannelId(Long channelId);
-    List<ChannelPost> findByChannelIdAndArticleType(Long channelId, ArticleType articleType);
-    Page<ChannelPost> findByChannelId(Long channelId, Pageable pageable);
 
     @Query(value = "select cp from ChannelPost cp " +
             "join fetch cp.member m " +

@@ -1,11 +1,13 @@
 package com.levelup.api.dto.request.member;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.levelup.api.dto.service.member.MemberDto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
-import com.levelup.core.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.EnumType;
@@ -13,7 +15,6 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 @Getter
 public class MemberRequest {
@@ -39,6 +40,7 @@ public class MemberRequest {
     private Gender gender;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthday;
 
@@ -81,6 +83,18 @@ public class MemberRequest {
         return new MemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
     }
 
+    static public MemberRequest from(MemberDto dto) {
+        return new MemberRequest(
+                dto.getEmail(),
+                dto.getPassword(),
+                dto.getName(),
+                dto.getNickname(),
+                dto.getGender(),
+                dto.getBirthday(),
+                dto.getPhone(),
+                dto.getProfileImage());
+    }
+
     public MemberDto toDto() {
         return MemberDto.builder()
                 .memberId(null)
@@ -92,23 +106,6 @@ public class MemberRequest {
                 .birthday(birthday)
                 .phone(phone)
                 .profileImage(uploadFile)
-                .build();
-    }
-
-    public Member toEntity() {
-        return Member.builder()
-                .email(email)
-                .password(password)
-                .name(name)
-                .nickname(nickname)
-                .gender(gender)
-                .birthday(birthday)
-                .phone(phone)
-                .profileImage(uploadFile)
-                .articles(new ArrayList<>())
-                .comments(new ArrayList<>())
-                .channelMembers(new ArrayList<>())
-                .roles(new ArrayList<>())
                 .build();
     }
 }

@@ -11,7 +11,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Getter
-@Component
 public class TokenProvider {
 
     private Date expireDate;

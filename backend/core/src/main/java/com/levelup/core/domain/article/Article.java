@@ -55,17 +55,6 @@ public class Article extends BaseTimeEntity {
 
     public Article() {}
 
-    public static Article of(Member member, String title, String content, ArticleType articleType) {
-        Article article = new Article();
-
-        article.setMember(member);
-        article.setTitle(title);
-        article.setContent(content);
-        article.setViews(0L);
-        article.setArticleType(articleType);
-        return article;
-    }
-
     public void setMember(Member member) {
         this.member = member;
         member.getArticles().add(this);
@@ -75,7 +64,7 @@ public class Article extends BaseTimeEntity {
         this.views++;
     }
 
-    public void modifyArticle(String title, String content) {
+    public void update(String title, String content) {
         this.title = (title);
         this.content = (content);
     }

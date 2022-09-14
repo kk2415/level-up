@@ -32,12 +32,12 @@ include::{snippets}/sign-up-api/response-fields.adoc[]
 
 * Parameters
 * Request
-include::{snippets}/member-post-profile/http-request.adoc[]
-* Request Body
-include::{snippets}/member-post-profile/request-part-file-body.adoc[]
-* Response
-include::{snippets}/member-post-profile/http-response.adoc[]
-* Response Body
-include::{snippets}/member-post-profile/response-fields.adoc[]
+//include::{snippets}/member-post-profile/http-request.adoc[]
+//* Request Body
+//include::{snippets}/member-post-profile/request-part-file-body.adoc[]
+//* Response
+//include::{snippets}/member-post-profile/http-response.adoc[]
+//* Response Body
+//include::{snippets}/member-post-profile/response-fields.adoc[]
 
 

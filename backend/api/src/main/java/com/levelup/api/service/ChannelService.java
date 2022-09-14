@@ -157,7 +157,7 @@ public class ChannelService {
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
         List<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndMemberId(channelId, findMember.getId());
 
-        findChannel.removeMember(channelMembers);
+        findChannel.removeMembers(channelMembers);
         channelMemberRepository.deleteAll(channelMembers);
     }
 

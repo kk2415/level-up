@@ -25,7 +25,7 @@ public class ChannelPost extends Article {
     protected ChannelPost() {}
 
     public void modifyChannelPost(String title, String contents, PostCategory postCategory) {
-        this.modifyArticle(title, contents);
+        this.update(title, contents);
         this.channelPostCategory = postCategory;
     }
 }

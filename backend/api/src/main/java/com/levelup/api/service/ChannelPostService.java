@@ -9,12 +9,11 @@ import com.levelup.api.util.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.api.dto.request.channelPost.ChannelPostRequest;
-import com.levelup.api.dto.response.channelPost.ChannelPostResponse;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
-import com.levelup.core.repository.article.ChannelPost.ChannelPostRepository;
+import com.levelup.core.repository.ChannelPost.ChannelPostRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -100,20 +99,20 @@ public class ChannelPostService {
         return ChannelPostDto.from(channelPost);
     }
 
-    public ChannelPostDto update(Long articleId, Long memberId, ChannelPostRequest request) {
-        ChannelPost channelPost = articleRepository.findChannelPostById(articleId)
+    public ChannelPostDto update(ChannelPostDto dto, Long articleId, Long memberId) {
+        ChannelPost channelPost = channelPostRepository.findByArticleId(articleId)
                 .orElseThrow(() -> new PostNotFoundException("작성한 게시글이 없습니다"));
 
         if (!channelPost.getMember().getId().equals(memberId)) {
             throw new MemberNotFoundException("권한이 없습니다.");
         }
 
-        channelPost.modifyChannelPost(request.getTitle(), request.getContent(), request.getPostCategory());
+        channelPost.modifyChannelPost(dto.getTitle(), dto.getContent(), dto.getPostCategory());
 
         return ChannelPostDto.from(channelPost);
     }
 
     public void delete(Long articleId) {
-        articleRepository.findById(articleId).ifPresent(articleRepository::delete);
+        channelPostRepository.findByArticleId(articleId).ifPresent(articleRepository::delete);
     }
 }

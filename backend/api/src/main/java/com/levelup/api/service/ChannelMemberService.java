@@ -4,7 +4,6 @@ import com.levelup.api.dto.service.chanelMember.ChannelMemberDto;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.response.channelMember.ChannelMemberResponse;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.exception.channelMember.DuplicateChannelMemberException;
 import com.levelup.core.exception.member.MemberNotFoundException;
@@ -84,7 +83,7 @@ public class ChannelMemberService {
 
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
-        channel.removeMember(List.of(channelMember));
+        channel.removeMembers(List.of(channelMember));
 
         channelMemberRepository.delete(channelMember);
     }

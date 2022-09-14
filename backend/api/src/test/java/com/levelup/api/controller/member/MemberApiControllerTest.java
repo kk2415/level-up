@@ -21,7 +21,6 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,7 +55,7 @@ class MemberApiControllerTest {
                 "<<binary data>>".getBytes());
 
         // When & Then
-        mvc.perform(multipart("/api/v1/members/image")
+        mvc.perform(multipart("/api/v1/members/profile")
                         .file(file))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -68,33 +67,5 @@ class MemberApiControllerTest {
                                 fieldWithPath("storeFileName").description("path on file stored")
                         )
                 ));
-    }
-
-    @Test
-    void getMember() {
-    }
-
-    @Test
-    void getAllMembers() {
-    }
-
-    @Test
-    void getProfileImage() {
-    }
-
-    @Test
-    void confirmLogin() {
-    }
-
-    @Test
-    void modifyMember() {
-    }
-
-    @Test
-    void modifyMemberProfile() {
-    }
-
-    @Test
-    void delete() {
     }
 }

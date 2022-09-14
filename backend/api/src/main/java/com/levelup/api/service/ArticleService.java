@@ -36,7 +36,7 @@ public class ArticleService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
 
-        final Article article = Article.of(member, dto.getTitle(), dto.getContent(), dto.getArticleType());
+        final Article article = dto.toEntity(member);
         articleRepository.save(article);
 
         return ArticleDto.from(article);
@@ -75,14 +75,14 @@ public class ArticleService {
     }
 
     public ArticleDto getNext(Long articleId, ArticleType articleType) {
-        final Article article = articleRepository.findNextPageByArticleType(articleId, articleType)
+        final Article article = articleRepository.findNextByIdAndArticleType(articleId, articleType.toString())
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ArticleDto.from(article);
     }
 
     public ArticleDto getPrev(Long articleId, ArticleType articleType) {
-        final Article article = articleRepository.findPrevPageArticleType(articleId, articleType)
+        final Article article = articleRepository.findPrevByIdAndArticleType(articleId, articleType.toString())
                 .orElseThrow(() -> new PostNotFoundException("존재하는 페이지가 없습니다."));
 
         return ArticleDto.from(article);
@@ -98,7 +98,7 @@ public class ArticleService {
             throw new AuthorityException("작성자만 게시글을 수정할 수 있습니다.");
         }
 
-        article.modifyArticle(request.getTitle(), request.getContent());
+        article.update(request.getTitle(), request.getContent());
         return ArticleDto.from(article);
     }
 
