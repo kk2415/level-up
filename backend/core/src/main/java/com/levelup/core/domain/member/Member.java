@@ -70,7 +70,7 @@ public class Member extends BaseTimeEntity {
         this.roles.add(role);
     }
 
-    public void setPassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
     }
 
@@ -78,7 +78,7 @@ public class Member extends BaseTimeEntity {
         this.profileImage = profileImage;
     }
 
-    public void modifyMember(String nickname, UploadFile profileImage) {
+    public void update(String nickname, UploadFile profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
     }

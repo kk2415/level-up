@@ -53,10 +53,10 @@ public class MemberService implements UserDetailsService {
         Member member = dto.toEntity();
         Role role = Role.of(RoleName.ANONYMOUS, member);
 
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.updatePassword(passwordEncoder.encode(member.getPassword()));
         member.addRole(role);
-
         memberRepository.save(member);
+
         return MemberDto.from(member);
     }
 
@@ -75,7 +75,7 @@ public class MemberService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "member", key = "#memberId")
-    public MemberResponse getById(Long memberId) {
+    public MemberResponse get(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
@@ -89,14 +89,14 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        member.modifyMember(dto.getNickname(), dto.getProfileImage());
+        member.update(dto.getNickname(), dto.getProfileImage());
     }
 
     public void updatePassword(UpdateMemberDto dto, String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
-        member.setPassword(passwordEncoder.encode(dto.getPassword()));
+        member.updatePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
     @CacheEvict(cacheNames = "member", key = "#memberId")

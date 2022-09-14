@@ -1,6 +1,5 @@
 package com.levelup.api.dto.service.channel;
 
-import com.levelup.core.DateFormat;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.file.UploadFile;
@@ -9,7 +8,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Builder
@@ -27,7 +26,7 @@ public class ChannelDto implements Serializable {
     private String storeFileName;
     private ChannelCategory category;
     private UploadFile thumbnailImage;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private LocalDate expectedStartDate;
     private LocalDate expectedEndDate;
 
@@ -44,7 +43,7 @@ public class ChannelDto implements Serializable {
                        String storeFileName,
                        ChannelCategory category,
                        UploadFile thumbnailImage,
-                       String createdAt,
+                       LocalDateTime createdAt,
                        LocalDate expectedStartDate,
                        LocalDate expectedEndDate) {
         this.channelId = channelId;
@@ -76,7 +75,7 @@ public class ChannelDto implements Serializable {
                 channel.getThumbnailImage().getStoreFileName(),
                 channel.getCategory(),
                 channel.getThumbnailImage(),
-                channel.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
+                channel.getCreatedAt(),
                 channel.getExpectedStartDate(),
                 channel.getExpectedEndDate()
         );

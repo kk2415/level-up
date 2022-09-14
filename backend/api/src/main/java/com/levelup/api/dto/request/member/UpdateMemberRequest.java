@@ -7,7 +7,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 
 @Getter
-public class ModifyMemberRequest {
+public class UpdateMemberRequest {
 
     @NotNull
     private String nickname;
@@ -15,15 +15,15 @@ public class ModifyMemberRequest {
     @NotNull
     private UploadFile profileImage;
 
-    protected ModifyMemberRequest() {}
+    protected UpdateMemberRequest() {}
 
-    private ModifyMemberRequest(String nickname, UploadFile profileImage) {
+    private UpdateMemberRequest(String nickname, UploadFile profileImage) {
         this.nickname = nickname;
         this.profileImage = profileImage;
     }
 
-    public static ModifyMemberRequest of(String nickname, UploadFile profileImage) {
-        return new ModifyMemberRequest(nickname, profileImage);
+    public static UpdateMemberRequest of(String nickname, UploadFile profileImage) {
+        return new UpdateMemberRequest(nickname, profileImage);
     }
 
     public UpdateMemberDto toDto() {

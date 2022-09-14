@@ -39,12 +39,11 @@ public class ArticleVoteService implements VoteService {
         return VoteDto.of(dto.getMemberId(), dto.getTargetId(), dto.getVoteType(), false);
     }
 
-    public boolean validateDuplicationAndDelete(Long memberId, Long articleId) {
+    private boolean validateDuplicationAndDelete(Long memberId, Long articleId) {
         final List<ArticleVote> votes = articleVoteRepository.findByMemberIdAndArticleId(memberId, articleId);
 
         if (!votes.isEmpty()) {
-            ArticleVote vote = votes.get(0);
-            articleVoteRepository.delete(vote);
+            articleVoteRepository.delete(votes.get(0));
             return false;
         }
         return true;

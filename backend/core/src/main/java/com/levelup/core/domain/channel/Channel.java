@@ -116,7 +116,7 @@ public class Channel extends BaseTimeEntity {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public void removeMember(List<ChannelMember> channelMembers) {
+    public void removeMembers(List<ChannelMember> channelMembers) {
         for (ChannelMember channelMember : channelMembers) {
             this.getChannelMembers().remove(channelMember);
             channelMember.getMember().getChannelMembers().remove(channelMember);

@@ -52,6 +52,30 @@ public class MemberDto {
         this.roles = roles;
     }
 
+    public static MemberDto of(Long memberId,
+                      String email,
+                      String password,
+                      String name,
+                      String nickname,
+                      Gender gender,
+                      LocalDate birthday,
+                      String phone,
+                      UploadFile profileImage,
+                      List<RoleName> roles) {
+        return new MemberDto(
+            memberId,
+            email,
+            password,
+            name,
+            nickname,
+            gender,
+            birthday,
+            phone,
+            profileImage,
+            roles
+        );
+    }
+
     public static MemberDto from(Member member) {
         return new MemberDto(
                 member.getId(),

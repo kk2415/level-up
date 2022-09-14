@@ -1,7 +1,6 @@
 package com.levelup.core.repository.article;
 
 import com.levelup.core.domain.article.Article;
-import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.dto.article.ArticlePagingDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleQueryRepository {
+public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @EntityGraph(attributePaths = {"member", "comments"})
     Optional<Article> findById(Long id);
@@ -53,20 +52,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
                                                      @Param("articleType") String articleType,
                                                      Pageable pageable);
 
-
-    @Query(value =
-            "select a.* from article a " +
-                    "where a.article_type = :articleType and match(a.title) against(:title in boolean mode)",
-            countQuery = "select count(*) from article a where a.article_type = :articleType and match(a.title) against(:title in boolean mode)",
-            nativeQuery = true)
-    Page<Article> findByTitleAndArticleTypeTest(@Param("title") String title,
-                                                @Param("articleType") String articleType,
-                                                Pageable pageable);
-
-    @Query(value = "select * from article a where a.article_type = :articleType",
-            countQuery = "select count from article_count ac where ac.article_type = :articleType", nativeQuery = true)
-    Page<Article> findByArticleTypeTest(@Param("articleType") String articleType, Pageable pageable);
-
     @Query(value =
             "select a.article_id as articleId, " +
                     "a.title, " +
@@ -79,31 +64,23 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
                     "(select count(1) from article_vote av where exists " +
                     "(select 1 from article where av.article_id = a.article_id)) as voteCount " +
                     "from article a left outer join member m on a.member_id = m.member_id " +
-                    "where a.article_type = :articleType and m.nickname like :nickname",
+                    "where a.article_type = :articleType and m.nickname like %:nickname%",
             countQuery = "select count(*) from article a join member m on m.member_id = a.member_id " +
-                    "where a.article_type = :articleType and m.nickname like :nickname",
+                    "where a.article_type = :articleType and m.nickname like %:nickname%",
             nativeQuery = true)
     Page<ArticlePagingDto> findByNicknameAndArticleType(@Param("nickname") String nickname,
                                                         @Param("articleType") String articleType,
                                                         Pageable pageable);
 
-    @EntityGraph(attributePaths = "member")
-    @Query("select cp from ChannelPost cp where cp.id = :articleId")
-    Optional<ChannelPost> findChannelPostById(@Param("articleId") Long articleId);
+    @Query(value = "select a.* from article a " +
+            "where a.article_type = :articleType and a.article_id > :articleId " +
+            "order by a.article_id limit 1",
+            nativeQuery = true)
+    Optional<Article> findNextByIdAndArticleType(@Param("articleId") Long articleId, @Param("articleType") String articleType);
 
-    @EntityGraph(attributePaths = "member")
-    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId")
-    Page<ChannelPost> findChannelPostByChannelId(@Param("channelId") Long channelId, Pageable pageable);
-
-    @EntityGraph(attributePaths = "member")
-    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.title like %:title%")
-    Page<ChannelPost> findByChannelIdAndTitle(@Param("channelId") Long channelId,
-                                              @Param("title") String title,
-                                              Pageable pageable);
-
-    @EntityGraph(attributePaths = "member")
-    @Query("select cp from ChannelPost cp where cp.channel.id = :channelId and cp.member.nickname like %:nickname%")
-    Page<ChannelPost> findByChannelIdAndNickname(@Param("channelId") Long channelId,
-                                                 @Param("nickname") String nickname,
-                                                 Pageable pageable);
+    @Query(value = "select a.* from article a " +
+            "where a.article_type = :articleType and a.article_id < :articleId " +
+            "order by a.article_id desc limit 1",
+            nativeQuery = true)
+    Optional<Article> findPrevByIdAndArticleType(@Param("articleId") Long articleId, @Param("articleType") String articleType);
 }

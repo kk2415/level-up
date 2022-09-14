@@ -7,6 +7,7 @@ import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class CommentDto {
     protected Long memberId;
     protected String writer;
     protected String content;
-    protected String createdAt;
+    protected LocalDateTime createdAt;
     protected Long voteCount;
     protected Long replyCount;
     protected Long articleId;
@@ -27,7 +28,7 @@ public class CommentDto {
                       Long memberId,
                       String writer,
                       String content,
-                      String createdAt,
+                      LocalDateTime createdAt,
                       Long voteCount,
                       Long replyCount,
                       Long articleId,
@@ -49,7 +50,7 @@ public class CommentDto {
             comment.getMember().getId(),
             comment.getMember().getNickname(),
             comment.getContent(),
-            DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(comment.getCreatedAt()),
+            comment.getCreatedAt(),
             (long) comment.getCommentVotes().size(),
             (long) comment.getChild().size(),
             comment.getArticle().getId(),

@@ -1,4 +1,4 @@
-package com.levelup.core.repository.article.ChannelPost;
+package com.levelup.core.repository.ChannelPost;
 
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;

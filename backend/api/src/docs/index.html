@@ -479,10 +479,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre>POST /api/v1/sign-up HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 181
+Content-Length: 230
 Host: localhost:8080
 
-{"email":"test@email.com","password":"pwd","name":"test","nickname":"test","gender":"MALE","birthday":"1997-09-27","phone":"010","uploadFile":{"uploadFileName":"","storeFileName":""}}</pre>
+{"email":"test@gmail.com","password":"00000000","name":"test1","nickname":"test1","gender":"MALE","birthday":[1997,9,27],"phone":"010-2354-9960","uploadFile":{"uploadFileName":"default.png","storeFileName":"thumbnail/as154-asda"}}</pre>
 </div>
 </div>
 <div class="ulist">
@@ -515,6 +515,104 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">member password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member nickname</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gender</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member gender</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>birthday</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member birthday</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member phone</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uploadFile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uploadFile.uploadFileName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uploadFile.storeFileName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">path on file stored</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>Response</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 241
+
+{"id":null,"email":"test@gmail.com","name":"test1","nickname":"test1","birthday":"1997-09-27","gender":"MALE","phone":"010-2354-9960","uploadFile":{"uploadFileName":"default.png","storeFileName":"thumbnail/as154-asda"},"roles":["ANONYMOUS"]}</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Response Body</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member entity PK</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">member email</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
@@ -551,93 +649,10 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">path on file stored</p></td>
 </tr>
-</tbody>
-</table>
-<div class="ulist">
-<ul>
-<li>
-<p>Response</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 137
-
-{"id":null,"email":"test@email.com","password":"pwd","name":"test","nickname":"test","gender":"MALE","birthday":"1997-09-27","phone":"010"}</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Response Body</p>
-</li>
-</ul>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
 <tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member entity PK</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member email</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member password</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member nickname</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gender</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member gender</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>birthday</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member birthday</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>phone</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">member phone</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>roles</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user roles</p></td>
 </tr>
 </tbody>
 </table>
@@ -656,100 +671,29 @@ Content-Length: 137
 <p>Parameters</p>
 </li>
 <li>
-<p>Request</p>
+<p>Request
+Unresolved directive in index.adoc - include::C:/Task/project/level-up/backend/api/build/generated-snippets/member-post-profile/http-request.adoc[]</p>
 </li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>POST /api/v1/members/image HTTP/1.1
-Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Host: localhost:8080
-
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=file; filename=myProfile.png
-Content-Type: image/png
-
-&lt;&lt;binary data&gt;&gt;
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
 <li>
-<p>Request Body</p>
+<p>Request Body
+Unresolved directive in index.adoc - include::C:/Task/project/level-up/backend/api/build/generated-snippets/member-post-profile/request-part-file-body.adoc[]</p>
 </li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>&lt;&lt;binary data&gt;&gt;</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
 <li>
-<p>Response</p>
+<p>Response
+Unresolved directive in index.adoc - include::C:/Task/project/level-up/backend/api/build/generated-snippets/member-post-profile/http-response.adoc[]</p>
 </li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 101
-
-{"uploadFileName":"myProfile.png","storeFileName":"profile/2cdcf2f4-be3d-4a29-9163-70342d4a375e.png"}</pre>
-</div>
-</div>
-<div class="ulist">
-<ul>
 <li>
-<p>Response Body</p>
+<p>Response Body
+Unresolved directive in index.adoc - include::C:/Task/project/level-up/backend/api/build/generated-snippets/member-post-profile/response-fields.adoc[]</p>
 </li>
 </ul>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Type</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uploadFileName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">file name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storeFileName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">path on file stored</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-02 19:02:04 +0900
+Last updated 2022-08-03 11:11:06 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

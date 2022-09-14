@@ -1,6 +1,7 @@
 package com.levelup;
 
 import com.levelup.api.config.SecurityConfig;
+import com.levelup.api.dto.service.member.MemberDto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
 import com.levelup.api.dto.request.member.MemberRequest;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,7 +27,8 @@ public class TestSecurityConfig {
         //테스트용 계정 정보 하나 저장
         //UserDetailsService에서 userAccountRepository.findById을 사용하니까 미리 데이터를 설정함
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(
-                MemberRequest.of(
+                MemberDto.of(
+                        null,
                         "test@test",
                         "00000000",
                         "test",
@@ -33,7 +36,9 @@ public class TestSecurityConfig {
                         Gender.MALE,
                         LocalDate.now(),
                         "010-2354-9960",
-                        new UploadFile("", "")).toEntity()
+                        new UploadFile("", ""),
+                        new ArrayList<>()
+                ).toEntity()
         ));
     }
 }

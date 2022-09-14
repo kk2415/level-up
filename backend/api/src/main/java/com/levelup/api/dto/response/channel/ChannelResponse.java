@@ -69,7 +69,7 @@ public class ChannelResponse implements Serializable {
                 dto.getDescription(),
                 dto.getDescriptionSummary(),
                 dto.getMemberCount(),
-                dto.getCreatedAt(),
+                dto.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT)),
                 dto.getThumbnailImage().getStoreFileName(),
                 dto.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
                 dto.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),

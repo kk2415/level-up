@@ -94,7 +94,7 @@ public class ChannelPostApiController {
             @RequestBody ChannelPostRequest request,
             @RequestParam Long memberId)
     {
-        ChannelPostDto dto = channelPostService.update(articleId, memberId, request);
+        ChannelPostDto dto = channelPostService.update(request.toDto(), articleId, memberId);
 
         return ResponseEntity.ok().body(ChannelPostResponse.from(dto));
     }
@@ -105,7 +105,7 @@ public class ChannelPostApiController {
             @RequestBody ChannelPostRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal Member member)
     {
-        ChannelPostDto dto = channelPostService.update(articleId, member.getId(), request);
+        ChannelPostDto dto = channelPostService.update(request.toDto(), articleId, member.getId());
 
         return ResponseEntity.ok().body(ChannelPostResponse.from(dto));
     }

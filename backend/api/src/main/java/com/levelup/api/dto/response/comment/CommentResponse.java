@@ -43,21 +43,9 @@ public class CommentResponse {
                 dto.getMemberId(),
                 dto.getWriter(),
                 dto.getContent(),
-                dto.getCreatedAt(),
+                DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(dto.getCreatedAt()),
                 dto.getVoteCount(),
                 dto.getReplyCount()
-        );
-    }
-
-    public static CommentResponse from(Comment comment) {
-        return new CommentResponse(
-                comment.getId(),
-                comment.getMember().getId(),
-                comment.getMember().getNickname(),
-                comment.getContent(),
-                DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(comment.getCreatedAt()),
-                (long) comment.getCommentVotes().size(),
-                (long) comment.getChild().size()
         );
     }
 }
