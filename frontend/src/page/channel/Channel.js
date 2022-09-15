@@ -55,24 +55,6 @@ const Channel = () => {
         return Number(queryString.substr(queryString.indexOf('=') + 1))
     }
 
-    const loadChannelPosts = async (channelId, searchCondition) => {
-        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
-        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable, searchCondition)
-
-        setChannelPosts(result.content)
-        setChannelPostsCount(result.totalElements)
-    }
-
-    const loadChannelInfo = async (channelId) => {
-        let result = await ChannelService.get(channelId)
-
-        if (result.manager) {
-            setIsManager(true)
-        }
-
-        setChannelName(result.name)
-    }
-
     const handleWriting = () => {
         if (localStorage.getItem(TOKEN)) {
             navigate('/post/create?channel=' + channelId)
@@ -82,22 +64,18 @@ const Channel = () => {
         }
     }
 
-    const handleSearch = (event) => {
-        event.preventDefault()
+    const handleManageChannel = () => {
+        navigate('/channel/' + channelId + '/manager')
+    }
 
-        let searchCondition = {
-            field : $('#field').val(),
-            querys : $('#search').val(),
+    const searchKeyDown = (event) => {
+        if (event.keyCode === 13) {
+            handleSearch()
         }
+    }
 
-        let url = '/channel/' + channelId + '?page=' + 1 + '&' +
-            'field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
-
-        if (searchCondition.field === "" || searchCondition.querys === "") {
-            url = '/channel/' + channelId + '?page=' + 1
-        }
-
-        window.location.href = url
+    const handleGoHome = () => {
+        navigate('/')
     }
 
     const onPagerNextButton = async (currentPage, lastPagerNum, pagerLength, searchCondition) => {
@@ -112,7 +90,8 @@ const Channel = () => {
         }
 
         if (nextPage <= lastPagerNum) {
-            $('#next').attr('href', url)
+            setCurPage(nextPage)
+            navigate(url)
         }
         else {
             alert("다음 페이지가 없습니다")
@@ -124,36 +103,68 @@ const Channel = () => {
         let previousPage = startNum - pagerLength
 
         let url = '/channel/' + channelId + '?page=' + previousPage
-
         if (searchCondition !== undefined && searchCondition.field !== "") {
             url = '/channel/' + channelId + '?page=' + previousPage + '&field='
                 + searchCondition.field + '&' + 'query=' + searchCondition.querys
         }
 
         if (previousPage > 0) {
-            $('#previous').attr('href', url)
+            setCurPage(previousPage)
+            navigate(url)
         }
         else {
             alert("이전 페이지가 없습니다")
         }
     }
 
-    const handleManageChannel = () => {
-        window.location.href = '/channel/' + channelId + '/manager'
-    }
+    const handleSearch = async (event) => {
+        event.preventDefault()
 
-    const searchKeyDown = (event) => {
-        if (event.keyCode === 13) {
-            handleSearch()
+        let searchCondition = {
+            field : $('#field').val(),
+            querys : $('#search').val(),
         }
+        let url = '/channel/' + channelId + '?page=1'
+        const pageable = 'page=0&size=10&sort=id,desc'
+
+        if (searchCondition !== undefined && searchCondition.field !== "") {
+            url += '&field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
+        }
+
+        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable, searchCondition)
+        setChannelPosts(result.content)
+        setChannelPostsCount(result.totalElements)
+
+        navigate(url)
     }
 
-    const handleGoHome = () => {
-        navigate('/')
+    const loadChannelPosts = async (channelId) => {
+        let searchCondition = getSearchCondition()
+        let curPage = getCurrentPage()
+        let url = '/channel/' + channelId + '?page=' + curPage
+
+        if (searchCondition !== undefined && searchCondition.field !== "") {
+            url =+ '&field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
+        }
+
+        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
+        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable, searchCondition)
+
+        setChannelPosts(result.content)
+        setChannelPostsCount(result.totalElements)
+
+        navigate(url)
     }
 
-    const POST_NUM_ON_SCREEN = 10
-    const NOTICE_NUM_ON_SCREEN = 5
+    const loadChannelInfo = async (channelId) => {
+        let result = await ChannelService.get(channelId)
+
+        if (result.manager) {
+            setIsManager(true)
+        }
+        setChannelName(result.name)
+    }
+
     const PAGER_LENGTH = 5
 
     const [channelId, setChannelId] = useState(getChannelId())
@@ -162,13 +173,12 @@ const Channel = () => {
 
     const [curPage, setCurPage] = useState(getCurrentPage())
     const [channelName, setChannelName] = useState(null)
-    const [postsCount, setPostsCount] = useState(0)
     const [channelPostsCount, setChannelPostsCount] = useState(0)
     const [channelPosts, setChannelPosts] = useState(null)
 
     useEffect(() => {
         loadChannelInfo(channelId)
-        loadChannelPosts(channelId, searchCondition)
+        loadChannelPosts(channelId)
 
     }, [curPage])
 

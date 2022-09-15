@@ -1,5 +1,5 @@
 import React from 'react';
-import { send } from "../../../api/request"
+import {useNavigate as navigate} from 'react-router-dom'
 import ChannelMemberService from "../../../api/service/ChannelMemberService";
 
 
@@ -9,7 +9,8 @@ const WaitingMemberRow = ({info, channelId}) => {
 
         if (result) {
             alert('채널 가입을 거절하였습니다')
-            window.location.href = '/channel/' + channelId + '/manager'
+            navigate('/channel/' + channelId + '/manager')
+            // window.location.href = '/channel/' + channelId + '/manager'
         }
     }
 
@@ -18,7 +19,8 @@ const WaitingMemberRow = ({info, channelId}) => {
 
         if (result) {
             alert('채널 가입을 승인하였습니다')
-            window.location.href = '/channel/' + channelId + '/manager'
+            navigate('/channel/' + channelId + '/manager')
+            // window.location.href = '/channel/' + channelId + '/manager'
         }
     }
 

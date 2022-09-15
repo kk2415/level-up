@@ -2,6 +2,8 @@ import React from "react";
 import {Container, Card, Row} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 
+import {useNavigate} from 'react-router-dom'
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -11,6 +13,7 @@ import { S3_URL } from "../api/backEndHost"
 import $ from "jquery";
 
 const CardSlide = ({ channel }) => {
+	const navigate = useNavigate();
 	const IMG_DIR = S3_URL + channel.storeFileName
 
 	const onMouseOver = () => {
@@ -18,7 +21,8 @@ const CardSlide = ({ channel }) => {
 	}
 
 	const handleCardImage = () => {
-		window.location.href = `/channel/description/` + channel.id
+		navigate(`/channel/description/` + channel.id)
+		// window.location.href = `/channel/description/` + channel.id
 	}
 
 	return (

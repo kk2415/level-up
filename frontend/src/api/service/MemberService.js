@@ -21,7 +21,7 @@ export const MemberService = {
     signIn : async function (member) {
         let result = false
 
-        await send('/api/login', 'POST', member)
+        await send('/api/v1/login', 'POST', member)
             .then((data) => {
                 result = true
                 localStorage.setItem(TOKEN, JSON.stringify(data.accessToken))

@@ -7,6 +7,7 @@ import {TOKEN} from "../../api/token";
 import react from "react";
 import {AiOutlineImport} from "react-icons/ai";
 import '../../css/channel.css'
+import {useNavigate} from "react-router-dom";
 
 const getChannelId = () => {
     let pathname = decodeURI($(window.location).attr('pathname'))
@@ -15,30 +16,35 @@ const getChannelId = () => {
 }
 
 const ChannelDescription = () => {
+    const navigate = useNavigate();
+
     const handleEnterChannel = () => {
-        $(window.location).attr('href', '/channel/' + channelId + '?page=1')
+        navigate('/channel/' + channelId + '?page=1')
+        // $(window.location).attr('href', '/channel/' + channelId + '?page=1')
     }
 
     const handleBack = () => {
-        $(window.location).attr('href', '/')
+        navigate('/')
+        // $(window.location).attr('href', '/')
     }
 
     const handleModifyChannel = () => {
-        $(window.location).attr('href', '/channel/modify/' + channelId)
+        navigate('/channel/modify/' + channelId)
+        // $(window.location).attr('href', '/channel/modify/' + channelId)
     }
 
     const handleDeleteChannel = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
             let result = await ChannelService.delete(channelId)
             if (result) {
-                window.location.href = '/'
+                navigate('/')
+                // window.location.href = '/'
             }
         }
     }
 
     const loadDescription = async (channelId) => {
         let result = await ChannelService.get(channelId)
-        console.log(result)
 
         setDescription(result)
     }

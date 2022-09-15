@@ -6,7 +6,7 @@ import $ from 'jquery'
 import ArticleService from '../../api/service/ArticleService'
 import {useNavigate} from "react-router-dom";
 
-const CreateArticle = () => {
+const CreateNotice = () => {
     const navigate = useNavigate();
 
     const getArticleType = () => {
@@ -15,7 +15,7 @@ const CreateArticle = () => {
         return queryString.substr(queryString.indexOf('=') + 1)
     }
 
-    const handleCreateArticle = async () => {
+    const handleCreateNotice = async () => {
         let formData = new FormData(document.getElementById('form'));
 
         let article = {
@@ -31,12 +31,12 @@ const CreateArticle = () => {
         let result = await ArticleService.create(localStorage.getItem('id'), article)
 
         if (result) {
-            navigate('/article/list?articleType=' + articleType + '&page=1')
+            navigate('/notice/list?articleType=' + articleType + '&page=1')
         }
     }
 
     const handleCancel = () => {
-        navigate('/article/list?articleType=' + articleType + '&page=1')
+        navigate('/notice/list?articleType=' + articleType + '&page=1')
     }
 
     const validate = (article) => {
@@ -146,7 +146,7 @@ const CreateArticle = () => {
 
                         <div className="row">
                             <div className="col">
-                                <button onClick={handleCreateArticle} className="w-100 btn btn-primary btn-lg" type="button" id="postingButton">작성
+                                <button onClick={handleCreateNotice} className="w-100 btn btn-primary btn-lg" type="button" id="postingButton">작성
                                 </button>
                             </div>
                             <div className="col">
@@ -161,4 +161,4 @@ const CreateArticle = () => {
     );
 };
 
-export default CreateArticle;
+export default CreateNotice;

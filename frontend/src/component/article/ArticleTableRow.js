@@ -1,10 +1,13 @@
 import React from 'react';
 import $ from 'jquery'
+import {useNavigate} from 'react-router-dom'
 
 const ArticleTableRow = ({info, url}) => {
+    const navigate = useNavigate();
 
     const titleHandler = () => {
-        window.location.href = url
+        navigate(url)
+        // window.location.href = url
     }
 
     const onMouseEnter = () => {

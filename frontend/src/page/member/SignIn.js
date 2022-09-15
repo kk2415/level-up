@@ -3,6 +3,8 @@ import {Button, Form, Container, Row} from 'react-bootstrap';
 
 import $ from 'jquery'
 
+import {useNavigate} from 'react-router-dom'
+
 import HorizonLine from "../../component/HorizonLine";
 import { GoogleLogin } from 'react-google-login'
 import {BiUserCircle} from "react-icons/bi";
@@ -13,6 +15,8 @@ import '../../css/login.css'
 import {loginMemberValidation as validation} from '../../api/validation'
 
 const SignIn = ({} ) => {
+    const navigate = useNavigate();
+
     async function HandleSignInButton() {
         let formData = new FormData(document.getElementById('signInForm'));
         let member = {
@@ -24,7 +28,7 @@ const SignIn = ({} ) => {
             let result = await MemberService.signIn(member);
 
             if (result) {
-                window.location.href = '/'
+                navigate('/', true)
             }
         }
     }

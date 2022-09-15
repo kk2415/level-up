@@ -1,15 +1,20 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ChannelMemberService from "../../../api/service/ChannelMemberService";
 
 const MemberRowNoImage = ({info, channelId}) => {
+    const [onDeleteButton, setOnDeleteButton] = useState(false)
+
     const deniedMember = async () => {
         let result = await ChannelMemberService.delete(info.channelMemberId, channelId);
 
         if (result) {
             alert('회원을 강제퇴장시켰습니다.')
-            window.location.href = '/channel/' + channelId + '/manager'
+            setOnDeleteButton(!onDeleteButton)
         }
     }
+
+    useEffect(() => {
+    }, [onDeleteButton])
 
     return (
         <>

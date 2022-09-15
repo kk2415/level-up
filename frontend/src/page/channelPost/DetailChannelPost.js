@@ -34,7 +34,8 @@ const DetailChannelPost = () => {
         let prev = await ChannelPostService.getPrev(postId, 'CHANNEL_POST', channelId)
 
         if (prev != null) {
-            window.location.href = '/channel-post/' + prev.id + '?channel=' + channelId
+            navigate('/channel-post/' + prev.id + '?channel=' + channelId)
+            // window.location.href = '/channel-post/' + prev.id + '?channel=' + channelId
         }
         else {
             alert("이전 페이지가 없습니다.")
@@ -45,7 +46,8 @@ const DetailChannelPost = () => {
         let next = await ChannelPostService.getNext(postId, 'CHANNEL_POST', channelId)
 
         if (next != null) {
-            window.location.href = '/channel-post/' + next.id + '?channel=' + channelId
+            navigate('/channel-post/' + next.id + '?channel=' + channelId)
+            // window.location.href = '/channel-post/' + next.id + '?channel=' + channelId
         }
         else {
             alert("다음 페이지가 없습니다.")
@@ -61,7 +63,8 @@ const DetailChannelPost = () => {
             let result = await ChannelPostService.delete(postId, channelId);
             if (result) {
                 alert('삭제되었습니다.')
-                window.location.href = '/channel/' + channelId + '?page=1'
+                navigate('/channel/' + channelId + '?page=1')
+                // window.location.href = '/channel/' + channelId + '?page=1'
             }
         }
     }

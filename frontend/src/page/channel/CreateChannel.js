@@ -4,9 +4,12 @@ import ChannelService from '../../api/service/ChannelService'
 import {Container, Col, Row, Form, FloatingLabel} from 'react-bootstrap'
 import {createChannelValidation as validation} from "../../api/validation";
 import $ from "jquery";
+import { useNavigate } from "react-router-dom";
 import {DateRange} from "@mui/icons-material";
 
 const CreateChannel = () => {
+    let navigate = new useNavigate();
+
     const context = useContext(AuthContext);
     const [thumbnail, setThumbnail] = useState(null)
 
@@ -28,7 +31,10 @@ const CreateChannel = () => {
             thumbnailImage : thumbnailImageDir,
         }
         if (validate(channel)) {
-            await ChannelService.create(channel, context.member.id);
+            let result = await ChannelService.create(channel, context.member.id);
+            if (result) {
+                navigate('/')
+            }
         }
     }
 
@@ -76,7 +82,7 @@ const CreateChannel = () => {
     }
 
     const handleBackButton = () => {
-        window.history.back()
+        navigate('/')
     }
 
     const getUploadFiles = (htmlCode) => {

@@ -3,6 +3,7 @@ import { Button, Form, Container } from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login'
 
 import $ from 'jquery'
+import {useNavigate} from 'react-router-dom'
 
 import HorizonLine from "../../component/HorizonLine";
 import { MemberService } from '../../api/service/MemberService'
@@ -10,6 +11,8 @@ import {createMemberValidation as validation} from '../../api/validation'
 import {EmailService} from "../../api/service/EmailService";
 
 const SignUp = () => {
+    const navigate = useNavigate();
+
     const [file, setFile] = useState(null)
     const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
 
@@ -33,7 +36,6 @@ const SignUp = () => {
         }
 
         if (validate(member)) {
-            console.log(member)
             let newMember = await MemberService.signUp(member);
 
             if (newMember) {
@@ -43,7 +45,8 @@ const SignUp = () => {
                 }
 
                 await MemberService.signIn(logInMember);
-                window.location.href = '/confirm-email'
+                navigate('/confirm-email')
+                // window.location.href = '/confirm-email'
 
                 alert(newMember.name + '님 가입되었습니다')
                 alert('인증번호를 발송 중입니다. 잠시만 기다려주세요.')

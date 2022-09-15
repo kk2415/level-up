@@ -2,14 +2,15 @@ package com.levelup.api.service;
 
 import com.levelup.api.dto.service.channel.ChannelDto;
 import com.levelup.api.dto.response.channel.ChannelStatInfoResponse;
+import com.levelup.api.util.file.FileStore;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.channelMember.ChannelMember;
-import com.levelup.api.util.S3FileStore;
+import com.levelup.api.util.file.S3FileStore;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.api.util.LocalFileStore;
-import com.levelup.core.domain.file.ImageType;
+import com.levelup.api.util.file.LocalFileStore;
+import com.levelup.core.domain.file.FileType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.exception.ImageNotFoundException;
@@ -40,13 +41,10 @@ import java.util.List;
 @Transactional
 public class ChannelService {
 
-    @Value("${file.linux_local_dir}")
-    private String fileDir;
-
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
     private final MemberRepository memberRepository;
-    private final S3FileStore fileStore;
+    private final FileStore fileStore;
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
     public ChannelDto save(ChannelDto dto, Long memberId) {
@@ -64,7 +62,7 @@ public class ChannelService {
     }
 
     public UploadFile createThumbnailImage(MultipartFile file) throws IOException {
-        return fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
+        return fileStore.storeFile(FileType.CHANNEL_THUMBNAIL, file);
     }
 
 
@@ -133,9 +131,9 @@ public class ChannelService {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
-        deleteS3ThumbNail(channel.getThumbnailImage().getStoreFileName());
+        fileStore.deleteFile(channel.getThumbnailImage().getStoreFileName());
 
-        UploadFile thumbNail = fileStore.storeFile(ImageType.CHANNEL_THUMBNAIL, file);
+        UploadFile thumbNail = fileStore.storeFile(FileType.CHANNEL_THUMBNAIL, file);
         channel.modifyThumbNail(thumbNail);
         return thumbNail;
     }
@@ -159,20 +157,5 @@ public class ChannelService {
 
         findChannel.removeMembers(channelMembers);
         channelMemberRepository.deleteAll(channelMembers);
-    }
-
-    private void deleteLocalThumbNail(String storeFileName) {
-        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
-            File imageFile = new File(fileStore.getFullPath(storeFileName));
-            if (imageFile.exists()) {
-                imageFile.delete();
-            }
-        }
-    }
-
-    private void deleteS3ThumbNail(String storeFileName) {
-        if (!storeFileName.equals(S3FileStore.DEFAULT_IMAGE)) {
-            fileStore.deleteS3File(storeFileName);
-        }
     }
 }

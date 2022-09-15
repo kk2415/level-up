@@ -1,47 +1,50 @@
-    import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import ChannelPostService from '../../api/service/ChannelPostService'
+import VoteService from "../../api/service/VoteService";
+import ArticleService from "../../api/service/ArticleService";
+
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
-    import VoteService from "../../api/service/VoteService";
 
-const DetailChannelNotice = () => {
+const Notice = () => {
     const navigate = useNavigate();
 
-    const getChannelNoticeId = () => {
+    const getArticleType = () => {
+        let queryString = decodeURI($(window.location).attr('search'))
+
+        return queryString.substr(queryString.indexOf('=') + 1)
+    }
+
+    const getArticleId = () => {
         let pathname = decodeURI($(window.location).attr('pathname'))
+
         return pathname.substr(pathname.lastIndexOf('/') + 1)
     }
 
-    const getChannelId = () => {
-        let search = decodeURI($(window.location).attr('search'))
-        return search.substr(search.indexOf('=') + 1)
+    const handleArticleListButton = () => {
+        navigate('/notice/list?articleType=' + articleType + '&page=1')
     }
 
-    const handleGoChannelButton = () => {
-        navigate('/channel/' + channelId + '?page=1')
-    }
-
-    const handlePrevPostButton = async () => {
-        let prev = await ChannelPostService.getPrev(channelNoticeId, 'CHANNEL_NOTICE', channelId)
+    const handlePrevArticleButton = async () => {
+        let prev = await ArticleService.getPrev(articleId, articleType)
 
         if (prev != null) {
-            navigate('/channel-notice/detail/' + prev.id + '?channel=' + channelId)
-            // window.location.href = '/channel-notice/detail/' + prev.id + '?channel=' + channelId
+            navigate('/notice/' + prev.id + '?articleType=' + articleType)
+            // window.location.href = '/notice/' + prev.id + '?articleType=' + articleType
         }
         else {
             alert("이전 페이지가 없습니다.")
         }
     }
 
-    const handleNextPostButton = async () => {
-        let next = await ChannelPostService.getNext(channelNoticeId, 'CHANNEL_NOTICE', channelId)
+    const handleNextArticleButton = async () => {
+        let next = await ArticleService.getNext(articleId, articleType)
 
         if (next != null) {
-            navigate('/channel-notice/detail/' + next.id + '?channel=' + channelId)
-            // window.location.href = '/channel-notice/detail/' + next.id + '?channel=' + channelId
+            navigate('/notice/' + next.id + '?articleType=' + articleType)
+            // window.location.href = '/notice/' + next.id + '?articleType=' + articleType
         }
         else {
             alert("다음 페이지가 없습니다.")
@@ -49,45 +52,30 @@ const DetailChannelNotice = () => {
     }
 
     const handleModifyButton = () => {
-        navigate('/channel-notice/modify/' + channelNoticeId + '?channel=' + channelId)
+        navigate('/notice/modify/' + articleId +  '?articleType=' + articleType)
     }
 
     const handleDeleteButton = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            let result = await ChannelPostService.delete(channelNoticeId, channelId)
+            let result = await ArticleService.delete(articleId);
             if (result) {
-                alert('삭제되었습니다.')
-                navigate('/channel/' + channelId + '?page=1')
-                // window.location.href = '/channel/' + channelId + '?page=1'
+                navigate('/notice/list?articleType=' + articleType + '&page=1')
             }
         }
     }
 
-    const loadChannelNotice = async (channelNoticeId) => {
-        let notice = await ChannelPostService.get(channelNoticeId)
-
-        setChannelNotice(notice)
-        setVoteCount(notice.voteCount)
-    }
-
-    const authorize = (channelNotice) => {
+    const authorize = (article) => {
         let memberId = localStorage.getItem('id')
 
-        if (channelNotice && Number(memberId) === channelNotice.memberId) {
+        if (article && Number(memberId) === article.memberId) {
             setAuthentication(true)
         }
     }
 
     const createVote = async () => {
-        let memberId = localStorage.getItem('id');
-        if (memberId === null || memberId === '') {
-            alert('로그인을 해야합니다.')
-            return
-        }
-
         let voteRequest = {
-            'memberId' : memberId,
-            'targetId' : channelNoticeId,
+            'memberId' : localStorage.getItem('id'),
+            'targetId' : articleId,
             'voteType' : 'ARTICLE',
         }
 
@@ -97,39 +85,46 @@ const DetailChannelNotice = () => {
         }
     }
 
-    const [channelNotice, setChannelNotice] = useState(null)
-    const [channelNoticeId, setChannelNoticeId] = useState(getChannelNoticeId())
-    const [channelId, setChannelId] = useState(getChannelId())
+    const loadArticle = async (articleId) => {
+        let article = await ArticleService.get(articleId)
+
+        setArticle(article)
+        setVoteCount(article.voteCount)
+    }
+
+    const [articleType, setArticleType] = useState(getArticleType())
+    const [article, setArticle] = useState(null)
+    const [articleId, setArticleId] = useState(getArticleId())
     const [authentication, setAuthentication] = useState(false)
     const [voteCount, setVoteCount] = useState(0)
 
     useEffect(() => {
-        authorize(channelNotice)
-    }, [channelNotice])
+        authorize(article)
+    }, [article])
 
     useLayoutEffect(() => {
-        setChannelNoticeId(getChannelNoticeId())
-        loadChannelNotice(channelNoticeId)
+        setArticleId(getArticleId())
+        loadArticle(articleId)
     }, [])
 
     return (
         <>
             {
-                channelNotice &&
+                article &&
                 <Container>
                     <div className="row">
                         <div className="col border-bottom">
-                            <p id="writer" className="h6">{channelNotice.writer}</p>
-                            <h1 id="title" className="display-3">{channelNotice.title}</h1>
+                            <p id="writer" className="h6">{article.writer}</p>
+                            <h1 id="title" className="display-3">{article.title}</h1>
                             <br/>
                             <p className="h6">
                                 <span>작성일
                                     &nbsp;
-                                    <span id="dateCreated">{channelNotice.dateCreated}</span>
+                                    <span id="dateCreated">{article.dateCreated}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span>조회&nbsp;
-                                    <span id="views">{channelNotice.views}</span>
+                                    <span id="views">{article.views}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;
                                 <span>추천
@@ -139,7 +134,7 @@ const DetailChannelNotice = () => {
                                 &nbsp;&nbsp;&nbsp;
                                 <span>
                                     댓글&nbsp;
-                                    <span id="commentCount">{channelNotice.commentCount}</span>
+                                    <span id="commentCount">{article.commentCount}</span>
                                 </span>
 
                                 <span className="d-grid gap-2 d-md-block float-end">
@@ -154,7 +149,7 @@ const DetailChannelNotice = () => {
 
                         <div className="col-lg-11">
                             <h1 className="display-6">
-                                <p dangerouslySetInnerHTML={{ __html: channelNotice.content }}/>
+                                <p dangerouslySetInnerHTML={{ __html: article.content }}/>
                             </h1>
                             <br/><br/><br/><br/>
                         </div>
@@ -178,16 +173,19 @@ const DetailChannelNotice = () => {
                     </div>
 
                     <hr/>
-                    <CommentFrame articleId={channelNoticeId} identity={'CHANNEL_NOTICE'} />
+
+
+
+                    <CommentFrame articleId={articleId} identity={'CHANNEL_NOTICE'} />
 
                     <div>
-                        <button onClick={handleGoChannelButton} className="btn btn-dark float-start" type="button" id="allPostButton">
+                        <button onClick={handleArticleListButton} className="btn btn-dark float-start" type="button" id="allPostButton">
                             목록으로
                         </button>
                         <div className="d-grid gap-2 d-md-block float-end">
-                            <button onClick={handleNextPostButton} className="btn btn-dark" type="button" id="nextPostButton">다음글
+                            <button onClick={handleNextArticleButton} className="btn btn-dark" type="button" id="nextPostButton">다음글
                             </button>
-                            <button onClick={handlePrevPostButton} className="btn btn-dark" type="button" id="prevPostButton">이전글
+                            <button onClick={handlePrevArticleButton} className="btn btn-dark" type="button" id="prevPostButton">이전글
                             </button>
                         </div>
                     </div>
@@ -197,4 +195,4 @@ const DetailChannelNotice = () => {
     );
 };
 
-export default DetailChannelNotice;
+export default Notice;

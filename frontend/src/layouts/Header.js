@@ -53,14 +53,6 @@ const Header = () => {
 		}
 	}
 
-	const qnaHandler = () => {
-		window.location.href = `/article/list?articleType=QNA&page=1`
-	}
-
-	const noticeHandler = () => {
-		window.location.href = `/article/list?articleType=NOTICE&page=1`
-	}
-
 	return (
 		<>
 			<header>
@@ -104,27 +96,31 @@ const Header = () => {
 										마이페이지
 									</Button>
 								</Nav.Link>
+								{/*<Nav.Link>*/}
+								{/*	<Button size="md" className='btn-info'>*/}
+								{/*		스터디*/}
+								{/*	</Button>*/}
+								{/*</Nav.Link>*/}
 								<Nav.Link>
-									<Button size="md" className='btn-info'>
-										스터디
-									</Button>
+									<Link to='/article/list?articleType=QNA&page=1'>
+										<Button size="md" className='btn-info'>
+											QnA
+										</Button>
+									</Link>
 								</Nav.Link>
 								<Nav.Link>
-									<Button onClick={qnaHandler} size="md" className='btn-info'>
-										QnA
-									</Button>
-								</Nav.Link>
-								<Nav.Link>
-									<Button onClick={noticeHandler} size="md" className='btn-info'>
-										공지사항
-									</Button>
+									<Link to='/notice/list?articleType=NOTICE&page=1'>
+										<Button size="md" className='btn-info'>
+											공지사항
+										</Button>
+									</Link>
 								</Nav.Link>
 								{
 									onShowAdmin &&
 									<Nav.Link>
-										<Button size="md" className='btn-info'>
-											관리자홈
-										</Button>
+											<Button size="md" className='btn-info'>
+												관리자홈
+											</Button>
 									</Nav.Link>
 								}
 							</Nav>

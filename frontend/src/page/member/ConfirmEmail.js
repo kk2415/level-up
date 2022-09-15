@@ -5,7 +5,11 @@ import {BiUserCircle} from "react-icons/bi";
 import {EmailService} from "../../api/service/EmailService";
 import '../../css/login.css'
 
+import {useNavigate} from "react-router-dom";
+
 const SignIn = ({} ) => {
+    const navigate = useNavigate();
+
     const [onShowAlertMsg, setOnShowAlertMsg] = useState(false)
 
     const HandleReConfirmButton = async () => {
@@ -31,7 +35,8 @@ const SignIn = ({} ) => {
 
         if (result) {
             alert('인증되었습니다.')
-            window.location.href = '/'
+            navigate('/')
+            // window.location.href = '/'
         }
     }
 

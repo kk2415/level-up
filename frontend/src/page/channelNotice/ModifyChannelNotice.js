@@ -37,12 +37,14 @@ const ModifyChannel = () => {
 
         let result = await ChannelPostService.modify(channelNotice, channelNoticeId, channelId);
         if (result) {
-            window.history.back()
+            navigate(-1)
+            // window.history.back()
         }
     }
 
     const handleCancel = () => {
-        window.location.href = '/channel/' + channelId + '?page=1'
+        navigate('/channel/' + channelId + '?page=1')
+        // window.location.href = '/channel/' + channelId + '?page=1'
     }
 
     const loadChannelNotice = async (channelNoticeId) => {

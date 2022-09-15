@@ -89,13 +89,13 @@ const ChannelPostService = {
     },
 
     modify: async (channelPost, articleId, channelId) => {
-        let result = null
+        let result = false
 
         await send('/api/v1/channel-posts/' + articleId, 'PATCH', channelPost)
             .then((data) => {
                 alert('수정되었습니다.')
-                result = data
-                window.location.href = '/post/' + articleId + '?channel=' + channelId
+                result = true
+                // window.location.href = '/post/' + articleId + '?channel=' + channelId
             })
             .catch((error) => {
                 console.log(error)
