@@ -1,26 +1,23 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.service.channel.ChannelDto;
-import com.levelup.api.dto.response.channel.ChannelStatInfoResponse;
+import com.levelup.api.service.dto.channel.ChannelDto;
+import com.levelup.api.controller.v1.dto.response.channel.ChannelStatInfoResponse;
 import com.levelup.api.util.file.FileStore;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.channelMember.ChannelMember;
-import com.levelup.api.util.file.S3FileStore;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.api.util.file.LocalFileStore;
 import com.levelup.core.domain.file.FileType;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.ImageNotFoundException;
-import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
-import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.ImageNotFoundException;
+import com.levelup.api.exception.channel.ChannelNotFountExcpetion;
+import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channelMember.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
@@ -31,14 +28,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class ChannelService {
 
     private final ChannelRepository channelRepository;
@@ -68,7 +64,7 @@ public class ChannelService {
 
 
     @Transactional(readOnly = true)
-    public ChannelDto getChannel(Long channelId, Long memberId) {
+    public ChannelDto get(Long channelId, Long memberId) {
         final Channel findChannel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
@@ -77,7 +73,7 @@ public class ChannelService {
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "ChannelCategory", key = "{#category, #order}")
-    public Page<ChannelDto> getByPaging(ChannelCategory category, String order, Pageable pageable) {
+    public Page<ChannelDto> getChannels(ChannelCategory category, String order, Pageable pageable) {
         if ("memberCount".equals(order)) {
             PageImpl<Channel> channelPage
                     = new PageImpl<>(channelRepository.findByCategoryAndOrderByMemberCount(category.toString()));
@@ -119,7 +115,7 @@ public class ChannelService {
 
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public void modify(ChannelDto dto, Long channelId) {
+    public void update(ChannelDto dto, Long channelId) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
@@ -127,7 +123,7 @@ public class ChannelService {
     }
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public UploadFile modifyChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
+    public UploadFile updateChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 
@@ -141,7 +137,7 @@ public class ChannelService {
 
 
     @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
-    public void deleteChannel(Long channelId) {
+    public void delete(Long channelId) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
 

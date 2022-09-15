@@ -1,7 +1,6 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.request.emailAuth.EmailAuthRequest;
-import com.levelup.api.dto.service.emailAuth.EmailAuthDto;
+import com.levelup.api.service.dto.emailAuth.EmailAuthDto;
 import com.levelup.api.util.email.EmailSender;
 import com.levelup.api.util.email.EmailStuff;
 import com.levelup.api.util.email.EmailSubject;
@@ -10,9 +9,9 @@ import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.emailAuth.EmailCodeExpiredException;
-import com.levelup.core.exception.member.MemberNotFoundException;
-import com.levelup.core.exception.emailAuth.NotMatchSecurityCodeException;
+import com.levelup.api.exception.emailAuth.EmailCodeExpiredException;
+import com.levelup.api.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.emailAuth.NotMatchSecurityCodeException;
 import com.levelup.core.repository.emailAuth.EmailAuthRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;

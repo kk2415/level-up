@@ -1,19 +1,18 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.service.member.MemberDto;
-import com.levelup.api.dto.service.member.UpdateMemberDto;
-import com.levelup.api.dto.response.member.MemberResponse;
+import com.levelup.api.exception.ImageNotFoundException;
+import com.levelup.api.service.dto.member.MemberDto;
+import com.levelup.api.service.dto.member.UpdateMemberDto;
+import com.levelup.api.controller.v1.dto.response.member.MemberResponse;
 import com.levelup.api.util.file.FileStore;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.file.FileType;
-import com.levelup.api.util.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.core.exception.*;
-import com.levelup.core.exception.member.DuplicateEmailException;
-import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.member.DuplicateEmailException;
+import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +36,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;

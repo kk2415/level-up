@@ -1,7 +1,7 @@
 package com.levelup.api.service;
 
 import com.levelup.TestSupporter;
-import com.levelup.api.dto.service.comment.ReplyCommentDto;
+import com.levelup.api.service.dto.comment.ReplyCommentDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.comment.Comment;

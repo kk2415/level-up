@@ -1,11 +1,11 @@
 package com.levelup.api.service;
 
 import com.levelup.TestSupporter;
-import com.levelup.api.dto.service.article.ArticleDto;
+import com.levelup.api.service.dto.article.ArticleDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.AuthorityException;
+import com.levelup.api.exception.AuthorityException;
 import com.levelup.core.repository.article.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

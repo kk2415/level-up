@@ -1,7 +1,7 @@
 package com.levelup.api.service.vote;
 
 import com.levelup.TestSupporter;
-import com.levelup.api.dto.service.vote.VoteDto;
+import com.levelup.api.service.dto.vote.VoteDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.member.Member;

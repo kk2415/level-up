@@ -1,6 +1,6 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.service.channelPost.ChannelPostDto;
+import com.levelup.api.service.dto.channelPost.ChannelPostDto;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
@@ -8,9 +8,9 @@ import com.levelup.core.domain.file.FileType;
 import com.levelup.api.util.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
-import com.levelup.core.exception.member.MemberNotFoundException;
-import com.levelup.core.exception.article.PostNotFoundException;
+import com.levelup.api.exception.channel.ChannelNotFountExcpetion;
+import com.levelup.api.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.ChannelPost.ChannelPostRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
@@ -67,8 +67,8 @@ public class ChannelPostService {
         return ChannelPostDto.from(channelPost);
     }
 
-    public Page<ChannelPostDto> getByPaging(Long channelId, ArticleType articleType, String field,
-                                                 String query, Pageable pageable) {
+    public Page<ChannelPostDto> getChannelPosts(Long channelId, ArticleType articleType, String field,
+                                                String query, Pageable pageable) {
         Page<ChannelPost> pages = null;
 
         if (field == null || field.equals("")) {

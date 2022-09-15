@@ -79,7 +79,7 @@
             <AppenderRef ref="errorFile" level="warn" />
         </logger>
 
-        <logger name="com.levelup.api.controller.member.SignUpApiController" level="debug" additivity="false">
+        <logger name="com.levelup.api.controller.v1.member.SignUpApiController" level="debug" additivity="false">
             <AppenderRef ref="signUpFile" />
         </logger>
 
