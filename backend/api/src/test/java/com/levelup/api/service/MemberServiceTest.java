@@ -1,13 +1,12 @@
 package com.levelup.api.service;
 
 import com.levelup.TestSupporter;
-import com.levelup.api.dto.service.member.MemberDto;
-import com.levelup.api.dto.service.member.UpdateMemberDto;
+import com.levelup.api.service.dto.member.MemberDto;
+import com.levelup.api.service.dto.member.UpdateMemberDto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.repository.member.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

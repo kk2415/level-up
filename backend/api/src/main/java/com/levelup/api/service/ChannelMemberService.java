@@ -1,13 +1,13 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.service.chanelMember.ChannelMemberDto;
+import com.levelup.api.service.dto.chanelMember.ChannelMemberDto;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
-import com.levelup.core.exception.channelMember.DuplicateChannelMemberException;
-import com.levelup.core.exception.member.MemberNotFoundException;
-import com.levelup.core.exception.channel.NoPlaceChannelException;
+import com.levelup.api.exception.channel.ChannelNotFountExcpetion;
+import com.levelup.api.exception.channelMember.DuplicateChannelMemberException;
+import com.levelup.api.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.channel.NoPlaceChannelException;
 import com.levelup.core.repository.channelMember.ChannelMemberRepository;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -58,8 +58,7 @@ public class ChannelMemberService {
 
 
 
-
-    public Page<ChannelMemberDto> getByPaging(Long channelId, Boolean isWaitingMember, Pageable pageable) {
+    public Page<ChannelMemberDto> getChannelMembers(Long channelId, Boolean isWaitingMember, Pageable pageable) {
         final Page<ChannelMember> channelMembers = channelMemberRepository.findByChannelIdAndIsWaitingMember(channelId, isWaitingMember, pageable);
 
         return channelMembers.map(ChannelMemberDto::from);

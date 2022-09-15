@@ -1,11 +1,9 @@
 package com.levelup.api.service.vote;
 
 
-import com.levelup.api.dto.service.vote.VoteDto;
+import com.levelup.api.service.dto.vote.VoteDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.vote.ArticleVote;
-import com.levelup.api.dto.request.vote.VoteRequest;
-import com.levelup.api.dto.response.vote.VoteResponse;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.vote.ArticleVoteRepository;
 import lombok.RequiredArgsConstructor;

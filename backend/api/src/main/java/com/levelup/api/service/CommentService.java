@@ -1,14 +1,13 @@
 package com.levelup.api.service;
 
-
-import com.levelup.api.dto.service.comment.ReplyCommentDto;
+import com.levelup.api.service.dto.comment.ReplyCommentDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.service.comment.CommentDto;
-import com.levelup.core.exception.comment.CommentNotFoundException;
-import com.levelup.core.exception.member.MemberNotFoundException;
-import com.levelup.core.exception.article.PostNotFoundException;
+import com.levelup.api.service.dto.comment.CommentDto;
+import com.levelup.api.exception.comment.CommentNotFoundException;
+import com.levelup.api.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -68,7 +67,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentDto> getReplyCommentByParentId(Long commentId) {
+    public List<CommentDto> getReplyComments(Long commentId) {
         final List<Comment> reply = commentRepository.findReplyByParentId(commentId);
 
         return reply.stream()
@@ -78,7 +77,7 @@ public class CommentService {
 
 
 
-    public void modify(Long commentId, String content) {
+    public void update(Long commentId, String content) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
 
@@ -87,7 +86,7 @@ public class CommentService {
 
 
 
-    public void deleteComment(Long commentId) {
+    public void delete(Long commentId) {
         Comment findComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
 

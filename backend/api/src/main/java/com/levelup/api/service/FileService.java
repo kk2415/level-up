@@ -1,6 +1,5 @@
 package com.levelup.api.service;
 
-
 import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.repository.file.FileRepository;
@@ -13,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class FileService {
 
     private final FileRepository fileRepository;

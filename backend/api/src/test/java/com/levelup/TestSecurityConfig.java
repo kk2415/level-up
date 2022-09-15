@@ -1,10 +1,9 @@
 package com.levelup;
 
 import com.levelup.api.config.SecurityConfig;
-import com.levelup.api.dto.service.member.MemberDto;
+import com.levelup.api.service.dto.member.MemberDto;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Gender;
-import com.levelup.api.dto.request.member.MemberRequest;
 import com.levelup.core.repository.member.MemberRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;

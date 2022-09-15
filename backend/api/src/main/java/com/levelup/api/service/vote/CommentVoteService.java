@@ -1,7 +1,6 @@
 package com.levelup.api.service.vote;
 
-
-import com.levelup.api.dto.service.vote.VoteDto;
+import com.levelup.api.service.dto.vote.VoteDto;
 import com.levelup.core.domain.comment.Comment;
 import com.levelup.core.domain.vote.CommentVote;
 import com.levelup.core.repository.comment.CommentRepository;

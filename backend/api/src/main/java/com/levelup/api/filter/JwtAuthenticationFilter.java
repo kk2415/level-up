@@ -4,7 +4,7 @@ import com.levelup.api.util.jwt.JwtException;
 import com.levelup.api.util.jwt.TokenProvider;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
-import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

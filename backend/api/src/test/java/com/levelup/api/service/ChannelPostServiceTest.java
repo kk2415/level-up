@@ -1,14 +1,13 @@
 package com.levelup.api.service;
 
 import com.levelup.TestSupporter;
-import com.levelup.api.dto.service.channelPost.ChannelPostDto;
+import com.levelup.api.service.dto.channelPost.ChannelPostDto;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.ChannelPost.ChannelPostRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

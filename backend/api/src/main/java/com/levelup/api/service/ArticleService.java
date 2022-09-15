@@ -1,17 +1,17 @@
 package com.levelup.api.service;
 
-import com.levelup.api.dto.response.article.ArticlePagingResponse;
-import com.levelup.api.dto.service.article.ArticleDto;
+import com.levelup.api.controller.v1.dto.response.article.ArticlePagingResponse;
+import com.levelup.api.service.dto.article.ArticleDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.file.FileType;
 import com.levelup.api.util.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.dto.article.ArticlePagingDto;
-import com.levelup.core.exception.AuthorityException;
-import com.levelup.core.exception.member.MemberNotFoundException;
-import com.levelup.core.exception.article.PostNotFoundException;
+import com.levelup.core.dto.ArticlePagingDto;
+import com.levelup.api.exception.AuthorityException;
+import com.levelup.api.exception.member.MemberNotFoundException;
+import com.levelup.api.exception.article.PostNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +57,7 @@ public class ArticleService {
         return ArticleDto.from(article);
     }
 
-    public Page<ArticlePagingResponse> getByPaging(ArticleType articleType, String field, String query, Pageable pageable) {
+    public Page<ArticlePagingResponse> getArticles(ArticleType articleType, String field, String query, Pageable pageable) {
         Page<ArticlePagingDto> pages;
 
         if ("title".equals(field) && !("".equals(query))) {

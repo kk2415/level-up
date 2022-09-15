@@ -1,13 +1,13 @@
 package com.levelup.api.service;
 
 import com.levelup.TestSupporter;
-import com.levelup.api.dto.service.chanelMember.ChannelMemberDto;
+import com.levelup.api.service.dto.chanelMember.ChannelMemberDto;
 import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channel.ChannelCategory;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
-import com.levelup.core.exception.channel.NoPlaceChannelException;
-import com.levelup.core.exception.channelMember.DuplicateChannelMemberException;
+import com.levelup.api.exception.channel.NoPlaceChannelException;
+import com.levelup.api.exception.channelMember.DuplicateChannelMemberException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.channelMember.ChannelMemberRepository;
 import com.levelup.core.repository.member.MemberRepository;
