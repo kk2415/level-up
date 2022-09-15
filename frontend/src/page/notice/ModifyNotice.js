@@ -6,13 +6,19 @@ import $ from 'jquery'
 import ArticleService from '../../api/service/ArticleService'
 import {useNavigate} from "react-router-dom";
 
-const CreateArticle = () => {
+const ModifyNotice = () => {
     const navigate = useNavigate();
 
     const getArticleType = () => {
         let queryString = decodeURI($(window.location).attr('search'))
 
         return queryString.substr(queryString.indexOf('=') + 1)
+    }
+
+    const getArticleId = () => {
+        let pathname = decodeURI($(window.location).attr('pathname'))
+
+        return pathname.substr(pathname.lastIndexOf('/') + 1)
     }
 
     const handleCreateArticle = async () => {
@@ -28,15 +34,15 @@ const CreateArticle = () => {
             return
         }
 
-        let result = await ArticleService.create(localStorage.getItem('id'), article)
+        let result = await ArticleService.modify(article, localStorage.getItem('id'), articleId)
 
         if (result) {
-            navigate('/article/list?articleType=' + articleType + '&page=1')
+            navigate('/notice/list?articleType=' + articleType + '&page=1')
         }
     }
 
     const handleCancel = () => {
-        navigate('/article/list?articleType=' + articleType + '&page=1')
+        navigate('/qna?page=1')
     }
 
     const validate = (article) => {
@@ -68,6 +74,19 @@ const CreateArticle = () => {
 
     const hideAlertMassageBox = () => {
         $('#alert').css('display', 'none')
+    }
+
+    const loadArticle = async (articleId) => {
+        let article = await ArticleService.get(articleId)
+
+        setArticle(article)
+    }
+
+    const showArticle = (article) => {
+        if (article) {
+            $('#title').val(article.title)
+            $('#summernote').val(article.content)
+        }
     }
 
     function configSummernote() {
@@ -112,12 +131,17 @@ const CreateArticle = () => {
     }
 
     const [articleType, setArticleType] = useState(getArticleType())
+    const [article, setArticle] = useState(null)
+    const [articleId, setArticleId] = useState(getArticleId())
 
     useEffect(() => {
+        showArticle(article)
         hideAlertMassageBox()
-    }, [])
+    }, [article])
 
     useLayoutEffect(() => {
+        setArticleId(getArticleId())
+        loadArticle(articleId)
         configSummernote()
     }, [])
 
@@ -161,4 +185,4 @@ const CreateArticle = () => {
     );
 };
 
-export default CreateArticle;
+export default ModifyNotice;

@@ -4,11 +4,10 @@ import com.levelup.api.dto.service.channelPost.ChannelPostDto;
 import com.levelup.core.domain.article.ArticleType;
 import com.levelup.core.domain.channelPost.ChannelPost;
 import com.levelup.core.domain.channel.Channel;
-import com.levelup.core.domain.file.ImageType;
-import com.levelup.api.util.LocalFileStore;
+import com.levelup.core.domain.file.FileType;
+import com.levelup.api.util.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.dto.request.channelPost.ChannelPostRequest;
 import com.levelup.core.exception.channel.ChannelNotFountExcpetion;
 import com.levelup.core.exception.member.MemberNotFoundException;
 import com.levelup.core.exception.article.PostNotFoundException;
@@ -54,7 +53,7 @@ public class ChannelPostService {
             throw new FileNotFoundException("파일이 존재하지 않습니다.");
         }
 
-        return fileStore.storeFile(ImageType.POST, file);
+        return fileStore.storeFile(FileType.POST, file);
     }
 
     public ChannelPostDto get(Long articleId, boolean view) {

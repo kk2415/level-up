@@ -1,7 +1,5 @@
 import React from 'react';
-import {send} from "../../../api/request";
-import {Button} from "@mui/material";
-import {Container} from "react-bootstrap";
+import {useNavigate as navigate} from 'react-router-dom'
 import ChannelPostService from "../../../api/service/ChannelPostService";
 
 const PostRow = ({info, channelId}) => {
@@ -11,7 +9,8 @@ const PostRow = ({info, channelId}) => {
             let result = await ChannelPostService.delete(info.id);
             if (result) {
                 alert('게시물이 삭제되었습니다.')
-                window.location.href = '/channel/' + channelId + '/manager'
+                navigate('/channel/' + channelId + '/manager')
+                // window.location.href = '/channel/' + channelId + '/manager'
             }
         }
     }

@@ -11,7 +11,6 @@ const ChannelService = {
             .then((data) => {
                 alert('채널을 만들었습니다.')
                 reuslt = true
-                window.location.href = '/'
             })
             .catch((error) => {
                 if (error.status === 403) {

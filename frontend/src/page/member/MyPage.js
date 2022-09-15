@@ -10,14 +10,14 @@ import { S3_URL } from "../../api/backEndHost"
 import '../../css/mypage.css'
 
 const MyPage = () => {
-    let navigate = new useNavigate();
+    const navigate = useNavigate();
 
     const loadMember = async () => {
         let result = await MemberService.get(localStorage.getItem('id'))
-        console.log(result)
         if (!result) {
             alert('권한이 없습니다')
-            window.location.href = '/'
+            navigate('/')
+            // window.location.href = '/'
         }
 
         setMember(result)
@@ -39,6 +39,9 @@ const MyPage = () => {
             let profileImage = member.uploadFile
             if (myPageFile) {
                 profileImage = await MemberService.modifyProfile(member.id, myPageFile)
+                if (profileImage === null) {
+                    alert('이미지 저장을 실패하였습니다.')
+                }
             }
 
             let updateMember = {

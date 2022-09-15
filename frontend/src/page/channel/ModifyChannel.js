@@ -5,8 +5,11 @@ import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
 import {uploadFile} from "../../api/UploadFile";
 import $ from "jquery";
 import {createChannelValidation as validation} from "../../api/validation";
+import {useNavigate} from "react-router-dom";
 
 const CreateChannel = () => {
+    const navigate = useNavigate();
+
     const getChannelId = () => {
         let pathname = decodeURI($(window.location).attr('pathname'))
 
@@ -47,7 +50,8 @@ const CreateChannel = () => {
             let result = await ChannelService.modify(channel, channelId);
             if (result) {
                 alert('수정되었습니다.')
-                window.location.href = '/channel/description/' + channelId
+                navigate('/channel/description/' + channelId)
+                // window.location.href = '/channel/description/' + channelId
             }
         }
     }
@@ -127,7 +131,6 @@ const CreateChannel = () => {
                 .then((data) => {
                 })
                 .catch((error) => {
-                    console.log(error)
                 })
             // uploadImage(images[i], insertImage);
         }

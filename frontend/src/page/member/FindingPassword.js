@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Row, Col} from 'react-bootstrap';
 import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import {createMemberValidation as validation} from '../../api/validation'
 
@@ -11,6 +12,7 @@ import {EmailService} from "../../api/service/EmailService";
 import {MemberService} from "../../api/service/MemberService";
 
 const FindingPassword = ({} ) => {
+    const navigate = useNavigate();
 
     const handleChangePasswordButton = async () => {
         if (!isValidPassword()) {
@@ -29,7 +31,8 @@ const FindingPassword = ({} ) => {
             let result = await MemberService.modifyPassword(request, 'kkh2415@naver.com');
             if (result) {
                 alert('비밀번호가 변경되었습니다.')
-                window.location.href = '/signin'
+                navigate('/signin')
+                // window.location.href = '/signin'
             }
         } else {
           alert('이메일을 인증해주세요.')

@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate} from "react-router-dom";
+
 
 import $ from 'jquery'
 import ChannelPostService from '../../api/service/ChannelPostService'
@@ -30,11 +31,11 @@ const CreateChannelPost = () => {
             return
         }
 
-        console.log(channelId)
         let result = await ChannelPostService.create(post, channelId, localStorage.getItem('id'));
 
         if (result) {
-            window.location.href = '/channel/' + channelId + '?page=1'
+            navigate('/channel/' + channelId + '?page=1')
+            // window.location.href = '/channel/' + channelId + '?page=1'
         }
     }
 

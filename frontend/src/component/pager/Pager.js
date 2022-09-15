@@ -1,6 +1,7 @@
 import React from 'react';
 import {Container} from 'react-bootstrap'
 import PagerUnit from "./PagerUnit";
+import NoticeList from "../../page/notice/NoticeList";
 
 const Pager = ({currentPage, postsCount, pagerLength, searchCondition, setCurPage, onNext, onPrev}) => {
     let numArr = []

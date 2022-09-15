@@ -31,7 +31,8 @@ const Article = () => {
         let prev = await ArticleService.getPrev(articleId, articleType)
 
         if (prev != null) {
-            window.location.href = '/article/' + prev.id + '?articleType=' + articleType
+            navigate('/article/' + prev.id + '?articleType=' + articleType)
+            // window.location.href = '/article/' + prev.id + '?articleType=' + articleType
         }
         else {
             alert("이전 페이지가 없습니다.")
@@ -42,7 +43,8 @@ const Article = () => {
         let next = await ArticleService.getNext(articleId, articleType)
 
         if (next != null) {
-            window.location.href = '/article/' + next.id + '?articleType=' + articleType
+            navigate('/article/' + next.id + '?articleType=' + articleType)
+            // window.location.href = '/article/' + next.id + '?articleType=' + articleType
         }
         else {
             alert("다음 페이지가 없습니다.")

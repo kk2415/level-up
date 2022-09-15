@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import {BACKEND_URL} from "./backEndHost.js"
 import {TOKEN} from './token'
+import {useNavigate as navigate} from 'react-router-dom'
 
 export async function send(url, method, requestBody) {
 	let headers = {
@@ -14,7 +15,8 @@ export async function send(url, method, requestBody) {
 			headers.Authorization = "Bearer " + accessToken.token
 		} else {
 			localStorage.clear();
-			window.location.href = "/signin"
+			navigate('/signin')
+			// window.location.href = "/signin"
 		}
 	}
 
@@ -109,7 +111,8 @@ export async function sendMultiPart(url, method, requestBody) {
 			headers.Authorization = "Bearer " + accessToken.token
 		} else {
 			localStorage.clear();
-			window.location.href = "/signin"
+			navigate('/signin')
+			// window.location.href = "/signin"
 		}
 	}
 

@@ -4,8 +4,8 @@ import com.levelup.api.dto.response.article.ArticlePagingResponse;
 import com.levelup.api.dto.service.article.ArticleDto;
 import com.levelup.core.domain.article.Article;
 import com.levelup.core.domain.article.ArticleType;
-import com.levelup.core.domain.file.ImageType;
-import com.levelup.api.util.LocalFileStore;
+import com.levelup.core.domain.file.FileType;
+import com.levelup.api.util.file.LocalFileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.dto.article.ArticlePagingDto;
@@ -43,7 +43,7 @@ public class ArticleService {
     }
 
     public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
-        return fileStore.storeFile(ImageType.POST, file);
+        return fileStore.storeFile(FileType.POST, file);
     }
 
 
@@ -60,15 +60,12 @@ public class ArticleService {
     public Page<ArticlePagingResponse> getByPaging(ArticleType articleType, String field, String query, Pageable pageable) {
         Page<ArticlePagingDto> pages;
 
-        switch (field) {
-            case "title" :
-                pages = articleRepository.findByTitleAndArticleType(query, articleType.name(), pageable);
-                break;
-            case "writer" :
-                pages = articleRepository.findByNicknameAndArticleType(query, articleType.name(), pageable);
-                break;
-            default:
-                pages = articleRepository.findByArticleType(articleType.name(), pageable);
+        if ("title".equals(field) && !("".equals(query))) {
+            pages = articleRepository.findByTitleAndArticleType(query, articleType.name(), pageable);
+        } else if ("writer".equals(field) && !("".equals(query))) {
+            pages = articleRepository.findByNicknameAndArticleType(query, articleType.name(), pageable);
+        } else {
+            pages = articleRepository.findByArticleType(articleType.name(), pageable);
         }
 
         return pages.map(ArticlePagingResponse::from);

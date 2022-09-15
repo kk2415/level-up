@@ -1,10 +1,12 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
+import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
 import ChannelPostService from '../../api/service/ChannelPostService'
 import {Container, Form} from 'react-bootstrap'
 
 const ModifyChannel = () => {
+    const navigate = useNavigate();
 
     const getChannelId = () => {
         let search = decodeURI($(window.location).attr('search'))
@@ -32,11 +34,16 @@ const ModifyChannel = () => {
             postCategory : formData.get('category'),
         }
 
-        await ChannelPostService.modify(post, postId, channelId)
+        let result = await ChannelPostService.modify(post, postId, channelId);
+        if (result) {
+            navigate('/post/' + articleId + '?channel=' + channelId)
+            // window.location.href = '/post/' + articleId + '?channel=' + channelId
+        }
     }
 
     const handleCancel = () => {
-        window.location.href = '/post/' + postId + '?channel=' + channelId
+        navigate('/post/' + postId + '?channel=' + channelId)
+        // window.location.href = '/post/' + postId + '?channel=' + channelId
     }
 
     const loadPost = async () => {

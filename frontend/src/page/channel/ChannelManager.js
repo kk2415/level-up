@@ -8,12 +8,16 @@ import MemberFrame from "../../component/channel/manager/MemberFrame";
 
 import {Container} from 'react-bootstrap'
 
+import {useNavigate} from "react-router-dom";
+
 import { S3_URL } from "../../api/backEndHost.js"
 import $ from 'jquery'
 
 const NUM_ON_SCREEN = 5
 
 const ChannelManager = () => {
+    const navigate = useNavigate();
+
     const getChannelId = () => {
         let pathname = decodeURI($(window.location).attr('pathname'))
 
@@ -39,11 +43,13 @@ const ChannelManager = () => {
     }
 
     const handleChannelModify = () => {
-        window.location.href = '/channel/modify/' + channelId
+        navigate('/channel/modify/' + channelId)
+        // window.location.href = '/channel/modify/' + channelId
     }
 
     const handleBack = () => {
-        window.location.href = ('/channel/' + channelId + '?page=1')
+        navigate('/channel/' + channelId + '?page=1')
+        // window.location.href = ('/channel/' + channelId + '?page=1')
     }
 
     const [channelId, setChannelId] = useState(getChannelId())

@@ -18,6 +18,11 @@ import DetailChannelNotice from "../page/channelNotice/DetailChannelNotice"
 import ModifyChannelNotice from "../page/channelNotice/ModifyChannelNotice"
 import DetailChannelPost from "../page/channelPost/DetailChannelPost"
 
+import CreateNotice from "../page/notice/CreateNotice"
+import NoticeList from "../page/notice/NoticeList"
+import Notice from "../page/notice/Notice"
+import ModifyNotice  from "../page/notice/ModifyNotice"
+
 import CreateArticle from "../page/article/CreateArticle"
 import ArticleList from "../page/article/ArticleList"
 import Article from "../page/article/Article"
@@ -29,7 +34,7 @@ import ChannelInfo from "../page/channel/ChannelInfo";
 const AppRouter = () => {
   return (
 	<Routes>
-		<Route exact path="/" element={<Home />}></Route>
+		<Route path="/" element={<Home />}></Route>
 
 		<Route path="/signin" element={<SignIn />}></Route>
 		<Route path="/signup" element={<SignUp />}></Route>
@@ -55,10 +60,14 @@ const AppRouter = () => {
 		<Route path="/channel-post/modify/:postId" element={<ModifyPost />}></Route>
 
 		<Route path="/article/:articleId" element={<Article />}></Route>
-		<Route path="/article/list" element={<ArticleList />}></Route>
+		<Route path="/article/list" element={<ArticleList onClick={true} />}></Route>
 		<Route path="/article/create" element={<CreateArticle />}></Route>
 		<Route path="/article/modify/:articleId" element={<ModifyArticle />}></Route>
 
+		<Route path="/notice/:articleId" element={<Notice />}></Route>
+		<Route path="/notice/list" element={<NoticeList />}></Route>
+		<Route path="/notice/create" element={<CreateNotice />}></Route>
+		<Route path="/notice/modify/:articleId" element={<ModifyNotice />}></Route>
 	</Routes>
   )
 }

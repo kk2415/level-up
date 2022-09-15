@@ -73,7 +73,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/v1/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 //
 //                .antMatchers("/api/v1/votes/**").authenticated();
-        http.addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
+        http
+                .addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());
     }
 
@@ -81,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         LoginFilter securityLoginFilter = new LoginFilter(memberRepository, objectMapper, roleRepository, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
-        securityLoginFilter.setFilterProcessesUrl("/api/login");
+            securityLoginFilter.setFilterProcessesUrl("/api/v1/login");
         return securityLoginFilter;
     }
 

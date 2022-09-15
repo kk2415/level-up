@@ -3,10 +3,10 @@ package com.levelup.api.service;
 import com.levelup.api.dto.service.member.MemberDto;
 import com.levelup.api.dto.service.member.UpdateMemberDto;
 import com.levelup.api.dto.response.member.MemberResponse;
+import com.levelup.api.util.file.FileStore;
 import com.levelup.core.domain.channelMember.ChannelMember;
-import com.levelup.api.util.LocalFileStore;
-import com.levelup.core.domain.file.ImageType;
-import com.levelup.api.util.S3FileStore;
+import com.levelup.core.domain.file.FileType;
+import com.levelup.api.util.file.S3FileStore;
 import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,7 +44,7 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final ChannelRepository channelRepository;
-    private final S3FileStore fileStore;
+    private final FileStore fileStore;
 
     public MemberDto save(MemberDto dto) {
         validateDuplicationMember(dto.getEmail(), dto.getNickname());
@@ -69,7 +68,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public UploadFile createProfileImage(MultipartFile file) throws IOException {
-        return fileStore.storeFile(ImageType.MEMBER, file);
+        return fileStore.storeFile(FileType.MEMBER, file);
     }
 
 
@@ -109,10 +108,10 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         if (member.getProfileImage() != null) {
-            deleteProfileInS3(member.getProfileImage().getStoreFileName());
+            fileStore.deleteFile(member.getProfileImage().getStoreFileName());
         }
 
-        UploadFile uploadFile = fileStore.storeFile(ImageType.MEMBER, file);
+        UploadFile uploadFile = fileStore.storeFile(FileType.MEMBER, file);
         member.modifyProfileImage(uploadFile);
 
         return uploadFile;
@@ -132,21 +131,6 @@ public class MemberService implements UserDetailsService {
         channelMembers.forEach(channelMember -> channelRepository.delete(channelMember.getChannel()));
 
         memberRepository.delete(member);
-    }
-
-    private void deleteProfileInS3(String storeFileName) {
-        if (!storeFileName.equals(S3FileStore.DEFAULT_IMAGE)) {
-            fileStore.deleteS3File(storeFileName);
-        }
-    }
-
-    private void deleteProfileInLocal(String storeFileName) {
-        if (!storeFileName.equals(LocalFileStore.MEMBER_DEFAULT_IMAGE)) {
-            File imageFile = new File(fileStore.getFullPath(storeFileName));
-            if (imageFile.exists()) {
-                imageFile.delete();
-            }
-        }
     }
 
 

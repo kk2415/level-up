@@ -5,6 +5,8 @@ import ChannelPostService from '../../api/service/ChannelPostService'
 import {ChannelNoticeTable} from "./ChannelNoticeTable";
 import {AiFillCaretRight, AiFillCaretLeft} from "react-icons/ai";
 
+import {useNavigate as navigate} from 'react-router-dom'
+
 const ChannelNotice = ({channelId}) => {
 
     const [curNoticePage, setCurNoticePage] = useState(1)
@@ -12,7 +14,8 @@ const ChannelNotice = ({channelId}) => {
     const [noticeCount, setNoticeCount] = useState(0)
 
     const handleCreateNotice = () => {
-        window.location.href = '/channel-notice/create?channel=' + channelId
+        navigate('/channel-notice/create?channel=' + channelId)
+        // window.location.href = '/channel-notice/create?channel=' + channelId
     }
 
     const handleNextNoticeList = () => {
@@ -36,7 +39,8 @@ const ChannelNotice = ({channelId}) => {
     }
 
     const handleManageChannel = () => {
-        window.location.href = '/channel/' + channelId + '/manager'
+        navigate('/channel/' + channelId + '/manager')
+        // window.location.href = '/channel/' + channelId + '/manager'
     }
 
     const loadNotice = async (channelId) => {

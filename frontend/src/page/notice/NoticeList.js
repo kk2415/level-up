@@ -8,7 +8,7 @@ import {TOKEN} from "../../api/token";
 import Pager from "../../component/pager/Pager";
 import ArticleService from "../../api/service/ArticleService";
 
-const ArticleList = ({onClick}) => {
+const NoticeList = ({onClick}) => {
     const navigate = useNavigate();
 
     const getBoardTitle = (articleType) => {
@@ -80,7 +80,7 @@ const ArticleList = ({onClick}) => {
 
     const handleWriting = () => {
         if (localStorage.getItem(TOKEN)) {
-            navigate('/article/create?articleType=' + articleType)
+            navigate('/notice/create?articleType=' + articleType)
         }
         else {
             alert('로그인해야됩니다.')
@@ -91,11 +91,11 @@ const ArticleList = ({onClick}) => {
         let startNum = currentPage - (currentPage - 1) % pagerLength
         let nextPage = startNum + pagerLength
 
-        let url = '/article/list?articleType=' + articleType + '&page=' + nextPage + '&field=' + searchCondition.field +
+        let url = '/notice/list?articleType=' + articleType + '&page=' + nextPage + '&field=' + searchCondition.field +
             '&query=' + searchCondition.querys
 
         if (searchCondition.field === "" || searchCondition.querys === "") {
-            url = '/article/list?articleType=' + articleType + '&page=' + nextPage
+            url = '/notice/list?articleType=' + articleType + '&page=' + nextPage
         }
 
         if (nextPage <= lastPagerNum) {
@@ -111,11 +111,11 @@ const ArticleList = ({onClick}) => {
         let startNum = currentPage - (currentPage - 1) % pagerLength
         let previousPage = startNum - pagerLength
 
-        let url = '/article/list?articleType=' + articleType + '&page=' + previousPage + '&field=' + searchCondition.field +
+        let url = '/notice/list?articleType=' + articleType + '&page=' + previousPage + '&field=' + searchCondition.field +
             '&query=' + searchCondition.querys
 
         if (searchCondition.field === "" || searchCondition.querys === "") {
-            url = '/article/list?articleType=' + articleType + '&page=' + previousPage
+            url = '/notice/list?articleType=' + articleType + '&page=' + previousPage
         }
 
         if (previousPage > 0) {
@@ -136,9 +136,9 @@ const ArticleList = ({onClick}) => {
         }
 
         const pageable = 'page=0&size=10&sort=article_id,desc'
-        let url = '/article/list?articleType=' + articleType + '&page=1&field=' + searchCondition.field + '&query=' + searchCondition.querys
+        let url = '/notice/list?articleType=' + articleType + '&page=1&field=' + searchCondition.field + '&query=' + searchCondition.querys
         if (searchCondition.field === "" || searchCondition.querys === "") {
-            url = '/article/list?articleType=' + articleType + '&page=1'
+            url = '/notice/list?articleType=' + articleType + '&page=1'
         }
 
         let result = await ArticleService.getAll(articleType, pageable, searchCondition)
@@ -154,9 +154,9 @@ const ArticleList = ({onClick}) => {
     const loadArticles = async (articleType) => {
         let searchCondition = getSearchCondition()
 
-        let url = '/article/list?articleType=' + articleType + '&page=' + (curPage - 1) + '&field=' + searchCondition.field + '&query=' + searchCondition.querys
+        let url = '/notice/list?articleType=' + articleType + '&page=' + (curPage - 1) + '&field=' + searchCondition.field + '&query=' + searchCondition.querys
         if (searchCondition.field === "" || searchCondition.querys === "") {
-            url = '/article/list?articleType=' + articleType + '&page=' + (curPage - 1)
+            url = '/notice/list?articleType=' + articleType + '&page=' + (curPage - 1)
         }
 
         const pageable = 'page=' + (curPage - 1) + '&size=10&sort=article_id,desc'
@@ -255,4 +255,4 @@ const ArticleList = ({onClick}) => {
     );
 };
 
-export default ArticleList;
+export default NoticeList;
