@@ -22,7 +22,6 @@ const ModifyChannel = () => {
 
     const [channelId, setChannelId] = useState(getChannelId())
     const [postId, setPostId] = useState(getPostId())
-    const [contents, setContents] = useState('내용')
     const [post, setPost] = useState(null)
 
     const handleModifyPost = async () => {
@@ -31,19 +30,19 @@ const ModifyChannel = () => {
         let post = {
             title : formData.get('title'),
             content  : $('#summernote').val(),
+            articleType : 'CHANNEL_POST',
             postCategory : formData.get('category'),
         }
 
         let result = await ChannelPostService.modify(post, postId, channelId);
         if (result) {
-            navigate('/post/' + articleId + '?channel=' + channelId)
-            // window.location.href = '/post/' + articleId + '?channel=' + channelId
+            alert('수정되었습니다.')
+            navigate('/post/' + postId + '?channel=' + channelId)
         }
     }
 
     const handleCancel = () => {
         navigate('/post/' + postId + '?channel=' + channelId)
-        // window.location.href = '/post/' + postId + '?channel=' + channelId
     }
 
     const loadPost = async () => {

@@ -7,7 +7,7 @@ import com.levelup.core.domain.member.Member;
 import com.levelup.api.service.dto.comment.CommentDto;
 import com.levelup.api.exception.comment.CommentNotFoundException;
 import com.levelup.api.exception.member.MemberNotFoundException;
-import com.levelup.api.exception.article.PostNotFoundException;
+import com.levelup.api.exception.article.ArticleNotFoundException;
 import com.levelup.core.repository.article.ArticleRepository;
 import com.levelup.core.repository.comment.CommentRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -29,7 +29,7 @@ public class CommentService {
 
     public CommentDto save(CommentDto dto, Long memberId) {
         Article article = articleRepository.findById(dto.getArticleId())
-                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
        final Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
        final Comment findComment = dto.toEntity(findMember, article);
@@ -43,7 +43,7 @@ public class CommentService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
         final Article article = articleRepository.findById(dto.getArticleId())
-                .orElseThrow(() -> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
         Comment parentComment = commentRepository.findById(dto.getParentId())
                 .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
         Comment replyComment = dto.toEntity(member, article);

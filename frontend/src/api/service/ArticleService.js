@@ -19,10 +19,10 @@ const ArticleService = {
         return result
     },
 
-    get: async (articleId) => {
+    get: async (articleId, articleType) => {
         let post = {}
 
-        await send('/api/v1/articles/' + articleId + '?view=true', 'GET')
+        await send('/api/v1/articles/' + articleId + '?articleType=' + articleType + '&view=true', 'GET')
             .then((data) => {
                 post = data
             })

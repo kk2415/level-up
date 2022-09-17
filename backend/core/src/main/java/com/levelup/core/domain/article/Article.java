@@ -6,6 +6,7 @@ import com.levelup.core.domain.file.File;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.vote.ArticleVote;
 import lombok.*;
+import org.springframework.cache.annotation.CacheEvict;
 
 import javax.persistence.*;
 import java.util.ArrayList;

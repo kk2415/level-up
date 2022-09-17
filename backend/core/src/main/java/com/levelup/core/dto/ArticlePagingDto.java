@@ -1,8 +1,9 @@
 package com.levelup.core.dto;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public interface ArticlePagingDto {
+public interface ArticlePagingDto extends Serializable {
 
     Long getArticleId();
     String getTitle();

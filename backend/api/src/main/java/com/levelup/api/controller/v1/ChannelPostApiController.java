@@ -91,8 +91,8 @@ public class ChannelPostApiController {
     @PatchMapping("/channel-posts-for-test/{articleId}")
     public ResponseEntity<ChannelPostResponse> update(
             @PathVariable Long articleId,
-            @RequestBody ChannelPostRequest request,
-            @RequestParam Long memberId)
+            @RequestParam Long memberId,
+            @RequestBody ChannelPostRequest request)
     {
         ChannelPostDto dto = channelPostService.update(request.toDto(), articleId, memberId);
 

@@ -77,7 +77,7 @@ const ModifyNotice = () => {
     }
 
     const loadArticle = async (articleId) => {
-        let article = await ArticleService.get(articleId)
+        let article = await ArticleService.get(articleId, articleType)
 
         setArticle(article)
     }

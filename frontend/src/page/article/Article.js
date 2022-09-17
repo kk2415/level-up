@@ -86,7 +86,7 @@ const Article = () => {
     }
 
     const loadArticle = async (articleId) => {
-        let article = await ArticleService.get(articleId)
+        let article = await ArticleService.get(articleId, articleType)
 
         setArticle(article)
         setVoteCount(article.voteCount)

@@ -5,10 +5,11 @@ import com.levelup.core.domain.article.Article;
 import com.levelup.core.dto.ArticlePagingDto;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class ArticlePagingResponse {
+public class ArticlePagingResponse implements Serializable {
 
     private Long id;
     private String title;

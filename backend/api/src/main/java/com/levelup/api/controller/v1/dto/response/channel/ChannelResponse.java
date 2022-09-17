@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-public class ChannelResponse implements Serializable {
+public class ChannelResponse {
 
     private Long id;
     private Long managerId;
