@@ -35,7 +35,7 @@ class ArticleServiceTest extends TestSupporter {
         given(mockArticleRepository.findById(article.getId())).willReturn(Optional.of(article));
 
         // When
-        ArticleDto articleDto = articleService.get(article.getId(), true);
+        ArticleDto articleDto = articleService.get(article.getId(), article.getArticleType(), true);
 
         // Then
         assertThat(articleDto.getViews()).isEqualTo(1L);

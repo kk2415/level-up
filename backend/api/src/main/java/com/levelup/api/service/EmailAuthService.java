@@ -9,7 +9,7 @@ import com.levelup.core.domain.emailAuth.EmailAuth;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
 import com.levelup.core.domain.member.Member;
-import com.levelup.api.exception.emailAuth.EmailCodeExpiredException;
+import com.levelup.api.exception.emailAuth.SecurityCodeExpiredException;
 import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.api.exception.emailAuth.NotMatchSecurityCodeException;
 import com.levelup.core.repository.emailAuth.EmailAuthRepository;
@@ -61,7 +61,7 @@ public class EmailAuthService {
 
     private void validateSecurityCode(String securityCode, EmailAuth emailAuth) {
         if (isExpired(emailAuth.getExpireDate())) {
-            throw new EmailCodeExpiredException("인증코드가 만료되었습니다.");
+            throw new SecurityCodeExpiredException("인증코드가 만료되었습니다.");
         }
 
         if (!emailAuth.getSecurityCode().equals(securityCode)) {

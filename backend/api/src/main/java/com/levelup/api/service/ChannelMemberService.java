@@ -5,7 +5,7 @@ import com.levelup.core.domain.channel.Channel;
 import com.levelup.core.domain.channelMember.ChannelMember;
 import com.levelup.core.domain.member.Member;
 import com.levelup.api.exception.channel.ChannelNotFountExcpetion;
-import com.levelup.api.exception.channelMember.DuplicateChannelMemberException;
+import com.levelup.api.exception.channelMember.ChannelMemberDuplicationException;
 import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.api.exception.channel.NoPlaceChannelException;
 import com.levelup.core.repository.channelMember.ChannelMemberRepository;
@@ -48,7 +48,7 @@ public class ChannelMemberService {
 
     private void validate(Channel channel, List<ChannelMember> channelMembers) {
         if (!channelMembers.isEmpty()) {
-            throw new DuplicateChannelMemberException("채널에 이미 존재하는 멤버입니다.");
+            throw new ChannelMemberDuplicationException("채널에 이미 존재하는 멤버입니다.");
         }
 
         if (channel.getChannelMembers().size() >= channel.getMemberMaxNumber() ) {
