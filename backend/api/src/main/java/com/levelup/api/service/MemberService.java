@@ -11,7 +11,7 @@ import com.levelup.core.domain.file.UploadFile;
 import com.levelup.core.domain.member.Member;
 import com.levelup.core.domain.role.Role;
 import com.levelup.core.domain.role.RoleName;
-import com.levelup.api.exception.member.DuplicateEmailException;
+import com.levelup.api.exception.member.EmailDuplicationException;
 import com.levelup.api.exception.member.MemberNotFoundException;
 import com.levelup.core.repository.channel.ChannelRepository;
 import com.levelup.core.repository.member.MemberRepository;
@@ -60,10 +60,10 @@ public class MemberService implements UserDetailsService {
 
     private void validateDuplicationMember(String email, String nickname) {
         memberRepository.findByEmail(email)
-                .ifPresent(user -> {throw new DuplicateEmailException("중복된 이메일입니다.");});
+                .ifPresent(user -> {throw new EmailDuplicationException("중복된 이메일입니다.");});
 
         memberRepository.findByNickname(nickname)
-                .ifPresent(user -> {throw new DuplicateEmailException("이미 사용중인 닉네임입니다.");});
+                .ifPresent(user -> {throw new EmailDuplicationException("이미 사용중인 닉네임입니다.");});
     }
 
     public UploadFile createProfileImage(MultipartFile file) throws IOException {
