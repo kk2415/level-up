@@ -17,6 +17,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
@@ -54,6 +55,9 @@ public class CacheConfig {
                 .computePrefixWith(name -> name + ":")
                 .entryTtl(Duration.ofSeconds(TTL))
                 .serializeKeysWith(fromSerializer(new StringRedisSerializer()));
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+//                        new GenericJackson2JsonRedisSerializer(objectMapper())
+//                ));
     }
 
     private ObjectMapper objectMapper() {

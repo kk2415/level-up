@@ -38,9 +38,10 @@ public class ArticleApiController {
     @GetMapping("/articles/{articleId}")
     public ResponseEntity<ArticleResponse> get(
             @PathVariable Long articleId,
+            @RequestParam ArticleType articleType,
             @RequestParam(required = false, defaultValue = "false") boolean view)
     {
-        ArticleDto dto = articleService.get(articleId, view);
+        ArticleDto dto = articleService.get(articleId, articleType, view);
 
         return ResponseEntity.ok().body(ArticleResponse.from(dto));
     }

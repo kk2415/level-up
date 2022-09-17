@@ -92,10 +92,8 @@ const ChannelPostService = {
         let result = false
 
         await send('/api/v1/channel-posts/' + articleId, 'PATCH', channelPost)
-            .then((data) => {
-                alert('수정되었습니다.')
+            .then(() => {
                 result = true
-                // window.location.href = '/post/' + articleId + '?channel=' + channelId
             })
             .catch((error) => {
                 console.log(error)
@@ -108,7 +106,7 @@ const ChannelPostService = {
         let result = false
 
         await send('/api/v1/channel-posts/' + articleId, 'DELETE')
-            .then((data) => {
+            .then(() => {
                 result = true
             })
             .catch((error) => {

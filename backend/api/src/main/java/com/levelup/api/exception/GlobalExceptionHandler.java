@@ -1,6 +1,6 @@
 package com.levelup.api.exception;
 
-import com.levelup.api.exception.article.PostNotFoundException;
+import com.levelup.api.exception.article.ArticleNotFoundException;
 import com.levelup.api.exception.emailAuth.EmailCodeExpiredException;
 import com.levelup.api.exception.emailAuth.NotMatchSecurityCodeException;
 import com.levelup.api.exception.member.DuplicateEmailException;
@@ -86,8 +86,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ExceptionResponse> postNotFoundException(PostNotFoundException e, HttpServletRequest request) {
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> postNotFoundException(ArticleNotFoundException e, HttpServletRequest request) {
         log.error(e.getClass().getName(), e.getMessage());
 
         String exceptionDir = e.getClass().getName();

@@ -161,10 +161,10 @@ const ArticleList = ({onClick}) => {
 
         const pageable = 'page=' + (curPage - 1) + '&size=10&sort=article_id,desc'
         let result = await ArticleService.getAll(articleType, pageable, searchCondition)
-
-        setArticle(result.content)
-        setArticleCount(result.totalElements)
-
+        if (result) {
+            setArticle(result.content)
+            setArticleCount(result.totalElements)
+        }
         navigate(url)
     }
 

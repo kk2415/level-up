@@ -8,11 +8,12 @@ import com.levelup.core.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class ChannelPostDto {
+public class ChannelPostDto implements Serializable {
 
     private Long channelPostId;
     private Long memberId;

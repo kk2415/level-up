@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -42,7 +43,7 @@ public class ChannelService {
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
 
-    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
+    @CacheEvict(cacheNames = "channel", allEntries = true)
     public ChannelDto save(ChannelDto dto, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
@@ -71,16 +72,18 @@ public class ChannelService {
         return ChannelDto.from(findChannel);
     }
 
+    @Cacheable(cacheNames = "channel", key = "{#category + ':' + #order}")
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "ChannelCategory", key = "{#category, #order}")
     public Page<ChannelDto> getChannels(ChannelCategory category, String order, Pageable pageable) {
         if ("memberCount".equals(order)) {
-            PageImpl<Channel> channelPage
-                    = new PageImpl<>(channelRepository.findByCategoryAndOrderByMemberCount(category.toString()));
-            return channelPage.map(ChannelDto::from);
-        }
+            List<ChannelDto> collect = channelRepository.findByCategoryAndOrderByMemberCount(category.toString())
+                    .stream().map(ChannelDto::from)
+                    .collect(Collectors.toUnmodifiableList());
 
-        return channelRepository.findByCategory(category, pageable).map(ChannelDto::from);
+            return new PageImpl<ChannelDto>(collect);
+        }
+        return channelRepository.findByCategory(category, pageable)
+                .map(ChannelDto::from);
     }
 
     /*
@@ -114,7 +117,7 @@ public class ChannelService {
 
 
 
-    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
+    @CacheEvict(cacheNames = "channel", allEntries = true)
     public void update(ChannelDto dto, Long channelId) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -122,7 +125,7 @@ public class ChannelService {
         channel.modifyChannel(dto.getName(), dto.getCategory(), dto.getLimitedMemberNumber(), dto.getDescription(), dto.getThumbnailImage());
     }
 
-    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
+    @CacheEvict(cacheNames = "channel", allEntries = true)
     public UploadFile updateChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
@@ -136,7 +139,7 @@ public class ChannelService {
 
 
 
-    @CacheEvict(cacheNames = "ChannelCategory", allEntries = true)
+    @CacheEvict(cacheNames = "channel", allEntries = true)
     public void delete(Long channelId) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
