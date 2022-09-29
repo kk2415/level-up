@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import ChannelMemberService from "../../../api/service/ChannelMemberService";
+import ChannelMemberService from "../../../api/service/channel/ChannelMemberService";
 
 const MemberRowNoImage = ({info, channelId}) => {
     const [onDeleteButton, setOnDeleteButton] = useState(false)

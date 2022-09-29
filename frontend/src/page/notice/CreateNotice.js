@@ -1,10 +1,11 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-
 import {Container, Form} from 'react-bootstrap'
+import {useNavigate} from "react-router-dom";
 import $ from 'jquery'
 
-import ArticleService from '../../api/service/ArticleService'
-import {useNavigate} from "react-router-dom";
+import ArticleService from '../../api/service/article/ArticleService'
+
+import {UserInfo} from "../../api/const/UserInfo";
 
 const CreateNotice = () => {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ const CreateNotice = () => {
             return
         }
 
-        let result = await ArticleService.create(localStorage.getItem('id'), article)
+        let result = await ArticleService.create(memberId, article)
 
         if (result) {
             navigate('/notice/list?articleType=' + articleType + '&page=1')
@@ -111,6 +112,7 @@ const CreateNotice = () => {
         })
     }
 
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [articleType, setArticleType] = useState(getArticleType())
 
     useEffect(() => {

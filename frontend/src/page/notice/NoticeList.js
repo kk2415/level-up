@@ -4,9 +4,9 @@ import {useNavigate} from 'react-router-dom'
 import $ from 'jquery'
 import {Container, Form, Row} from 'react-bootstrap'
 import { ArticleTable } from '../../component/article/ArticleTable'
-import {TOKEN} from "../../api/token";
+import {UserInfo} from "../../api/const/UserInfo";
 import Pager from "../../component/pager/Pager";
-import ArticleService from "../../api/service/ArticleService";
+import ArticleService from "../../api/service/article/ArticleService";
 
 const NoticeList = ({onClick}) => {
     const navigate = useNavigate();
@@ -79,7 +79,7 @@ const NoticeList = ({onClick}) => {
     }
 
     const handleWriting = () => {
-        if (localStorage.getItem(TOKEN)) {
+        if (localStorage.getItem(UserInfo.TOKEN)) {
             navigate('/notice/create?articleType=' + articleType)
         }
         else {
@@ -135,7 +135,7 @@ const NoticeList = ({onClick}) => {
             querys : $('#search').val(),
         }
 
-        const pageable = 'page=0&size=10&sort=article_id,desc'
+        const pageable = 'page=0&size=10&sort=id,desc'
         let url = '/notice/list?articleType=' + articleType + '&page=1&field=' + searchCondition.field + '&query=' + searchCondition.querys
         if (searchCondition.field === "" || searchCondition.querys === "") {
             url = '/notice/list?articleType=' + articleType + '&page=1'
@@ -159,7 +159,7 @@ const NoticeList = ({onClick}) => {
             url = '/notice/list?articleType=' + articleType + '&page=' + (curPage - 1)
         }
 
-        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=article_id,desc'
+        const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
         let result = await ArticleService.getAll(articleType, pageable, searchCondition)
         if (result) {
             setArticle(result.content)

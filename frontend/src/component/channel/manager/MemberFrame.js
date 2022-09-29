@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import MemberRowNoImage from "./MemberRowNoImage"
 import Pager from "../../pager/Pager";
-import ChannelMemberService from "../../../api/service/ChannelMemberService";
+import ChannelMemberService from "../../../api/service/channel/ChannelMemberService";
 
 const PAGER_LENGTH = 5
 

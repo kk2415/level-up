@@ -1,16 +1,15 @@
 import React from 'react';
 import {useNavigate as navigate} from 'react-router-dom'
-import ChannelPostService from "../../../api/service/ChannelPostService";
+import ChannelArticleService from "../../../api/service/channel/ChannelArticleService";
 
 const PostRow = ({info, channelId}) => {
 
     const deletePost = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            let result = await ChannelPostService.delete(info.id);
+            let result = await ChannelArticleService.delete(info.id, channelId);
             if (result) {
                 alert('게시물이 삭제되었습니다.')
                 navigate('/channel/' + channelId + '/manager')
-                // window.location.href = '/channel/' + channelId + '/manager'
             }
         }
     }

@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
 import $ from 'jquery'
-import ChannelService from '../../api/service/ChannelService'
-import ChannelMemberService from "../../api/service/ChannelMemberService";
+import ChannelService from '../../api/service/channel/ChannelService'
+import ChannelMemberService from "../../api/service/channel/ChannelMemberService";
 import {Container} from 'react-bootstrap'
-import {TOKEN} from "../../api/token";
+import {UserInfo} from "../../api/const/UserInfo";
 import react from "react";
 import {AiOutlineImport} from "react-icons/ai";
 import '../../css/channel.css'
@@ -50,8 +50,8 @@ const ChannelDescription = () => {
     }
 
     const handleRegisterChannel = async () => {
-        if (localStorage.getItem(TOKEN)) {
-            let result = await ChannelMemberService.create(channelId, localStorage.getItem('id'));
+        if (localStorage.getItem(UserInfo.TOKEN)) {
+            let result = await ChannelMemberService.create(channelId, localStorage.getItem(UserInfo.ID));
 
             if (result) {
                 alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
@@ -87,7 +87,7 @@ const ChannelDescription = () => {
                             <p className="h6">
                         <span>
                             등록일&nbsp;
-                            <span id="dateCreated">{description.dateCreated}</span>
+                            <span id="dateCreated">{description.createdAt}</span>
                         </span>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 

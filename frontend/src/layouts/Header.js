@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import {Navbar, Container, Nav, Button} from 'react-bootstrap'
 
-import {TOKEN} from '../api/token'
-import { MemberService } from '../api/service/MemberService'
+import {UserInfo} from '../api/const/UserInfo'
+import { MemberService } from '../api/service/member/MemberService'
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Header = () => {
 	}
 
 	useEffect(() => {
-		if (localStorage.getItem(TOKEN) === 'null' || localStorage.getItem(TOKEN) === null) {
+		if (localStorage.getItem(UserInfo.TOKEN) === 'null' || localStorage.getItem(UserInfo.TOKEN) === null) {
 			setSignUpShow(true)
 			setSignInShow(true)
 			setSignOutShow(false)
@@ -39,13 +39,13 @@ const Header = () => {
 			setSignOutShow(true)
 		}
 
-		if (localStorage.getItem('isAdmin') === 'true') {
+		if (localStorage.getItem(UserInfo.IS_ADMIN) === 'true') {
 			setOnShowAdmin(true)
 		}
 	})
 
 	const myPageHanlder = () => {
-		if (localStorage.getItem(TOKEN)) {
+		if (localStorage.getItem(UserInfo.TOKEN)) {
 			navigate(`/mypage`);
 		}
 		else {
@@ -56,12 +56,11 @@ const Header = () => {
 	return (
 		<>
 			<header>
-				<Container>
-					<Navbar expand="lg" className="ml-auto border-bottom">
+					<Navbar expand="lg" className="ml-auto border-bottom ">
 						<Navbar.Brand href="/" className=''>
 							Level Up
 						</Navbar.Brand>
-						<Navbar.Collapse className="ml-auto">
+						<Navbar.Collapse className="ml-auto float-left">
 							<Nav className="ml-auto float-end ">
 								{
 									signUpShow &&
@@ -126,7 +125,6 @@ const Header = () => {
 							</Nav>
 						</Navbar.Collapse>
 					</Navbar>
-				</Container>
 			</header>
 		</>
 	)

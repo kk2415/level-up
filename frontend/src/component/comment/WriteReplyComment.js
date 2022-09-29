@@ -1,8 +1,9 @@
 import React from 'react';
 import {Container} from 'react-bootstrap'
-import CommentService from "../../api/service/CommentService";
+import CommentService from "../../api/service/article/CommentService";
 
 import $ from 'jquery'
+import {UserInfo} from "../../api/const/UserInfo";
 
 const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, parentCommentId, articleId, identity}) => {
     const createReplyComment = async () => {
@@ -13,7 +14,7 @@ const WriteReplyComment = ({setWritingReplyComment, setReplyCount, replyCount, p
             identity : identity,
         }
 
-        let result = await CommentService.createReply(replyRequest, localStorage.getItem('id'))
+        let result = await CommentService.createReply(replyRequest, localStorage.getItem(UserInfo.ID))
         if (result !== null) {
             $('#createReplyContent').val('')
             setWritingReplyComment(true)

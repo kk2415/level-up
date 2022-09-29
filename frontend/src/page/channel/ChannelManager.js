@@ -1,19 +1,15 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
+import {Container} from 'react-bootstrap'
+import {useNavigate} from "react-router-dom";
+import $ from 'jquery'
 
-import ChannelService from "../../api/service/ChannelService";
-
+import ChannelService from "../../api/service/channel/ChannelService";
 import WaitingMemberFrame from "../../component/channel/manager/WaitingMemberFrame";
 import PostFrame from "../../component/channel/manager/PostFrame";
 import MemberFrame from "../../component/channel/manager/MemberFrame";
 
-import {Container} from 'react-bootstrap'
-
-import {useNavigate} from "react-router-dom";
-
-import { S3_URL } from "../../api/backEndHost.js"
-import $ from 'jquery'
-
-const NUM_ON_SCREEN = 5
+import {UserInfo} from "../../api/const/UserInfo";
+import { S3_URL } from "../../api/const/BackEndHost.js"
 
 const ChannelManager = () => {
     const navigate = useNavigate();
@@ -24,47 +20,25 @@ const ChannelManager = () => {
         return pathname.substring(pathname.indexOf('/', 2) + 1, pathname.lastIndexOf('/'))
     }
 
-    const getLastPostPagerNum = (count) => {
-        return Math.floor(count / NUM_ON_SCREEN) + 1;
-    }
-
-    const getLastMemberPagerNum = (count) => {
-        return Math.floor(count / NUM_ON_SCREEN) + 1;
-    }
-
-    const getLastWaitingMemberPagerNum = (count) => {
-        return Math.floor(count / NUM_ON_SCREEN) + 1;
-    }
-
     const loadManager = async (channelId) => {
-        let result = await ChannelService.getManager(localStorage.getItem('id'), channelId)
+        let result = await ChannelService.getManager(memberId, channelId)
 
         setManager(result)
     }
 
     const handleChannelModify = () => {
         navigate('/channel/modify/' + channelId)
-        // window.location.href = '/channel/modify/' + channelId
     }
 
     const handleBack = () => {
         navigate('/channel/' + channelId + '?page=1')
-        // window.location.href = ('/channel/' + channelId + '?page=1')
     }
 
     const [channelId, setChannelId] = useState(getChannelId())
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [manager, setManager] = useState(null)
 
-    const [lastPostPagerNum, setLastPostPagerNum] = useState(0)
-    const [lastMemberPagerNum, setLastMemberPagerNum] = useState(0)
-    const [lastWaitingMemberPagerNum, setLastWaitingMemberPagerNum] = useState(0)
-
     useEffect(() => {
-        if (manager) {
-            setLastPostPagerNum(getLastPostPagerNum(manager.postCount))
-            setLastMemberPagerNum(getLastMemberPagerNum(manager.memberCount))
-            setLastWaitingMemberPagerNum(getLastWaitingMemberPagerNum(manager.waitingMemberCount))
-        }
     })
 
     useLayoutEffect(() => {

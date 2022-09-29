@@ -8,66 +8,64 @@ import SignIn from '../page/member/SignIn'
 import SignUp from '../page/member/SignUp'
 import FindingPassword from '../page/member/FindingPassword'
 
-import ChannelDescription from "../page/channel/ChannelDescription";
 import ModifyChannel from "../page/channel/ModifyChannel";
 import Channel from "../page/channel/Channel"
 import ChannelManager from "../page/channel/ChannelManager"
-import CreateChannelPost from "../page/channelPost/CreateChannelPost"
+import CreateChannelArticle from "../page/channelArticle/CreateChannelArticle"
 import CreateChannelNotice from "../page/channelNotice/CreateChannelNotice"
 import DetailChannelNotice from "../page/channelNotice/DetailChannelNotice"
 import ModifyChannelNotice from "../page/channelNotice/ModifyChannelNotice"
-import DetailChannelPost from "../page/channelPost/DetailChannelPost"
+import DetailChannelArticle from "../page/channelArticle/DetailChannelArticle"
 
 import CreateNotice from "../page/notice/CreateNotice"
 import NoticeList from "../page/notice/NoticeList"
 import Notice from "../page/notice/Notice"
 import ModifyNotice  from "../page/notice/ModifyNotice"
 
-import CreateArticle from "../page/article/CreateArticle"
-import ArticleList from "../page/article/ArticleList"
-import Article from "../page/article/Article"
-import ModifyArticle from "../page/article/ModifyArticle"
-import ModifyPost from "../page/channelPost/ModifyChannelPost"
+import CreateArticle from "../page/qna/CreateArticle"
+import ArticleList from "../page/qna/ArticleList"
+import Article from "../page/qna/Article"
+import ModifyArticle from "../page/qna/ModifyArticle"
+import ModifyPost from "../page/channelArticle/ModifyChannelArticle"
 import ConfirmEmail from "../page/member/ConfirmEmail";
 import ChannelInfo from "../page/channel/ChannelInfo";
+import ModifyChannelArticle from "../page/channelArticle/ModifyChannelArticle";
 
 const AppRouter = () => {
   return (
 	<Routes>
-		<Route path="/" element={<Home />}></Route>
+		<Route path="/" element={<Home/>}/>
 
-		<Route path="/signin" element={<SignIn />}></Route>
-		<Route path="/signup" element={<SignUp />}></Route>
-		<Route path="/mypage" element={<MyPage />}></Route>
-		<Route path="/confirm-email" element={<ConfirmEmail />}></Route>
-		<Route path="/finding-password" element={<FindingPassword />}></Route>
+		<Route path="/signin" element={<SignIn/>}/>
+		<Route path="/signup" element={<SignUp/>}/>
+		<Route path="/mypage" element={<MyPage/>}/>
+		<Route path="/confirm-email" element={<ConfirmEmail/>}/>
+		<Route path="/finding-password" element={<FindingPassword />}/>
 
-		<Route path="/channel/:channelId" element={<Channel />}></Route>
-		<Route path="/channels" element={<ChannelInfo />}></Route>
-		<Route path="/channel/create" element={<CreateChannel />}></Route>
-		<Route path="/channel/modify/:channelId" element={<ModifyChannel />}></Route>
-		<Route path="/channel/description/:channelId" element={<ChannelInfo />}></Route>
-		<Route path="/channel/:channelId/manager" element={<ChannelManager />}></Route>
+		<Route path="/channel/:channelId" element={<Channel/>}/>
+		<Route path="/channels" element={<ChannelInfo/>}/>
+		<Route path="/channel/create" element={<CreateChannel/>}/>
+		<Route path="/channel/modify/:channelId" element={<ModifyChannel/>}/>
+		<Route path="/channel/description/:channelId" element={<ChannelInfo/>}/>
+		<Route path="/channel/:channelId/manager" element={<ChannelManager/>}/>
 
-		<Route path="/channel-notice/create" element={<CreateChannelNotice />}></Route>
-		<Route path="/channel-notice/detail/:channelNoticeId" element={<DetailChannelNotice />}></Route>
-		<Route path="/channel-notice/modify/:channelNoticeId" element={<ModifyChannelNotice />}></Route>
+		<Route path="/channel-notice/create" element={<CreateChannelNotice />}/>
+		<Route path="/channel-notice/detail/:channelNoticeId" element={<DetailChannelNotice/>}/>
+		<Route path="/channel-notice/modify/:channelNoticeId" element={<ModifyChannelNotice/>}/>
 
-		<Route path="/post/:postId" element={<DetailChannelPost />}></Route>
-		<Route path="/channel-post/:postId" element={<DetailChannelPost />}></Route>
-		<Route path="/post/create" element={<CreateChannelPost />}></Route>
-		<Route path="/post/modify/:postId" element={<ModifyPost />}></Route>
-		<Route path="/channel-post/modify/:postId" element={<ModifyPost />}></Route>
+		<Route path="/channel-article/create" element={<CreateChannelArticle />}/>
+		<Route path="/channel-article/:articleId" element={<DetailChannelArticle />}/>
+		<Route path="/channel-article/modify/:articleId" element={<ModifyChannelArticle />}/>
 
-		<Route path="/article/:articleId" element={<Article />}></Route>
-		<Route path="/article/list" element={<ArticleList onClick={true} />}></Route>
-		<Route path="/article/create" element={<CreateArticle />}></Route>
-		<Route path="/article/modify/:articleId" element={<ModifyArticle />}></Route>
+		<Route path="/article/:articleId" element={<Article />}/>
+		<Route path="/article/list" element={<ArticleList onClick={true} />}/>
+		<Route path="/article/create" element={<CreateArticle />}/>
+		<Route path="/article/modify/:articleId" element={<ModifyArticle />}/>
 
-		<Route path="/notice/:articleId" element={<Notice />}></Route>
-		<Route path="/notice/list" element={<NoticeList />}></Route>
-		<Route path="/notice/create" element={<CreateNotice />}></Route>
-		<Route path="/notice/modify/:articleId" element={<ModifyNotice />}></Route>
+		<Route path="/notice/:articleId" element={<Notice />}/>
+		<Route path="/notice/list" element={<NoticeList />}/>
+		<Route path="/notice/create" element={<CreateNotice />}/>
+		<Route path="/notice/modify/:articleId" element={<ModifyNotice />}/>
 	</Routes>
   )
 }

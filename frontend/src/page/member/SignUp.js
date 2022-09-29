@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Form, Container } from 'react-bootstrap';
-import { GoogleLogin } from 'react-google-login'
-
-import $ from 'jquery'
 import {useNavigate} from 'react-router-dom'
+import { GoogleLogin } from 'react-google-login'
+import $ from 'jquery'
 
-import HorizonLine from "../../component/HorizonLine";
-import { MemberService } from '../../api/service/MemberService'
-import {createMemberValidation as validation} from '../../api/validation'
-import {EmailService} from "../../api/service/EmailService";
+import { MemberService } from '../../api/service/member/MemberService'
+import { SignUpService } from '../../api/service/member/SignUpService'
+import {createMemberValidation as validation} from '../../api/Validation'
+import {EmailService} from "../../api/service/member/EmailService";
+import {LogInService} from "../../api/service/member/LogInService";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -25,18 +25,18 @@ const SignUp = () => {
         let profileImage = await MemberService.uploadProfile(file)
 
         let member = {
-            name : formData.get('name'),
-            nickname : formData.get('nickname'),
             email : formData.get('email'),
             password : formData.get('password'),
-            phone: formData.get('tel'),
-            birthday : formData.get('birthday'),
+            name : formData.get('name'),
+            nickname : formData.get('nickname'),
             gender : formData.get('gender'),
+            birthday : formData.get('birthday'),
+            phone: formData.get('tel'),
             uploadFile : profileImage,
         }
 
         if (validate(member)) {
-            let newMember = await MemberService.signUp(member);
+            let newMember = await SignUpService.signUp(member);
 
             if (newMember) {
                 let logInMember = {
@@ -44,7 +44,7 @@ const SignUp = () => {
                     password : formData.get('password'),
                 }
 
-                await MemberService.signIn(logInMember);
+                await LogInService.signIn(logInMember);
                 navigate('/confirm-email')
                 // window.location.href = '/confirm-email'
 

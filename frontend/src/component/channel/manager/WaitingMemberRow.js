@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate as navigate} from 'react-router-dom'
-import ChannelMemberService from "../../../api/service/ChannelMemberService";
+import ChannelMemberService from "../../../api/service/channel/ChannelMemberService";
 
 
 const WaitingMemberRow = ({info, channelId}) => {

@@ -1,17 +1,17 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import { AuthContext } from '../../App';
-import ChannelService from '../../api/service/ChannelService'
 import {Container, Col, Row, Form, FloatingLabel} from 'react-bootstrap'
-import {createChannelValidation as validation} from "../../api/validation";
-import $ from "jquery";
 import { useNavigate } from "react-router-dom";
-import {DateRange} from "@mui/icons-material";
+import { AuthContext } from '../../App';
+import $ from "jquery";
+
+import ChannelService from '../../api/service/channel/ChannelService'
+import {createChannelValidation as validation} from "../../api/Validation";
+
+import {UserInfo} from "../../api/const/UserInfo";
 
 const CreateChannel = () => {
     let navigate = new useNavigate();
-
     const context = useContext(AuthContext);
-    const [thumbnail, setThumbnail] = useState(null)
 
     const handleChangeThumbnail = (event) => {
         setThumbnail(event.target.files[0])
@@ -31,7 +31,7 @@ const CreateChannel = () => {
             thumbnailImage : thumbnailImageDir,
         }
         if (validate(channel)) {
-            let result = await ChannelService.create(channel, context.member.id);
+            let result = await ChannelService.create(channel, memberId);
             if (result) {
                 navigate('/')
             }
@@ -137,6 +137,9 @@ const CreateChannel = () => {
             })
         })
     }
+
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
+    const [thumbnail, setThumbnail] = useState(null)
 
     useEffect(() => {
         hideAlertMassageBox()

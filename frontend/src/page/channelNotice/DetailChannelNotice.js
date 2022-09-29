@@ -1,11 +1,13 @@
-    import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
+import {useNavigate} from "react-router-dom";
 import $ from 'jquery'
 
-import ChannelPostService from '../../api/service/ChannelPostService'
+import ChannelArticleService from '../../api/service/channel/ChannelArticleService'
 import CommentFrame from '../../component/comment/CommentFrame'
-import {useNavigate} from "react-router-dom";
-    import VoteService from "../../api/service/VoteService";
+import VoteService from "../../api/service/article/VoteService";
+
+import {UserInfo} from "../../api/const/UserInfo";
 
 const DetailChannelNotice = () => {
     const navigate = useNavigate();
@@ -25,11 +27,10 @@ const DetailChannelNotice = () => {
     }
 
     const handlePrevPostButton = async () => {
-        let prev = await ChannelPostService.getPrev(channelNoticeId, 'CHANNEL_NOTICE', channelId)
+        let prev = await ChannelArticleService.getPrev(channelNoticeId, 'CHANNEL_NOTICE', channelId)
 
         if (prev != null) {
             navigate('/channel-notice/detail/' + prev.id + '?channel=' + channelId)
-            // window.location.href = '/channel-notice/detail/' + prev.id + '?channel=' + channelId
         }
         else {
             alert("이전 페이지가 없습니다.")
@@ -37,11 +38,10 @@ const DetailChannelNotice = () => {
     }
 
     const handleNextPostButton = async () => {
-        let next = await ChannelPostService.getNext(channelNoticeId, 'CHANNEL_NOTICE', channelId)
+        let next = await ChannelArticleService.getNext(channelNoticeId, 'CHANNEL_NOTICE', channelId)
 
         if (next != null) {
             navigate('/channel-notice/detail/' + next.id + '?channel=' + channelId)
-            // window.location.href = '/channel-notice/detail/' + next.id + '?channel=' + channelId
         }
         else {
             alert("다음 페이지가 없습니다.")
@@ -54,32 +54,28 @@ const DetailChannelNotice = () => {
 
     const handleDeleteButton = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            let result = await ChannelPostService.delete(channelNoticeId, channelId)
+            let result = await ChannelArticleService.delete(channelNoticeId, channelId)
             if (result) {
                 alert('삭제되었습니다.')
                 navigate('/channel/' + channelId + '?page=1')
-                // window.location.href = '/channel/' + channelId + '?page=1'
             }
         }
     }
 
     const loadChannelNotice = async (channelNoticeId) => {
-        let notice = await ChannelPostService.get(channelNoticeId)
+        let notice = await ChannelArticleService.get(channelNoticeId, channelId, 'true')
 
         setChannelNotice(notice)
         setVoteCount(notice.voteCount)
     }
 
     const authorize = (channelNotice) => {
-        let memberId = localStorage.getItem('id')
-
         if (channelNotice && Number(memberId) === channelNotice.memberId) {
             setAuthentication(true)
         }
     }
 
     const createVote = async () => {
-        let memberId = localStorage.getItem('id');
         if (memberId === null || memberId === '') {
             alert('로그인을 해야합니다.')
             return
@@ -97,6 +93,7 @@ const DetailChannelNotice = () => {
         }
     }
 
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [channelNotice, setChannelNotice] = useState(null)
     const [channelNoticeId, setChannelNoticeId] = useState(getChannelNoticeId())
     const [channelId, setChannelId] = useState(getChannelId())
@@ -125,7 +122,7 @@ const DetailChannelNotice = () => {
                             <p className="h6">
                                 <span>작성일
                                     &nbsp;
-                                    <span id="dateCreated">{channelNotice.dateCreated}</span>
+                                    <span id="dateCreated">{channelNotice.createdAt}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span>조회&nbsp;
