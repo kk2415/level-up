@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PostRow from "../../../component/channel/manager/PostRow";
 import Pager from "../../pager/Pager";
 
-import ChannelPostService from "../../../api/service/ChannelPostService";
+import ChannelArticleService from "../../../api/service/channel/ChannelArticleService";
 
 const PAGER_LENGTH = 5
 
@@ -15,7 +15,7 @@ const PostFrame = ({channelId, postCount}) => {
         // let url = '/api/' + channelId + '/posts/' + curPage + '?postCount=' + PAGER_LENGTH
         const pageable = 'page=' + (curPage - 1) + '&size=5&sort=id,desc'
 
-        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable);
+        let result = await ChannelArticleService.getAll(channelId, 'CHANNEL_POST', pageable);
         setPosts(result.content)
     }
 

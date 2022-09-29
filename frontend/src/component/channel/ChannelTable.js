@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Table} from 'react-bootstrap'
 import ArticleTableRow from '../article/ArticleTableRow'
 
-export const ChannelTable = ({channelPost, channelId} ) => {
+export const ChannelTable = ({channelArticle, channelId} ) => {
     return (
         <>
             {
-                channelPost &&
+                channelArticle &&
                 <Table>
                     <caption className="caption-top fs-3 fw-bold">전체글</caption>
                     <thead>
@@ -21,9 +21,8 @@ export const ChannelTable = ({channelPost, channelId} ) => {
                     </thead>
                     <tbody id="tableBody">
                     {
-                        channelPost.map((info) => (
-                            <ArticleTableRow info={info}
-                                             url={'/channel-post/' + info.id + '?channel=' + channelId} />
+                        channelArticle.map((info) => (
+                            <ArticleTableRow info={info} url={'/channel-article/' + info.id + '?channel=' + channelId} />
                         ))
                     }
                     </tbody>

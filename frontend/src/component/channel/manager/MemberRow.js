@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 
-import { S3_URL } from "../../../api/backEndHost"
+import { S3_URL } from "../../../api/const/BackEndHost"
 
 const MemberRow = ({member}) => {
     const IMG_DIR = S3_URL + member.storeFileName

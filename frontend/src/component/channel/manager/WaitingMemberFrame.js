@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import ChannelMemberService from "../../../api/service/ChannelMemberService";
+import ChannelMemberService from "../../../api/service/channel/ChannelMemberService";
 
 import WaitingMemberRow from "../../../component/channel/manager/WaitingMemberRow";
 import Pager from "../../pager/Pager";

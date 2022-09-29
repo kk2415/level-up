@@ -2,11 +2,12 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery'
 
-import VoteService from "../../api/service/VoteService";
-import ArticleService from "../../api/service/ArticleService";
+import VoteService from "../../api/service/article/VoteService";
+import ArticleService from "../../api/service/article/ArticleService";
 
 import CommentFrame from '../../component/comment/CommentFrame'
 import {useNavigate} from "react-router-dom";
+import {UserInfo} from "../../api/const/UserInfo";
 
 const Notice = () => {
     const navigate = useNavigate();
@@ -32,7 +33,6 @@ const Notice = () => {
 
         if (prev != null) {
             navigate('/notice/' + prev.id + '?articleType=' + articleType)
-            // window.location.href = '/notice/' + prev.id + '?articleType=' + articleType
         }
         else {
             alert("이전 페이지가 없습니다.")
@@ -44,7 +44,6 @@ const Notice = () => {
 
         if (next != null) {
             navigate('/notice/' + next.id + '?articleType=' + articleType)
-            // window.location.href = '/notice/' + next.id + '?articleType=' + articleType
         }
         else {
             alert("다음 페이지가 없습니다.")
@@ -57,7 +56,7 @@ const Notice = () => {
 
     const handleDeleteButton = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            let result = await ArticleService.delete(articleId);
+            let result = await ArticleService.delete(articleId, articleType);
             if (result) {
                 navigate('/notice/list?articleType=' + articleType + '&page=1')
             }
@@ -65,8 +64,6 @@ const Notice = () => {
     }
 
     const authorize = (article) => {
-        let memberId = localStorage.getItem('id')
-
         if (article && Number(memberId) === article.memberId) {
             setAuthentication(true)
         }
@@ -74,7 +71,7 @@ const Notice = () => {
 
     const createVote = async () => {
         let voteRequest = {
-            'memberId' : localStorage.getItem('id'),
+            'memberId' : memberId,
             'targetId' : articleId,
             'voteType' : 'ARTICLE',
         }
@@ -92,6 +89,7 @@ const Notice = () => {
         setVoteCount(article.voteCount)
     }
 
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [articleType, setArticleType] = useState(getArticleType())
     const [article, setArticle] = useState(null)
     const [articleId, setArticleId] = useState(getArticleId())
@@ -120,7 +118,7 @@ const Notice = () => {
                             <p className="h6">
                                 <span>작성일
                                     &nbsp;
-                                    <span id="dateCreated">{article.dateCreated}</span>
+                                    <span id="dateCreated">{article.createdAt}</span>
                                 </span>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span>조회&nbsp;

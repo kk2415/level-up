@@ -2,8 +2,9 @@ import React, {useState, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelPostService from '../../api/service/ChannelPostService'
+import ChannelArticleService from '../../api/service/channel/ChannelArticleService'
 import {Container, Form} from 'react-bootstrap'
+import {UserInfo} from "../../api/const/UserInfo";
 
 const CreateChannelNotice = () => {
     const navigate = useNavigate();
@@ -14,8 +15,6 @@ const CreateChannelNotice = () => {
         return search.substr(search.indexOf('=') + 1)
     }
 
-    const [channelId, setChannelId] = useState(getChannelId())
-
     const handleCreateNotice = async () => {
         let formData = new FormData(document.getElementById('form'));
 
@@ -25,7 +24,7 @@ const CreateChannelNotice = () => {
             articleType : 'CHANNEL_NOTICE',
         }
 
-        let result = await ChannelPostService.create(notice, channelId, localStorage.getItem('id'));
+        let result = await ChannelArticleService.create(notice, channelId, memberId);
         if (result) {
             navigate('/channel/' + channelId + '?page=1')
         }
@@ -66,6 +65,9 @@ const CreateChannelNotice = () => {
             })
         })
     }
+
+    const [channelId, setChannelId] = useState(getChannelId())
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
 
     useLayoutEffect(() => {
         configSummernote()

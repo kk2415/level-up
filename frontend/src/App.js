@@ -1,9 +1,9 @@
-import { useState, createContext, useEffect, useContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import Layout from './layouts/Layout';
 import {BrowserRouter} from 'react-router-dom'
 import {Container} from "react-bootstrap";
 import AppRouter from "./route/AppRouter";
-import EditorComponent from '../src/component/SummerNote'
+import {UserInfo} from "./api/const/UserInfo";
 
 export const AuthContext = createContext();
 
@@ -11,8 +11,8 @@ const AuthProvider = ({ children }) => {
   const [member, setMember] = useState(null);
 
   useEffect(() => {
-    const email = localStorage.getItem('email');
-    const id = localStorage.getItem('id')
+    const email = localStorage.getItem(UserInfo.EMAIL);
+    const id = localStorage.getItem(UserInfo.ID)
     setMember({ email, id });
   }, []);
 

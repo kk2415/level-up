@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Container} from 'react-bootstrap'
 
-import ChannelPostService from '../../api/service/ChannelPostService'
+import ChannelArticleService from '../../api/service/channel/ChannelArticleService'
 import {ChannelNoticeTable} from "./ChannelNoticeTable";
 import {AiFillCaretRight, AiFillCaretLeft} from "react-icons/ai";
 
@@ -47,7 +47,7 @@ const ChannelNotice = ({channelId}) => {
         const pageable = 'page=' + (curNoticePage - 1) + '&size=5&sort=id,desc'
 
 
-        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_NOTICE', pageable)
+        let result = await ChannelArticleService.getAll(channelId, 'CHANNEL_NOTICE', pageable)
 
         if (result) {
             setNotice(result.content)

@@ -2,12 +2,12 @@ import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/service/ChannelService'
-import ChannelPostService from '../../api/service/ChannelPostService'
+import ChannelService from '../../api/service/channel/ChannelService'
+import ChannelArticleService from '../../api/service/channel/ChannelArticleService'
 import {Container, Form} from 'react-bootstrap'
 import RichTextEditor from "../../component/SummerNote";
 
-const ModifyChannel = () => {
+const ModifyChannelArticle = () => {
     const navigate = useNavigate();
 
     const getChannelId = () => {
@@ -35,7 +35,7 @@ const ModifyChannel = () => {
             content  : $('#summernote').val(),
         }
 
-        let result = await ChannelPostService.modify(channelNotice, channelNoticeId, channelId);
+        let result = await ChannelArticleService.modify(channelNotice, channelNoticeId, channelId);
         if (result) {
             navigate(-1)
             // window.history.back()
@@ -44,11 +44,10 @@ const ModifyChannel = () => {
 
     const handleCancel = () => {
         navigate('/channel/' + channelId + '?page=1')
-        // window.location.href = '/channel/' + channelId + '?page=1'
     }
 
     const loadChannelNotice = async (channelNoticeId) => {
-        let channelNotice = await ChannelPostService.get(channelNoticeId)
+        let channelNotice = await ChannelArticleService.get(channelNoticeId, channelId, false)
 
         setChannelNotice(channelNotice)
     }
@@ -142,4 +141,4 @@ const ModifyChannel = () => {
     );
 };
 
-export default ModifyChannel;
+export default ModifyChannelArticle;

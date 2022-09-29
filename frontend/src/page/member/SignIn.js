@@ -10,9 +10,10 @@ import { GoogleLogin } from 'react-google-login'
 import {BiUserCircle} from "react-icons/bi";
 
 import {Link} from "react-router-dom";
-import {MemberService} from "../../api/service/MemberService";
+import {MemberService} from "../../api/service/member/MemberService";
 import '../../css/login.css'
-import {loginMemberValidation as validation} from '../../api/validation'
+import {loginMemberValidation as validation} from '../../api/Validation'
+import {LogInService} from "../../api/service/member/LogInService";
 
 const SignIn = ({} ) => {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const SignIn = ({} ) => {
         }
 
         if (validate(member)) {
-            let result = await MemberService.signIn(member);
+            let result = await LogInService.signIn(member);
 
             if (result) {
                 navigate('/', true)

@@ -3,11 +3,13 @@ buildscript {
         springBootVersion = '2.6.8'
         snippetDir = file('build/generated-snippets')
     }
+
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
+
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
@@ -22,8 +24,9 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: "org.asciidoctor.jvm.convert"
     apply plugin: "me.champeau.gradle.jmh"
+    apply plugin: "java-test-fixtures"
 
-    group = 'com.together'
+    group = 'com.levelup'
     version = 'v1.0'
     sourceCompatibility = '11'
 
@@ -106,8 +109,31 @@ subprojects {
     }
 }
 
-project(':api') {
+project(':level-api') {
     dependencies {
-        implementation project(':core')
+        implementation project(':level-channel')
+        implementation project(':level-article')
+        implementation project(':level-member')
+        implementation project(':level-common')
+    }
+}
+
+project(':level-channel') {
+    dependencies {
+        implementation project(':level-member')
+        implementation project(':level-common')
+    }
+}
+
+project(':level-article') {
+    dependencies {
+        implementation project(':level-member')
+        implementation project(':level-common')
+    }
+}
+
+project(':level-member') {
+    dependencies {
+        implementation project(':level-common')
     }
 }

@@ -2,10 +2,10 @@ import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
 import {Container, Form, Row, Col} from "react-bootstrap";
 import $ from "jquery";
 
-import ChannelService from '../../api/service/ChannelService'
-import ChannelMemberService from "../../api/service/ChannelMemberService";
+import ChannelService from '../../api/service/channel/ChannelService'
+import ChannelMemberService from "../../api/service/channel/ChannelMemberService";
 
-import {TOKEN} from "../../api/token";
+import {UserInfo} from "../../api/const/UserInfo";
 import HorizonLine from "../../component/HorizonLine";
 import {AiOutlineImport} from "react-icons/ai";
 import MemberRow from "../../component/channel/manager/MemberRow";
@@ -27,27 +27,24 @@ const ChannelInfo = () => {
 
     const handleBack = () => {
         navigate('/')
-        // $(window.location).attr('href', '/')
     }
 
     const handleModifyChannel = () => {
         navigate('/channel/modify/' + channelId)
-        // $(window.location).attr('href', '/channel/modify/' + channelId)
     }
 
     const handleDeleteChannel = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            let result = await ChannelService.delete(channelId)
+            let result = await ChannelService.delete(channelId, channelInfo.category)
             if (result) {
                 navigate('/')
-                // window.location.href = '/'
             }
         }
     }
 
     const handleRegisterChannel = async () => {
-        if (localStorage.getItem(TOKEN)) {
-            let result = await ChannelMemberService.create(channelId, localStorage.getItem('id'));
+        if (localStorage.getItem(UserInfo.TOKEN)) {
+            let result = await ChannelMemberService.create(channelId, localStorage.getItem(UserInfo.ID));
 
             if (result) {
                 alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
@@ -87,15 +84,15 @@ const ChannelInfo = () => {
                         <div style={{marginBottom: 20}}>
                             <p id='channelName' className='h1'>{channelInfo.name}</p>
                             {
-                                channelInfo.managerId === Number(localStorage.getItem('id')) &&
+                                channelInfo.managerId === Number(localStorage.getItem(UserInfo.ID)) &&
                                 <button onClick={handleModifyChannel} type='button' className='btn btn-secondary float-end'>수정</button>
                             }
                             {
-                                channelInfo.managerId === Number(localStorage.getItem('id')) &&
+                                channelInfo.managerId === Number(localStorage.getItem(UserInfo.ID)) &&
                                 <button onClick={handleDeleteChannel} type='button' className='btn btn-danger float-end'>삭제</button>
                             }
                             <p id='managerName' className='h3' style={{display: 'inline-block', marginRight: 30}}>{channelInfo.managerName}</p>
-                            <p id='createdAt' className='h4' style={{display: 'inline-block'}}>{channelInfo.dateCreated}</p>
+                            <p id='createdAt' className='h4' style={{display: 'inline-block'}}>{channelInfo.createdAt}</p>
                         </div>
                         <HorizonLine text={""} />
                         <div style={{marginBottom: 20}}>

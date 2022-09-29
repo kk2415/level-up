@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import ChannelService from '../../api/service/ChannelService'
-import {MemberService} from '../../api/service/MemberService'
+import ChannelService from '../../api/service/channel/ChannelService'
+import {MemberService} from '../../api/service/member/MemberService'
 import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
 import {uploadFile} from "../../api/UploadFile";
 import $ from "jquery";
-import {createChannelValidation as validation} from "../../api/validation";
+import {createChannelValidation as validation} from "../../api/Validation";
 import {useNavigate} from "react-router-dom";
 
 const CreateChannel = () => {

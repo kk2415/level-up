@@ -3,13 +3,13 @@ import {Container, Row, Col} from 'react-bootstrap';
 import {Link} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 
-import {createMemberValidation as validation} from '../../api/validation'
+import {createMemberValidation as validation} from '../../api/Validation'
 
 import $ from 'jquery'
 
 import HorizonLine from "../../component/HorizonLine";
-import {EmailService} from "../../api/service/EmailService";
-import {MemberService} from "../../api/service/MemberService";
+import {EmailService} from "../../api/service/member/EmailService";
+import {MemberService} from "../../api/service/member/MemberService";
 
 const FindingPassword = ({} ) => {
     const navigate = useNavigate();

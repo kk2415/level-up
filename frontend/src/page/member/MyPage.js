@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import {useNavigate} from 'react-router-dom'
-
-import $ from 'jquery'
 import {Button, Form, Container, Row, Col, Image} from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom'
+import $ from 'jquery'
+
+import { MemberService } from '../../api/service/member/MemberService'
+
 import HorizonLine from "../../component/HorizonLine";
-import { MemberService } from '../../api/service/MemberService'
-import { S3_URL } from "../../api/backEndHost"
+import { S3_URL } from "../../api/const/BackEndHost"
+import {UserInfo} from "../../api/const/UserInfo";
 
 import '../../css/mypage.css'
+import {Role} from "../../api/const/Role";
 
 const MyPage = () => {
     const navigate = useNavigate();
 
     const loadMember = async () => {
-        let result = await MemberService.get(localStorage.getItem('id'))
+        let result = await MemberService.get(localStorage.getItem(UserInfo.ID))
         if (!result) {
             alert('권한이 없습니다')
             navigate('/')
-            // window.location.href = '/'
         }
 
         setMember(result)
@@ -107,10 +109,10 @@ const MyPage = () => {
                                            style={{width: "30%", height: "30%", objectFit: "contain"}}
                                     />
                                 </Container>
-
                             }
 
                             {
+                                member.role === Role.ANONYMOUS &&
                                 <button onClick={handleConfirmEmail} className='btn btn-info w-100 mb-5'>
                                     이메일 인증 하기
                                 </button>

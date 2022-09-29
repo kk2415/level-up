@@ -1,14 +1,14 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
 
 import $ from 'jquery'
-import ChannelService from '../../api/service/ChannelService'
+import ChannelService from '../../api/service/channel/ChannelService'
 import {Container, Form, Tabs, Tab, Row} from 'react-bootstrap'
 import { ChannelTable } from '../../component/channel/ChannelTable'
-import {TOKEN} from "../../api/token";
+import {UserInfo} from "../../api/const/UserInfo";
 import Pager from "../../component/pager/Pager";
 import ChannelNotice from '../../component/channelNotice/ChannelNotice'
-import ChannelPostService from "../../api/service/ChannelPostService";
+import ChannelArticleService from "../../api/service/channel/ChannelArticleService";
 
 const Channel = () => {
     const navigate = useNavigate();
@@ -55,16 +55,16 @@ const Channel = () => {
         return Number(queryString.substr(queryString.indexOf('=') + 1))
     }
 
-    const handleWriting = () => {
-        if (localStorage.getItem(TOKEN)) {
-            navigate('/post/create?channel=' + channelId)
+    const handleWritingButton = () => {
+        if (token) {
+            navigate('/channel-article/create?channel=' + channelId)
         }
         else {
             alert('로그인해야됩니다.')
         }
     }
 
-    const handleManageChannel = () => {
+    const handleEnterManageChannelButton = () => {
         navigate('/channel/' + channelId + '/manager')
     }
 
@@ -74,7 +74,7 @@ const Channel = () => {
         }
     }
 
-    const handleGoHome = () => {
+    const handleHomeButton = () => {
         navigate('/')
     }
 
@@ -131,7 +131,7 @@ const Channel = () => {
             url += '&field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
         }
 
-        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable, searchCondition)
+        let result = await ChannelArticleService.getAll(channelId, pageable, searchCondition)
         setChannelPosts(result.content)
         setChannelPostsCount(result.totalElements)
 
@@ -140,15 +140,15 @@ const Channel = () => {
 
     const loadChannelPosts = async (channelId) => {
         let searchCondition = getSearchCondition()
-        let curPage = getCurrentPage()
-        let url = '/channel/' + channelId + '?page=' + curPage
 
+        let url = '/channel/' + channelId + '?page=' + curPage
         if (searchCondition !== undefined && searchCondition.field !== "") {
             url =+ '&field=' + searchCondition.field + '&' + 'query=' + searchCondition.querys
         }
 
         const pageable = 'page=' + (curPage - 1) + '&size=10&sort=id,desc'
-        let result = await ChannelPostService.getAll(channelId, 'CHANNEL_POST', pageable, searchCondition)
+        console.log(pageable)
+        let result = await ChannelArticleService.getAll(channelId, pageable, searchCondition)
 
         setChannelPosts(result.content)
         setChannelPostsCount(result.totalElements)
@@ -167,6 +167,7 @@ const Channel = () => {
 
     const PAGER_LENGTH = 5
 
+    const [token, setToken] = useState(localStorage.getItem(UserInfo.TOKEN))
     const [channelId, setChannelId] = useState(getChannelId())
     const [isManager, setIsManager] = useState(false)
     const [searchCondition, setSearchCondition] = useState(getSearchCondition())
@@ -194,7 +195,7 @@ const Channel = () => {
                             </h2>
                             {
                                 isManager &&
-                                <button onClick={handleManageChannel} className="w-25 btn btn-info btn-md float-start" type="button" id="manager">
+                                <button onClick={handleEnterManageChannelButton} className="w-25 btn btn-info btn-md float-start" type="button" id="manager">
                                     채널 관리
                                 </button>
                             }
@@ -242,14 +243,14 @@ const Channel = () => {
                                     </div>
                                 </div>
 
-                                <ChannelTable channelPost={channelPosts} channelId={channelId} />
+                                <ChannelTable channelArticle={channelPosts} channelId={channelId} />
 
                                 <div className="row">
                                     <div className="col-lg-6 col-sm-12 text-lg-start text-center">
-                                        <button onClick={handleGoHome} type="button" className="btn btn-secondary btn-sm" id="backButton">홈으로</button>
+                                        <button onClick={handleHomeButton} type="button" className="btn btn-secondary btn-sm" id="backButton">홈으로</button>
                                     </div>
                                     <div className="col-lg-6 col-sm-12 text-lg-end text-center">
-                                        <button onClick={handleWriting} type="button" className="btn btn-secondary btn-sm" id="postingButton">글쓰기</button>
+                                        <button onClick={handleWritingButton} type="button" className="btn btn-secondary btn-sm" id="postingButton">글쓰기</button>
                                     </div>
                                 </div>
 
@@ -264,9 +265,9 @@ const Channel = () => {
                                 />
                             </Container>
                         </Tab>
-                        <Tab eventKey="profile" title="공지사항">
-                            <ChannelNotice channelId={channelId} />
-                        </Tab>
+                        {/*<Tab eventKey="profile" title="공지사항">*/}
+                        {/*    <ChannelNotice channelId={channelId} />*/}
+                        {/*</Tab>*/}
                     </Tabs>
                 </Container>
             }

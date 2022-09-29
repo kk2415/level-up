@@ -9,7 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import "../css/HomeSwiper.css"
-import { S3_URL } from "../api/backEndHost"
+import { S3_URL } from "../api/const/BackEndHost"
 import $ from "jquery";
 
 const CardSlide = ({ channel }) => {

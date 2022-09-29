@@ -7,11 +7,11 @@ import { Navigation, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import ChannelService from "../api/service/ChannelService";
+import ChannelService from "../api/service/channel/ChannelService";
 
 import $ from "jquery";
 import CardSlide from "./CardSlide";
-import {TOKEN} from "../api/token";
+import {UserInfo} from "../api/const/UserInfo";
 
 const StudySwiper = ({category}) => {
 	const navigate = useNavigate();
@@ -31,7 +31,7 @@ const StudySwiper = ({category}) => {
 	}
 
 	const handleCreateChannel = () => {
-		if (localStorage.getItem(TOKEN) === null || localStorage.getItem(TOKEN) === 'null') {
+		if (localStorage.getItem(UserInfo.TOKEN) === null || localStorage.getItem(UserInfo.TOKEN) === 'null') {
 			alert('로그인이 필요합니다')
 		}
 		else {
@@ -42,7 +42,9 @@ const StudySwiper = ({category}) => {
 	const loadChannels = async (category) => {
 		const pageable = 'page=0&size=10&sort=' + orderBy + ',desc'
 		let result = await ChannelService.getByCategory(category, orderBy, pageable);
-		setChannels(result.content)
+		if (result) {
+			setChannels(result.content)
+		}
 	}
 
 	const [channels, setChannels] = useState([])

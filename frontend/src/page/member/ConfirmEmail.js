@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import {Button, Form, Container, Row} from 'react-bootstrap';
 
 import {BiUserCircle} from "react-icons/bi";
-import {EmailService} from "../../api/service/EmailService";
+import {EmailService} from "../../api/service/member/EmailService";
 import '../../css/login.css'
 
 import {useNavigate} from "react-router-dom";
+import {UserInfo} from "../../api/const/UserInfo";
 
 const SignIn = ({} ) => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const SignIn = ({} ) => {
             securityCode : "",
             authType : "SIGN_UP",
         }
-        let result = await EmailService.sendSecurityCode(emailAuthRequest, localStorage.getItem('email'));
+        let result = await EmailService.sendSecurityCode(emailAuthRequest, localStorage.getItem(UserInfo.EMAIL));
 
         if (result) {
             alert('인증번호가 전송되었습니다.')
@@ -31,19 +32,18 @@ const SignIn = ({} ) => {
             authType : "SIGN_UP",
         }
 
-        let result = await EmailService.confirmEmail(auth, localStorage.getItem('email'));
+        let result = await EmailService.confirmEmail(auth, localStorage.getItem(UserInfo.EMAIL));
 
         if (result) {
             alert('인증되었습니다.')
             navigate('/')
-            // window.location.href = '/'
         }
     }
 
     return (
         <>
             {
-                localStorage.getItem('id') &&
+                localStorage.getItem(UserInfo.ID) &&
                 <Container className='mt-5' style={{width: "40%"}}>
                     <Row className='d-flex justify-content-center align-items-center'>
                         <BiUserCircle className='loginIcon'/>

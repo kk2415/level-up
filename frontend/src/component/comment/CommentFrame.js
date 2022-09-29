@@ -1,29 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import {Container} from 'react-bootstrap'
-import CommentService from "../../api/service/CommentService";
+import CommentService from "../../api/service/article/CommentService";
 import Comment from './Comment'
-import {TOKEN} from "../../api/token";
+import {UserInfo} from "../../api/const/UserInfo";
 
 import $ from 'jquery'
 
 const CommentFrame = ({articleId, identity}) => {
-    const [comments, setComments] = useState(null)
-    const [onComments, setOnComments] = useState(false)
 
-    const loadComment = async (articleId, identity) => {
-        let result = await CommentService.get(articleId, identity)
-        setComments(result)
-    }
-
-    const createComment = async () => {
+    const handleCreateCommentButton = async () => {
         let comment = {
             articleId : articleId,
             content : $('#contentOfWritingComment').val(),
             identity : identity,
         }
 
-        if (localStorage.getItem(TOKEN)) {
-            await CommentService.create(comment, localStorage.getItem('id'))
+        if (localStorage.getItem(UserInfo.TOKEN)) {
+            await CommentService.create(comment, localStorage.getItem(UserInfo.ID))
             $('#contentOfWritingComment').val('')
             setOnComments(!onComments)
         }
@@ -31,6 +24,14 @@ const CommentFrame = ({articleId, identity}) => {
             alert("댓글을 작성하려면 로그인을 해야합니다.")
         }
     }
+
+    const loadComment = async (articleId, identity) => {
+        let result = await CommentService.get(articleId, identity)
+        setComments(result)
+    }
+
+    const [comments, setComments] = useState(null)
+    const [onComments, setOnComments] = useState(false)
 
     useEffect(() => {
         loadComment(articleId, identity)
@@ -53,7 +54,7 @@ const CommentFrame = ({articleId, identity}) => {
                 <Container>
                     <textarea id="contentOfWritingComment" className="form-control" rows="3" placeholder="댓글을 입력해주세요." />
                     <br/>
-                    <button onClick={createComment} className="btn btn btn-success float-end mb-5" type="button">
+                    <button onClick={handleCreateCommentButton} className="btn btn btn-success float-end mb-5" type="button">
                         등록
                     </button>
                 </Container>
