@@ -1,10 +1,11 @@
 package com.levelup.api.filter;
 
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.exception.JwtException;
 import com.levelup.member.util.jwt.TokenProvider;
 import com.levelup.member.domain.MemberPrincipal;
-import com.levelup.member.exception.MemberNotFoundException;
 import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     switch (validationResult) {
                         case SUCCESS:
                             Member member = memberRepository.findByEmail(tokenProvider.getSubject(token))
-                                    .orElseThrow(() -> new MemberNotFoundException(""));
+                                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
                             MemberPrincipal userDetails = MemberPrincipal.from(member);
 
                             AbstractAuthenticationToken authenticationToken =

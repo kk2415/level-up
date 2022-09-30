@@ -51,8 +51,10 @@ public class MemberApiController {
     }
 
     @PatchMapping({"/{email}/password", "/{email}/password/"})
-    public ResponseEntity<Void> updatePassword(@Valid @RequestBody ModifyPasswordRequest request,
-                                                     @PathVariable String email) {
+    public ResponseEntity<Void> updatePassword(
+            @Valid @RequestBody ModifyPasswordRequest request,
+            @PathVariable String email)
+    {
         memberService.updatePassword(request.toDto(), email);
 
         return ResponseEntity.ok().build();

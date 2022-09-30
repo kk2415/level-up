@@ -2,10 +2,11 @@ package com.levelup.channel.domain.service;
 
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.service.dto.ChannelDto;
-import com.levelup.channel.exception.ChannelNotFountExcpetion;
-import com.levelup.channel.exception.ThumbnailImageNotFoundException;
 import com.levelup.channel.domain.service.dto.ChannelStatInfoDto;
 import com.levelup.common.domain.FileType;
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
+import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.ChannelCategory;
@@ -14,7 +15,6 @@ import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Member;
-import com.levelup.member.exception.MemberNotFoundException;
 import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -48,7 +48,7 @@ public class ChannelService {
     })
     public ChannelDto save(ChannelDto dto, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         member.addRole(Role.of(RoleName.CHANNEL_MANAGER, member));
 
         ChannelMember channelMember = ChannelMember.of(member, true, false);
@@ -66,7 +66,7 @@ public class ChannelService {
     @Transactional(readOnly = true)
     public ChannelDto get(Long channelId) {
         final Channel findChannel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         return ChannelDto.from(findChannel);
     }
@@ -94,10 +94,10 @@ public class ChannelService {
     @Transactional(readOnly = true)
     public UrlResource getThumbnailImage(Long channelId) throws MalformedURLException {
         final Channel findChannel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         if (findChannel.getThumbnail() == null) {
-            throw new ThumbnailImageNotFoundException("썸네일 사진을 찾을 수 없습니다");
+            throw new FileNotFoundException(ErrorCode.IMAGE_NOT_FOUND);
         }
 
         UploadFile uploadFile = findChannel.getThumbnail();
@@ -109,7 +109,7 @@ public class ChannelService {
     @Transactional(readOnly = true)
     public ChannelStatInfoDto getStatInfo(Long channelId, Long memberId) {
         final Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         return ChannelStatInfoDto.from(channel);
     }
@@ -118,7 +118,7 @@ public class ChannelService {
     @CacheEvict(cacheNames = "channel", allEntries = true)
     public void update(ChannelDto dto, Long channelId) {
         Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         channel.updateChannel(dto.getName(), dto.getCategory(), dto.getLimitedMemberNumber(), dto.getDescription(), dto.getThumbnailImage());
     }
@@ -126,7 +126,7 @@ public class ChannelService {
     @CacheEvict(cacheNames = "channel", allEntries = true)
     public UploadFile updateChannelThumbNail(MultipartFile file, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         fileStore.deleteFile(channel.getThumbnail().getStoreFileName());
 
@@ -142,7 +142,7 @@ public class ChannelService {
     })
     public void delete(Long channelId, ChannelCategory category) {
         Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         channelRepository.delete(channel);
     }

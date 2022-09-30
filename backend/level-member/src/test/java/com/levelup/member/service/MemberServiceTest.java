@@ -47,7 +47,7 @@ class MemberServiceTest extends TestSupporter {
         // Then
         assertThat(newMemberDto1.getEmail()).isEqualTo(memberDto1.getEmail());
         assertThat(newMemberDto1.getPassword()).isEqualTo("changed password");
-        assertThat(newMemberDto1.getRoles().get(0)).isEqualTo(RoleName.ANONYMOUS);
+        assertThat(newMemberDto1.getRole()).isEqualTo(RoleName.ANONYMOUS);
         verify(mockPasswordEncoder, times(1)).encode(anyString());
         verify(mocKMemberRepository, times(1)).save(any(Member.class));
     }

@@ -1,24 +1,10 @@
 package com.levelup.channel.exception;
 
-public class NoPlaceChannelException extends RuntimeException {
+import com.levelup.common.exception.ErrorCode;
 
-    public NoPlaceChannelException() {
-        super();
-    }
+public class NoPlaceChannelException extends ChannelException {
 
-    public NoPlaceChannelException(String message) {
-        super(message);
-    }
-
-    public NoPlaceChannelException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NoPlaceChannelException(Throwable cause) {
-        super(cause);
-    }
-
-    protected NoPlaceChannelException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public NoPlaceChannelException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

@@ -7,8 +7,8 @@ import com.levelup.channel.domain.service.dto.ChannelArticleDto;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.ChannelCategory;
 import com.levelup.channel.domain.entity.ChannelArticle;
+import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.member.domain.entity.Member;
-import com.levelup.member.exception.MemberNotFoundException;
 import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class ChannelArticleServiceTest extends TestSupporter {
 
         // When
         given(mockChannelArticleRepository.findById(anyLong())).willReturn(Optional.of(channelArticle1));
-        ChannelArticleDto channelPostDto1 = channelArticleService.get(1L, true);
+        ChannelArticleDto channelPostDto1 = channelArticleService.get(1L, channel1.getId(), true);
 
         // Then
         assertThat(channelPostDto1.getViews()).isEqualTo(1L);
@@ -64,7 +64,7 @@ class ChannelArticleServiceTest extends TestSupporter {
         given(mockChannelArticleRepository.findById(anyLong())).willReturn(Optional.of(channelArticle1));
 
         // When
-        ChannelArticleDto newChannelDto = channelArticleService.update(updateDto, 1L, manager1.getMember().getId());
+        ChannelArticleDto newChannelDto = channelArticleService.update(updateDto, 1L, manager1.getMember().getId(), channel1.getId());
 
         // Then
         assertThat(newChannelDto.getTitle()).isEqualTo(updateDto.getTitle());
@@ -88,7 +88,7 @@ class ChannelArticleServiceTest extends TestSupporter {
         given(mockChannelArticleRepository.findById(anyLong())).willReturn(Optional.of(channelPost1));
 
         // When & than
-        assertThatThrownBy(() -> channelArticleService.update(updateDto, 1L, manager2.getId()))
-                .isInstanceOf(MemberNotFoundException.class);
+        assertThatThrownBy(() -> channelArticleService.update(updateDto, 1L, manager2.getId(), channel1.getId()))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 }

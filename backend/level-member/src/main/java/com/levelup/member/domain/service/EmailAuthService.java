@@ -1,5 +1,7 @@
 package com.levelup.member.domain.service;
 
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.util.email.EmailSender;
 import com.levelup.common.util.email.EmailStuff;
 import com.levelup.common.util.email.EmailSubject;
@@ -8,7 +10,6 @@ import com.levelup.member.domain.entity.EmailAuth;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.entity.Member;
-import com.levelup.member.exception.MemberNotFoundException;
 import com.levelup.member.exception.NotMatchSecurityCodeException;
 import com.levelup.member.exception.SecurityCodeExpiredException;
 import com.levelup.member.domain.repository.EmailAuthRepository;
@@ -31,7 +32,7 @@ public class EmailAuthService {
 
     public void save(EmailAuthDto dto, String email) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 계정입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         EmailAuth emailAuth = dto.toEntity(member);
         sendEmail(member.getEmail(), emailAuth.getSecurityCode());
@@ -61,11 +62,11 @@ public class EmailAuthService {
 
     private void validateSecurityCode(String securityCode, EmailAuth emailAuth) {
         if (isExpired(emailAuth.getExpireDate())) {
-            throw new SecurityCodeExpiredException("인증코드가 만료되었습니다.");
+            throw new SecurityCodeExpiredException(ErrorCode.SECURITY_CODE_EXPIRED);
         }
 
         if (!emailAuth.getSecurityCode().equals(securityCode)) {
-            throw new NotMatchSecurityCodeException("인증번호가 일치하지 않습니다.");
+            throw new NotMatchSecurityCodeException(ErrorCode.NOT_MATCH_SECURITY_CODE);
         }
     }
 

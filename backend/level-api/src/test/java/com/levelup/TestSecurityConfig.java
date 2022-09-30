@@ -1,6 +1,7 @@
 package com.levelup;
 
 import com.levelup.api.config.SecurityConfig;
+import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.service.dto.MemberDto;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Gender;
@@ -36,7 +37,7 @@ public class TestSecurityConfig {
                         LocalDate.now(),
                         "010-2354-9960",
                         new UploadFile("", ""),
-                        new ArrayList<>()
+                        RoleName.MEMBER
                 ).toEntity()
         ));
     }

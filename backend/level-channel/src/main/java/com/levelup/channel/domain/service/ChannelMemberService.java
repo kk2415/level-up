@@ -4,12 +4,12 @@ import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
-import com.levelup.channel.exception.ChannelMemberDuplicationException;
-import com.levelup.channel.exception.ChannelNotFountExcpetion;
 import com.levelup.channel.exception.NoPlaceChannelException;
 import com.levelup.channel.domain.service.dto.ChannelMemberDto;
+import com.levelup.common.exception.EntityDuplicationException;
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
 import com.levelup.member.domain.entity.Member;
-import com.levelup.member.exception.MemberNotFoundException;
 import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +33,9 @@ public class ChannelMemberService {
 
     public ChannelMemberDto create(Long channelId, Long memberId, Boolean isWaitingMember) {
         Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         final Optional<ChannelMember> channelMembers
                 = channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId);
 
@@ -49,11 +49,11 @@ public class ChannelMemberService {
 
     private void validate(Channel channel, Optional<ChannelMember> channelMember) {
         if (channelMember.isPresent()) {
-            throw new ChannelMemberDuplicationException("채널에 이미 존재하는 멤버입니다.");
+            throw new EntityDuplicationException(ErrorCode.CHANNEL_MEMBER_DUPLICATION);
         }
 
         if (channel.getChannelMembers().size() >= channel.getMemberMaxNumber() ) {
-            throw new NoPlaceChannelException("채널 제한 멤버수가 다 찼습니다. 더 이상 가입할 수 없습니다");
+            throw new NoPlaceChannelException(ErrorCode.NO_PLACE_CHANNEL);
         }
     }
 
@@ -67,7 +67,7 @@ public class ChannelMemberService {
 
     public void approvalMember(Long channelMemberId) {
         ChannelMember channelMember = channelMemberRepository.findById(channelMemberId)
-                .orElseThrow(() -> new MemberNotFoundException("채널 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         channelMember.setIsWaitingMember(false);
     }
@@ -75,10 +75,10 @@ public class ChannelMemberService {
 
     public void delete(Long channelMemberId, Long channelId) {
         ChannelMember channelMember = channelMemberRepository.findById(channelMemberId)
-                .orElseThrow(() -> new MemberNotFoundException("채널 멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
         channel.removeMembers(List.of(channelMember));
 
         channelMemberRepository.delete(channelMember);

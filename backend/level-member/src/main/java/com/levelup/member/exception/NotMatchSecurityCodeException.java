@@ -1,24 +1,10 @@
 package com.levelup.member.exception;
 
-public class NotMatchSecurityCodeException extends RuntimeException {
+import com.levelup.common.exception.ErrorCode;
 
-    public NotMatchSecurityCodeException() {
-        super();
-    }
+public class NotMatchSecurityCodeException extends MemberException {
 
-    public NotMatchSecurityCodeException(String message) {
-        super(message);
-    }
-
-    public NotMatchSecurityCodeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NotMatchSecurityCodeException(Throwable cause) {
-        super(cause);
-    }
-
-    protected NotMatchSecurityCodeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public NotMatchSecurityCodeException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

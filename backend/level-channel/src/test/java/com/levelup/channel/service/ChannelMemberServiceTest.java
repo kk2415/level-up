@@ -6,9 +6,10 @@ import com.levelup.channel.domain.service.dto.ChannelMemberDto;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.ChannelCategory;
 import com.levelup.channel.domain.entity.ChannelMember;
+import com.levelup.common.exception.EntityDuplicationException;
+import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.channel.exception.NoPlaceChannelException;
-import com.levelup.channel.exception.ChannelMemberDuplicationException;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.member.domain.repository.MemberRepository;
@@ -72,7 +73,7 @@ class ChannelMemberServiceTest extends TestSupporter {
 
         // When && Then
         assertThatThrownBy(() -> channelMemberService.create(1L, manager1.getMember().getId(), true))
-                .isInstanceOf(ChannelMemberDuplicationException.class);
+                .isInstanceOf(EntityDuplicationException.class);
     }
 
     @DisplayName("채널 정원 초과 테스트")

@@ -2,6 +2,8 @@ package com.levelup.api.config;
 
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Gender;
+import com.levelup.member.domain.entity.Role;
+import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.domain.service.dto.MemberDto;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +40,7 @@ public class TestSecurityConfig {
                         LocalDate.now(),
                         "010-2354-9960",
                         new UploadFile("", ""),
-                        List.of()).toEntity()
+                        RoleName.MEMBER).toEntity()
         ));
     }
 }

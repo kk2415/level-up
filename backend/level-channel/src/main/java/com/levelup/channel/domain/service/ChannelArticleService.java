@@ -7,13 +7,11 @@ import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.service.dto.ChannelArticleDto;
-import com.levelup.channel.exception.ChannelArticleNotFoundException;
-import com.levelup.channel.exception.ChannelMemberNotFoundException;
-import com.levelup.channel.exception.ChannelNotFountExcpetion;
 import com.levelup.common.domain.FileType;
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.util.file.LocalFileStore;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,9 +37,9 @@ public class ChannelArticleService {
     @CacheEvict(cacheNames = "channelArticle", key = "{#channelId + ':0'}")
     public ChannelArticleDto save(ChannelArticleDto dto, Long memberId, Long channelId) {
         final ChannelMember channelMember = channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId)
-                .orElseThrow(() -> new ChannelMemberNotFoundException("멤버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_MEMBER_NOT_FOUND));
         final Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new ChannelNotFountExcpetion("채널이 존재하지 않습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
         ChannelArticle channelPost = dto.toEntity(channelMember, channel);
 
@@ -62,7 +60,7 @@ public class ChannelArticleService {
     @CacheEvict(cacheNames = "channelArticle", key = "{#channelId + ':0'}")
     public ChannelArticleDto get(Long articleId, Long channelId, boolean view) {
         final ChannelArticle article = channelArticleRepository.findById(articleId)
-                .orElseThrow(() -> new ChannelArticleNotFoundException("존재하는 게시글이 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
         if (view) article.addViews();;
 
@@ -96,14 +94,14 @@ public class ChannelArticleService {
 
     public ChannelArticleDto getNext(Long articleId, Long channelId) {
        final ChannelArticle channelPost = channelArticleRepository.findNextByChannelId(articleId, channelId)
-                .orElseThrow(() -> new ChannelArticleNotFoundException("존재하는 페이지가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
         return ChannelArticleDto.from(channelPost);
     }
 
     public ChannelArticleDto getPrev(Long articleId, Long channelId) {
         final ChannelArticle channelPost = channelArticleRepository.findPrevByChannelId(articleId, channelId)
-                .orElseThrow(() -> new ChannelArticleNotFoundException("존재하는 페이지가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
         return ChannelArticleDto.from(channelPost);
     }
@@ -113,10 +111,10 @@ public class ChannelArticleService {
     @CacheEvict(cacheNames = "channelArticle", key = "{#channelId + ':0'}")
     public ChannelArticleDto update(ChannelArticleDto dto, Long articleId, Long memberId, Long channelId) {
         final ChannelArticle article = channelArticleRepository.findById(articleId)
-                .orElseThrow(() -> new ChannelArticleNotFoundException("작성한 게시글이 없습니다"));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
         if (!article.getChannelMember().getMember().getId().equals(memberId)) {
-            throw new MemberNotFoundException("권한이 없습니다.");
+            throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         article.update(dto.getTitle(), dto.getContent(), dto.getPostCategory());

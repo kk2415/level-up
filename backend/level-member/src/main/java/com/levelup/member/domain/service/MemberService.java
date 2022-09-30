@@ -1,6 +1,10 @@
 package com.levelup.member.domain.service;
 
 import com.levelup.common.domain.FileType;
+import com.levelup.common.exception.EntityDuplicationException;
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
+import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.MemberPrincipal;
@@ -8,9 +12,6 @@ import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.service.dto.UpdateMemberDto;
-import com.levelup.member.exception.EmailDuplicationException;
-import com.levelup.member.exception.MemberNotFoundException;
-import com.levelup.member.exception.ProfileImageNotFoundException;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.domain.service.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
@@ -55,10 +56,10 @@ public class MemberService implements UserDetailsService {
 
     private void validateDuplicationMember(String email, String nickname) {
         memberRepository.findByEmail(email)
-                .ifPresent(user -> {throw new EmailDuplicationException("중복된 이메일입니다.");});
+                .ifPresent(user -> {throw new EntityDuplicationException(ErrorCode.EMAIL_DUPLICATION);});
 
         memberRepository.findByNickname(nickname)
-                .ifPresent(user -> {throw new EmailDuplicationException("이미 사용중인 닉네임입니다.");});
+                .ifPresent(user -> {throw new EntityDuplicationException(ErrorCode.NICKNAME_DUPLICATION);});
     }
 
     public UploadFile createProfileImage(MultipartFile file) throws IOException {
@@ -70,7 +71,7 @@ public class MemberService implements UserDetailsService {
     @Cacheable(cacheNames = "member", key = "#memberId")
     public MemberDto get(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         return MemberDto.from(member);
     }
@@ -80,14 +81,14 @@ public class MemberService implements UserDetailsService {
     @CacheEvict(cacheNames = "member", key = "#memberId")
     public void update(UpdateMemberDto dto, Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.update(dto.getNickname(), dto.getProfileImage());
     }
 
     public void updatePassword(UpdateMemberDto dto, String email) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.updatePassword(passwordEncoder.encode(dto.getPassword()));
     }
@@ -95,11 +96,11 @@ public class MemberService implements UserDetailsService {
     @CacheEvict(cacheNames = "member", key = "#memberId")
     public UploadFile updateProfileImage(MultipartFile file, Long memberId) throws IOException {
         if (file == null || file.isEmpty()) {
-            throw new ProfileImageNotFoundException("존재하지 않는 이미지파일입니다.");
+            throw new FileNotFoundException(ErrorCode.IMAGE_NOT_FOUND);
         }
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         if (member.getProfileImage() != null) {
             fileStore.deleteFile(member.getProfileImage().getStoreFileName());
@@ -116,7 +117,7 @@ public class MemberService implements UserDetailsService {
     @CacheEvict(cacheNames = "member", key = "#memberId")
     public void delete(Long memberId) {
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         //TODO::비동기 메시지 구현
 //        List<ChannelMember> channelMembers = member.getChannelMembers().stream()
@@ -133,7 +134,7 @@ public class MemberService implements UserDetailsService {
         log.error("start loadUserByUsername");
 
        final Member member = memberRepository.findByEmail(username)
-                .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>(10);
         List<Role> roles = member.getRoles();
