@@ -5,6 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
+    EMAIL_NOT_FOUND(400, "존재하지 않는 이메일입니다."),
+    PASSWORD_NOT_FOUND(400, "패스워드를 잘못 입력하셨습니다."),
+
     MEMBER_NOT_FOUND(400, "존재하지 않는 회원입니다."),
     ARTICLE_NOT_FOUND(400, "존재하지 않는 게시글입니다."),
     COMMENT_NOT_FOUND(400, "존재하지 않는 댓글입니다."),

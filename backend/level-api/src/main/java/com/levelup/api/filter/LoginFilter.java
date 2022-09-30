@@ -27,9 +27,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper;
     private final TokenProvider tokenProvider;
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+        @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException
+        {
         log.info("login filter start = url : {}", request.getRequestURL());
 
         try {
@@ -44,6 +44,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                             creds.getPassword(),
                             new ArrayList<>(10)
                     )
+
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

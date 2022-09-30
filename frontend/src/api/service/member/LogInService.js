@@ -17,8 +17,7 @@ export const LogInService = {
                 localStorage.setItem(UserInfo.IS_ADMIN, data.isAdmin)
             })
             .catch((error) => {
-                console.log(error)
-                alert("이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.")
+                alert(error.responseJSON.message)
             })
 
         return result

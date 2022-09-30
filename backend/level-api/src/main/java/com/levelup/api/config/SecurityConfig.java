@@ -1,10 +1,7 @@
 package com.levelup.api.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.levelup.api.filter.JwtAccessDeniedHandler;
-import com.levelup.api.filter.JwtAuthenticationEntryPoint;
-import com.levelup.api.filter.JwtAuthenticationFilter;
-import com.levelup.api.filter.LoginFilter;
+import com.levelup.api.filter.*;
 import com.levelup.member.util.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -30,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final LoginFailureHandler loginFailureHandler;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -81,7 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         LoginFilter securityLoginFilter = new LoginFilter(objectMapper, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
-            securityLoginFilter.setFilterProcessesUrl("/api/v1/login");
+        securityLoginFilter.setFilterProcessesUrl("/api/v1/login");
+        securityLoginFilter.setAuthenticationFailureHandler(loginFailureHandler);
         return securityLoginFilter;
     }
 
