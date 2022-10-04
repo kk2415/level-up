@@ -3,7 +3,7 @@ package com.levelup.channel.repository.vote;
 import com.levelup.channel.ChannelApplicationTest;
 import com.levelup.channel.TestSupporter;
 import com.levelup.channel.config.TestJpaConfig;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.entity.*;
 import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;

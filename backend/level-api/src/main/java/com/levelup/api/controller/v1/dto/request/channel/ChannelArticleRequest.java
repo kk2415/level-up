@@ -1,7 +1,7 @@
 package com.levelup.api.controller.v1.dto.request.channel;
 
 import com.levelup.channel.domain.service.dto.ChannelArticleDto;
-import com.levelup.channel.domain.ChannelArticleCategory;
+import com.levelup.channel.domain.entity.ChannelArticleCategory;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -2,7 +2,7 @@ package com.levelup.channel.domain.service.dto;
 
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelArticle;
-import com.levelup.channel.domain.ChannelArticleCategory;
+import com.levelup.channel.domain.entity.ChannelArticleCategory;
 import com.levelup.channel.domain.entity.ChannelMember;
 import lombok.Builder;
 import lombok.Getter;

@@ -5,7 +5,7 @@ import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.service.ChannelService;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;

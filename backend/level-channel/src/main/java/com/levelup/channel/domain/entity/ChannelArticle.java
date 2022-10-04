@@ -1,6 +1,5 @@
 package com.levelup.channel.domain.entity;
 
-import com.levelup.channel.domain.ChannelArticleCategory;
 import com.levelup.common.domain.base.BaseTimeEntity;
 import lombok.*;
 

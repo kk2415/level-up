@@ -2,7 +2,7 @@ package com.levelup.api.controller.v1.dto.response.channel;
 
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.common.util.DateFormat;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.common.util.file.UploadFile;
 import lombok.Getter;
 

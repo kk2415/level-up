@@ -1,6 +1,6 @@
 package com.levelup.api.controller.v1.dto.request.channel;
 
-import com.levelup.channel.domain.VoteType;
+import com.levelup.channel.domain.entity.VoteType;
 import com.levelup.channel.domain.service.dto.ChannelVoteDto;
 import lombok.Getter;
 

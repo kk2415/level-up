@@ -3,7 +3,7 @@ package com.levelup.api.controller.v1.dto.request.channel;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.levelup.channel.domain.service.dto.ChannelDto;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.common.util.file.UploadFile;
 import lombok.*;
 

@@ -7,6 +7,8 @@ import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.common.util.file.UploadFile;
+import com.levelup.event.events.EventPublisher;
+import com.levelup.event.events.MemberDeletedEvent;
 import com.levelup.member.domain.MemberPrincipal;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
@@ -119,11 +121,7 @@ public class MemberService implements UserDetailsService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
-        //TODO::비동기 메시지 구현
-//        List<ChannelMember> channelMembers = member.getChannelMembers().stream()
-//                .filter(ChannelMember::getIsManager)
-//                .collect(Collectors.toUnmodifiableList());
-//        channelMembers.forEach(channelMember -> channelRepository.delete(channelMember.getChannel()));
+        EventPublisher.raise(MemberDeletedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
 
         memberRepository.delete(member);
     }

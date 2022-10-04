@@ -115,7 +115,10 @@ public class ChannelService {
     }
 
 
-    @CacheEvict(cacheNames = "channel", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':id'}"),
+            @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':memberCount'}")
+    })
     public void update(ChannelDto dto, Long channelId) {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));

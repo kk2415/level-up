@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface ChannelMemberRepository extends JpaRepository<ChannelMember, Long> {
 
+    Optional<ChannelMember> findByMemberId(Long memberId);
+
     Optional<ChannelMember> findByChannelIdAndMemberId(Long channelId, Long memberId);
 
     @Query(value = "select cm from ChannelMember cm " +

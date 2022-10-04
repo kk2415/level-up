@@ -1,6 +1,6 @@
 package com.levelup.channel.domain.service.vote;
 
-import com.levelup.channel.domain.VoteType;
+import com.levelup.channel.domain.entity.VoteType;
 import com.levelup.channel.domain.service.dto.ChannelVoteDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

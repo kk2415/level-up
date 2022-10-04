@@ -1,6 +1,5 @@
 package com.levelup.channel.domain.entity;
 
-import com.levelup.channel.domain.ChannelCategory;
 import com.levelup.common.domain.base.BaseTimeEntity;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Member;

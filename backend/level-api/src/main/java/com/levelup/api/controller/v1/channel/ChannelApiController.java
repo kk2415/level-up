@@ -5,7 +5,7 @@ import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelStatInfoResponse;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelResponse;
 import com.levelup.channel.domain.service.ChannelService;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.service.dto.ChannelStatInfoDto;
 import com.levelup.common.util.file.UploadFile;
 import io.swagger.v3.oas.annotations.Operation;

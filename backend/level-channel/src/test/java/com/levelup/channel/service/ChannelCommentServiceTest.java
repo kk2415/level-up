@@ -1,7 +1,7 @@
 package com.levelup.channel.service;
 
 import com.levelup.channel.TestSupporter;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelArticle;
 import com.levelup.channel.domain.entity.ChannelComment;
@@ -11,7 +11,6 @@ import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.comment.ChannelCommentRepository;
 import com.levelup.channel.domain.service.ChannelCommentService;
 import com.levelup.channel.domain.service.dto.ChannelCommentDto;
-import com.levelup.channel.domain.service.dto.ChannelReplyCommentDto;
 import com.levelup.member.domain.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

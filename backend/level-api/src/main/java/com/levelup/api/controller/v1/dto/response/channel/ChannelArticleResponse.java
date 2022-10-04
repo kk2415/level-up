@@ -3,7 +3,7 @@ package com.levelup.api.controller.v1.dto.response.channel;
 import com.levelup.channel.domain.service.dto.ChannelArticleDto;
 import com.levelup.common.util.DateFormat;
 import com.levelup.channel.domain.entity.ChannelArticle;
-import com.levelup.channel.domain.ChannelArticleCategory;
+import com.levelup.channel.domain.entity.ChannelArticleCategory;
 import lombok.*;
 
 import java.time.format.DateTimeFormatter;
