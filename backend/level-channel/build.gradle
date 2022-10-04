@@ -1,3 +1,9 @@
+dependencies {
+    implementation project(':level-member')
+    implementation project(':level-event')
+    implementation project(':level-common')
+}
+
 bootJar {
     enabled = false
 }

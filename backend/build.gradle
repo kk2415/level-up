@@ -108,32 +108,3 @@ subprojects {
         iterations = 1
     }
 }
-
-project(':level-api') {
-    dependencies {
-        implementation project(':level-channel')
-        implementation project(':level-article')
-        implementation project(':level-member')
-        implementation project(':level-common')
-    }
-}
-
-project(':level-channel') {
-    dependencies {
-        implementation project(':level-member')
-        implementation project(':level-common')
-    }
-}
-
-project(':level-article') {
-    dependencies {
-        implementation project(':level-member')
-        implementation project(':level-common')
-    }
-}
-
-project(':level-member') {
-    dependencies {
-        implementation project(':level-common')
-    }
-}

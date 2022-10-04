@@ -9,7 +9,7 @@ import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.ChannelCategory;
+import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.member.domain.entity.RoleName;
