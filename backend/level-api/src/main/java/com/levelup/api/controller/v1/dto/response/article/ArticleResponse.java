@@ -2,7 +2,7 @@ package com.levelup.api.controller.v1.dto.response.article;
 
 import com.levelup.article.domain.service.dto.ArticleDto;
 import com.levelup.common.util.DateFormat;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;

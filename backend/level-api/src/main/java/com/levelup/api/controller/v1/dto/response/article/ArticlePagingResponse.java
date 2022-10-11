@@ -71,7 +71,7 @@ public class ArticlePagingResponse implements Serializable {
         return new ArticlePagingResponse(
                 article.getId(),
                 article.getTitle(),
-                article.getMember().getNickname(),
+                article.getWriter().getNickname(),
                 article.getViews(),
                 article.getArticleType().name(),
                 DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(article.getCreatedAt()),

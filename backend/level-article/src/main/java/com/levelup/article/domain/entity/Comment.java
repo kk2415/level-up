@@ -1,7 +1,6 @@
 package com.levelup.article.domain.entity;
 
 import com.levelup.common.domain.base.BaseTimeEntity;
-import com.levelup.member.domain.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,19 +13,19 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "article_comment")
+@Table(name = "comment")
 @Entity
-public class ArticleComment extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "article_comment_id")
+    @Column(name = "comment_id")
     private Long id;
 
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "writer_id")
+    private Writer writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
@@ -34,16 +33,16 @@ public class ArticleComment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private ArticleComment parent;
+    private Comment parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
-    private List<ArticleComment> child;
+    private List<Comment> child;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<CommentVote> commentVotes;
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setWriter(Writer writer) {
+        this.writer = writer;
     }
 
     public void setArticle(Article article) {
@@ -51,20 +50,20 @@ public class ArticleComment extends BaseTimeEntity {
             article.getComments().add(this);
     }
 
-    public void addChildComment(ArticleComment child) {
+    public void addChildComment(Comment child) {
         this.child.add(child);
         child.parent = (this);
     }
 
-    public void changeComment(String content) {
+    public void update(String content) {
         this.content = (content);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof ArticleComment)) return false;
-        return id != null && id.equals(((ArticleComment) obj).getId());
+        if (!(obj instanceof Comment)) return false;
+        return id != null && id.equals(((Comment) obj).getId());
     }
 
     @Override

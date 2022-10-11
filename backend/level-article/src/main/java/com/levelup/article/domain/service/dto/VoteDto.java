@@ -1,10 +1,10 @@
 package com.levelup.article.domain.service.dto;
 
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.entity.ArticleComment;
+import com.levelup.article.domain.entity.Comment;
 import com.levelup.article.domain.entity.ArticleVote;
 import com.levelup.article.domain.entity.CommentVote;
-import com.levelup.article.domain.VoteType;
+import com.levelup.article.domain.entity.VoteType;
 import lombok.Getter;
 
 @Getter
@@ -46,7 +46,7 @@ public class VoteDto {
         return articleVote;
     }
 
-    public CommentVote toEntity(ArticleComment comment) {
+    public CommentVote toEntity(Comment comment) {
         CommentVote commentVote = CommentVote.builder()
                 .memberId(memberId)
                 .comment(comment)

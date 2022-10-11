@@ -27,11 +27,11 @@ public class CommentVote extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "comment_id")
-    private ArticleComment comment;
+    private Comment comment;
 
     protected CommentVote() {}
 
-    public void setComment(ArticleComment comment) {
+    public void setComment(Comment comment) {
         if (comment != null) {
             comment.getCommentVotes().remove(this);
         }

@@ -6,6 +6,8 @@ import com.levelup.article.domain.entity.ArticleVote;
 import com.levelup.article.domain.repository.ArticleRepository;
 import com.levelup.article.domain.repository.ArticleVoteRepository;
 import com.levelup.article.domain.service.dto.VoteDto;
+import com.levelup.common.exception.EntityDuplicationException;
+import com.levelup.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,26 +26,23 @@ public class ArticleVoteService implements VoteService {
     private final ArticleVoteRepository articleVoteRepository;
 
     public VoteDto save(VoteDto dto) {
-        if (validateDuplicationAndDelete(dto.getMemberId(), dto.getTargetId())) {
-            Article article = articleRepository.findById(dto.getTargetId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+        final List<ArticleVote> votes = articleVoteRepository.findByMemberIdAndArticleId(dto.getMemberId(), dto.getTargetId());
 
-            ArticleVote vote = dto.toEntity(article);
-            articleVoteRepository.save(vote);
-
-            return VoteDto.of(vote, true);
+        if (isDuplicationVote(votes)) {
+            articleVoteRepository.deleteAll(votes);
+            return VoteDto.of(votes.get(0), false);
         }
 
-        return VoteDto.of(dto.getMemberId(), dto.getTargetId(), dto.getVoteType(), false);
+        Article article = articleRepository.findById(dto.getTargetId())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+
+        ArticleVote vote = dto.toEntity(article);
+        articleVoteRepository.save(vote);
+
+        return VoteDto.of(vote, true);
     }
 
-    private boolean validateDuplicationAndDelete(Long memberId, Long articleId) {
-        final List<ArticleVote> votes = articleVoteRepository.findByMemberIdAndArticleId(memberId, articleId);
-
-        if (!votes.isEmpty()) {
-            articleVoteRepository.delete(votes.get(0));
-            return false;
-        }
-        return true;
+    private boolean isDuplicationVote(List<ArticleVote> votes) {
+        return !votes.isEmpty();
     }
 }

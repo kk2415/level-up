@@ -4,13 +4,12 @@ import com.levelup.article.ArticleApplicationTest;
 import com.levelup.article.TestSupporter;
 import com.levelup.article.config.TestJpaConfig;
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.entity.ArticleComment;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.Comment;
+import com.levelup.article.domain.entity.ArticleType;
+import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.repository.ArticleRepository;
 import com.levelup.article.domain.repository.CommentRepository;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
+import com.levelup.article.domain.repository.WriterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,18 +30,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @Import(TestJpaConfig.class)
 @DataJpaTest
-@ContextConfiguration(classes = {ArticleApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ArticleApplicationTest.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ArticleCommentRepositoryTest extends TestSupporter {
+class CommentRepositoryTest extends TestSupporter {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired WriterRepository writerRepository;
     @Autowired ArticleRepository articleRepository;
     @Autowired CommentRepository commentRepository;
 
     @BeforeEach
     public void before() {
+        writerRepository.deleteAll();
         articleRepository.deleteAll();
-        memberRepository.deleteAll();
         commentRepository.deleteAll();
     }
 
@@ -50,22 +49,22 @@ class ArticleCommentRepositoryTest extends TestSupporter {
     @Test
     void findReplyByParentId() {
         // Given
-        Member member1 = createMember("test1", "test1");
-        memberRepository.save(member1);
+        Writer writer1 = createWriter(1L, "test", "test");
+        writerRepository.save(writer1);
 
-        Article article1 = createArticle(member1, "test article1", ArticleType.QNA);
+        Article article1 = createArticle(writer1, "test article1", ArticleType.QNA);
         articleRepository.save(article1);
 
-        ArticleComment comment1 = createComment(member1, article1);
-        ArticleComment comment2 = createComment(member1, article1);
-        ArticleComment replyComment = createReplyComment(member1, article1, comment1);
+        Comment comment1 = createComment(writer1, article1);
+        Comment comment2 = createComment(writer1, article1);
+        Comment replyComment = createReplyComment(writer1, article1, comment1);
         commentRepository.save(comment1);
         commentRepository.save(comment2);
         commentRepository.save(replyComment);
 
         // When
-        List<ArticleComment> replyComments1 = commentRepository.findReplyByParentId(comment1.getId());
-        List<ArticleComment> replyComments2 = commentRepository.findReplyByParentId(comment2.getId());
+        List<Comment> replyComments1 = commentRepository.findReplyByParentId(comment1.getId());
+        List<Comment> replyComments2 = commentRepository.findReplyByParentId(comment2.getId());
 
         // Then
         assertThat(replyComments1.size()).isEqualTo(1);

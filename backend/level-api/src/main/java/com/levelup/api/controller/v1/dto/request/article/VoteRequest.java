@@ -2,10 +2,10 @@ package com.levelup.api.controller.v1.dto.request.article;
 
 import com.levelup.article.domain.service.dto.VoteDto;
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.entity.ArticleComment;
+import com.levelup.article.domain.entity.Comment;
 import com.levelup.article.domain.entity.ArticleVote;
 import com.levelup.article.domain.entity.CommentVote;
-import com.levelup.article.domain.VoteType;
+import com.levelup.article.domain.entity.VoteType;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -47,7 +47,7 @@ public class VoteRequest {
         return articleVote;
     }
 
-    public CommentVote toEntity(ArticleComment comment) {
+    public CommentVote toEntity(Comment comment) {
         CommentVote commentVote = CommentVote.builder()
                 .memberId(memberId)
                 .comment(comment)

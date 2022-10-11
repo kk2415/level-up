@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class MemberDeletedHandler {
+public class ChannelHandler {
 
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
 
     @CacheEvict(cacheNames = "channel", allEntries = true)
     @EventListener(MemberDeletedEvent.class)
-    public void handle(MemberDeletedEvent event) {
+    public void handleMemberDeletedEvent(MemberDeletedEvent event) {
         List<Channel> channels = channelMemberRepository.findByMemberId(event.getDeletedMemberId())
             .stream()
             .filter(ChannelMember::getIsManager)

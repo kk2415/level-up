@@ -7,12 +7,13 @@ import com.levelup.channel.domain.service.dto.ChannelVoteDto;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.comment.ChannelCommentRepository;
 import com.levelup.channel.domain.repository.vote.ChannelCommentVoteRepository;
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -27,15 +28,14 @@ public class ChannelCommentVoteService implements ChannelVoteService {
 
     public ChannelVoteDto save(ChannelVoteDto dto) {
         final ChannelComment comment = commentRepository.findById(dto.getTargetId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
-        final ChannelMember channelMember
-                = channelMemberRepository.findByChannelIdAndMemberId(dto.getChannelId(), dto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
+        final ChannelMember channelMember = channelMemberRepository.findById(dto.getMemberId())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_MEMBER_NOT_FOUND));
         final List<ChannelCommentVote> votes
-                = commentVoteRepository.findByChannelMemberIdAndCommentId(channelMember.getId(), dto.getTargetId());
+                = commentVoteRepository.findByChannelMemberIdAndCommentId(dto.getMemberId(), dto.getTargetId());
 
         if (isDuplicationVote(votes)) {
-            commentVoteRepository.delete(votes.get(0));
+            commentVoteRepository.deleteAll(votes);
             return ChannelVoteDto.of(votes.get(0), false);
         }
 

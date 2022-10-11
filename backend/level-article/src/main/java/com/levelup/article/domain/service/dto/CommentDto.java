@@ -1,9 +1,9 @@
 package com.levelup.article.domain.service.dto;
 
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
-import com.levelup.article.domain.entity.ArticleComment;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.article.domain.entity.ArticleType;
+import com.levelup.article.domain.entity.Comment;
+import com.levelup.article.domain.entity.Writer;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -42,11 +42,11 @@ public class CommentDto {
         this.articleType = articleType;
     }
 
-    public static CommentDto from(ArticleComment comment) {
+    public static CommentDto from(Comment comment) {
         return new CommentDto(
             comment.getId(),
-            comment.getMember().getId(),
-            comment.getMember().getNickname(),
+            comment.getWriter().getMemberId(),
+            comment.getWriter().getNickname(),
             comment.getContent(),
             comment.getCreatedAt(),
             (long) comment.getCommentVotes().size(),
@@ -69,9 +69,9 @@ public class CommentDto {
                 identity);
     }
 
-    public ArticleComment toEntity(Member member, Article article) {
-        ArticleComment comment = ArticleComment.builder()
-                .member(member)
+    public Comment toEntity(Writer writer, Article article) {
+        Comment comment = Comment.builder()
+                .writer(writer)
                 .content(content)
                 .child(new ArrayList<>())
                 .commentVotes(new ArrayList<>())

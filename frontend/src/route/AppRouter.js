@@ -26,7 +26,6 @@ import CreateArticle from "../page/qna/CreateArticle"
 import ArticleList from "../page/qna/ArticleList"
 import Article from "../page/qna/Article"
 import ModifyArticle from "../page/qna/ModifyArticle"
-import ModifyPost from "../page/channelArticle/ModifyChannelArticle"
 import ConfirmEmail from "../page/member/ConfirmEmail";
 import ChannelInfo from "../page/channel/ChannelInfo";
 import ModifyChannelArticle from "../page/channelArticle/ModifyChannelArticle";

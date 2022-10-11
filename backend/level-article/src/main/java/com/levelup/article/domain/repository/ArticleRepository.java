@@ -1,6 +1,6 @@
 package com.levelup.article.domain.repository;
 
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.article.domain.entity.Article;
 import com.levelup.article.domain.service.dto.ArticleDto;
 import org.springframework.data.domain.Page;
@@ -14,11 +14,13 @@ import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    @EntityGraph(attributePaths = {"member", "comments"})
+    @EntityGraph(attributePaths = {"writer", "comments"})
     Optional<Article> findById(Long id);
 
-    @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, m) from Article a " +
-            "join a.member m where a.articleType = :articleType",
+    @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, w.memberId, w.nickname) " +
+            "from Article a " +
+            "join a.writer w " +
+            "where a.articleType = :articleType",
     countQuery = "select a from Article a where a.articleType = :articleType")
     Page<ArticleDto> findByArticleType(@Param("articleType") ArticleType articleType, Pageable pageable);
 
@@ -41,13 +43,17 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 //                                                     @Param("articleType") String articleType,
 //                                                     Pageable pageable);
 
-    @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, m) from Article a " +
-            "join a.member m where match(a.title, :title) > 0 and a.articleType = :articleType",
-            countQuery = "select a from Article a " +
-                    "join a.member m where match(a.title, :title) > 0 and a.articleType = :articleType")
+    @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, w.memberId, w.nickname) " +
+            "from Article a " +
+            "join a.writer w " +
+            "where match(a.title, :title) > 0 and a.articleType = :articleType",
+            countQuery =
+                    "select a from Article a " +
+                    "join a.writer w " +
+                    "where match(a.title, :title) > 0 and a.articleType = :articleType")
     Page<ArticleDto> findByTitleAndArticleType(@Param("title") String title,
-                                                     @Param("articleType") ArticleType articleType,
-                                                     Pageable pageable);
+                                               @Param("articleType") ArticleType articleType,
+                                               Pageable pageable);
 
 //    @Query(value =
 //            "select a.article_id as articleId, " +
@@ -69,10 +75,13 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 //                                                        @Param("articleType") String articleType,
 //                                                        Pageable pageable);
 
-    @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, m) from Article a " +
-            "join a.member m where m.nickname like %:nickname% and a.articleType = :articleType",
-            countQuery = "select a from Article a join a.member m " +
-                    "where m.nickname like %:nickname and a.articleType = :articleType")
+    @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, w.memberId, w.nickname) " +
+            "from Article a " +
+            "join a.writer w " +
+            "where w.nickname like %:nickname% and a.articleType = :articleType",
+            countQuery = "select a from Article a " +
+                    "join a.writer w " +
+                    "where w.nickname like %:nickname and a.articleType = :articleType")
     Page<ArticleDto> findByNicknameAndArticleType(@Param("nickname") String nickname,
                                                         @Param("articleType") ArticleType articleType,
                                                         Pageable pageable);

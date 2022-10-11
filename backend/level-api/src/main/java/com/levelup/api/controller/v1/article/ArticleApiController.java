@@ -4,7 +4,7 @@ import com.levelup.api.controller.v1.dto.response.article.ArticlePagingResponse;
 import com.levelup.api.controller.v1.dto.response.article.ArticleUpdateResponse;
 import com.levelup.article.domain.service.dto.ArticleDto;
 import com.levelup.article.domain.service.ArticleService;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.api.controller.v1.dto.request.article.ArticleRequest;
 import com.levelup.api.controller.v1.dto.response.article.ArticleResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

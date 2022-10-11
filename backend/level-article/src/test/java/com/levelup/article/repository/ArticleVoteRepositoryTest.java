@@ -4,13 +4,12 @@ import com.levelup.article.ArticleApplicationTest;
 import com.levelup.article.TestSupporter;
 import com.levelup.article.config.TestJpaConfig;
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.article.domain.entity.ArticleVote;
+import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.repository.ArticleRepository;
 import com.levelup.article.domain.repository.ArticleVoteRepository;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
+import com.levelup.article.domain.repository.WriterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,20 +30,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @Import(TestJpaConfig.class)
 @DataJpaTest
-@ContextConfiguration(classes = {ArticleApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ArticleApplicationTest.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ArticleVoteRepositoryTest extends TestSupporter {
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired
-    ArticleRepository articleRepository;
-    @Autowired
-    ArticleVoteRepository articleVoteRepository;
+    @Autowired WriterRepository writerRepository;
+    @Autowired ArticleRepository articleRepository;
+    @Autowired ArticleVoteRepository articleVoteRepository;
 
     @BeforeEach
     public void before() {
         articleRepository.deleteAll();
-        memberRepository.deleteAll();
         articleVoteRepository.deleteAll();
     }
 
@@ -52,29 +48,29 @@ class ArticleVoteRepositoryTest extends TestSupporter {
     @Test
     void findByMemberIdAndArticleId() {
         // Given
-        Member member1 = createMember("test1", "test1");
-        Member member2 = createMember("test2", "test2");
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        Writer writer1 = createWriter(1L, "test1", "test1");
+        Writer writer2 = createWriter(2L, "test2", "test2");
+        writerRepository.save(writer1);
+        writerRepository.save(writer2);
 
-        Article article1 = createArticle(member1, "test article1", ArticleType.QNA);
-        Article article2 = createArticle(member1, "test article2", ArticleType.QNA);
+        Article article1 = createArticle(writer1, "test article1", ArticleType.QNA);
+        Article article2 = createArticle(writer2, "test article2", ArticleType.QNA);
         articleRepository.save(article1);
         articleRepository.save(article2);
 
-        ArticleVote articleVote1 = createArticleVote(article1, member1.getId());
-        ArticleVote articleVote2 = createArticleVote(article1, member2.getId());
-        ArticleVote articleVote3 = createArticleVote(article2, member1.getId());
+        ArticleVote articleVote1 = createArticleVote(article1, writer1.getMemberId());
+        ArticleVote articleVote2 = createArticleVote(article1, writer1.getMemberId());
+        ArticleVote articleVote3 = createArticleVote(article2, writer2.getMemberId());
         articleVoteRepository.save(articleVote1);
         articleVoteRepository.save(articleVote2);
         articleVoteRepository.save(articleVote3);
 
         // When
         List<ArticleVote> articleVotes
-                = articleVoteRepository.findByMemberIdAndArticleId(member1.getId(), article1.getId());
+                = articleVoteRepository.findByMemberIdAndArticleId(writer1.getMemberId(), article1.getId());
 
         // Then
-        assertThat(articleVotes.get(0).getMemberId()).isEqualTo(member1.getId());
+        assertThat(articleVotes.get(0).getMemberId()).isEqualTo(writer1.getMemberId());
         assertThat(articleVotes.get(0).getArticle()).isEqualTo(article1);
     }
 }

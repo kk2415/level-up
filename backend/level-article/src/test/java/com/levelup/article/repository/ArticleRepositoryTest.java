@@ -4,12 +4,11 @@ import com.levelup.article.ArticleApplicationTest;
 import com.levelup.article.TestSupporter;
 import com.levelup.article.config.TestJpaConfig;
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
+import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.repository.ArticleRepository;
+import com.levelup.article.domain.repository.WriterRepository;
 import com.levelup.article.domain.service.dto.ArticleDto;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,29 +28,28 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 @Import(TestJpaConfig.class)
 @DataJpaTest
-@ContextConfiguration(classes = {ArticleApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ArticleApplicationTest.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ArticleRepositoryTest extends TestSupporter {
 
-    @Autowired
-    ArticleRepository articleRepository;
-    @Autowired MemberRepository memberRepository;
+    @Autowired ArticleRepository articleRepository;
+    @Autowired WriterRepository writerRepository;
 
     @BeforeEach
     public void before() {
         articleRepository.deleteAll();
-        memberRepository.deleteAll();
+        writerRepository.deleteAll();
     }
 
     @DisplayName("타입으로 게시글 조회")
     @Test
     void findByArticleType() {
-        Member member1 = createMember("test", "test1");
-        Article article1 = createArticle(member1, "test article1", ArticleType.QNA);
-        Article article2 = createArticle(member1, "test article2", ArticleType.QNA);
-        Article article3 = createArticle(member1, "test article3", ArticleType.NOTICE);
+        Writer writer = createWriter(1L, "test", "test1");
+        Article article1 = createArticle(writer, "test article1", ArticleType.QNA);
+        Article article2 = createArticle(writer, "test article2", ArticleType.QNA);
+        Article article3 = createArticle(writer, "test article3", ArticleType.NOTICE);
 
-        memberRepository.save(member1);
+        writerRepository.save(writer);
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);
@@ -65,16 +63,16 @@ class ArticleRepositoryTest extends TestSupporter {
     @DisplayName("제목과 타입으로 게시글 조회")
     @Test
     void findByTitleAndArticleType() {
-        Member member1 = createMember("member1", "member1");
-        Member member2 = createMember("member2", "member2");
-        Member member3 = createMember("member3", "member3");
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
+        Writer writer1 = createWriter(1L, "member1", "member1");
+        Writer writer2 = createWriter(2L, "member2", "member2");
+        Writer writer3 = createWriter(3L, "member3", "member3");
+        writerRepository.save(writer1);
+        writerRepository.save(writer2);
+        writerRepository.save(writer3);
 
-        Article article1 = createArticle(member1, "test", ArticleType.QNA);
-        Article article2 = createArticle(member2, "test", ArticleType.QNA);
-        Article article3 = createArticle(member3, "test", ArticleType.NOTICE);
+        Article article1 = createArticle(writer1, "test", ArticleType.QNA);
+        Article article2 = createArticle(writer2, "test", ArticleType.QNA);
+        Article article3 = createArticle(writer3, "test", ArticleType.NOTICE);
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);
@@ -87,16 +85,16 @@ class ArticleRepositoryTest extends TestSupporter {
     @DisplayName("작성자 닉네임과 타입으로 게시글 조회")
     @Test
     void findByNicknameAndArticleType() {
-        Member member1 = createMember("member1", "member1");
-        Member member2 = createMember("member2", "member2");
-        Member member3 = createMember("member3", "member3");
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
+        Writer writer1 = createWriter(1L, "member1", "member1");
+        Writer writer2 = createWriter(2L, "member2", "member2");
+        Writer writer3 = createWriter(3L, "member3", "member3");
+        writerRepository.save(writer1);
+        writerRepository.save(writer2);
+        writerRepository.save(writer3);
 
-        Article article1 = createArticle(member1, "test", ArticleType.QNA);
-        Article article2 = createArticle(member2, "test", ArticleType.QNA);
-        Article article3 = createArticle(member3, "test", ArticleType.NOTICE);
+        Article article1 = createArticle(writer1, "test", ArticleType.QNA);
+        Article article2 = createArticle(writer2, "test", ArticleType.QNA);
+        Article article3 = createArticle(writer3, "test", ArticleType.NOTICE);
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);
@@ -107,20 +105,20 @@ class ArticleRepositoryTest extends TestSupporter {
 
         assertThat(articles.getTotalElements()).isEqualTo(1);
         for (ArticleDto article : articles) {
-            assertThat(article.getWriter()).isEqualTo(member2.getNickname());
+            assertThat(article.getWriter()).isEqualTo("member2");
         }
     }
 
     @DisplayName("게시글 다음글 조회")
     @Test
     void findNextByIdAndArticleType() {
-        Member member1 = createMember("member1", "member1");
-        memberRepository.save(member1);
+        Writer writer1 = createWriter(1L, "member1", "member1");
+        writerRepository.save(writer1);
 
-        Article article1 = createArticle(member1, "test1", ArticleType.QNA);
-        Article article2 = createArticle(member1, "test2", ArticleType.QNA);
-        Article article3 = createArticle(member1, "test3", ArticleType.NOTICE);
-        Article article4 = createArticle(member1, "test4", ArticleType.QNA);
+        Article article1 = createArticle(writer1,"test1", ArticleType.QNA);
+        Article article2 = createArticle(writer1,"test2", ArticleType.QNA);
+        Article article3 = createArticle(writer1,"test3", ArticleType.NOTICE);
+        Article article4 = createArticle(writer1,"test4", ArticleType.QNA);
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);
@@ -136,13 +134,13 @@ class ArticleRepositoryTest extends TestSupporter {
     @DisplayName("게시글 이전글 조회")
     @Test
     void findPrevByIdAndArticleType() {
-        Member member1 = createMember("member1", "member1");
-        memberRepository.save(member1);
+        Writer writer1 = createWriter(1L, "member1", "member1");
+        writerRepository.save(writer1);
 
-        Article article1 = createArticle(member1, "test1", ArticleType.QNA);
-        Article article2 = createArticle(member1, "test2", ArticleType.QNA);
-        Article article3 = createArticle(member1, "test3", ArticleType.NOTICE);
-        Article article4 = createArticle(member1, "test4", ArticleType.QNA);
+        Article article1 = createArticle(writer1,"test1", ArticleType.QNA);
+        Article article2 = createArticle(writer1,"test2", ArticleType.QNA);
+        Article article3 = createArticle(writer1,"test3", ArticleType.NOTICE);
+        Article article4 = createArticle(writer1,"test4", ArticleType.QNA);
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);

@@ -1,62 +1,34 @@
 package com.levelup.article;
 
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.article.domain.entity.*;
-import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
-import com.levelup.member.domain.entity.RoleName;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.entity.Role;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TestSupporter {
 
-    protected Member createMember(Long id, String email, String nickname) {
-        Member member = Member.builder()
+    protected Writer createWriter(Long memberId, String nickname, String email) {
+        return Writer.builder()
+                .memberId(memberId)
+                .nickname(nickname)
+                .email(email)
+                .build();
+    }
+
+    protected Writer createWriter(Long id, Long memberId, String nickname, String email) {
+        return Writer.builder()
                 .id(id)
-                .email(email)
-                .password("00000000")
-                .name(nickname)
+                .memberId(memberId)
                 .nickname(nickname)
-                .gender(Gender.MALE)
-                .birthday(LocalDate.of(1997, 9, 27))
-                .phone("010-2354-9960")
-                .profileImage(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .roles(new ArrayList<>())
+                .email(email)
                 .build();
-
-        Role role = Role.of(RoleName.ANONYMOUS, member);
-        member.addRole(role);
-
-        return member;
     }
 
-    protected Member createMember(String email, String nickname) {
-        Member member = Member.builder()
-                .email(email)
-                .password("00000000")
-                .name(nickname)
-                .nickname(nickname)
-                .gender(Gender.MALE)
-                .birthday(LocalDate.of(1997, 9, 27))
-                .phone("010-2354-9960")
-                .profileImage(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .roles(new ArrayList<>())
-                .build();
-
-        Role role = Role.of(RoleName.ANONYMOUS, member);
-        member.addRole(role);
-
-        return member;
-    }
-
-    protected Article createArticle(Long id, Member member, String title, ArticleType articleType) {
+    protected Article createArticle(Long id, Writer writer, String title, ArticleType articleType) {
         Article article = new Article();
 
         article.setId(id);
-        article.setMember(member);
+        article.setWriter(writer);
         article.setTitle(title);
         article.setContent("test");
         article.setViews(0L);
@@ -64,10 +36,10 @@ public class TestSupporter {
         return article;
     }
 
-    protected Article createArticle(Member member, String title, ArticleType articleType) {
+    protected Article createArticle(Writer writer, String title, ArticleType articleType) {
         Article article = new Article();
 
-        article.setMember(member);
+        article.setWriter(writer);
         article.setTitle(title);
         article.setContent("test");
         article.setViews(0L);
@@ -75,9 +47,9 @@ public class TestSupporter {
         return article;
     }
 
-    protected ArticleComment createComment(Member member, Article article) {
-        ArticleComment comment = ArticleComment.builder()
-                .member(member)
+    protected Comment createComment(Writer writer, Article article) {
+        Comment comment = Comment.builder()
+                .writer(writer)
                 .content("test")
                 .child(new ArrayList<>())
                 .commentVotes(new ArrayList<>())
@@ -87,9 +59,9 @@ public class TestSupporter {
         return comment;
     }
 
-    protected ArticleComment createReplyComment(Member member, Article article, ArticleComment parentComment) {
-        ArticleComment comment = ArticleComment.builder()
-                .member(member)
+    protected Comment createReplyComment(Writer writer, Article article, Comment parentComment) {
+        Comment comment = Comment.builder()
+                .writer(writer)
                 .content("test")
                 .child(new ArrayList<>())
                 .commentVotes(new ArrayList<>())
@@ -109,7 +81,7 @@ public class TestSupporter {
         return articleVote;
     }
 
-    protected CommentVote createCommentVote(ArticleComment comment, Long memberId) {
+    protected CommentVote createCommentVote(Comment comment, Long memberId) {
         CommentVote commentVote = CommentVote.builder()
                 .memberId(memberId)
                 .build();

@@ -1,8 +1,6 @@
 package com.levelup.article.domain.entity;
 
-import com.levelup.article.domain.ArticleType;
 import com.levelup.common.domain.base.BaseTimeEntity;
-import com.levelup.member.domain.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,21 +33,21 @@ public class Article extends BaseTimeEntity {
     @Column(nullable = false)
     private ArticleType articleType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id")
-    private Member member;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+//    private Member member;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<ArticleComment> comments = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id")
+    private Writer writer;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ArticleVote> votes = new ArrayList<>();
 
     public Article() {}
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
 
     public void addViews() {
         this.views++;

@@ -70,20 +70,18 @@ const Article = () => {
         }
 
         let voteRequest = {
-            'memberId' : localStorage.getItem(UserInfo.ID),
+            'memberId' : memberId,
             'targetId' : articleId,
             'voteType' : 'ARTICLE',
         }
 
         let result = await VoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
+            setVoteCount(result.successful === false ? voteCount - 1 : voteCount + 1)
         }
     }
 
     const authorize = (article) => {
-        let memberId = localStorage.getItem(UserInfo.ID)
-
         if (article && Number(memberId) === article.memberId) {
             setAuthentication(true)
         }

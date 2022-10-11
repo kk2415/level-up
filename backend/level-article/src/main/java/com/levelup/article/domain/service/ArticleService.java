@@ -1,8 +1,10 @@
 package com.levelup.article.domain.service;
 
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
+import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.repository.ArticleRepository;
+import com.levelup.article.domain.repository.WriterRepository;
 import com.levelup.article.domain.service.dto.ArticleDto;
 import com.levelup.article.exception.ArticleAuthorityException;
 import com.levelup.common.domain.FileType;
@@ -10,8 +12,6 @@ import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.util.file.LocalFileStore;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,15 +29,15 @@ import java.io.IOException;
 public class ArticleService {
 
     private final LocalFileStore fileStore;
-    private final MemberRepository memberRepository;
     private final ArticleRepository articleRepository;
+    private final WriterRepository writerRepository;
 
     @CacheEvict(cacheNames = "article", key = "{#dto.articleType + ':0'}")
     public ArticleDto save(ArticleDto dto, Long memberId) {
-        final Member member = memberRepository.findById(memberId)
+        final Writer writer = writerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
-        final Article article = dto.toEntity(member);
+        final Article article = dto.toEntity(writer);
         articleRepository.save(article);
 
         return ArticleDto.from(article);
@@ -48,18 +48,14 @@ public class ArticleService {
     }
 
 
+    @CacheEvict(cacheNames = "article", key = "{#articleType + ':0'}")
     public ArticleDto get(Long articleId, ArticleType articleType, boolean view) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
-        if (view) addViews(article);
+        if (view) article.addViews();
 
         return ArticleDto.from(article);
-    }
-
-    @CacheEvict(cacheNames = "article", key = "{#article.articleType + ':0'}")
-    public void addViews(Article article) {
-        article.addViews();
     }
 
     @Cacheable(
@@ -100,7 +96,7 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
-        if (!article.getMember().getId().equals(memberId)) {
+        if (!article.getWriter().getMemberId().equals(memberId)) {
             throw new ArticleAuthorityException(ErrorCode.AUTHORITY_EXCEPTION);
         }
 
