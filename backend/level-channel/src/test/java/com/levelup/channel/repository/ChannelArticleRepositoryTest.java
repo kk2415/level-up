@@ -115,7 +115,7 @@ class ChannelArticleRepositoryTest extends TestSupporter {
 
         assertThat(channelPosts.getTotalElements()).isEqualTo(1);
         for (ChannelArticle channelPost : channelPosts) {
-            assertThat(channelPost.getChannelMember().getMember().getEmail()).isEqualTo(manager1.getEmail());
+            assertThat(channelPost.getChannelMember().getEmail()).isEqualTo(manager1.getEmail());
         }
     }
 }

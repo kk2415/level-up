@@ -5,9 +5,10 @@ const urlPrefix = '/api/v1/channel-members/'
 
 const ChannelMemberService = {
 
-    create: async (channelId, memberId) => {
+    create: async (channelId, memberId, isManager, isWaitingMember) => {
         let result = false
-        let url = urlPrefix + '?channel=' + channelId + '&member=' + memberId
+        let url = urlPrefix + '?channel=' + channelId + '&member=' + memberId +
+            '&isManager=' + isManager + '&isWaitingMember=' + isWaitingMember
 
         await send(HttpMethod.POST, url)
             .then(() => {

@@ -46,10 +46,10 @@ public class ChannelMemberResponse {
     public static ChannelMemberResponse from(ChannelMember channelMember) {
         return new ChannelMemberResponse(
                 channelMember.getId(),
-                channelMember.getMember().getId(),
-                channelMember.getMember().getEmail(),
-                channelMember.getMember().getNickname(),
-                channelMember.getMember().getProfileImage().getStoreFileName(),
+                channelMember.getMemberId(),
+                channelMember.getEmail(),
+                channelMember.getNickname(),
+                channelMember.getProfileImage(),
                 channelMember.getIsManager());
     }
 }

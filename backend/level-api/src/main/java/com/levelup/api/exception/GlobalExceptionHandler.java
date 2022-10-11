@@ -14,14 +14,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception e)
+    public ResponseEntity<ExceptionResponse> handleException(Exception e, HttpServletRequest request)
     {
-        log.error(e.getClass().getName(), e.getMessage());
+        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
         ExceptionResponse response = ExceptionResponse.of(500, e.getMessage());
 
@@ -29,8 +31,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
-        log.error(e.getClass().getName(), e.getMessage(), ErrorCode.INVALID_REQUEST_BODY.getMessage());
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
+        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
         ExceptionResponse response = FieldExceptionResponse.of(ErrorCode.INVALID_REQUEST_BODY, e.getBindingResult());
 
@@ -38,9 +40,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException e)
+    public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException e, HttpServletRequest request)
     {
-        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
+        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 
@@ -48,9 +50,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<ExceptionResponse> handleMemberException(MemberException e)
+    public ResponseEntity<ExceptionResponse> handleMemberException(MemberException e, HttpServletRequest request)
     {
-        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
+        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 
@@ -58,9 +60,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ArticleException.class)
-    public ResponseEntity<ExceptionResponse> handleArticleException(ArticleException e)
+    public ResponseEntity<ExceptionResponse> handleArticleException(ArticleException e, HttpServletRequest request)
     {
-        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
+        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 
@@ -68,9 +70,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ChannelException.class)
-    public ResponseEntity<ExceptionResponse> handleChannelException(ChannelException e)
+    public ResponseEntity<ExceptionResponse> handleChannelException(ChannelException e, HttpServletRequest request)
     {
-        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
+        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 

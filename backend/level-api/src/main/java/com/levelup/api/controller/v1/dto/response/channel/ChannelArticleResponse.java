@@ -65,18 +65,14 @@ public class ChannelArticleResponse {
 
     private ChannelArticleResponse(ChannelArticle channelPost) {
         this.id = channelPost.getId();
-        this.memberId = channelPost.getChannelMember().getMember().getId();
+        this.memberId = channelPost.getChannelMember().getMemberId();
         this.title = channelPost.getTitle();
-        this.writer = channelPost.getChannelMember().getMember().getNickname();
+        this.writer = channelPost.getChannelMember().getNickname();
         this.content = channelPost.getContent();
         this.createdAt = DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(channelPost.getCreatedAt());
         this.voteCount = (long) channelPost.getVotes().size();
         this.views = channelPost.getViews();
         this.commentCount = (long) channelPost.getComments().size();
         this.category = channelPost.getCategory();
-    }
-
-    public static ChannelArticleResponse from(ChannelArticle channelPost) {
-        return new ChannelArticleResponse(channelPost);
     }
 }

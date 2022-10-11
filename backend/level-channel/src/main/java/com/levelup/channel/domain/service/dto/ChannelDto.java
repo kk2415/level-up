@@ -2,7 +2,6 @@ package com.levelup.channel.domain.service.dto;
 
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.common.util.file.UploadFile;
 import lombok.Builder;
 import lombok.Getter;
@@ -82,10 +81,10 @@ public class ChannelDto implements Serializable {
         );
     }
 
-    public Channel toEntity(ChannelMember channelMember) {
-        Channel channel = Channel.builder()
+    public Channel toEntity(String nickname) {
+        return Channel.builder()
                 .name(name)
-                .managerName(channelMember.getMember().getNickname())
+                .managerName(nickname)
                 .description(description)
                 .memberMaxNumber(limitedMemberNumber)
                 .thumbnail(thumbnailImage)
@@ -95,8 +94,5 @@ public class ChannelDto implements Serializable {
                 .channelMembers(new ArrayList<>())
                 .channelArticles(new ArrayList<>())
                 .build();
-
-        channel.addChannelMember(channelMember);
-        return channel;
     }
 }

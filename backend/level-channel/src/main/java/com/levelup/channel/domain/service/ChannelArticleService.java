@@ -113,7 +113,7 @@ public class ChannelArticleService {
         final ChannelArticle article = channelArticleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
-        if (!article.getChannelMember().getMember().getId().equals(memberId)) {
+        if (!article.getChannelMember().getId().equals(memberId)) {
             throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         }
 

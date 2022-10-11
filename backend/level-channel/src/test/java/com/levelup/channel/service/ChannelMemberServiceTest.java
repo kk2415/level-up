@@ -42,18 +42,30 @@ class ChannelMemberServiceTest extends TestSupporter {
     void create() {
         // Given
         Member member1 = createMember(1L, "manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(member1, true, false);
+        ChannelMember manager1 = createChannelMember(
+                member1.getId(),
+                member1.getEmail(),
+                member1.getNickname(),
+                member1.getProfileImage().getStoreFileName(),
+                true,
+                false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
 
-        given(mockMemberRepository.findById(anyLong())).willReturn(Optional.of(member1));
         given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
         given(mockChannelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong())).willReturn(Optional.ofNullable(null));
 
         // When
-        ChannelMemberDto channelMemberDto = channelMemberService.create(1L, manager1.getMember().getId(), true);
+        ChannelMemberDto channelMemberDto = channelMemberService.create(
+                1L,
+                manager1.getMemberId(),
+                manager1.getEmail(),
+                manager1.getNickname(),
+                manager1.getProfileImage(),
+                true,
+                false);
 
         // Then
-        assertThat(channelMemberDto.getMemberId()).isEqualTo(manager1.getMember().getId());
+        assertThat(channelMemberDto.getMemberId()).isEqualTo(manager1.getMemberId());
         assertThat(channel1.getChannelMembers().size()).isEqualTo(2L);
     }
 
@@ -62,16 +74,28 @@ class ChannelMemberServiceTest extends TestSupporter {
     void duplicateCreation() {
         // Given
         Member member1 = createMember(1L, "manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(member1, true, false);
+        ChannelMember manager1 = createChannelMember(
+                member1.getId(),
+                member1.getEmail(),
+                member1.getNickname(),
+                member1.getProfileImage().getStoreFileName(),
+                true,
+                false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
 
-        given(mockMemberRepository.findById(anyLong())).willReturn(Optional.of(member1));
         given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
         given(mockChannelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong()))
-                .willReturn(Optional.ofNullable(createChannelMember(member1, channel1, false)));
+                .willReturn(Optional.of(manager1));
 
         // When && Then
-        assertThatThrownBy(() -> channelMemberService.create(1L, manager1.getMember().getId(), true))
+        assertThatThrownBy(() -> channelMemberService.create(
+                1L,
+                manager1.getMemberId(),
+                manager1.getEmail(),
+                manager1.getNickname(),
+                manager1.getProfileImage(),
+                true,
+                false))
                 .isInstanceOf(EntityDuplicationException.class);
     }
 
@@ -80,9 +104,16 @@ class ChannelMemberServiceTest extends TestSupporter {
     void fullSizeChannel() {
         // Given
         Member member1 = createMember(1L, "manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(member1, true, false);
+        ChannelMember manager1 = createChannelMember(
+                member1.getId(),
+                member1.getEmail(),
+                member1.getNickname(),
+                member1.getProfileImage().getStoreFileName(),
+                true,
+                false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
-        List<ChannelMember> channelMembers = List.of(createChannelMember(member1, channel1, false),
+        List<ChannelMember> channelMembers = List.of(
+                createChannelMember(member1, channel1, false),
                 createChannelMember(member1, channel1, false),
                 createChannelMember(member1, channel1, false),
                 createChannelMember(member1, channel1, false),
@@ -102,13 +133,19 @@ class ChannelMemberServiceTest extends TestSupporter {
             channel1.addChannelMember(channelMember);
         }
 
-        given(mockMemberRepository.findById(anyLong())).willReturn(Optional.of(member1));
         given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
         given(mockChannelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong()))
                 .willReturn(Optional.ofNullable(null));
 
         // When && Then
-        assertThatThrownBy(() -> channelMemberService.create(1L, manager1.getMember().getId(), true))
+        assertThatThrownBy(() -> channelMemberService.create(
+                1L,
+                manager1.getMemberId(),
+                manager1.getEmail(),
+                manager1.getNickname(),
+                manager1.getProfileImage(),
+                true,
+                false))
                 .isInstanceOf(NoPlaceChannelException.class);
     }
 
@@ -119,13 +156,19 @@ class ChannelMemberServiceTest extends TestSupporter {
         Member member1 = createMember(1L, "manager1", "manager1");
         Member member2 = createMember(2L, "member1", "member1");
         Member member3 = createMember(3L, "member2", "member2");
-        Member member4 = createMember(4L, "member3", "member3");
-        ChannelMember manager1 = createChannelMember(member1, true, false);
+        ChannelMember manager1 = createChannelMember(
+                member1.getId(),
+                member1.getEmail(),
+                member1.getNickname(),
+                member1.getProfileImage().getStoreFileName(),
+                true,
+                false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
 
         ChannelMember channelMember2 = createChannelMember(member1, channel1, false);
         ChannelMember channelMember3 = createChannelMember(member2, channel1, false);
         ChannelMember channelMember4 = createChannelMember(member3, channel1, false);
+        channel1.addChannelMembers(channelMember2, channelMember3, channelMember4);
 
         given(mockChannelMemberRepository.findById(anyLong())).willReturn(Optional.of(channelMember2));
         given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));

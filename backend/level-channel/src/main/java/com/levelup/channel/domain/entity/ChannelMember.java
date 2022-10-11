@@ -23,6 +23,18 @@ public class ChannelMember extends BaseTimeEntity {
     @Column(name = "channel_member_id")
     private Long id;
 
+    @Column(nullable = false)
+    private Long memberId;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String nickname;
+
+    @Column(nullable = false)
+    String profileImage;
+
     @Setter
     @Column(nullable = false)
     private Boolean isManager;
@@ -30,10 +42,6 @@ public class ChannelMember extends BaseTimeEntity {
     @Setter
     @Column(nullable = false)
     private Boolean isWaitingMember;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id")
-    private Member member;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -45,19 +53,22 @@ public class ChannelMember extends BaseTimeEntity {
 
     protected ChannelMember() {}
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public static ChannelMember of(Member member, Boolean isManager, Boolean isWaitingMember) {
-        ChannelMember channelMember = ChannelMember.builder()
+    public static ChannelMember of(Long memberId, String email, String nickname, String profileImage, Boolean isManager, Boolean isWaitingMember) {
+        return ChannelMember.builder()
+                .memberId(memberId)
+                .email(email)
+                .nickname(nickname)
+                .profileImage(profileImage)
                 .isManager(isManager)
                 .isWaitingMember(isWaitingMember)
                 .comments(new ArrayList<>())
                 .build();
+    }
 
-        channelMember.setMember(member);
-        return channelMember;
+    public void update(String email, String nickname, String profileImage) {
+        this.email = email;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
     }
 
     @Override

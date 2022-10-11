@@ -49,10 +49,10 @@ public class ChannelReplyCommentDto {
     public static ChannelReplyCommentDto from(ChannelComment comment) {
         return new ChannelReplyCommentDto(
             comment.getId(),
-            comment.getChannelMember().getMember().getId(),
+            comment.getChannelMember().getMemberId(),
             comment.getChannelMember().getChannel().getId(),
             comment.getParent().getId(),
-            comment.getChannelMember().getMember().getNickname(),
+            comment.getChannelMember().getNickname(),
             comment.getContent(),
             comment.getCreatedAt(),
             (long) comment.getVotes().size(),

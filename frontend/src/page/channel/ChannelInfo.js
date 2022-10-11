@@ -60,7 +60,7 @@ const ChannelInfo = () => {
 
     const handleRegisterChannel = async () => {
         if (localStorage.getItem(UserInfo.TOKEN)) {
-            let result = await ChannelMemberService.create(channelId, localStorage.getItem(UserInfo.ID));
+            let result = await ChannelMemberService.create(channelId, localStorage.getItem(UserInfo.ID), false, true);
 
             if (result) {
                 alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')

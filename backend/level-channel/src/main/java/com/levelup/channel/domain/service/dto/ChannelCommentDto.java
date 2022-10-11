@@ -73,8 +73,8 @@ public class ChannelCommentDto {
     public static ChannelCommentDto from(ChannelComment comment) {
         return new ChannelCommentDto(
                 comment.getId(),
-                comment.getChannelMember().getMember().getId(),
-                comment.getChannelMember().getMember().getNickname(),
+                comment.getChannelMember().getMemberId(),
+                comment.getChannelMember().getNickname(),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 (long) comment.getVotes().size(),

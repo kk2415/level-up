@@ -36,10 +36,10 @@ public class ChannelMemberDto {
     public static ChannelMemberDto from(ChannelMember channelMember) {
         return new ChannelMemberDto(
                 channelMember.getId(),
-                channelMember.getMember().getId(),
-                channelMember.getMember().getEmail(),
-                channelMember.getMember().getNickname(),
-                channelMember.getMember().getProfileImage().getStoreFileName(),
+                channelMember.getMemberId(),
+                channelMember.getEmail(),
+                channelMember.getNickname(),
+                channelMember.getProfileImage(),
                 channelMember.getIsManager());
     }
 }
