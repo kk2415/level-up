@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useContext, useLayoutEffect} from 'react';
-import {Container, Form, Row, Col} from "react-bootstrap";
+import React, {useState, useEffect} from 'react';
+import {Container, Row} from "react-bootstrap";
 import $ from "jquery";
 
 import ChannelService from '../../api/service/channel/ChannelService'
@@ -21,8 +21,24 @@ const ChannelInfo = () => {
     let navigate = new useNavigate();
 
     const handleEnterChannel = () => {
-        navigate('/channel/' + channelId + '?page=1')
-        // $(window.location).attr('href', '/channel/' + channelId + '?page=1')
+        if (memberId === null) {
+            alert('로그인해야 합니다.')
+            return
+        }
+
+        let isChannelMember = false
+        channelMembers.map((member) => {
+            if (member.memberId === Number(memberId)) {
+                isChannelMember = true
+                localStorage.setItem(UserInfo.CHANNEL_MEMBER_ID, member.channelMemberId)
+            }
+        })
+
+        if (isChannelMember) {
+            navigate('/channel/' + channelId + '?page=1')
+        } else {
+            alert('채널에 가입해야 접속이 가능합니다.')
+        }
     }
 
     const handleBack = () => {
@@ -67,6 +83,7 @@ const ChannelInfo = () => {
         setChannelInfo(result)
     }
 
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [channelMembers, setChannelMembers] = useState([])
     const [channelInfo, setChannelInfo] = useState({})
     const [channelId, setChannelId] = useState(getChannelId())

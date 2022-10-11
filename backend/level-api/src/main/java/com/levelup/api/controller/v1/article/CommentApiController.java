@@ -1,6 +1,6 @@
 package com.levelup.api.controller.v1.article;
 
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.article.domain.service.dto.ReplyCommentDto;
 import com.levelup.api.controller.v1.dto.response.article.CommentResponse;
 import com.levelup.api.controller.v1.dto.request.article.CommentRequest;

@@ -2,10 +2,9 @@ package com.levelup.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-//@EnableGlobalMethodSecurity(securedEnabled = true) //secured 애노테이션 활성화
-@EnableCaching
+@EnableFeignClients
 @SpringBootApplication(scanBasePackages = "com.levelup")
 public class ApiApplication {
 

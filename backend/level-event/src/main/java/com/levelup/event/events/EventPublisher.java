@@ -10,7 +10,8 @@ public class EventPublisher {
         EventPublisher.publisher = publisher;
     }
 
-    public static void raise(Object event) {
+    public static Object raise(Object event) {
         publisher.publishEvent(event);
+        return event;
     }
 }

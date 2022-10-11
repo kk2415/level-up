@@ -82,7 +82,7 @@ const DetailChannelArticle = () => {
         }
 
         let voteRequest = {
-            'memberId' : memberId,
+            'memberId' : channelMemberId,
             'channelId' : channelId,
             'targetId' : article.id,
             'voteType' : 'ARTICLE',
@@ -90,11 +90,12 @@ const DetailChannelArticle = () => {
 
         let result = await ChannelVoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
+            setVoteCount(result.successful === false ? voteCount - 1 : voteCount + 1)
         }
     }
 
     const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
+    const [channelMemberId, setChannelMemberId] = useState(localStorage.getItem(UserInfo.CHANNEL_MEMBER_ID))
     const [token, setToken] = useState(localStorage.getItem(UserInfo.TOKEN))
     const [article, setArticle] = useState(null)
     const [articleId, setArticleId] = useState(getPostId())

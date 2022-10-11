@@ -1,6 +1,6 @@
 package com.levelup.article.domain.service.vote;
 
-import com.levelup.article.domain.entity.ArticleComment;
+import com.levelup.article.domain.entity.Comment;
 import com.levelup.article.domain.entity.CommentVote;
 import com.levelup.article.domain.repository.CommentRepository;
 import com.levelup.article.domain.repository.CommentVoteRepository;
@@ -23,27 +23,23 @@ public class CommentVoteService implements VoteService {
     private final CommentVoteRepository commentVoteRepository;
 
     public VoteDto save(VoteDto dto) {
-        if (validateDuplicationAndDelete(dto.getMemberId(), dto.getTargetId())) {
-            ArticleComment article = commentRepository.findById(dto.getTargetId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+        final List<CommentVote> votes = commentVoteRepository.findByMemberIdAndCommentId(dto.getMemberId(), dto.getTargetId());
 
-            CommentVote vote = dto.toEntity(article);
-            commentVoteRepository.save(vote);
-
-            return VoteDto.of(vote, true);
+        if (isDuplicationVote(votes)) {
+            commentVoteRepository.deleteAll(votes);
+            return VoteDto.of(votes.get(0), false);
         }
 
-        return VoteDto.of(dto.getMemberId(), dto.getTargetId(), dto.getVoteType(), false);
+        Comment article = commentRepository.findById(dto.getTargetId())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 댓글입니다."));
+
+        CommentVote vote = dto.toEntity(article);
+        commentVoteRepository.save(vote);
+
+        return VoteDto.of(vote, true);
     }
 
-    public boolean validateDuplicationAndDelete(Long memberId, Long commentId) {
-        final List<CommentVote> votes = commentVoteRepository.findByMemberIdAndCommentId(memberId, commentId);
-
-        if (!votes.isEmpty()) {
-            CommentVote vote = votes.get(0);
-            commentVoteRepository.delete(vote);
-            return false;
-        }
-        return true;
+    public boolean isDuplicationVote(List<CommentVote> votes) {
+        return !votes.isEmpty();
     }
 }

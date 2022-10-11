@@ -3,16 +3,11 @@ package com.levelup.article.repository;
 import com.levelup.article.ArticleApplicationTest;
 import com.levelup.article.TestSupporter;
 import com.levelup.article.config.TestJpaConfig;
-import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.entity.ArticleComment;
-import com.levelup.article.domain.ArticleType;
-import com.levelup.article.domain.entity.CommentVote;
+import com.levelup.article.domain.entity.*;
 import com.levelup.article.domain.repository.ArticleRepository;
 import com.levelup.article.domain.repository.CommentRepository;
 import com.levelup.article.domain.repository.CommentVoteRepository;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
+import com.levelup.article.domain.repository.WriterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,11 +28,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @Import(TestJpaConfig.class)
 @DataJpaTest
-@ContextConfiguration(classes = {ArticleApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ArticleApplicationTest.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ArticleCommentVoteRepositoryTest extends TestSupporter {
+class CommentVoteRepositoryTest extends TestSupporter {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired WriterRepository writerRepository;
     @Autowired ArticleRepository articleRepository;
     @Autowired CommentVoteRepository commentVoteRepository;
     @Autowired CommentRepository commentRepository;
@@ -45,7 +40,6 @@ class ArticleCommentVoteRepositoryTest extends TestSupporter {
     @BeforeEach
     public void before() {
         articleRepository.deleteAll();
-        memberRepository.deleteAll();
         commentRepository.deleteAll();
         commentVoteRepository.deleteAll();
     }
@@ -54,34 +48,34 @@ class ArticleCommentVoteRepositoryTest extends TestSupporter {
     @Test
     void findByMemberIdAndCommentId() {
         // Given
-        Member member1 = createMember("test1", "test1");
-        Member member2 = createMember("test2", "test2");
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        Writer writer1 = createWriter(1L, "test", "test");
+        Writer writer2 = createWriter(2L, "test", "test");
+        writerRepository.save(writer1);
+        writerRepository.save(writer2);
 
-        Article article1 = createArticle(member1, "test article1", ArticleType.QNA);
-        Article article2 = createArticle(member1, "test article2", ArticleType.QNA);
+        Article article1 = createArticle(writer1, "test article1", ArticleType.QNA);
+        Article article2 = createArticle(writer2, "test article2", ArticleType.QNA);
         articleRepository.save(article1);
         articleRepository.save(article2);
 
-        ArticleComment comment1 = createComment(member1, article1);
-        ArticleComment comment2 = createComment(member1, article2);
+        Comment comment1 = createComment(writer1, article1);
+        Comment comment2 = createComment(writer2, article2);
         commentRepository.save(comment1);
         commentRepository.save(comment2);
 
-        CommentVote commentVote1 = createCommentVote(comment1, member1.getId());
-        CommentVote commentVote2 = createCommentVote(comment2, member1.getId());
-        CommentVote commentVote3 = createCommentVote(comment1, member2.getId());
+        CommentVote commentVote1 = createCommentVote(comment1, writer1.getMemberId());
+        CommentVote commentVote2 = createCommentVote(comment2, writer1.getMemberId());
+        CommentVote commentVote3 = createCommentVote(comment1, writer1.getMemberId());
         commentVoteRepository.save(commentVote1);
         commentVoteRepository.save(commentVote2);
         commentVoteRepository.save(commentVote3);
 
         // When
         List<CommentVote> commentVotes
-                = commentVoteRepository.findByMemberIdAndCommentId(member1.getId(), comment1.getId());
+                = commentVoteRepository.findByMemberIdAndCommentId(writer1.getMemberId(), comment1.getId());
 
         // Then
         assertThat(commentVotes.get(0).getComment()).isEqualTo(comment1);
-        assertThat(commentVotes.get(0).getMemberId()).isEqualTo(member1.getId());
+        assertThat(commentVotes.get(0).getMemberId()).isEqualTo(writer1.getMemberId());
     }
 }

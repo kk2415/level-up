@@ -70,6 +70,11 @@ const Notice = () => {
     }
 
     const createVote = async () => {
+        if (!token) {
+            alert('로그인 해야합니다')
+            return
+        }
+
         let voteRequest = {
             'memberId' : memberId,
             'targetId' : articleId,
@@ -78,7 +83,7 @@ const Notice = () => {
 
         let result = await VoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
+            setVoteCount(result.successful === false ? voteCount - 1 : voteCount + 1)
         }
     }
 
@@ -89,6 +94,7 @@ const Notice = () => {
         setVoteCount(article.voteCount)
     }
 
+    const [token, setToken] = useState(localStorage.getItem(UserInfo.TOKEN))
     const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [articleType, setArticleType] = useState(getArticleType())
     const [article, setArticle] = useState(null)

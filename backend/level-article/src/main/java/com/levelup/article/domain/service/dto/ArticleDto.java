@@ -1,8 +1,8 @@
 package com.levelup.article.domain.service.dto;
 
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.article.domain.entity.ArticleType;
+import com.levelup.article.domain.entity.Writer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -72,11 +72,11 @@ public class ArticleDto implements Serializable {
         );
     }
 
-    public ArticleDto(Article article, Member member) {
+    public ArticleDto(Article article, Long memberId, String nickname) {
         this.articleId = article.getId();
-        this.memberId = member.getId();
+        this.memberId = memberId;
         this.title = article.getTitle();
-        this.writer = member.getNickname();
+        this.writer = nickname;
         this.content = article.getContent();
         this.createdAt = article.getCreatedAt();
         this.voteCount = (long) article.getVotes().size();
@@ -88,9 +88,9 @@ public class ArticleDto implements Serializable {
     public static ArticleDto from(Article article) {
         return new ArticleDto(
             article.getId(),
-            article.getMember().getId(),
+            article.getWriter().getMemberId(),
             article.getTitle(),
-            article.getMember().getNickname(),
+            article.getWriter().getNickname(),
             article.getContent(),
             article.getCreatedAt(),
             (long) article.getVotes().size(),
@@ -100,10 +100,10 @@ public class ArticleDto implements Serializable {
         );
     }
 
-    public Article toEntity(Member member) {
+    public Article toEntity(Writer writer) {
         Article article = new Article();
 
-        article.setMember(member);
+        article.setWriter(writer);
         article.setTitle(title);
         article.setContent(content);
         article.setViews(0L);

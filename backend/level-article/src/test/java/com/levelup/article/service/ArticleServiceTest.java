@@ -1,12 +1,12 @@
 package com.levelup.article.service;
 
 import com.levelup.article.TestSupporter;
+import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.service.ArticleService;
 import com.levelup.article.exception.ArticleAuthorityException;
 import com.levelup.article.domain.service.dto.ArticleDto;
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.article.domain.repository.ArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,8 +33,8 @@ class ArticleServiceTest extends TestSupporter {
     @Test
     void get() {
         // Given
-        Member member = createMember("test", "test");
-        Article article = createArticle(member, "test article", ArticleType.QNA);
+        Writer writer = createWriter(1L, 1L, "test", "test");
+        Article article = createArticle(writer, "test article", ArticleType.QNA);
         given(mockArticleRepository.findById(article.getId())).willReturn(Optional.of(article));
 
         // When
@@ -48,8 +48,8 @@ class ArticleServiceTest extends TestSupporter {
     @Test
     void update() {
         // Given
-        Member member = createMember(1L, "test", "test");
-        Article article = createArticle(member, "test article", ArticleType.QNA);
+        Writer writer = createWriter(1L, 1L, "test", "test");
+        Article article = createArticle(writer, "test article", ArticleType.QNA);
         given(mockArticleRepository.findById(anyLong())).willReturn(Optional.of(article));
 
         // When
@@ -64,7 +64,7 @@ class ArticleServiceTest extends TestSupporter {
                         null,
                         null,
                         null,
-                        null), 1L, member.getId());
+                        null), 1L, writer.getMemberId());
 
         // Then
         assertThat(newArticleDto.getTitle()).isEqualTo("changed title");
@@ -75,9 +75,9 @@ class ArticleServiceTest extends TestSupporter {
     @Test
     void updateFail() {
         // Given
-        Member member1 = createMember(1L, "test1", "test1");
-        Member member2 = createMember(2L, "test2", "test2");
-        Article article = createArticle(member1, "unchanged article", ArticleType.QNA);
+        Writer writer1 = createWriter(1L, 1L, "test1", "test1");
+        Writer writer2 = createWriter(2L, 2L, "test2", "test2");
+        Article article = createArticle(writer1, "unchanged article", ArticleType.QNA);
         given(mockArticleRepository.findById(anyLong())).willReturn(Optional.of(article));
 
         // When & Then
@@ -93,7 +93,7 @@ class ArticleServiceTest extends TestSupporter {
                                 null,
                                 null,
                                 null,
-                                null), 1L, member2.getId()))
+                                null), 1L, writer2.getMemberId()))
                 .isInstanceOf(ArticleAuthorityException.class);
     }
 }

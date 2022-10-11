@@ -12,10 +12,10 @@ const ChannelVoteService = {
         await send(HttpMethod.POST, url, vote)
             .then((data) => {
                 result = data
+                console.log(data)
             })
             .catch((error) => {
                 console.log(error)
-                alert(error.responseJSON.message)
             })
 
         return result

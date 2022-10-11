@@ -7,12 +7,14 @@ import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.vote.ChannelArticleVoteRepository;
 import com.levelup.channel.domain.service.dto.ChannelVoteDto;
+import com.levelup.common.exception.EntityDuplicationException;
+import com.levelup.common.exception.EntityNotFoundException;
+import com.levelup.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -27,15 +29,14 @@ public class ChannelArticleVoteService implements ChannelVoteService {
 
     public ChannelVoteDto save(ChannelVoteDto dto) {
         final ChannelArticle article = articleRepository.findById(dto.getTargetId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
-        final ChannelMember channelMember
-                = channelMemberRepository.findByChannelIdAndMemberId(dto.getChannelId(), dto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
+        final ChannelMember channelMember = channelMemberRepository.findById(dto.getMemberId())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_MEMBER_NOT_FOUND));
         final List<ChannelArticleVote> votes
-                = articleVoteRepository.findByChannelMemberIdAndArticleId(channelMember.getId(), dto.getTargetId());
+                = articleVoteRepository.findByChannelMemberIdAndArticleId(dto.getMemberId(), dto.getTargetId());
 
         if (isDuplicationVote(votes)) {
-            articleVoteRepository.delete(votes.get(0));
+            articleVoteRepository.deleteAll(votes);
             return ChannelVoteDto.of(votes.get(0), false);
         }
 
@@ -43,7 +44,6 @@ public class ChannelArticleVoteService implements ChannelVoteService {
         articleVoteRepository.save(vote);
 
         return ChannelVoteDto.of(vote, true);
-
     }
 
     private boolean isDuplicationVote(List<ChannelArticleVote> votes) {

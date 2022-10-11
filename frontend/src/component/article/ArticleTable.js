@@ -23,7 +23,7 @@ export const ArticleTable = ({articles} ) => {
                     <tbody id="tableBody">
                     {
                         articles.map((info) => (
-                            <ArticleTableRow info={info} url={'/notice/' + info.id + '?articleType=' + info.articleType} />
+                            <ArticleTableRow info={info} url={'/article/' + info.id + '?articleType=' + info.articleType} />
                         ))
                     }
                     </tbody>

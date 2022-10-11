@@ -41,10 +41,10 @@ public class ChannelArticleService {
         final Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
-        ChannelArticle channelPost = dto.toEntity(channelMember, channel);
+        ChannelArticle channelArticle = dto.toEntity(channelMember, channel);
 
-        channelArticleRepository.save(channelPost);
-        return ChannelArticleDto.from(channelPost);
+        channelArticleRepository.save(channelArticle);
+        return ChannelArticleDto.from(channelArticle);
     }
 
     public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {

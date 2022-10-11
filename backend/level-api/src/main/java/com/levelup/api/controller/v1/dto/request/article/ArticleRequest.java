@@ -1,7 +1,7 @@
 package com.levelup.api.controller.v1.dto.request.article;
 
 import com.levelup.article.domain.service.dto.ArticleDto;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;

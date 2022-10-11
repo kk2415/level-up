@@ -8,7 +8,9 @@ import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.event.events.EventPublisher;
+import com.levelup.event.events.MemberCreatedEvent;
 import com.levelup.event.events.MemberDeletedEvent;
+import com.levelup.event.events.MemberUpdatedEvent;
 import com.levelup.member.domain.MemberPrincipal;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
@@ -39,9 +41,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
 
+    private final FileStore fileStore;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final FileStore fileStore;
 
     public MemberDto save(MemberDto dto) {
         validateDuplicationMember(dto.getEmail(), dto.getNickname());
@@ -52,6 +54,8 @@ public class MemberService implements UserDetailsService {
         member.updatePassword(passwordEncoder.encode(member.getPassword()));
         member.addRole(role);
         memberRepository.save(member);
+
+        EventPublisher.raise(MemberCreatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
 
         return MemberDto.from(member);
     }
@@ -86,6 +90,8 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.update(dto.getNickname(), dto.getProfileImage());
+
+        EventPublisher.raise(MemberUpdatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
     }
 
     public void updatePassword(UpdateMemberDto dto, String email) {

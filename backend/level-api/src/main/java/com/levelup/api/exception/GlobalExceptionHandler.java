@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
-        log.error(e.getClass().getName(), e.getMessage());
+        log.error(e.getClass().getName(), e.getMessage(), ErrorCode.INVALID_REQUEST_BODY.getMessage());
 
         ExceptionResponse response = FieldExceptionResponse.of(ErrorCode.INVALID_REQUEST_BODY, e.getBindingResult());
 
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException e)
     {
-        log.error(e.getClass().getName(), e.getMessage());
+        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<ExceptionResponse> handleMemberException(MemberException e)
     {
-        log.error(e.getClass().getName(), e.getMessage());
+        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ArticleException.class)
     public ResponseEntity<ExceptionResponse> handleArticleException(ArticleException e)
     {
-        log.error(e.getClass().getName(), e.getMessage());
+        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ChannelException.class)
     public ResponseEntity<ExceptionResponse> handleChannelException(ChannelException e)
     {
-        log.error(e.getClass().getName(), e.getMessage());
+        log.error(e.getClass().getName(), e.getMessage(), e.getErrorCode().getMessage());
 
         ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
 

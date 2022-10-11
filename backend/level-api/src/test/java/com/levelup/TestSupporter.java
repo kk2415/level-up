@@ -1,20 +1,16 @@
 package com.levelup;
 
-import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.*;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.entity.ChannelArticle;
 import com.levelup.channel.domain.entity.ChannelArticleCategory;
-import com.levelup.article.domain.entity.ArticleComment;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Gender;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.entity.RoleName;
-import com.levelup.article.domain.entity.ArticleVote;
-import com.levelup.article.domain.entity.CommentVote;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,6 +54,23 @@ public class TestSupporter {
         member.addRole(role);
 
         return member;
+    }
+
+    protected Writer createWriter(Long memberId, String nickname, String email) {
+        return Writer.builder()
+                .memberId(memberId)
+                .nickname(nickname)
+                .email(email)
+                .build();
+    }
+
+    protected Writer createWriter(Long id, Long memberId, String nickname, String email) {
+        return Writer.builder()
+                .id(id)
+                .memberId(memberId)
+                .nickname(nickname)
+                .email(email)
+                .build();
     }
 
     protected Channel createChannel(ChannelMember manager, String channelName, ChannelCategory category) {
@@ -108,11 +121,11 @@ public class TestSupporter {
         return channelArticle;
     }
 
-    protected Article createArticle(Long id, Member member, String title, ArticleType articleType) {
+    protected Article createArticle(Long id, Writer writer, String title, ArticleType articleType) {
         Article article = new Article();
 
         article.setId(id);
-        article.setMember(member);
+        article.setWriter(writer);
         article.setTitle(title);
         article.setContent("test");
         article.setViews(0L);
@@ -120,40 +133,15 @@ public class TestSupporter {
         return article;
     }
 
-    protected Article createArticle(Member member, String title, ArticleType articleType) {
+    protected Article createArticle(Writer writer, String title, ArticleType articleType) {
         Article article = new Article();
 
-        article.setMember(member);
+        article.setWriter(writer);
         article.setTitle(title);
         article.setContent("test");
         article.setViews(0L);
         article.setArticleType(articleType);
         return article;
-    }
-
-    protected ArticleComment createComment(Member member, Article article) {
-        ArticleComment comment = ArticleComment.builder()
-                .member(member)
-                .content("test")
-                .child(new ArrayList<>())
-                .commentVotes(new ArrayList<>())
-                .build();
-
-        comment.setArticle(article);
-        return comment;
-    }
-
-    protected ArticleComment createReplyComment(Member member, Article article, ArticleComment parentComment) {
-        ArticleComment comment = ArticleComment.builder()
-                .member(member)
-                .content("test")
-                .child(new ArrayList<>())
-                .commentVotes(new ArrayList<>())
-                .build();
-
-        comment.setArticle(article);
-        parentComment.addChildComment(comment);
-        return comment;
     }
 
     protected ArticleVote createArticleVote(Article article, Long memberId) {
@@ -165,7 +153,7 @@ public class TestSupporter {
         return articleVote;
     }
 
-    protected CommentVote createCommentVote(ArticleComment comment, Long memberId) {
+    protected CommentVote createCommentVote(Comment comment, Long memberId) {
         CommentVote commentVote = CommentVote.builder()
                 .memberId(memberId)
                 .build();

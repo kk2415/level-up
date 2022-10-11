@@ -7,12 +7,13 @@ import com.levelup.api.config.TestJpaConfig;
 import com.levelup.api.controller.v1.article.VoteApiController;
 import com.levelup.api.controller.v1.dto.request.article.VoteRequest;
 import com.levelup.api.filter.JwtAuthenticationFilter;
+import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.service.dto.VoteDto;
 import com.levelup.article.domain.service.vote.VoteServiceImpl;
 import com.levelup.article.domain.entity.Article;
-import com.levelup.article.domain.ArticleType;
+import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.member.domain.entity.Member;
-import com.levelup.article.domain.VoteType;
+import com.levelup.article.domain.entity.VoteType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,9 @@ class VoteApiControllerTest extends TestSupporter {
     @DisplayName("게시글 추천 테스트")
     @Test
     void create() throws Exception {
-        Member member = createMember(1L, "test", "test");
-        Article article = createArticle(1L, member, "test article", ArticleType.QNA);
-        VoteRequest voteRequest = VoteRequest.of(member.getId(), article.getId(), VoteType.ARTICLE);
+        Writer writer = createWriter(1L, 1L, "test", "test");
+        Article article = createArticle(1L, writer, "test article", ArticleType.QNA);
+        VoteRequest voteRequest = VoteRequest.of(writer.getMemberId(), article.getId(), VoteType.ARTICLE);
 
         given(voteServiceImpl.save(any(VoteDto.class))).willReturn(voteRequest.toDto());
 

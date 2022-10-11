@@ -15,6 +15,7 @@ const ChannelArticleService = {
             })
             .catch((error) => {
                 console.log(error)
+                alert(error.responseJSON.message)
 
                 if (error.status === 403) {
                     alert('이메일 인증을 해야합니다.')

@@ -180,7 +180,6 @@ const Channel = () => {
     useEffect(() => {
         loadChannelInfo(channelId)
         loadChannelPosts(channelId)
-
     }, [curPage])
 
     return (

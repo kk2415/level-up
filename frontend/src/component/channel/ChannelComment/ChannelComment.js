@@ -20,7 +20,7 @@ const ChannelComment = ({comment, articleId, channelId}) => {
         }
 
         let voteRequest = {
-            'memberId' : memberId,
+            'memberId' : channelMemberId,
             'channelId' : channelId,
             'targetId' : comment.commentId,
             'voteType' : 'COMMENT',
@@ -28,7 +28,7 @@ const ChannelComment = ({comment, articleId, channelId}) => {
 
         let result = await ChannelVoteService.create(voteRequest)
         if (result != null) {
-            setVoteCount(result.successful === true ? voteCount + 1 : voteCount - 1)
+            setVoteCount(result.successful === false ? voteCount - 1 : voteCount + 1)
         }
     }
 
@@ -53,6 +53,7 @@ const ChannelComment = ({comment, articleId, channelId}) => {
     }
 
     const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
+    const [channelMemberId, setChannelMemberId] = useState(localStorage.getItem(UserInfo.CHANNEL_MEMBER_ID))
     const [token, setToken] = useState(localStorage.getItem(UserInfo.TOKEN))
     const [replyComment, setReplyComment] = useState(null)
     const [voteCount, setVoteCount] = useState(comment.voteCount)
