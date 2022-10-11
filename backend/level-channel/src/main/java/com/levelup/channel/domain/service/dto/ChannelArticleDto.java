@@ -55,9 +55,9 @@ public class ChannelArticleDto implements Serializable {
     public static ChannelArticleDto from(ChannelArticle channelArticle) {
         return new ChannelArticleDto(
             channelArticle.getId(),
-            channelArticle.getChannelMember().getMember().getId(),
+            channelArticle.getChannelMember().getId(),
             channelArticle.getTitle(),
-            channelArticle.getChannelMember().getMember().getNickname(),
+            channelArticle.getChannelMember().getNickname(),
             channelArticle.getContent(),
             channelArticle.getCreatedAt(),
             (long) channelArticle.getVotes().size(),

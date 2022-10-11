@@ -1,5 +1,6 @@
 package com.levelup.channel.domain.service;
 
+import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.channel.domain.service.dto.ChannelStatInfoDto;
@@ -10,12 +11,9 @@ import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.member.domain.entity.Role;
-import com.levelup.channel.domain.entity.ChannelMember;
-import com.levelup.member.domain.entity.RoleName;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
+import com.levelup.event.events.ChannelCreatedEvent;
+import com.levelup.event.events.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,21 +37,25 @@ import java.util.stream.Collectors;
 public class ChannelService {
 
     private final FileStore fileStore;
-    private final MemberRepository memberRepository;
     private final ChannelRepository channelRepository;
 
     @Caching(evict = {
             @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':id'}"),
             @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':memberCount'}")
     })
-    public ChannelDto save(ChannelDto dto, Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-        member.addRole(Role.of(RoleName.CHANNEL_MANAGER, member));
+    public ChannelDto save(ChannelDto dto, Long memberId, String email, String nickname, String profileImage) {
+        Channel channel = dto.toEntity(nickname);
+        channel.addChannelMember(ChannelMember.of(
+                memberId,
+                email,
+                nickname,
+                profileImage,
+                true,
+                false));
 
-        ChannelMember channelMember = ChannelMember.of(member, true, false);
-        Channel channel = dto.toEntity(channelMember);
         channelRepository.save(channel);
+
+        EventPublisher.raise(ChannelCreatedEvent.of(channel.getId(), memberId, email, nickname, profileImage));
 
         return ChannelDto.from(channel);
     }

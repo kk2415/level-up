@@ -79,6 +79,9 @@ class ChannelRepositoryTest extends TestSupporter {
         ChannelMember channelMember4 = createChannelMember(member4, channel2, false);
         ChannelMember channelMember5 = createChannelMember(member5, channel2, false);
         ChannelMember channelMember6 = createChannelMember(member5, channel3, false);
+        channel3.addChannelMember(channelMember6);
+        channel1.addChannelMembers(channelMember1, channelMember2);
+        channel2.addChannelMembers(channelMember3, channelMember4, channelMember5);
         channelRepository.save(channel1);
         channelRepository.save(channel2);
         channelRepository.save(channel3);

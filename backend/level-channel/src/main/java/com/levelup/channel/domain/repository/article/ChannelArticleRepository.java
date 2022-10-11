@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ChannelArticleRepository extends JpaRepository<ChannelArticle, Long> {
 
-    @EntityGraph(attributePaths = {"channelMember", "channelMember.member"})
+    @EntityGraph(attributePaths = {"channelMember"})
     Optional<ChannelArticle> findById(@Param("articleId") Long articleId);
 
     @Query(value = "select ca from ChannelArticle ca where ca.channel.id = :channelId",
@@ -22,7 +22,6 @@ public interface ChannelArticleRepository extends JpaRepository<ChannelArticle, 
     @Query(value = "select ca.* from channel_article ca " +
             "join channel c on ca.channel_id = c.channel_id " +
             "where c.channel_id = :channelId and match(ca.title) against(:title in boolean mode)",
-//            "where c.channel_id = :channelId and ca.title like %:title%",
             countQuery = "select count(1) from channel_article ca " +
                     "join channel c on ca.channel_id = c.channel_id " +
                     "where c.channel_id = :channelId and match(ca.title) against(:title in boolean mode)",
@@ -33,12 +32,10 @@ public interface ChannelArticleRepository extends JpaRepository<ChannelArticle, 
 
     @Query(value = "select ca from ChannelArticle ca " +
             "join ca.channelMember cm " +
-            "join cm.member m " +
-            "where ca.channel.id = :channelId and m.nickname like %:nickname%",
+            "where ca.channel.id = :channelId and cm.nickname like %:nickname%",
             countQuery = "select count(ca) from ChannelArticle ca " +
                     "join ca.channelMember cm " +
-                    "join cm.member m " +
-                    "where ca.channel.id = :channelId and m.nickname like %:nickname%")
+                    "where ca.channel.id = :channelId and cm.nickname like %:nickname%")
     Page<ChannelArticle> findByChannelIdAndNickname(@Param("channelId") Long channelId,
                                                     @Param("nickname") String nickname,
                                                     Pageable pageable);

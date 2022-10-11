@@ -7,10 +7,7 @@ import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.exception.FileNotFoundException;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.event.events.EventPublisher;
-import com.levelup.event.events.MemberCreatedEvent;
-import com.levelup.event.events.MemberDeletedEvent;
-import com.levelup.event.events.MemberUpdatedEvent;
+import com.levelup.event.events.*;
 import com.levelup.member.domain.MemberPrincipal;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
@@ -116,6 +113,11 @@ public class MemberService implements UserDetailsService {
 
         UploadFile uploadFile = fileStore.storeFile(FileType.MEMBER, file);
         member.modifyProfileImage(uploadFile);
+
+        EventPublisher.raise(MemberProfileImageUpdatedEvent.of(
+                member.getId(),
+                member.getProfileImage().getUploadFileName(),
+                member.getProfileImage().getStoreFileName()));
 
         return uploadFile;
     }

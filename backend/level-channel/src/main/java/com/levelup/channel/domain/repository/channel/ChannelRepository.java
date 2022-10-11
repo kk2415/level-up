@@ -15,14 +15,8 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
 
     @Query("select ch from Channel ch " +
             "join fetch ch.channelMembers chm " +
-            "join fetch chm.member m " +
             "where ch.id = :id")
     Optional<Channel> findById(@Param("id") Long id);
-
-    @Query("select ch from Channel ch " +
-            "join ChannelArticle cp on ch.id = cp.channel.id " +
-            "where cp.id = :articleId")
-    Optional<Channel> findByArticleId(@Param("articleId") Long articleId);
 
     Page<Channel> findByCategory(ChannelCategory category, Pageable pageable);
 

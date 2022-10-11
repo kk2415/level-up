@@ -158,8 +158,8 @@ const Channel = () => {
 
     const loadChannelInfo = async (channelId) => {
         let result = await ChannelService.get(channelId)
-
-        if (result.manager) {
+        console.log(result)
+        if (result.managerId === Number(memberId)) {
             setIsManager(true)
         }
         setChannelName(result.name)
@@ -167,6 +167,7 @@ const Channel = () => {
 
     const PAGER_LENGTH = 5
 
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
     const [token, setToken] = useState(localStorage.getItem(UserInfo.TOKEN))
     const [channelId, setChannelId] = useState(getChannelId())
     const [isManager, setIsManager] = useState(false)

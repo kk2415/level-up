@@ -73,38 +73,6 @@ public class TestSupporter {
                 .build();
     }
 
-    protected Channel createChannel(ChannelMember manager, String channelName, ChannelCategory category) {
-        Channel channel = Channel.builder()
-                .name(channelName)
-                .managerName(manager.getMember().getNickname())
-                .description("test")
-                .memberMaxNumber(10L)
-                .thumbnail(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .category(category)
-                .expectedStartDate(LocalDate.of(1997, 9, 27))
-                .expectedEndDate(LocalDate.of(1997, 9, 27))
-                .channelMembers(new ArrayList<>())
-                .channelArticles(new ArrayList<>())
-                .build();
-
-        manager.getMember().addRole(Role.of(RoleName.CHANNEL_MANAGER, manager.getMember()));
-        channel.addChannelMember(manager);
-        manager.setChannel(channel);
-
-        return channel;
-    }
-
-    protected ChannelMember createChannelMember(Member member, Boolean isWaitingMember) {
-        return ChannelMember.of(member, false, isWaitingMember);
-    }
-
-    protected ChannelMember createChannelMember(Member member, Channel channel, Boolean isWaitingMember) {
-        ChannelMember channelMember = ChannelMember.of(member, false, isWaitingMember);
-        channel.addChannelMember(channelMember);
-
-        return channelMember;
-    }
-
     protected ChannelArticle createChannelArticle(ChannelMember channelMember, Channel channel, String title) {
         ChannelArticle channelArticle = ChannelArticle.builder()
                 .category(ChannelArticleCategory.INFO)

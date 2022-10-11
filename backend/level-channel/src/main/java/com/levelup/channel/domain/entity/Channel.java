@@ -66,17 +66,15 @@ public class Channel extends BaseTimeEntity {
     public Long getManagerId() {
         return this.getChannelMembers().stream()
                 .filter(ChannelMember::getIsManager)
-                .map(ChannelMember::getMember)
+                .map(ChannelMember::getMemberId)
                 .findAny()
-                .map(Member::getId)
                 .orElse(null);
     }
 
     public String getManagerNickname() {
         return this.getChannelMembers().stream()
                 .filter(ChannelMember::getIsManager)
-                .map(ChannelMember::getMember)
-                .map(Member::getNickname)
+                .map(ChannelMember::getNickname)
                 .findAny().orElse("none");
     }
 
@@ -92,6 +90,14 @@ public class Channel extends BaseTimeEntity {
     public void addChannelMember(ChannelMember channelMember) {
         this.getChannelMembers().add(channelMember);
         channelMember.setChannel(this);
+    }
+
+    public void addChannelMembers(ChannelMember... channelMembers) {
+        this.getChannelMembers().addAll(List.of(channelMembers));
+
+        for (ChannelMember channelMember : channelMembers) {
+            channelMember.setChannel(this);
+        }
     }
 
     public void updateChannel(String name,

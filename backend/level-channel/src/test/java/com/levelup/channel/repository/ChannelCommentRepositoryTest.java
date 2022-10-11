@@ -83,7 +83,7 @@ class ChannelCommentRepositoryTest extends TestSupporter {
         // Then
         assertThat(comments.size()).isEqualTo(2);
         assertThat(comments.get(0).getChannelMember().getId()).isEqualTo(channelMember.getId());
-        assertThat(comments.get(0).getChannelMember().getMember().getId()).isEqualTo(member.getId());
+        assertThat(comments.get(0).getChannelMember().getMemberId()).isEqualTo(member.getId());
         assertThat(comments.get(0).getArticle().getId()).isEqualTo(article1.getId());
     }
 

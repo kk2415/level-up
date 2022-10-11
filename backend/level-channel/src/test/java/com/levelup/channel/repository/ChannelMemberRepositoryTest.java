@@ -74,12 +74,14 @@ class ChannelMemberRepositoryTest extends TestSupporter {
         Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
         Channel channel2 = createChannel(channelManager2, "test channel2", ChannelCategory.STUDY);
         Channel channel3 = createChannel(channelManager3, "test channel3", ChannelCategory.STUDY);
-        ChannelMember channelMember1 = createChannelMember(member1, channel1, false);
-        ChannelMember channelMember2 = createChannelMember(member2, channel1, false);
-        ChannelMember channelMember3 = createChannelMember(member3, channel2, false);
-        ChannelMember channelMember4 = createChannelMember(member4, channel2, true);
-        ChannelMember channelMember5 = createChannelMember(member5, channel2, false);
-        ChannelMember channelMember6 = createChannelMember(member5, channel3, false);
+        ChannelMember channelMember1 = createChannelMember(member1, false, false);
+        ChannelMember channelMember2 = createChannelMember(member2, false, false);
+        ChannelMember channelMember3 = createChannelMember(member3, false, false);
+        ChannelMember channelMember4 = createChannelMember(member4, false, true);
+        ChannelMember channelMember5 = createChannelMember(member5, false, true);
+        ChannelMember channelMember6 = createChannelMember(member5, false, false);
+        channel1.addChannelMembers(channelMember1, channelMember2);
+        channel2.addChannelMembers(channelMember3, channelMember4, channelMember5, channelMember6);
         channelRepository.save(channel1);
         channelRepository.save(channel2);
         channelRepository.save(channel3);
@@ -95,6 +97,6 @@ class ChannelMemberRepositoryTest extends TestSupporter {
 
         // Then
         assertThat(channelMembers.getTotalElements()).isEqualTo(3);
-        assertThat(waitingChannelMembers.getTotalElements()).isEqualTo(1);
+        assertThat(waitingChannelMembers.getTotalElements()).isEqualTo(2);
     }
 }

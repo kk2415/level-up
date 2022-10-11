@@ -1,6 +1,8 @@
 package com.levelup.api.controller.v1.channel;
 
+import com.levelup.api.adapter.client.MemberClient;
 import com.levelup.api.controller.v1.dto.request.channel.ChannelRequest;
+import com.levelup.api.controller.v1.dto.response.member.MemberResponse;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelStatInfoResponse;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelResponse;
@@ -30,6 +32,7 @@ import java.net.MalformedURLException;
 @RequestMapping("/api/v1/channels")
 public class ChannelApiController {
 
+    private final MemberClient memberClient;
     private final ChannelService channelService;
 
     @PostMapping({"", "/"})
@@ -37,7 +40,14 @@ public class ChannelApiController {
             @Valid @RequestBody ChannelRequest request,
             @RequestParam("member") Long memberId)
     {
-        ChannelDto dto = channelService.save(request.toDto(), memberId);
+        MemberResponse member = memberClient.get(memberId);
+
+        ChannelDto dto = channelService.save(
+                request.toDto(),
+                memberId,
+                member.getEmail(),
+                member.getNickname(),
+                member.getUploadFile().getStoreFileName());
 
         return ResponseEntity.ok().body(ChannelResponse.from(dto));
     }

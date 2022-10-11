@@ -77,7 +77,7 @@ class ChannelCommentVoteRepositoryTest extends TestSupporter {
         assertThat(votes.size()).isEqualTo(1L);
         assertThat(votes.get(0).getComment().getId()).isEqualTo(comment1.getId());
         assertThat(votes.get(0).getChannelMember().getId()).isEqualTo(channelMember.getId());
-        assertThat(votes.get(0).getChannelMember().getMember().getId()).isEqualTo(member.getId());
+        assertThat(votes.get(0).getChannelMember().getMemberId()).isEqualTo(member.getId());
         assertThat(votes.get(0).getChannelMember().getChannel().getId()).isEqualTo(channel.getId());
     }
 }

@@ -9,8 +9,6 @@ import com.levelup.channel.domain.service.dto.ChannelMemberDto;
 import com.levelup.common.exception.EntityDuplicationException;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,20 +26,31 @@ import java.util.Optional;
 public class ChannelMemberService {
 
     private final ChannelRepository channelRepository;
-    private final MemberRepository memberRepository;
     private final ChannelMemberRepository channelMemberRepository;
 
-    public ChannelMemberDto create(Long channelId, Long memberId, Boolean isWaitingMember) {
+    public ChannelMemberDto create(
+            Long channelId,
+            Long memberId,
+            String email,
+            String nickname,
+            String profileImage,
+            Boolean isManager,
+            Boolean isWaitingMember)
+    {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
-        final Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
         final Optional<ChannelMember> channelMembers
                 = channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId);
 
         validate(channel, channelMembers);
 
-        ChannelMember channelMember = ChannelMember.of(member, false, isWaitingMember);
+        ChannelMember channelMember = ChannelMember.of(
+                memberId,
+                email,
+                nickname,
+                profileImage,
+                isManager,
+                isWaitingMember);
         channel.addChannelMember(channelMember);
 
         return ChannelMemberDto.from(channelMember);

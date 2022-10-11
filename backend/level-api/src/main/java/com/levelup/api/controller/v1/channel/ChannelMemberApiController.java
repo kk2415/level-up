@@ -1,5 +1,7 @@
 package com.levelup.api.controller.v1.channel;
 
+import com.levelup.api.adapter.client.MemberClient;
+import com.levelup.api.controller.v1.dto.response.member.MemberResponse;
 import com.levelup.channel.domain.service.dto.ChannelMemberDto;
 import com.levelup.channel.domain.service.ChannelMemberService;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelMemberResponse;
@@ -19,13 +21,25 @@ import org.springframework.web.bind.annotation.*;
 public class ChannelMemberApiController {
 
     private final ChannelMemberService channelMemberService;
+    private final MemberClient memberClient;
 
     @PostMapping({"", "/"})
     public ResponseEntity<ChannelMemberResponse> create(
             @RequestParam("channel") Long channelId,
-            @RequestParam("member") Long memberId)
+            @RequestParam("member") Long memberId,
+            @RequestParam("isManager") Boolean isManager,
+            @RequestParam("isWaitingMember") Boolean isWaitingMember)
     {
-        ChannelMemberDto dto = channelMemberService.create(channelId, memberId, true);
+        MemberResponse member = memberClient.get(memberId);
+
+        ChannelMemberDto dto = channelMemberService.create(
+                channelId,
+                memberId,
+                member.getEmail(),
+                member.getNickname(),
+                member.getUploadFile().getStoreFileName(),
+                isManager,
+                isWaitingMember);
 
         return ResponseEntity.ok().body(ChannelMemberResponse.from(dto));
     }
