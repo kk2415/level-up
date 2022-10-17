@@ -22,7 +22,7 @@ const SignUp = () => {
 
     async function HandleSignUpButton() {
         let formData = new FormData(document.getElementById('signUpForm'));
-        let profileImage = await MemberService.uploadProfile(file)
+        // let profileImage = await MemberService.uploadProfile(file)
 
         let member = {
             email : formData.get('email'),
@@ -32,11 +32,10 @@ const SignUp = () => {
             gender : formData.get('gender'),
             birthday : formData.get('birthday'),
             phone: formData.get('tel'),
-            uploadFile : profileImage,
         }
 
         if (validate(member)) {
-            let newMember = await SignUpService.signUp(member);
+            let newMember = await SignUpService.signUp(member, file);
 
             if (newMember) {
                 let logInMember = {
@@ -46,7 +45,6 @@ const SignUp = () => {
 
                 await LogInService.signIn(logInMember);
                 navigate('/confirm-email')
-                // window.location.href = '/confirm-email'
 
                 alert(newMember.name + '님 가입되었습니다')
                 alert('인증번호를 발송 중입니다. 잠시만 기다려주세요.')

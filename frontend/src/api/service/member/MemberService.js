@@ -1,4 +1,4 @@
-import {send} from "../../Request"
+import {send, sendMultiPart} from "../../Request"
 import {uploadFile} from "../../UploadFile";
 import {HttpMethod} from "../../const/HttpMethod";
 
@@ -6,12 +6,12 @@ const urlPrefix = '/api/v1/members/'
 
 export const MemberService = {
 
-    signOut : function () {
+    signOut : () => {
         localStorage.clear()
         window.location.href = "/"
     },
 
-    get : async function getMember(memberId) {
+    get : async (memberId) => {
         let member = {}
         const url = urlPrefix + memberId
 
@@ -27,11 +27,16 @@ export const MemberService = {
         return member
     },
 
-    modify: async function modifyMember(memberId, member) {
+
+    modify: async (memberId, member, file) => {
         let result = false
         const url = urlPrefix + memberId
 
-        await send(HttpMethod.PATCH, url, member)
+        let form = new FormData();
+        form.append('request', new Blob([JSON.stringify(member)], { type: "application/json" }))
+        form.append('profileImage', file)
+
+        await sendMultiPart(HttpMethod.PATCH, url, form)
             .then(() => {
                 result = true
             })
@@ -42,7 +47,7 @@ export const MemberService = {
         return result
     },
 
-    modifyPassword: async function modifyMember(request, email) {
+    modifyPassword: async (request, email) => {
         let result = false
         const url = urlPrefix + email + '/password'
 
@@ -59,7 +64,7 @@ export const MemberService = {
         return result
     },
 
-    delete : async function deleteMember(memberId) {
+    delete : async (memberId) => {
         let members = {}
         const url = urlPrefix + memberId
 

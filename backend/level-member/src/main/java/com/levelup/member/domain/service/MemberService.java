@@ -15,6 +15,7 @@ import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.service.dto.UpdateMemberDto;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.service.dto.UpdatePasswordDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -42,14 +43,14 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-    public MemberDto save(MemberDto dto) {
+    public MemberDto save(MemberDto dto, MultipartFile file) throws IOException {
         validateDuplicationMember(dto.getEmail(), dto.getNickname());
 
-        Member member = dto.toEntity();
-        Role role = Role.of(RoleName.ANONYMOUS, member);
+        UploadFile profileImage = fileStore.storeFile(FileType.MEMBER, file);
 
+        Member member = dto.toEntity(profileImage);
         member.updatePassword(passwordEncoder.encode(member.getPassword()));
-        member.addRole(role);
+        member.addRole(Role.of(RoleName.ANONYMOUS, member));
         memberRepository.save(member);
 
         EventPublisher.raise(MemberCreatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
@@ -65,10 +66,6 @@ public class MemberService implements UserDetailsService {
                 .ifPresent(user -> {throw new EntityDuplicationException(ErrorCode.NICKNAME_DUPLICATION);});
     }
 
-    public UploadFile createProfileImage(MultipartFile file) throws IOException {
-        return fileStore.storeFile(FileType.MEMBER, file);
-    }
-
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "member", key = "#memberId")
@@ -80,48 +77,35 @@ public class MemberService implements UserDetailsService {
     }
 
 
-
     @CacheEvict(cacheNames = "member", key = "#memberId")
-    public void update(UpdateMemberDto dto, Long memberId) {
+    public void update(UpdateMemberDto dto, Long memberId, MultipartFile file) throws IOException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
-        member.update(dto.getNickname(), dto.getProfileImage());
+        UploadFile profileImage = storeUpdateProfileImage(member, file);
+        member.update(dto.getNickname(), profileImage);
 
-        EventPublisher.raise(MemberUpdatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
+        EventPublisher.raise(MemberUpdatedEvent.of(
+                member.getId(),
+                member.getEmail(),
+                member.getNickname(),
+                member.getProfileImage()));
     }
 
-    public void updatePassword(UpdateMemberDto dto, String email) {
+    private UploadFile storeUpdateProfileImage(Member member, MultipartFile file) throws IOException {
+        if (member.getProfileImage() != null) {
+            fileStore.deleteFile(member.getProfileImage().getStoreFileName());
+        }
+
+        return fileStore.storeFile(FileType.MEMBER, file);
+    }
+
+    public void updatePassword(UpdatePasswordDto dto, String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.updatePassword(passwordEncoder.encode(dto.getPassword()));
     }
-
-    @CacheEvict(cacheNames = "member", key = "#memberId")
-    public UploadFile updateProfileImage(MultipartFile file, Long memberId) throws IOException {
-        if (file == null || file.isEmpty()) {
-            throw new FileNotFoundException(ErrorCode.IMAGE_NOT_FOUND);
-        }
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-
-        if (member.getProfileImage() != null) {
-            fileStore.deleteFile(member.getProfileImage().getStoreFileName());
-        }
-
-        UploadFile uploadFile = fileStore.storeFile(FileType.MEMBER, file);
-        member.modifyProfileImage(uploadFile);
-
-        EventPublisher.raise(MemberProfileImageUpdatedEvent.of(
-                member.getId(),
-                member.getProfileImage().getUploadFileName(),
-                member.getProfileImage().getStoreFileName()));
-
-        return uploadFile;
-    }
-
 
 
     @CacheEvict(cacheNames = "member", key = "#memberId")

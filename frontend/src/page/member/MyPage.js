@@ -38,24 +38,15 @@ const MyPage = () => {
 
     const handleAccess = async () => {
         if (onModifyButton) {
-            let profileImage = member.uploadFile
-            if (myPageFile) {
-                profileImage = await MemberService.modifyProfile(member.id, myPageFile)
-                if (profileImage === null) {
-                    alert('이미지 저장을 실패하였습니다.')
-                }
-            }
-
             let updateMember = {
                 nickname : $('#nickname').val(),
-                profileImage : profileImage,
             }
 
             if ($('#nickname').val() === '') {
                 updateMember.nickname = member.nickname
             }
 
-            let result = await MemberService.modify(member.id, updateMember);
+            let result = await MemberService.modify(member.id, updateMember, myPageFile);
             if (result) {
                 alert('수정되었습니다')
             }
