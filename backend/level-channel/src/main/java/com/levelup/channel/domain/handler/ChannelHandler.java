@@ -42,17 +42,11 @@ public class ChannelHandler {
 
     @EventListener(MemberUpdatedEvent.class)
     public void handleMemberUpdatedEvent(MemberUpdatedEvent event) {
-        ChannelMember channelMember = channelMemberRepository.findByMemberId(event.getMemberId())
-                .orElseThrow(() -> new ChannelException(ErrorCode.CHANNEL_MEMBER_NOT_FOUND));
-
-        channelMember.update(event.getEmail(), event.getNickname(), channelMember.getProfileImage());
-    }
-
-    @EventListener(MemberProfileImageUpdatedEvent.class)
-    public void handleMemberProfileImageUpdatedEvent(MemberProfileImageUpdatedEvent event) {
-        ChannelMember channelMember = channelMemberRepository.findByMemberId(event.getMemberId())
-                .orElseThrow(() -> new ChannelException(ErrorCode.CHANNEL_MEMBER_NOT_FOUND));
-
-        channelMember.update(channelMember.getEmail(), channelMember.getNickname(), event.getStoreFileName());
+        channelMemberRepository.findByMemberId(event.getMemberId())
+                        .ifPresent(channelMember ->
+                                channelMember.update(
+                                        event.getEmail(),
+                                        event.getNickname(),
+                                        event.getProfileImage().getStoreFileName()));
     }
 }

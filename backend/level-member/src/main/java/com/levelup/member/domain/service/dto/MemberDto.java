@@ -111,4 +111,18 @@ public class MemberDto implements Serializable {
                 .roles(new ArrayList<>())
                 .build();
     }
+
+    public Member toEntity(UploadFile profileImage) {
+        return Member.builder()
+                .email(email)
+                .password(password)
+                .name(name)
+                .nickname(nickname)
+                .gender(gender)
+                .birthday(birthday)
+                .phone(phone)
+                .profileImage(profileImage)
+                .roles(new ArrayList<>())
+                .build();
+    }
 }

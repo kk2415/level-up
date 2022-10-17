@@ -12,21 +12,17 @@ public class UpdateMemberRequest {
     @NotNull
     private String nickname;
 
-    @NotNull
-    private UploadFile profileImage;
-
     protected UpdateMemberRequest() {}
 
-    private UpdateMemberRequest(String nickname, UploadFile profileImage) {
+    private UpdateMemberRequest(String nickname) {
         this.nickname = nickname;
-        this.profileImage = profileImage;
     }
 
-    public static UpdateMemberRequest of(String nickname, UploadFile profileImage) {
-        return new UpdateMemberRequest(nickname, profileImage);
+    public static UpdateMemberRequest of(String nickname) {
+        return new UpdateMemberRequest(nickname);
     }
 
     public UpdateMemberDto toDto() {
-        return UpdateMemberDto.of(null, nickname, profileImage);
+        return UpdateMemberDto.of(nickname);
     }
 }

@@ -1,24 +1,19 @@
 package com.levelup.member.domain.service.dto;
 
-import com.levelup.common.util.file.UploadFile;
 import lombok.Getter;
 
 @Getter
 public class UpdateMemberDto {
 
-    private String password;
     private String nickname;
-    private UploadFile profileImage;
 
     protected UpdateMemberDto() {}
 
-    private UpdateMemberDto(String password, String nickname, UploadFile profileImage) {
-        this.password = password;
+    protected UpdateMemberDto(String nickname) {
         this.nickname = nickname;
-        this.profileImage = profileImage;
     }
 
-    public static UpdateMemberDto of(String password, String nickname, UploadFile profileImage) {
-        return new UpdateMemberDto(password, nickname, profileImage);
+    public static UpdateMemberDto of(String password) {
+        return new UpdateMemberDto(password);
     }
 }

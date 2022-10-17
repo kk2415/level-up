@@ -38,34 +38,4 @@ class MemberApiControllerTest {
     public MemberApiControllerTest(@Autowired MockMvc mvc) {
         this.mvc = mvc;
     }
-
-    @DisplayName("회원 프로필 등록")
-    @Test
-    void createProfileImage() throws Exception {
-        // Given
-        given(memberService.createProfileImage(any(MultipartFile.class))).willReturn(new UploadFile(
-                "myProfile.png",
-                "profile/2cdcf2f4-be3d-4a29-9163-70342d4a375e.png"
-                ));
-
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "myProfile.png",
-                "image/png",
-                "<<binary data>>".getBytes());
-
-        // When & Then
-        mvc.perform(multipart("/api/v1/members/profile")
-                        .file(file))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document(
-                        "member-post-profile",
-                        requestPartBody("file"),
-                        responseFields(
-                                fieldWithPath("uploadFileName").description("file name"),
-                                fieldWithPath("storeFileName").description("path on file stored")
-                        )
-                ));
-    }
 }
