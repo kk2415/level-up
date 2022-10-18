@@ -2,7 +2,6 @@ package com.levelup.channel.domain.entity;
 
 import com.levelup.common.domain.base.BaseTimeEntity;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Member;
 import lombok.*;
 import org.jsoup.Jsoup;
 
@@ -29,9 +28,6 @@ public class Channel extends BaseTimeEntity {
 
     @Column(name = "channel_name", nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    private String managerName;
 
     @Column(nullable = false)
     private Long memberMaxNumber;
@@ -116,16 +112,11 @@ public class Channel extends BaseTimeEntity {
         this.thumbnail = thumbnail;
     }
 
-    public void removeMembers(ChannelMember channelMember) {
-        this.getChannelMembers().remove(channelMember);
-    }
-
     public void removeMembers(List<ChannelMember> channelMembers) {
         for (ChannelMember channelMember : channelMembers) {
             this.getChannelMembers().remove(channelMember);
         }
     }
-
 
 
     @Override
