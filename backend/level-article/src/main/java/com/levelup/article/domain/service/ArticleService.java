@@ -2,16 +2,14 @@ package com.levelup.article.domain.service;
 
 import com.levelup.article.domain.entity.Article;
 import com.levelup.article.domain.entity.ArticleType;
+import com.levelup.article.domain.service.dto.SearchCondition;
 import com.levelup.article.domain.entity.Writer;
 import com.levelup.article.domain.repository.ArticleRepository;
 import com.levelup.article.domain.repository.WriterRepository;
 import com.levelup.article.domain.service.dto.ArticleDto;
 import com.levelup.article.exception.ArticleAuthorityException;
-import com.levelup.common.domain.FileType;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.common.util.file.LocalFileStore;
-import com.levelup.common.util.file.UploadFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,16 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ArticleService {
 
-    private final LocalFileStore fileStore;
     private final ArticleRepository articleRepository;
     private final WriterRepository writerRepository;
 
@@ -41,10 +35,6 @@ public class ArticleService {
         articleRepository.save(article);
 
         return ArticleDto.from(article);
-    }
-
-    public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
-        return fileStore.storeFile(FileType.POST, file);
     }
 
 
@@ -62,13 +52,17 @@ public class ArticleService {
             cacheNames = "article",
             key = "{#articleType + ':' + #pageable.pageNumber}",
             condition = "#pageable.pageNumber == 0 AND #field == ''")
-    public Page<ArticleDto> getArticles(ArticleType articleType, String field, String query, Pageable pageable) {
+    public Page<ArticleDto> getArticles(
+            ArticleType articleType,
+            SearchCondition search,
+            Pageable pageable)
+    {
         Page<ArticleDto> pages;
 
-        if ("title".equals(field) && !("".equals(query))) {
-            pages = articleRepository.findByTitleAndArticleType(query, articleType, pageable);
-        } else if ("writer".equals(field) && !("".equals(query))) {
-            pages = articleRepository.findByNicknameAndArticleType(query, articleType, pageable);
+        if (search.isTitleSearch()) {
+            pages = articleRepository.findByTitleAndArticleType(search.getQuery(), articleType, pageable);
+        } else if (search.isWriterSearch()) {
+            pages = articleRepository.findByNicknameAndArticleType(search.getQuery(), articleType, pageable);
         } else {
             pages = articleRepository.findByArticleType(articleType, pageable);
         }
@@ -93,11 +87,11 @@ public class ArticleService {
 
     @CacheEvict(cacheNames = "article", key = "{#dto.articleType + ':0'}")
     public ArticleDto update(ArticleDto dto, Long articleId, Long memberId) {
-        Article article = articleRepository.findById(articleId)
+        final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
-        if (!article.getWriter().getMemberId().equals(memberId)) {
-            throw new ArticleAuthorityException(ErrorCode.AUTHORITY_EXCEPTION);
+        if (!article.isWriter(memberId)) {
+            throw new ArticleAuthorityException(ErrorCode.ARTICLE_AUTHORITY_EXCEPTION);
         }
 
         article.update(dto.getTitle(), dto.getContent());

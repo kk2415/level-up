@@ -33,10 +33,6 @@ public class Article extends BaseTimeEntity {
     @Column(nullable = false)
     private ArticleType articleType;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private Writer writer;
@@ -56,6 +52,10 @@ public class Article extends BaseTimeEntity {
     public void update(String title, String content) {
         this.title = (title);
         this.content = (content);
+    }
+
+    public boolean isWriter(Long memberId) {
+        return this.writer.getMemberId().equals(memberId);
     }
 
     @Override

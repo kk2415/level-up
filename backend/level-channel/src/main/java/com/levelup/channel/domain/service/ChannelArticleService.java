@@ -7,6 +7,7 @@ import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.service.dto.ChannelArticleDto;
+import com.levelup.channel.domain.service.dto.SearchCondition;
 import com.levelup.common.domain.FileType;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
@@ -29,7 +30,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ChannelArticleService {
 
-    private final LocalFileStore fileStore;
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
     private final ChannelArticleRepository channelArticleRepository;
@@ -46,15 +46,6 @@ public class ChannelArticleService {
         channelArticleRepository.save(channelArticle);
         return ChannelArticleDto.from(channelArticle);
     }
-
-    public UploadFile createFileByMultiPart(MultipartFile file) throws IOException {
-        if (file == null) {
-            throw new FileNotFoundException("파일이 존재하지 않습니다.");
-        }
-
-        return fileStore.storeFile(FileType.POST, file);
-    }
-
 
 
     @CacheEvict(cacheNames = "channelArticle", key = "{#channelId + ':0'}")
@@ -73,20 +64,17 @@ public class ChannelArticleService {
             condition = "#pageable.pageNumber == 0 AND #field == ''")
     public Page<ChannelArticleDto> getChannelArticles(
             Long channelId,
-            String field,
-            String query,
+            SearchCondition search,
             Pageable pageable)
     {
-        Page<ChannelArticle> pages = null;
+        Page<ChannelArticle> pages;
 
-        if (field == null || field.equals("")) {
+        if (search.isTitleSearch()) {
+            pages = channelArticleRepository.findByChannelIdAndTitle(channelId, search.getQuery(), pageable);
+        } else if (search.isWriterSearch()) {
+            pages = channelArticleRepository.findByChannelIdAndNickname(channelId, search.getQuery(), pageable);
+        } else {
             pages = channelArticleRepository.findByChannelId(channelId, pageable);
-        }
-        else if (field.equals("title")) {
-            pages = channelArticleRepository.findByChannelIdAndTitle(channelId, query, pageable);
-        }
-        else if (field.equals("writer")) {
-            pages = channelArticleRepository.findByChannelIdAndNickname(channelId, query, pageable);
         }
 
         return pages.map(ChannelArticleDto::from);
