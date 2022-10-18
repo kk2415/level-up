@@ -19,9 +19,9 @@ import org.springframework.web.filter.CorsFilter;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true) //secured 애노테이션 활성화
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(securedEnabled = true) //secured 애노테이션 활성화
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -85,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(
                 "/swagger-resources",
                 "/swagger-resources/**",
