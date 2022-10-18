@@ -99,30 +99,10 @@ public class MemberDto implements Serializable {
     }
 
     public Member toEntity() {
-        return Member.builder()
-                .email(email)
-                .password(password)
-                .name(name)
-                .nickname(nickname)
-                .gender(gender)
-                .birthday(birthday)
-                .phone(phone)
-                .profileImage(profileImage)
-                .roles(new ArrayList<>())
-                .build();
+        return Member.of(null, email, password, name, nickname, gender, birthday, phone, profileImage, new ArrayList<>());
     }
 
     public Member toEntity(UploadFile profileImage) {
-        return Member.builder()
-                .email(email)
-                .password(password)
-                .name(name)
-                .nickname(nickname)
-                .gender(gender)
-                .birthday(birthday)
-                .phone(phone)
-                .profileImage(profileImage)
-                .roles(new ArrayList<>())
-                .build();
+        return Member.of(null, email, password, name, nickname, gender, birthday, phone, profileImage, new ArrayList<>());
     }
 }

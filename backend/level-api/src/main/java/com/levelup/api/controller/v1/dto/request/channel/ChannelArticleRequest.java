@@ -43,7 +43,7 @@ public class ChannelArticleRequest {
                 .voteCount(0L)
                 .views(0L)
                 .commentCount(0L)
-                .postCategory(category)
+                .category(category)
                 .build();
     }
 }

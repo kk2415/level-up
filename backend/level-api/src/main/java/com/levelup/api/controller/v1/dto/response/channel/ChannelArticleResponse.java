@@ -59,7 +59,7 @@ public class ChannelArticleResponse {
                 dto.getVoteCount(),
                 dto.getViews(),
                 dto.getCommentCount(),
-                dto.getPostCategory()
+                dto.getCategory()
         );
     }
 

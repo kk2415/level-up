@@ -4,15 +4,14 @@ import com.levelup.common.domain.base.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "channel_comment")
 @Entity
 public class ChannelComment extends BaseTimeEntity {
@@ -41,13 +40,33 @@ public class ChannelComment extends BaseTimeEntity {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<ChannelCommentVote> votes;
 
-    public void setChannelMember(ChannelMember channelMember) {
-        this.channelMember = channelMember;
-        channelMember.getComments().add(this);
+    protected ChannelComment() {}
+
+    public static ChannelComment of(
+            Long id,
+            String content,
+            ChannelMember channelMember,
+            ChannelArticle article)
+    {
+        ChannelComment comment = new ChannelComment(
+                id,
+                content,
+                channelMember,
+                null,
+                null,
+                new ArrayList<>(),
+                new ArrayList<>());
+
+        comment.setArticle(article);
+        return comment;
     }
 
     public void setArticle(ChannelArticle article) {
-            this.article = article;
+        if (this.article != null) {
+            this.article.getComments().remove(this);
+        }
+
+        this.article = article;
         article.getComments().add(this);
     }
 

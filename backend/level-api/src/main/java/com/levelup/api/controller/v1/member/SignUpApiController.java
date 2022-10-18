@@ -17,16 +17,16 @@ import java.io.IOException;
 
 @Tag(name = "회원가입 API")
 @Slf4j
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/sign-up")
+@RestController
 public class SignUpApiController {
 
     private final MemberService memberService;
 
-    @PostMapping(value = {"", "/"}, consumes = {"multipart/form-data"})
+    @PostMapping(value = {"", "/"})
     public ResponseEntity<MemberResponse> test(
-            @Valid @RequestPart(value = "request", required = false) MemberRequest request,
+            @RequestPart(value = "request", required = false) @Valid MemberRequest request,
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
     ) throws IOException {
         MemberDto dto = memberService.save(request.toDto(), profileImage);

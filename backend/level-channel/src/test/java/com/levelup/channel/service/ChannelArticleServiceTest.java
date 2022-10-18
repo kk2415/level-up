@@ -56,7 +56,7 @@ class ChannelArticleServiceTest extends TestSupporter {
         Member member1 = createMember(1L, "manager1", "manager1");
 
         ChannelMember manager1 = createChannelMember(1L, member1, true, false);
-        Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
+        Channel channel1 = createChannel(1L, manager1, "test channel1", ChannelCategory.STUDY);
         ChannelArticle channelArticle1 = createChannelArticle(manager1, channel1, "unchanged title");
 
         ChannelArticleDto updateDto = ChannelArticleDto.from(createChannelArticle(manager1, channel1, "changed title"));

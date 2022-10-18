@@ -6,14 +6,11 @@ import com.levelup.channel.domain.service.ChannelService;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.common.util.file.FileStore;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.event.events.EventPublisher;
-import com.levelup.event.events.MemberCreatedEvent;
 import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.entity.RoleName;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
-import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,20 +21,20 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @DisplayName("채널 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 class ChannelServiceTest extends TestSupporter {
 
+    @Mock private FileStore fileStore;
     @Mock private ChannelRepository channelRepository;
 
     @InjectMocks private ChannelService channelService;
@@ -56,11 +53,11 @@ class ChannelServiceTest extends TestSupporter {
 
     @DisplayName("채널 생성시 유저에 매니저 권한 부여 and 생성된 채널에 유저가 자동 등록됨")
     @Test
-    void save() {
+    void save() throws IOException {
         // Given
         Member member1 = createMember(1L, "manager1", "manager1");
         ChannelMember manager1 = createChannelMember(
-                member1.getId(),
+                1L,
                 member1.getEmail(),
                 member1.getNickname(),
                 member1.getProfileImage().getStoreFileName(),
@@ -70,7 +67,7 @@ class ChannelServiceTest extends TestSupporter {
 
         ChannelDto channelDto = ChannelDto.builder()
                 .channelId(1L)
-                .managerId(manager1.getId())
+                .managerId(1L)
                 .name(channel1.getName())
                 .managerNickname(member1.getNickname())
                 .description(channel1.getDescription())
@@ -82,24 +79,19 @@ class ChannelServiceTest extends TestSupporter {
                 .build();
 
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(ChannelCreatedEvent.class)))
-                .thenReturn(ChannelCreatedEvent.of(
-                        channelDto.getChannelId(),
-                        manager1.getMemberId(),
-                        manager1.getEmail(),
-                        manager1.getNickname(),
-                        manager1.getProfileImage()));
+                .thenReturn(ChannelCreatedEvent.of(manager1.getMemberId()));
 
-        given(channelRepository.save(any(Channel.class))).willReturn(channelDto.toEntity(member1.getNickname()));
+        given(channelRepository.save(any(Channel.class))).willReturn(channelDto.toEntity(channel1.getThumbnail()));
+        given(fileStore.storeFile(any(), any())).willReturn(channel1.getThumbnail());
 
         // When
         ChannelDto newChannelDto = channelService.save(
                 channelDto,
-                member1.getId(),
+                new MockMultipartFile("thumbnail", new byte[]{}),
                 member1.getEmail(),
-                member1.getNickname(),
                 member1.getProfileImage().getStoreFileName());
 
         // Then
-        assertThat(newChannelDto.getManagerId()).isEqualTo(manager1.getId());
+        assertThat(newChannelDto.getManagerId()).isEqualTo(1L);
     }
 }

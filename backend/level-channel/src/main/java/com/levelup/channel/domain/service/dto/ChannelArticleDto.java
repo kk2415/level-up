@@ -24,7 +24,7 @@ public class ChannelArticleDto implements Serializable {
     private Long voteCount;
     private Long views;
     private Long commentCount;
-    private ChannelArticleCategory postCategory;
+    private ChannelArticleCategory category;
 
     protected ChannelArticleDto() {}
 
@@ -38,7 +38,7 @@ public class ChannelArticleDto implements Serializable {
             Long voteCount,
             Long views,
             Long commentCount,
-            ChannelArticleCategory postCategory)
+            ChannelArticleCategory category)
     {
         this.channelPostId = channelPostId;
         this.memberId = memberId;
@@ -49,7 +49,7 @@ public class ChannelArticleDto implements Serializable {
         this.voteCount = voteCount;
         this.views = views;
         this.commentCount = commentCount;
-        this.postCategory = postCategory;
+        this.category = category;
     }
 
     public static ChannelArticleDto from(ChannelArticle channelArticle) {
@@ -68,17 +68,6 @@ public class ChannelArticleDto implements Serializable {
     }
 
     public ChannelArticle toEntity(ChannelMember channelMember, Channel channel) {
-        ChannelArticle channelArticle = ChannelArticle.builder()
-                .category(ChannelArticleCategory.INFO)
-                .channelMember(channelMember)
-                .title(title)
-                .content("test")
-                .views(0L)
-                .comments(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        channelArticle.setChannel(channel);
-        return channelArticle;
+        return ChannelArticle.of(null, category, content, title, channel, channelMember);
     }
 }

@@ -48,7 +48,7 @@ class ChannelCommentServiceTest extends TestSupporter {
 
         ChannelCommentDto dto = ChannelCommentDto.of(
                 null,
-                member.getId(),
+                1L,
                 null,
                 "test",
                 LocalDateTime.now(),
@@ -60,7 +60,7 @@ class ChannelCommentServiceTest extends TestSupporter {
                 .willReturn(Optional.of(channelMember));
 
         // When
-        ChannelCommentDto newDto = channelCommentService.save(dto, member.getId(), article.getId(), channel.getId());
+        ChannelCommentDto newDto = channelCommentService.save(dto, 1L, 1L, 1L);
 
         // Then
         assertThat(newDto.getNickname()).isEqualTo(member.getNickname());
@@ -76,9 +76,9 @@ class ChannelCommentServiceTest extends TestSupporter {
         ChannelArticle article = createChannelArticle(1L, channelMember, channel, "test article");
         ChannelComment parent = createChannelComment(1L, channelMember, article);
 
-        ChannelCommentDto dto = ChannelCommentDto.of(
+        ChannelCommentDto child = ChannelCommentDto.of(
                 null,
-                member.getId(),
+                1L,
                 null,
                 "reply comment",
                 LocalDateTime.now(),
@@ -90,7 +90,7 @@ class ChannelCommentServiceTest extends TestSupporter {
                 .willReturn(Optional.of(channelMember));
 
         // When
-        ChannelCommentDto newDto = channelCommentService.saveReply(dto, member.getId(), parent.getId());
+        ChannelCommentDto newDto = channelCommentService.saveReply(child, 1L, 1L);
 
         // Then
         assertThat(newDto.getNickname()).isEqualTo(member.getNickname());

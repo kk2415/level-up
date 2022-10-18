@@ -44,21 +44,10 @@ public class ChannelVoteDto {
     }
 
     public ChannelArticleVote toEntity(ChannelMember member, ChannelArticle article) {
-        ChannelArticleVote articleVote = ChannelArticleVote.builder()
-                .channelMember(member)
-                .build();
-
-        articleVote.setArticle(article);
-        return articleVote;
+        return ChannelArticleVote.of(member, article);
     }
 
     public ChannelCommentVote toEntity(ChannelMember member, ChannelComment comment) {
-        ChannelCommentVote commentVote = ChannelCommentVote.builder()
-                .channelMember(member)
-                .comment(comment)
-                .build();
-
-        commentVote.setComment(comment);
-        return commentVote;
+        return ChannelCommentVote.of(member, comment);
     }
 }

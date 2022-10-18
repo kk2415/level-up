@@ -31,14 +31,12 @@ public class EmailAuthDto {
     }
 
     public EmailAuth toEntity(Member member) {
-        return EmailAuth.builder()
-                .member(member)
-                .authType(authType)
-                .email(member.getEmail())
-                .securityCode(EmailAuth.createSecurityCode())
-                .isAuthenticated(false)
-                .receivedDate(LocalDateTime.now())
-                .expireDate(LocalDateTime.now().plusMinutes(1))
-                .build();
+        return EmailAuth.of(
+                authType,
+                member.getEmail(),
+                false,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(1),
+                member);
     }
 }

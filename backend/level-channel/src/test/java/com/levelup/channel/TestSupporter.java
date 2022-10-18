@@ -15,18 +15,17 @@ import java.util.ArrayList;
 public class TestSupporter {
 
     protected Member createMember(Long id, String email, String nickname) {
-        Member member = Member.builder()
-                .id(id)
-                .email(email)
-                .password("00000000")
-                .name(nickname)
-                .nickname(nickname)
-                .gender(Gender.MALE)
-                .birthday(LocalDate.of(1997, 9, 27))
-                .phone("010-2354-9960")
-                .profileImage(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .roles(new ArrayList<>())
-                .build();
+        Member member = Member.of(
+                id,
+                email,
+                "00000000",
+                nickname,
+                nickname,
+                Gender.MALE,
+                LocalDate.of(1997, 9, 27),
+                "010-2354-9960",
+                new UploadFile("default.png", "thumbnail/as154-asda"),
+                new ArrayList<>());
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);
@@ -35,17 +34,17 @@ public class TestSupporter {
     }
 
     protected Member createMember(String email, String nickname) {
-        Member member = Member.builder()
-                .email(email)
-                .password("00000000")
-                .name(nickname)
-                .nickname(nickname)
-                .gender(Gender.MALE)
-                .birthday(LocalDate.of(1997, 9, 27))
-                .phone("010-2354-9960")
-                .profileImage(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .roles(new ArrayList<>())
-                .build();
+        Member member = Member.of(
+                null,
+                email,
+                "00000000",
+                nickname,
+                nickname,
+                Gender.MALE,
+                LocalDate.of(1997, 9, 27),
+                "010-2354-9960",
+                new UploadFile("default.png", "thumbnail/as154-asda"),
+                new ArrayList<>());
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);
@@ -54,159 +53,106 @@ public class TestSupporter {
     }
 
     protected Channel createChannel(Long id, ChannelMember manager, String channelName, ChannelCategory category) {
-        Channel channel = Channel.builder()
-                .id(id)
-                .name(channelName)
-                .description("test")
-                .memberMaxNumber(10L)
-                .thumbnail(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .category(category)
-                .expectedStartDate(LocalDate.of(1997, 9, 27))
-                .expectedEndDate(LocalDate.of(1997, 9, 27))
-                .channelMembers(new ArrayList<>())
-                .channelArticles(new ArrayList<>())
-                .build();
+        Channel channel = Channel.of(
+                id,
+                "test",
+                channelName,
+                10L,
+                category,
+                new UploadFile("default.png", "thumbnail/as154-asda"),
+                LocalDate.of(1997, 9, 27),
+                LocalDate.of(1997, 9, 27)
+        );
 
         channel.addChannelMember(manager);
         return channel;
     }
 
     protected Channel createChannel(ChannelMember manager, String channelName, ChannelCategory category) {
-        Channel channel = Channel.builder()
-                .name(channelName)
-                .description("test")
-                .memberMaxNumber(10L)
-                .thumbnail(new UploadFile("default.png", "thumbnail/as154-asda"))
-                .category(category)
-                .expectedStartDate(LocalDate.of(1997, 9, 27))
-                .expectedEndDate(LocalDate.of(1997, 9, 27))
-                .channelMembers(new ArrayList<>())
-                .channelArticles(new ArrayList<>())
-                .build();
+        Channel channel = Channel.of(
+                null,
+                "test",
+                channelName,
+                10L,
+                category,
+                new UploadFile("default.png", "thumbnail/as154-asda"),
+                LocalDate.of(1997, 9, 27),
+                LocalDate.of(1997, 9, 27)
+                );
 
         channel.addChannelMember(manager);
         return channel;
     }
 
-
     protected ChannelMember createChannelMember(Long id, Long memberId, String email, String nickname, String profileImage, Boolean isManager, Boolean isWaitingMember) {
-        return ChannelMember.builder()
-                .id(id)
-                .memberId(memberId)
-                .email(email)
-                .nickname(nickname)
-                .profileImage(profileImage)
-                .isManager(isManager)
-                .isWaitingMember(isWaitingMember)
-                .comments(new ArrayList<>())
-                .build();
+        return ChannelMember.of(
+                id,
+                memberId,
+                email,
+                nickname,
+                profileImage,
+                isManager,
+                isWaitingMember);
     }
 
     protected ChannelMember createChannelMember(Long memberId, String email, String nickname, String profileImage, Boolean isManager, Boolean isWaitingMember) {
-        return ChannelMember.builder()
-                .memberId(memberId)
-                .email(email)
-                .nickname(nickname)
-                .profileImage(profileImage)
-                .isManager(isManager)
-                .isWaitingMember(isWaitingMember)
-                .comments(new ArrayList<>())
-                .build();
+        return ChannelMember.of(
+                null,
+                memberId,
+                email,
+                nickname,
+                profileImage,
+                isManager,
+                isWaitingMember);
     }
 
     protected ChannelMember createChannelMember(Member member, Channel channel, boolean isManager) {
-        return ChannelMember.builder()
-                .memberId(member.getId())
-                .email(member.getEmail())
-                .nickname(member.getNickname())
-                .profileImage(member.getProfileImage().getStoreFileName())
-                .isManager(isManager)
-                .isWaitingMember(false)
-                .comments(new ArrayList<>())
-                .build();
+        return ChannelMember.of(
+                null,
+                member.getId(),
+                member.getEmail(),
+                member.getNickname(),
+                member.getProfileImage().getStoreFileName(),
+                isManager,
+                false);
     }
 
     protected ChannelMember createChannelMember(Long id, Member member, boolean isManager, boolean isWaitingMember) {
-        return ChannelMember.builder()
-                .id(id)
-                .memberId(member.getId())
-                .email(member.getEmail())
-                .nickname(member.getNickname())
-                .profileImage(member.getProfileImage().getStoreFileName())
-                .isManager(isManager)
-                .isWaitingMember(isWaitingMember)
-                .comments(new ArrayList<>())
-                .build();
+        return ChannelMember.of(
+                id,
+                member.getId(),
+                member.getEmail(),
+                member.getNickname(),
+                member.getProfileImage().getStoreFileName(),
+                isManager,
+                isWaitingMember);
     }
 
     protected ChannelMember createChannelMember(Member member, boolean isManager, boolean isWaitingMember) {
-        return ChannelMember.builder()
-                .memberId(member.getId())
-                .email(member.getEmail())
-                .nickname(member.getNickname())
-                .profileImage(member.getProfileImage().getStoreFileName())
-                .isManager(isManager)
-                .isWaitingMember(isWaitingMember)
-                .comments(new ArrayList<>())
-                .build();
+        return ChannelMember.of(
+                null,
+                member.getId(),
+                member.getEmail(),
+                member.getNickname(),
+                member.getProfileImage().getStoreFileName(),
+                isManager,
+                isWaitingMember);
     }
 
     protected ChannelArticle createChannelArticle(Long id, ChannelMember channelMember, Channel channel, String title) {
-        ChannelArticle channelArticle = ChannelArticle.builder()
-                .id(id)
-                .category(ChannelArticleCategory.INFO)
-                .channel(channel)
-                .channelMember(channelMember)
-                .title(title)
-                .content("test")
-                .views(0L)
-                .comments(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        channelArticle.setChannel(channel);
-        return channelArticle;
+        return ChannelArticle.of(id, ChannelArticleCategory.INFO, "test", title, channel, channelMember);
     }
 
     protected ChannelArticle createChannelArticle(ChannelMember channelMember, Channel channel, String title) {
-        ChannelArticle channelArticle = ChannelArticle.builder()
-                .category(ChannelArticleCategory.INFO)
-                .channel(channel)
-                .channelMember(channelMember)
-                .title(title)
-                .content("test")
-                .views(0L)
-                .comments(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        channelArticle.setChannel(channel);
-        return channelArticle;
+        return ChannelArticle.of(null, ChannelArticleCategory.INFO, "test", title, channel, channelMember);
     }
 
     protected ChannelComment createChannelComment(Long id, ChannelMember channelMember, ChannelArticle article) {
-        ChannelComment comment = ChannelComment.builder()
-                .id(id)
-                .content("content")
-                .replies(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        comment.setChannelMember(channelMember);
-        comment.setArticle(article);
-        return comment;
+        return ChannelComment.of(id, "content", channelMember, article);
     }
 
     protected ChannelComment createChannelComment(ChannelMember channelMember, ChannelArticle article) {
-        ChannelComment comment = ChannelComment.builder()
-                .content("content")
-                .replies(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        comment.setChannelMember(channelMember);
-        comment.setArticle(article);
-        return comment;
+        return ChannelComment.of(null, "content", channelMember, article);
     }
 
     protected ChannelComment createChannelReplyComment(
@@ -214,34 +160,17 @@ public class TestSupporter {
             ChannelArticle article,
             ChannelComment parent)
     {
-        ChannelComment comment = ChannelComment.builder()
-                .content("content")
-                .replies(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        comment.setChannelMember(channelMember);
-        comment.setArticle(article);
+        ChannelComment comment = ChannelComment.of(null, "content", channelMember, article);
 
         parent.addReply(comment);
         return comment;
     }
 
     protected ChannelArticleVote createChannelArticleVote(ChannelMember channelMember, ChannelArticle article) {
-        ChannelArticleVote articleVote = ChannelArticleVote.builder()
-                .channelMember(channelMember)
-                .build();
-
-        articleVote.setArticle(article);
-        return articleVote;
+        return ChannelArticleVote.of(channelMember, article);
     }
 
     protected ChannelCommentVote createChannelCommentVote(ChannelMember channelMember, ChannelComment comment) {
-        ChannelCommentVote commentVote = ChannelCommentVote.builder()
-                .channelMember(channelMember)
-                .build();
-
-        commentVote.setComment(comment);
-        return commentVote;
+        return ChannelCommentVote.of(channelMember, comment);
     }
 }

@@ -7,16 +7,16 @@ import org.jsoup.Jsoup;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@Entity
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "channel")
-@AllArgsConstructor
+@Entity
 public class Channel extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -53,6 +53,29 @@ public class Channel extends BaseTimeEntity {
 
     protected Channel() {}
 
+    public static Channel of(
+            Long id,
+            String description,
+            String name,
+            Long memberMaxNumber,
+            ChannelCategory category,
+            UploadFile thumbnail,
+            LocalDate expectedStartDate,
+            LocalDate expectedEndDate)
+    {
+        return new Channel(
+                id,
+                description,
+                name,
+                memberMaxNumber,
+                category,
+                thumbnail,
+                expectedStartDate,
+                expectedEndDate,
+                new ArrayList<>(),
+                new ArrayList<>());
+    }
+
     public long getMemberCount() {
         return this.getChannelMembers().stream()
                 .filter(member -> !member.getIsWaitingMember())
@@ -74,6 +97,10 @@ public class Channel extends BaseTimeEntity {
                 .findAny().orElse("none");
     }
 
+    /**
+     * Jsoup 라이브러리 활용하여 description 데이터에서 HTML 태그 제거하였음.
+     * HTML 태그 제거 된 문자열을 20자리까지만 자르고 리턴.
+     * */
     public String getDescriptionSummary() {
         String descriptionSummary = Jsoup.parse(this.description).text();
 
@@ -106,10 +133,6 @@ public class Channel extends BaseTimeEntity {
         this.memberMaxNumber = memberMaxNumber == null ? this.memberMaxNumber : memberMaxNumber;
         this.description = description == null ? this.description : description;
         this.thumbnail = thumbnail == null ? this.thumbnail : thumbnail;
-    }
-
-    public void updateThumbnail(UploadFile thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public void removeMembers(List<ChannelMember> channelMembers) {

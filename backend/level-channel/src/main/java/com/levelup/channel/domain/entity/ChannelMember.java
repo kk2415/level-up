@@ -1,20 +1,16 @@
 package com.levelup.channel.domain.entity;
 
 import com.levelup.common.domain.base.BaseTimeEntity;
-import com.levelup.member.domain.entity.Member;
 import lombok.*;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "channel_member")
 @Entity
 public class ChannelMember extends BaseTimeEntity {
@@ -43,26 +39,38 @@ public class ChannelMember extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isWaitingMember;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    @OneToMany(mappedBy = "channelMember")
-    private List<ChannelComment> comments;
-
     protected ChannelMember() {}
 
-    public static ChannelMember of(Long memberId, String email, String nickname, String profileImage, Boolean isManager, Boolean isWaitingMember) {
-        return ChannelMember.builder()
-                .memberId(memberId)
-                .email(email)
-                .nickname(nickname)
-                .profileImage(profileImage)
-                .isManager(isManager)
-                .isWaitingMember(isWaitingMember)
-                .comments(new ArrayList<>())
-                .build();
+    public static ChannelMember of(
+            Long id,
+            Long memberId,
+            String email,
+            String nickname,
+            String profileImage,
+            Boolean isManager,
+            Boolean isWaitingMember)
+    {
+        return new ChannelMember(
+                id,
+                memberId,
+                email,
+                nickname,
+                profileImage,
+                isManager,
+                isWaitingMember,
+                null);
+    }
+
+    public void setChannel(Channel channel) {
+        if (this.channel != null) {
+            this.channel.getChannelMembers().remove(this);
+        }
+
+        this.channel = channel;
     }
 
     public void update(String email, String nickname, String profileImage) {

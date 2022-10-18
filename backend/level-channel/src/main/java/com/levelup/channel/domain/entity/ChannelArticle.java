@@ -11,8 +11,7 @@ import java.util.List;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "channel_article")
 @Entity
 public class ChannelArticle extends BaseTimeEntity {
@@ -48,6 +47,29 @@ public class ChannelArticle extends BaseTimeEntity {
     private List<ChannelArticleVote> votes = new ArrayList<>();
 
     protected ChannelArticle() {}
+
+    public static ChannelArticle of(
+            Long id,
+            ChannelArticleCategory category,
+            String content,
+            String title,
+            Channel channel,
+            ChannelMember channelMember)
+    {
+        ChannelArticle channelArticle = new ChannelArticle(
+                id,
+                category,
+                content,
+                title,
+                0L,
+                null,
+                channelMember,
+                new ArrayList<>(),
+                new ArrayList<>());
+
+        channelArticle.setChannel(channel);
+        return channelArticle;
+    }
 
     public void setChannel(Channel channel) {
         if (this.channel != null) {

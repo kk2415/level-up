@@ -83,14 +83,6 @@ public class ChannelCommentDto {
     }
 
     public ChannelComment toEntity(ChannelMember channelMember, ChannelArticle article) {
-        ChannelComment comment = ChannelComment.builder()
-                .content(content)
-                .replies(new ArrayList<>())
-                .votes(new ArrayList<>())
-                .build();
-
-        comment.setChannelMember(channelMember);
-        comment.setArticle(article);
-        return comment;
+        return ChannelComment.of(null, content, channelMember, article);
     }
 }

@@ -45,6 +45,7 @@ public class ChannelService {
         UploadFile thumbnail = fileStore.storeFile(FileType.CHANNEL_THUMBNAIL, file);
         Channel channel = dto.toEntity(thumbnail);
         ChannelMember manager = ChannelMember.of(
+                null,
                 dto.getManagerId(),
                 managerEmail,
                 dto.getManagerNickname(),

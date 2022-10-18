@@ -1,8 +1,8 @@
 package com.levelup.channel.domain.entity;
 
 import com.levelup.common.domain.base.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -11,8 +11,7 @@ import java.util.Objects;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "channel_article_vote")
 @Entity
 public class ChannelArticleVote extends BaseTimeEntity {
@@ -30,6 +29,13 @@ public class ChannelArticleVote extends BaseTimeEntity {
     private ChannelArticle article;
 
     protected ChannelArticleVote() {}
+
+    public static ChannelArticleVote of(ChannelMember channelMember, ChannelArticle article) {
+        ChannelArticleVote articleVote = new ChannelArticleVote(null, channelMember, null);
+
+        articleVote.setArticle(article);
+        return articleVote;
+    }
 
     public void setChannelMember(ChannelMember member) {
         this.channelMember = member;

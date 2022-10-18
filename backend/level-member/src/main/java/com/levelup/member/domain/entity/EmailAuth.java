@@ -1,10 +1,7 @@
 package com.levelup.member.domain.entity;
 
 import com.levelup.common.domain.base.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,8 +11,7 @@ import java.util.Random;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "email_auth")
 @Entity
 public class EmailAuth extends BaseTimeEntity {
@@ -51,6 +47,25 @@ public class EmailAuth extends BaseTimeEntity {
     private Member member;
 
     protected EmailAuth() {}
+
+    public static EmailAuth of(
+            EmailAuthType authType,
+            String email,
+            Boolean isAuthenticated,
+            LocalDateTime receivedDate,
+            LocalDateTime expireDate,
+            Member member)
+    {
+        return new EmailAuth(
+                null,
+                authType,
+                email,
+                createSecurityCode(),
+                isAuthenticated,
+                receivedDate,
+                expireDate,
+                member);
+    }
 
     public void setMember(Member member) {
         this.member = member;

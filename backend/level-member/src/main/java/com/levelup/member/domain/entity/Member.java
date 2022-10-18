@@ -12,8 +12,7 @@ import java.util.Objects;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "member")
 @Entity
 public class Member extends BaseTimeEntity {
@@ -51,6 +50,21 @@ public class Member extends BaseTimeEntity {
     private List<Role> roles;
 
     protected Member (){}
+
+    public static Member of(
+            Long id,
+            String email,
+            String password,
+            String name,
+            String nickname,
+            Gender gender,
+            LocalDate birthday,
+            String phone,
+            UploadFile profileImage,
+            List<Role> roles)
+    {
+        return new Member(id, email, password, name, nickname, gender, birthday, phone, profileImage, roles);
+    }
 
     public void addRole(Role role) {
         role.setMember(this);

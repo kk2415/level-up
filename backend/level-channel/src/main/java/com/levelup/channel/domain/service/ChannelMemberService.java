@@ -45,6 +45,7 @@ public class ChannelMemberService {
         validate(channel, channelMembers);
 
         ChannelMember channelMember = ChannelMember.of(
+                null,
                 memberId,
                 email,
                 nickname,

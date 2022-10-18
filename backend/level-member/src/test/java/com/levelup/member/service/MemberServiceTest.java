@@ -1,15 +1,17 @@
 package com.levelup.member.service;
 
+import com.levelup.common.util.file.FileStore;
 import com.levelup.event.events.EventPublisher;
 import com.levelup.event.events.MemberCreatedEvent;
+import com.levelup.event.events.MemberUpdatedEvent;
 import com.levelup.member.TestSupporter;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.service.MemberService;
 import com.levelup.member.domain.service.dto.MemberDto;
-import com.levelup.member.domain.service.dto.UpdateMemberDto;
-import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.repository.MemberRepository;
+import com.levelup.member.domain.service.dto.UpdateMemberDto;
+import com.levelup.member.domain.service.dto.UpdatePasswordDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +22,10 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,10 +36,11 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest extends TestSupporter {
 
-    @Mock private MemberRepository mocKMemberRepository;
-    @Mock private PasswordEncoder mockPasswordEncoder;
+    @Mock private MemberRepository memberRepository;
+    @Mock private PasswordEncoder passwordEncoder;
+    @Mock private FileStore fileStore;
 
-    @InjectMocks private MemberService mockMemberService;
+    @InjectMocks private MemberService memberService;
 
     private MockedStatic<EventPublisher> eventPublisher;
 
@@ -51,44 +56,48 @@ class MemberServiceTest extends TestSupporter {
 
     @DisplayName("회원가입 테스트")
     @Test
-    void save() {
+    void save() throws IOException {
         // Given
         MemberDto memberDto1 = MemberDto.from(createMember("test1@email.com", "test1"));
 
-        given(mockPasswordEncoder.encode(eq(memberDto1.getPassword()))).willReturn("changed password");
-        given(mocKMemberRepository.save(any(Member.class))).willReturn(memberDto1.toEntity());
+        given(fileStore.storeFile(any(), any())).willReturn(memberDto1.getProfileImage());
+        given(passwordEncoder.encode(eq(memberDto1.getPassword()))).willReturn("changed password");
+        given(memberRepository.save(any(Member.class))).willReturn(memberDto1.toEntity());
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
                 .thenReturn(MemberCreatedEvent.of(1L, memberDto1.getEmail(), memberDto1.getNickname()));
 
         // When
-//        MemberDto newMemberDto1 = mockMemberService.save(memberDto1);
+        MemberDto newMemberDto1 = memberService.save(memberDto1, new MockMultipartFile("profile", new byte[]{}));
 
         // Then
-//        assertThat(newMemberDto1.getEmail()).isEqualTo(memberDto1.getEmail());
-//        assertThat(newMemberDto1.getPassword()).isEqualTo("changed password");
-//        assertThat(newMemberDto1.getRole()).isEqualTo(RoleName.ANONYMOUS);
-//        verify(mockPasswordEncoder, times(1)).encode(anyString());
-//        verify(mocKMemberRepository, times(1)).save(any(Member.class));
+        assertThat(newMemberDto1.getEmail()).isEqualTo(memberDto1.getEmail());
+        assertThat(newMemberDto1.getPassword()).isEqualTo("changed password");
+        assertThat(newMemberDto1.getRole()).isEqualTo(RoleName.ANONYMOUS);
+        verify(passwordEncoder, times(1)).encode(anyString());
+        verify(memberRepository, times(1)).save(any(Member.class));
     }
 
     @DisplayName("회원 정보 수정 테스트")
     @Test
-    void update() {
+    void update() throws IOException {
         // Given
-//        UpdateMemberDto updateMemberDto = UpdateMemberDto.of("changed password", "changed nickname", new UploadFile());
-//        Member member = MemberDto.from(createMember("test1@email.com", "test1")).toEntity();
-//
-//        eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any())).thenReturn(any());
-//        given(mocKMemberRepository.findById(member.getId())).willReturn(Optional.of(member));
-//        given(mocKMemberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
-//        given(mockPasswordEncoder.encode(anyString())).willReturn(updateMemberDto.getPassword());
+        UpdateMemberDto updateMemberDto = UpdateMemberDto.of("changed nickname");
+        UpdatePasswordDto updatePasswordDto = UpdatePasswordDto.of("changed password");
+        Member member = MemberDto.from(createMember("test1@email.com", "test1")).toEntity();
+
+        eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
+                .thenReturn(MemberUpdatedEvent.of(1L, member.getEmail(), member.getNickname(), member.getProfileImage()));
+        given(fileStore.storeFile(any(), any())).willReturn(member.getProfileImage());
+        given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
+        given(memberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
+        given(passwordEncoder.encode(anyString())).willReturn(updatePasswordDto.getPassword());
 
         // When
-//        mockMemberService.update(updateMemberDto, member.getId());
-//        mockMemberService.updatePassword(updateMemberDto, member.getEmail());
+        memberService.update(updateMemberDto, member.getId(), new MockMultipartFile("profile", new byte[]{}));
+        memberService.updatePassword(updatePasswordDto, member.getEmail());
 
         // Then
-//        assertThat(member.getNickname()).isEqualTo(updateMemberDto.getNickname());
-//        assertThat(member.getPassword()).isEqualTo(updateMemberDto.getPassword());
+        assertThat(member.getNickname()).isEqualTo(updateMemberDto.getNickname());
+        assertThat(member.getPassword()).isEqualTo(updatePasswordDto.getPassword());
     }
 }

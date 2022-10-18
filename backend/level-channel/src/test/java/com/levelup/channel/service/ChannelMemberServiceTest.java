@@ -11,7 +11,6 @@ import com.levelup.member.domain.entity.Member;
 import com.levelup.channel.exception.NoPlaceChannelException;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
-import com.levelup.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,9 +30,8 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class ChannelMemberServiceTest extends TestSupporter {
 
-    @Mock private MemberRepository mockMemberRepository;
-    @Mock private ChannelRepository mockChannelRepository;
-    @Mock private ChannelMemberRepository mockChannelMemberRepository;
+    @Mock private ChannelRepository channelRepository;
+    @Mock private ChannelMemberRepository channelMemberRepository;
 
     @InjectMocks private ChannelMemberService channelMemberService;
 
@@ -43,7 +41,7 @@ class ChannelMemberServiceTest extends TestSupporter {
         // Given
         Member member1 = createMember(1L, "manager1", "manager1");
         ChannelMember manager1 = createChannelMember(
-                member1.getId(),
+                1L,
                 member1.getEmail(),
                 member1.getNickname(),
                 member1.getProfileImage().getStoreFileName(),
@@ -51,13 +49,13 @@ class ChannelMemberServiceTest extends TestSupporter {
                 false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
 
-        given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
-        given(mockChannelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong())).willReturn(Optional.ofNullable(null));
+        given(channelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
+        given(channelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong())).willReturn(Optional.ofNullable(null));
 
         // When
         ChannelMemberDto channelMemberDto = channelMemberService.create(
                 1L,
-                manager1.getMemberId(),
+                1L,
                 manager1.getEmail(),
                 manager1.getNickname(),
                 manager1.getProfileImage(),
@@ -65,7 +63,7 @@ class ChannelMemberServiceTest extends TestSupporter {
                 false);
 
         // Then
-        assertThat(channelMemberDto.getMemberId()).isEqualTo(manager1.getMemberId());
+        assertThat(channelMemberDto.getMemberId()).isEqualTo(1L);
         assertThat(channel1.getChannelMembers().size()).isEqualTo(2L);
     }
 
@@ -83,14 +81,14 @@ class ChannelMemberServiceTest extends TestSupporter {
                 false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
 
-        given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
-        given(mockChannelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong()))
+        given(channelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
+        given(channelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong()))
                 .willReturn(Optional.of(manager1));
 
         // When && Then
         assertThatThrownBy(() -> channelMemberService.create(
                 1L,
-                manager1.getMemberId(),
+                1L,
                 manager1.getEmail(),
                 manager1.getNickname(),
                 manager1.getProfileImage(),
@@ -105,7 +103,7 @@ class ChannelMemberServiceTest extends TestSupporter {
         // Given
         Member member1 = createMember(1L, "manager1", "manager1");
         ChannelMember manager1 = createChannelMember(
-                member1.getId(),
+                1L,
                 member1.getEmail(),
                 member1.getNickname(),
                 member1.getProfileImage().getStoreFileName(),
@@ -133,8 +131,8 @@ class ChannelMemberServiceTest extends TestSupporter {
             channel1.addChannelMember(channelMember);
         }
 
-        given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
-        given(mockChannelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong()))
+        given(channelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
+        given(channelMemberRepository.findByChannelIdAndMemberId(anyLong(), anyLong()))
                 .willReturn(Optional.ofNullable(null));
 
         // When && Then
@@ -170,8 +168,8 @@ class ChannelMemberServiceTest extends TestSupporter {
         ChannelMember channelMember4 = createChannelMember(member3, channel1, false);
         channel1.addChannelMembers(channelMember2, channelMember3, channelMember4);
 
-        given(mockChannelMemberRepository.findById(anyLong())).willReturn(Optional.of(channelMember2));
-        given(mockChannelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
+        given(channelMemberRepository.findById(anyLong())).willReturn(Optional.of(channelMember2));
+        given(channelRepository.findById(anyLong())).willReturn(Optional.of(channel1));
 
         // When
         channelMemberService.delete(1L, 1L);

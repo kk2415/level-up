@@ -9,7 +9,6 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Builder
 @Getter
@@ -82,16 +81,14 @@ public class ChannelDto implements Serializable {
     }
 
     public Channel toEntity(UploadFile thumbnail) {
-        return Channel.builder()
-                .name(name)
-                .description(description)
-                .memberMaxNumber(limitedMemberNumber)
-                .thumbnail(thumbnail)
-                .category(category)
-                .expectedStartDate(expectedStartDate)
-                .expectedEndDate(expectedEndDate)
-                .channelMembers(new ArrayList<>())
-                .channelArticles(new ArrayList<>())
-                .build();
+        return Channel.of(
+                null,
+                description,
+                name,
+                limitedMemberNumber,
+                category,
+                thumbnail,
+                expectedStartDate,
+                expectedEndDate);
     }
 }

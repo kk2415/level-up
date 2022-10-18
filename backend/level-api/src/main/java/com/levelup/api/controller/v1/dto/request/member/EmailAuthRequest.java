@@ -28,16 +28,4 @@ public class EmailAuthRequest {
     public EmailAuthDto toDto() {
         return EmailAuthDto.of(authType, securityCode, false);
     }
-
-    public EmailAuth toEntity(Member member) {
-        return EmailAuth.builder()
-                .member(member)
-                .authType(authType)
-                .email(member.getEmail())
-                .securityCode(EmailAuth.createSecurityCode())
-                .isAuthenticated(false)
-                .receivedDate(LocalDateTime.now())
-                .expireDate(LocalDateTime.now().plusMinutes(1))
-                .build();
-    }
 }

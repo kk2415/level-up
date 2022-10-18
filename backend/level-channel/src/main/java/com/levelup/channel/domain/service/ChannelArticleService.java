@@ -8,11 +8,8 @@ import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.service.dto.ChannelArticleDto;
 import com.levelup.channel.domain.service.dto.SearchCondition;
-import com.levelup.common.domain.FileType;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.common.util.file.LocalFileStore;
-import com.levelup.common.util.file.UploadFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,10 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 @Service
 @Transactional
@@ -101,11 +94,11 @@ public class ChannelArticleService {
         final ChannelArticle article = channelArticleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
 
-        if (!article.getChannelMember().getId().equals(memberId)) {
+        if (!article.getChannelMember().getMemberId().equals(memberId)) {
             throw new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
-        article.update(dto.getTitle(), dto.getContent(), dto.getPostCategory());
+        article.update(dto.getTitle(), dto.getContent(), dto.getCategory());
 
         return ChannelArticleDto.from(article);
     }
