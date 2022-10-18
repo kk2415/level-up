@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception e, HttpServletRequest request)
     {
-        log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
+        log.error("{} - {} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI(), e.getStackTrace());
 
         ExceptionResponse response = ExceptionResponse.of(500, e.getMessage());
 

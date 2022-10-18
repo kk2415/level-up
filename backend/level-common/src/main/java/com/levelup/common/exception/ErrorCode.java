@@ -25,7 +25,8 @@ public enum ErrorCode {
 
     NO_PLACE_CHANNEL(400, "스터디/프로젝트 정원이 다 찼습니다."),
 
-    AUTHORITY_EXCEPTION(403, "작성자 본인이 아닙니다."),
+    ARTICLE_AUTHORITY_EXCEPTION(403, "작성자 본인이 아닙니다."),
+    CHANNEL_AUTHORITY_EXCEPTION(403, "채널 매니저가 아닙니다."),
 
     INVALID_REQUEST_BODY(400, "HTTP 리퀘스트 바디 유효성 체크 에러"),
     BAD_REQUEST(400, "잘못된 접근입니다");
