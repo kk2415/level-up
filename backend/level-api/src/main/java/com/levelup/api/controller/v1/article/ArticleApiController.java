@@ -2,6 +2,7 @@ package com.levelup.api.controller.v1.article;
 
 import com.levelup.api.controller.v1.dto.response.article.ArticlePagingResponse;
 import com.levelup.api.controller.v1.dto.response.article.ArticleUpdateResponse;
+import com.levelup.article.domain.service.dto.SearchCondition;
 import com.levelup.article.domain.service.dto.ArticleDto;
 import com.levelup.article.domain.service.ArticleService;
 import com.levelup.article.domain.entity.ArticleType;
@@ -53,8 +54,9 @@ public class ArticleApiController {
             @RequestParam(required = false) String field,
             @RequestParam(required = false) String query)
     {
-        Page<ArticlePagingResponse> response = articleService.getArticles(articleType, field, query, pageable)
-                .map(ArticlePagingResponse::from);
+        Page<ArticlePagingResponse> response
+                = articleService.getArticles(articleType, SearchCondition.of(field, query), pageable)
+                    .map(ArticlePagingResponse::from);
 
         return ResponseEntity.ok().body(response);
     }
