@@ -4,6 +4,7 @@ import com.levelup.channel.domain.service.dto.ChannelArticleDto;
 import com.levelup.channel.domain.service.ChannelArticleService;
 import com.levelup.api.controller.v1.dto.request.channel.ChannelArticleRequest;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelArticleResponse;
+import com.levelup.channel.domain.service.dto.SearchCondition;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class ChannelArticleApiController {
             @RequestParam(required = false) String query)
     {
         Page<ChannelArticleResponse> response
-                = channelArticleService.getChannelArticles(channelId, field, query, pageable)
+                = channelArticleService.getChannelArticles(channelId, SearchCondition.of(field, query), pageable)
                             .map(ChannelArticleResponse::from);
 
         return ResponseEntity.ok().body(response);

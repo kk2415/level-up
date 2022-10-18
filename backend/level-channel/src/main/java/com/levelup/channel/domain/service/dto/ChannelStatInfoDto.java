@@ -41,7 +41,7 @@ public class ChannelStatInfoDto {
     public static ChannelStatInfoDto from(Channel channel) {
         return new ChannelStatInfoDto(
             channel.getName(),
-            channel.getManagerName(),
+            channel.getManagerNickname(),
             DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT).format(channel.getCreatedAt()),
             channel.getChannelMembers().stream()
                     .filter(member -> !member.getIsWaitingMember())

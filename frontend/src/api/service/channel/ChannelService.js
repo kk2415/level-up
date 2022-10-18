@@ -1,15 +1,19 @@
-import {send} from "../../Request"
+import {send, sendMultiPart} from "../../Request"
 import {uploadFile} from "../../UploadFile";
 import {HttpMethod} from "../../const/HttpMethod";
 
 const urlPrefix = '/api/v1/channels/'
 const ChannelService = {
 
-    create: async (channel, memberId) => {
+    create: async (channel, memberId, file) => {
         let result = false
         const url = urlPrefix + '?member=' + memberId
 
-        await send(HttpMethod.POST, url, channel)
+        let form = new FormData();
+        form.append('request', new Blob([JSON.stringify(channel)], { type: "application/json" }))
+        form.append('thumbnail', file)
+
+        await sendMultiPart(HttpMethod.POST, url, form)
             .then(() => {
                 alert('채널을 만들었습니다.')
                 result = true
@@ -78,11 +82,15 @@ const ChannelService = {
         return result
     },
 
-    modify: async (channel, channelId) => {
+    modify: async (channel, file, channelId) => {
         let result = false
         const url = urlPrefix + channelId
 
-        await send(HttpMethod.PATCH, url, channel)
+        let form = new FormData();
+        form.append('request', new Blob([JSON.stringify(channel)], { type: "application/json" }))
+        form.append('thumbnail', file)
+
+        await sendMultiPart(HttpMethod.PATCH, url, form)
             .then(() => {
                 result = true
             })

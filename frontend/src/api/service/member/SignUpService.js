@@ -5,9 +5,9 @@ const urlPrefix = '/api/v1/sign-up'
 
 export const SignUpService = {
 
-    signUp : async function (member, file) {
+    signUp : async (member, file) => {
         let result = null
-        const url = urlPrefix + '/test'
+        const url = urlPrefix
 
         let form = new FormData();
         form.append('request', new Blob([JSON.stringify(member)], { type: "application/json" }))

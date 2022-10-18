@@ -1,11 +1,13 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import ChannelService from '../../api/service/channel/ChannelService'
-import {MemberService} from '../../api/service/member/MemberService'
-import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
-import {uploadFile} from "../../api/UploadFile";
-import $ from "jquery";
-import {createChannelValidation as validation} from "../../api/Validation";
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
+import $ from "jquery";
+
+import ChannelService from '../../api/service/channel/ChannelService'
+import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
+import {createChannelValidation as validation} from "../../api/Validation";
+
+import {BACKEND_URL, S3_URL} from "../../api/const/BackEndHost"
 
 const CreateChannel = () => {
     const navigate = useNavigate();
@@ -31,27 +33,21 @@ const CreateChannel = () => {
     }
 
     const handleModifyButton = async () => {
-        let thumbnailImageDir = description.thumbnailImage
-        if (thumbnail !== null) {
-            thumbnailImageDir = await MemberService.uploadProfile(thumbnail)
-        }
-
         let channel = {
             name : $('#name').val(),
             limitedMemberNumber : $('#limitedMemberNumber').val(),
             description : $('#summernote').val(),
             category : $('#category').val(),
-            thumbnailImage : thumbnailImageDir,
+            thumbnailImage : description.thumbnailImage,
             expectedStartDate : $('#expectedStartDate').val(),
             expectedEndDate : $('#expectedEndDate').val(),
         }
 
         if (validate(channel)) {
-            let result = await ChannelService.modify(channel, channelId);
+            let result = await ChannelService.modify(channel, thumbnail, channelId);
             if (result) {
                 alert('수정되었습니다.')
                 navigate('/channel/description/' + channelId)
-                // window.location.href = '/channel/description/' + channelId
             }
         }
     }
@@ -99,43 +95,6 @@ const CreateChannel = () => {
         $('#alert').css('display', 'none')
     }
 
-    const getUploadFiles = (htmlCode) => {
-        let uploadFiles = []
-        let offset = 0
-
-        while (htmlCode.indexOf('img src', offset) !== -1) {
-            let uploadFile = {}
-
-            let imgTagStr = htmlCode.substr(htmlCode.indexOf('img src', offset))
-            let firstIdx = imgTagStr.indexOf('"') + 1
-            let lastIdx = imgTagStr.indexOf('"', firstIdx)
-
-            let base64 = imgTagStr.substring(firstIdx, lastIdx)
-            uploadFile.storeFileName = base64.substr(base64.indexOf(',') + 1)
-            uploadFile.uploadFileName = base64
-
-            uploadFiles.push(uploadFile)
-
-            offset = htmlCode.indexOf('img src', offset) + 'img src'.length
-        }
-        return uploadFiles;
-    }
-
-    const [thumbnail, setThumbnail] = useState(null)
-    const [channelId, setChannelId] = useState(getChannelId())
-    const [description, setDescription] = useState(null)
-
-    const uploadImage = (images, insertImage) => {
-        for (let i = 0; i < images.length; i++) {
-            uploadFile('/api/channel/descriptionFiles', 'POST', images[i])
-                .then((data) => {
-                })
-                .catch((error) => {
-                })
-            // uploadImage(images[i], insertImage);
-        }
-    }
-
     const showChannel = () => {
         if (description) {
             $('#name').val(description.name)
@@ -175,6 +134,10 @@ const CreateChannel = () => {
             })
         })
     }
+
+    const [thumbnail, setThumbnail] = useState(null)
+    const [channelId, setChannelId] = useState(getChannelId())
+    const [description, setDescription] = useState(null)
 
     useEffect(() => {
         hideAlertMassageBox()

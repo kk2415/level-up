@@ -57,7 +57,6 @@ public class TestSupporter {
         Channel channel = Channel.builder()
                 .id(id)
                 .name(channelName)
-                .managerName(manager.getNickname())
                 .description("test")
                 .memberMaxNumber(10L)
                 .thumbnail(new UploadFile("default.png", "thumbnail/as154-asda"))
@@ -75,7 +74,6 @@ public class TestSupporter {
     protected Channel createChannel(ChannelMember manager, String channelName, ChannelCategory category) {
         Channel channel = Channel.builder()
                 .name(channelName)
-                .managerName(manager.getNickname())
                 .description("test")
                 .memberMaxNumber(10L)
                 .thumbnail(new UploadFile("default.png", "thumbnail/as154-asda"))

@@ -19,7 +19,6 @@ const CreateChannel = () => {
 
     const handleCreateButton = async () => {
         let formData = new FormData(document.getElementById('form'));
-        let thumbnailImageDir = await ChannelService.uploadThumbnail(thumbnail)
 
         let channel = {
             name : formData.get('name'),
@@ -28,10 +27,10 @@ const CreateChannel = () => {
             category : formData.get('category'),
             expectedStartDate : formData.get('expectedStartDate'),
             expectedEndDate : formData.get('expectedEndDate'),
-            thumbnailImage : thumbnailImageDir,
         }
+
         if (validate(channel)) {
-            let result = await ChannelService.create(channel, memberId);
+            let result = await ChannelService.create(channel, memberId, thumbnail);
             if (result) {
                 navigate('/')
             }

@@ -81,13 +81,12 @@ public class ChannelDto implements Serializable {
         );
     }
 
-    public Channel toEntity(String nickname) {
+    public Channel toEntity(UploadFile thumbnail) {
         return Channel.builder()
                 .name(name)
-                .managerName(nickname)
                 .description(description)
                 .memberMaxNumber(limitedMemberNumber)
-                .thumbnail(thumbnailImage)
+                .thumbnail(thumbnail)
                 .category(category)
                 .expectedStartDate(expectedStartDate)
                 .expectedEndDate(expectedEndDate)

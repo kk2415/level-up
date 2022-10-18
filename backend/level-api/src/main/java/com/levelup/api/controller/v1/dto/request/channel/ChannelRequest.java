@@ -26,7 +26,6 @@ public class ChannelRequest {
     @NotNull
     private ChannelCategory category;
 
-    @NotNull
     private UploadFile thumbnailImage;
 
     @NotNull
@@ -72,6 +71,25 @@ public class ChannelRequest {
                 thumbnailImage,
                 expectedStartDate,
                 expectedEndDate);
+    }
+
+    public ChannelDto toDto(Long managerId, String managerNickname) {
+        return ChannelDto.builder()
+                .channelId(null)
+                .managerId(managerId)
+                .name(name)
+                .managerNickname(managerNickname)
+                .limitedMemberNumber(limitedMemberNumber)
+                .description(description)
+                .descriptionSummary(null)
+                .memberCount(0L)
+                .storeFileName(null)
+                .category(category)
+                .thumbnailImage(null)
+                .createdAt(null)
+                .expectedStartDate(expectedStartDate)
+                .expectedEndDate(expectedEndDate)
+                .build();
     }
 
     public ChannelDto toDto() {

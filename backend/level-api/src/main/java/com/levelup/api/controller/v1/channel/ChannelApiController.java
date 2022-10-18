@@ -9,12 +9,10 @@ import com.levelup.api.controller.v1.dto.response.channel.ChannelResponse;
 import com.levelup.channel.domain.service.ChannelService;
 import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.service.dto.ChannelStatInfoDto;
-import com.levelup.common.util.file.UploadFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
-@Tag(name = "채널 API")
 @Slf4j
-@RestController
+@Tag(name = "채널 API")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/channels")
+@RestController
 public class ChannelApiController {
 
     private final MemberClient memberClient;
@@ -37,26 +34,19 @@ public class ChannelApiController {
 
     @PostMapping({"", "/"})
     public ResponseEntity<ChannelResponse> create(
-            @Valid @RequestBody ChannelRequest request,
-            @RequestParam("member") Long memberId)
+            @RequestPart(value = "request") @Valid ChannelRequest request,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,
+            @RequestParam("member") Long memberId) throws IOException
     {
         MemberResponse member = memberClient.get(memberId);
 
         ChannelDto dto = channelService.save(
-                request.toDto(),
-                memberId,
+                request.toDto(memberId, member.getNickname()),
+                thumbnail,
                 member.getEmail(),
-                member.getNickname(),
                 member.getUploadFile().getStoreFileName());
 
         return ResponseEntity.ok().body(ChannelResponse.from(dto));
-    }
-
-    @PostMapping({"/thumbnail", "/thumbnail/"})
-    public ResponseEntity<UploadFile> createThumbnailImage(MultipartFile file) throws IOException {
-        UploadFile response = channelService.createThumbnailImage(file);
-
-        return ResponseEntity.ok().body(response);
     }
 
 
@@ -81,10 +71,6 @@ public class ChannelApiController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(path = {"/{channelId}/thumbnail", "/{channelId}/thumbnail/"}, produces = "image/jpeg")
-    public Resource getThumbnailImage(@PathVariable Long channelId) throws MalformedURLException {
-        return channelService.getThumbnailImage(channelId);
-    }
 
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
     @GetMapping({"/{channelId}/manager", "/{channelId}/manager/"})
@@ -101,28 +87,20 @@ public class ChannelApiController {
     @PatchMapping({"/{channelId}", "/{channelId}/"})
     public ResponseEntity<Void> update(
             @PathVariable Long channelId,
-            @Valid @RequestBody ChannelRequest request)
+            @RequestPart(value = "request") @Valid ChannelRequest request,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException
     {
-        channelService.update(request.toDto(), channelId);
+        channelService.update(request.toDto(), thumbnail, channelId);
 
         return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping({"/{channelId}/thumbnail", "/{channelId}/thumbnail/"})
-    public ResponseEntity<UploadFile> updateThumbnailImage(
-            @PathVariable Long channelId,
-            MultipartFile file) throws IOException
-    {
-        UploadFile response = channelService.updateChannelThumbNail(file, channelId);
-
-        return ResponseEntity.ok().body(response);
     }
 
 
     @DeleteMapping({"/{channelId}", "/{channelId}/"})
     public ResponseEntity<Void> delete(
             @PathVariable Long channelId,
-            @RequestParam("category") ChannelCategory category) {
+            @RequestParam("category") ChannelCategory category)
+    {
         channelService.delete(channelId, category);
 
         return ResponseEntity.ok().build();
