@@ -1,7 +1,7 @@
 import { send } from "../../Request"
 import {HttpMethod} from "../../const/HttpMethod";
 
-const urlPrefix = '/api/v1/channel-members/'
+const urlPrefix = '/api/v1/channel/members/'
 
 const ChannelMemberService = {
 
