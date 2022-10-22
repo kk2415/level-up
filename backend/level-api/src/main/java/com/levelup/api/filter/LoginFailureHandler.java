@@ -1,6 +1,7 @@
 package com.levelup.api.filter;
 
 import com.levelup.common.exception.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
@@ -21,6 +23,8 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException
     {
+        log.info("LoginFailureHandler start = url : {}", request.getRequestURL());
+
         ErrorCode errorCode = ErrorCode.MEMBER_NOT_FOUND;
 
         if (exception instanceof InternalAuthenticationServiceException) {
