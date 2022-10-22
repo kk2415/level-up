@@ -45,29 +45,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// session 기반이 아님을 선언
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증 실패시
-                .accessDeniedHandler(jwtAccessDeniedHandler); //권한 에러 처리(관리자 권한 등)
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증 실패시
+                    .accessDeniedHandler(jwtAccessDeniedHandler); //권한 에러 처리(관리자 권한 등)
 
         http.authorizeRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
-
-                .antMatchers(POST,"/api/*/sign-up", "/api/*/members/image", "/api/*/login").permitAll()
-                .antMatchers("/api/*/members").authenticated()
-
+                /*====================================================================================================*/
+                .antMatchers(POST,"/api/*/sign-up", "/api/*/members/image", "/api/*/login", "/api/*/sign-in/failure").permitAll()
+                .antMatchers("/api/*/members/**").authenticated()
+                /*====================================================================================================*/
                 .antMatchers(GET, "/api/*/channels/**").permitAll()
-                .antMatchers("/api/*/channels/{\\d+}/manager", "/api/*/channels/{\\d+}/member/**",
-                        "/api/*/channels/{\\d+}/waiting-member/**").hasAnyRole("CHANNEL_MANAGER", "ADMIN")
+                .antMatchers("/api/*/channels/{\\d+}/manager").hasAnyRole("CHANNEL_MANAGER", "ADMIN")
                 .antMatchers("/api/*/channels/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers(GET, "/api/*/channel-articles/**").permitAll()
+                .antMatchers("/api/*/channel-articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers(GET, "/api/*/channel/comments/**").permitAll()
+                .antMatchers("/api/*/channel/comments/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers(GET, "/api/*/channel/members/**").permitAll()
+                .antMatchers("/api/*/channel/members/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+
+                .antMatchers("/api/*/channel/votes/**").authenticated()
+                /*====================================================================================================*/
+                .antMatchers(GET, "/api/*/articles/**").permitAll()
+                .antMatchers("/api/*/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers(GET, "/api/*/comments/**").permitAll()
                 .antMatchers("/api/*/comments/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
-
-                .antMatchers(GET, "/api/*/channel-posts/**").permitAll()
-                .antMatchers("/api/*/channel-posts/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
-
-                .antMatchers(GET, "/api/*/articles/**").permitAll()
-                .antMatchers("/api/*/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers("/api/*/votes/**").authenticated();
         http
