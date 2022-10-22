@@ -1,6 +1,7 @@
 package com.levelup.member.util.jwt;
 
-import com.levelup.member.exception.JwtException;
+import com.levelup.common.exception.AuthenticationErrorCode;
+import com.levelup.common.exception.CustomAuthenticationException;
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import org.springframework.data.util.Pair;
@@ -48,19 +49,39 @@ public class TokenProvider {
                 .signWith(key.getSecond()) //sig
                 .compact();
     }
-
-    public com.levelup.member.exception.JwtException validateToken(String token) {
+    public AuthenticationErrorCode validateToken(String token) throws RuntimeException {
         try {
             Jwts.parserBuilder()
-                    .setSigningKeyResolver(com.levelup.member.util.jwt.SigningKeyResolver.instance) //JWT 만들었을 때 사용했던 비밀키를 넣어줘야됨
+                    .setSigningKeyResolver(SigningKeyResolver.instance) //JWT 만들었을 때 사용했던 비밀키를 넣어줘야됨
                     .build()
                     .parseClaimsJws(token);
+            return AuthenticationErrorCode.SUCCESS;
 
-            return com.levelup.member.exception.JwtException.SUCCESS;
         } catch (ExpiredJwtException e) {
-            return com.levelup.member.exception.JwtException.EXPIRED;
+            return AuthenticationErrorCode.EXPIRED_TOKEN;
         } catch (SignatureException e) {
-            return JwtException.SIGNATURE;
+            return AuthenticationErrorCode.INVALID_SIGNATURE;
+        } catch (IllegalArgumentException e) {
+            return AuthenticationErrorCode.NULL_TOKEN;
+        } catch (MalformedJwtException e) {
+            return AuthenticationErrorCode.INVALID_TOKEN;
+        }
+    }
+
+    public void validateToken2(String token) throws RuntimeException {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKeyResolver(SigningKeyResolver.instance) //JWT 만들었을 때 사용했던 비밀키를 넣어줘야됨
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            throw new CustomAuthenticationException(AuthenticationErrorCode.EXPIRED_TOKEN);
+        } catch (SignatureException e) {
+            throw new CustomAuthenticationException(AuthenticationErrorCode.INVALID_SIGNATURE);
+        } catch (IllegalArgumentException e) {
+            throw new CustomAuthenticationException(AuthenticationErrorCode.NULL_TOKEN);
+        } catch (MalformedJwtException e) {
+            throw new CustomAuthenticationException(AuthenticationErrorCode.INVALID_TOKEN);
         }
     }
 
