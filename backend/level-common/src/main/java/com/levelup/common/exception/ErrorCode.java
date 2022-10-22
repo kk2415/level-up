@@ -31,11 +31,11 @@ public enum ErrorCode {
     INVALID_REQUEST_BODY(400, "HTTP 리퀘스트 바디 유효성 체크 에러"),
     BAD_REQUEST(400, "잘못된 접근입니다");
 
-    private final int status;
+    private final int httpStatus;
     private final String message;
 
-    ErrorCode(int status, String message) {
-        this.status = status;
+    ErrorCode(int httpStatus, String message) {
+        this.httpStatus = httpStatus;
         this.message = message;
     }
 }
