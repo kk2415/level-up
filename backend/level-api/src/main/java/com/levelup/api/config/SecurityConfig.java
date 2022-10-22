@@ -52,24 +52,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
 
-                .antMatchers(POST,"/api/v1/sign-up", "/api/v1/members/image", "/api/v1/login").permitAll()
-                .antMatchers("/api/v1/members").authenticated()
+                .antMatchers(POST,"/api/*/sign-up", "/api/*/members/image", "/api/*/login").permitAll()
+                .antMatchers("/api/*/members").authenticated()
 
-                .antMatchers(GET, "/api/v1/channels/**").permitAll()
-                .antMatchers("/api/v1/channels/{\\d+}/manager", "/api/v1/channels/{\\d+}/member/**",
-                        "/api/v1/channels/{\\d+}/waiting-member/**").hasAnyRole("CHANNEL_MANAGER", "ADMIN")
-                .antMatchers("/api/v1/channels/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/*/channels/**").permitAll()
+                .antMatchers("/api/*/channels/{\\d+}/manager", "/api/*/channels/{\\d+}/member/**",
+                        "/api/*/channels/{\\d+}/waiting-member/**").hasAnyRole("CHANNEL_MANAGER", "ADMIN")
+                .antMatchers("/api/*/channels/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers(GET, "/api/v1/comments/**").permitAll()
-                .antMatchers("/api/v1/comments/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/*/comments/**").permitAll()
+                .antMatchers("/api/*/comments/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers(GET, "/api/v1/channel-posts/**").permitAll()
-                .antMatchers("/api/v1/channel-posts/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/*/channel-posts/**").permitAll()
+                .antMatchers("/api/*/channel-posts/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers(GET, "/api/v1/articles/**").permitAll()
-                .antMatchers("/api/v1/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
+                .antMatchers(GET, "/api/*/articles/**").permitAll()
+                .antMatchers("/api/*/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers("/api/v1/votes/**").authenticated();
+                .antMatchers("/api/*/votes/**").authenticated();
         http
                 .addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());
@@ -79,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         LoginFilter securityLoginFilter = new LoginFilter(objectMapper, new TokenProvider());
 
         securityLoginFilter.setAuthenticationManager(authenticationManager());
-        securityLoginFilter.setFilterProcessesUrl("/api/v1/login");
+        securityLoginFilter.setFilterProcessesUrl("/api/*/login");
         securityLoginFilter.setAuthenticationFailureHandler(loginFailureHandler);
         return securityLoginFilter;
     }
