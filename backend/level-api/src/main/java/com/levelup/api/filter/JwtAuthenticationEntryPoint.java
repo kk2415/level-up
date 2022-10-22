@@ -1,5 +1,7 @@
 package com.levelup.api.filter;
 
+import com.levelup.api.controller.v1.dto.response.exception.ExceptionResponse;
+import com.levelup.common.exception.AuthenticationErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -20,6 +22,17 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         log.error("from - {}, Responding with unauthorized error. Message - {}", request.getRequestURL(), e.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+        ExceptionResponse exceptionResponse = ExceptionResponse.from(AuthenticationErrorCode.FAIL_AUTHENTICATION);
+
+        Object errorCode = request.getAttribute("AuthenticationErrorCode");
+        if (errorCode != null) {
+            exceptionResponse = ExceptionResponse.from((AuthenticationErrorCode) errorCode);
+        }
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setStatus(exceptionResponse.getStatus());
+        response.getWriter().write(exceptionResponse.toString());
     }
 }
