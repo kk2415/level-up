@@ -2,10 +2,13 @@ package com.levelup.api.controller.v1.dto.response.exception;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.levelup.common.exception.AuthenticationErrorCode;
 import com.levelup.common.exception.ErrorCode;
 import lombok.Getter;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Getter
 public class ExceptionResponse {
@@ -25,16 +28,28 @@ public class ExceptionResponse {
     }
 
     protected ExceptionResponse(ErrorCode errorCode) {
-        this.status = errorCode.getStatus();
+        this.status = errorCode.getHttpStatus();
         this.message = errorCode.getMessage();
         this.timeStamp = LocalDateTime.now();
     }
 
     public static ExceptionResponse from(ErrorCode errorCode) {
-        return new ExceptionResponse(errorCode.getStatus(), errorCode.getMessage());
+        return new ExceptionResponse(errorCode.getHttpStatus(), errorCode.getMessage());
+    }
+
+    public static ExceptionResponse from(AuthenticationErrorCode errorCode) {
+        return new ExceptionResponse(errorCode.getHttpStatus(), errorCode.getMessage());
     }
 
     public static ExceptionResponse of(int status, String message) {
         return new ExceptionResponse(status, message);
+    }
+
+    public String toString() {
+        return "{\n" +
+                "\"status\":" + "\"" + status + "\"\n\t" +
+                "\"message\":" + "\"" + message + "\"\n\t" +
+                "\"timeStamp\":" + "\"" + timeStamp + "\"" +
+                "\n}";
     }
 }
