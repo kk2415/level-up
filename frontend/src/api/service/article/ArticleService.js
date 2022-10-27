@@ -1,7 +1,9 @@
 import { send } from "../../Request"
 
 import {HttpMethod} from "../../const/HttpMethod";
-const urlPrefix = '/api/v1/articles/'
+import {SERVICE_APP_URL} from "../../const/BackEndHost";
+
+const urlPrefix = SERVICE_APP_URL + '/api/v1/articles/'
 
 const ArticleService = {
 

@@ -12,7 +12,6 @@ public class ChannelStatInfoResponse {
     private Long memberCount;
     private Long waitingMemberCount;
     private Long postCount;
-    private String thumbnail;
 
     protected ChannelStatInfoResponse() {}
 
@@ -22,8 +21,7 @@ public class ChannelStatInfoResponse {
             String date,
             Long memberCount,
             Long waitingMemberCount,
-            Long postCount,
-            String thumbnail)
+            Long postCount)
     {
         this.channelName = channelName;
         this.manager = manager;
@@ -31,7 +29,6 @@ public class ChannelStatInfoResponse {
         this.memberCount = memberCount;
         this.waitingMemberCount = waitingMemberCount;
         this.postCount = postCount;
-        this.thumbnail = thumbnail;
     }
 
     public static ChannelStatInfoResponse from(ChannelStatInfoDto dto) {
@@ -41,8 +38,7 @@ public class ChannelStatInfoResponse {
                 dto.getDate(),
                 dto.getMemberCount(),
                 dto.getWaitingMemberCount(),
-                dto.getPostCount(),
-                dto.getThumbnail()
+                dto.getPostCount()
         );
     }
 }

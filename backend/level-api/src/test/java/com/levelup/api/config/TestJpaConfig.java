@@ -12,8 +12,9 @@ import java.util.Optional;
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @TestConfiguration
 public class TestJpaConfig {
+
     @Bean
-    public AuditorAware<String> auditorAware() {
+    public AuditorAware<String> auditorProvider() {
         return () -> Optional.of("levelUp");
     }
 }

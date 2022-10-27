@@ -1,7 +1,9 @@
 package com.levelup.channel.domain.service;
 
 import com.levelup.channel.domain.entity.Channel;
+import com.levelup.channel.domain.entity.ChannelArticle;
 import com.levelup.channel.domain.entity.ChannelMember;
+import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.exception.NoPlaceChannelException;
@@ -27,37 +29,30 @@ public class ChannelMemberService {
 
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
+    private final ChannelArticleRepository channelArticleRepository;
 
-    public ChannelMemberDto create(
-            Long channelId,
-            Long memberId,
-            String email,
-            String nickname,
-            String profileImage,
-            Boolean isManager,
-            Boolean isWaitingMember)
+    public ChannelMemberDto create(Long channelId, ChannelMemberDto dto)
     {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
         final Optional<ChannelMember> channelMembers
-                = channelMemberRepository.findByChannelIdAndMemberId(channelId, memberId);
+                = channelMemberRepository.findByChannelIdAndMemberId(channelId, dto.getMemberId());
 
-        validate(channel, channelMembers);
+        validateDuplicationAndMemberMaxNumber(channel, channelMembers);
 
         ChannelMember channelMember = ChannelMember.of(
                 null,
-                memberId,
-                email,
-                nickname,
-                profileImage,
-                isManager,
-                isWaitingMember);
+                dto.getMemberId(),
+                dto.getEmail(),
+                dto.getNickname(),
+                dto.isManager(),
+                dto.isWaitingMember());
         channel.addChannelMember(channelMember);
 
         return ChannelMemberDto.from(channelMember);
     }
 
-    private void validate(Channel channel, Optional<ChannelMember> channelMember) {
+    private void validateDuplicationAndMemberMaxNumber(Channel channel, Optional<ChannelMember> channelMember) {
         if (channelMember.isPresent()) {
             throw new EntityDuplicationException(ErrorCode.CHANNEL_MEMBER_DUPLICATION);
         }

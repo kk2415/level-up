@@ -3,6 +3,7 @@ package com.levelup.member.domain.entity;
 import com.levelup.common.domain.base.BaseTimeEntity;
 import com.levelup.common.util.file.UploadFile;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -43,13 +44,40 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String phone;
 
-    @Embedded
-    private UploadFile profileImage;
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Role> roles;
 
+    @Column(updatable = false)
+    private String createdBy;
+
+    @LastModifiedBy
+    private String updatedBy;
+
     protected Member (){}
+
+    public Member(
+            Long id,
+            String email,
+            String password,
+            String name,
+            String nickname,
+            Gender gender,
+            LocalDate birthday,
+            String phone,
+            List<Role> roles,
+            String createdBy)
+    {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.roles = roles;
+        this.createdBy = createdBy;
+    }
 
     public static Member of(
             Long id,
@@ -60,10 +88,10 @@ public class Member extends BaseTimeEntity {
             Gender gender,
             LocalDate birthday,
             String phone,
-            UploadFile profileImage,
-            List<Role> roles)
+            List<Role> roles,
+            String createdBy)
     {
-        return new Member(id, email, password, name, nickname, gender, birthday, phone, profileImage, roles);
+        return new Member(id, email, password, name, nickname, gender, birthday, phone, roles, createdBy);
     }
 
     public void addRole(Role role) {
@@ -75,13 +103,8 @@ public class Member extends BaseTimeEntity {
         this.password = password;
     }
 
-    public void modifyProfileImage(UploadFile profileImage) {
-        this.profileImage = profileImage;
-    }
-
-    public void update(String nickname, UploadFile profileImage) {
+    public void update(String nickname) {
         this.nickname = nickname;
-        this.profileImage = profileImage;
     }
 
     @Override

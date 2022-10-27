@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.levelup.common.domain.FileType.MEMBER;
-import static com.levelup.common.domain.FileType.QNA;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -47,7 +44,7 @@ public class LocalFileStore implements FileStore {
 
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                UploadFile uploadFile = storeFile(FileType.POST, multipartFile);
+                UploadFile uploadFile = storeFile(FileType.ARTICLE, multipartFile);
                 uploadFiles.add(uploadFile);
             }
         }
@@ -75,11 +72,7 @@ public class LocalFileStore implements FileStore {
 
         switch (imageType) {
             case MEMBER : return  "/images/member/" + storedFileName;
-            case CHANNEL : return  "/images/channel/description/" + storedFileName;
-            case CHANNEL_THUMBNAIL : return "/images/channel/thumbnail/" + storedFileName;
-            case CHANNEL_NOTICE : return  "/images/channel_notice/" + storedFileName;
-            case NOTICE : return  "/images/notice/" + storedFileName;
-            case QNA : return  "/images/qna/" + storedFileName;
+            case CHANNEL : return  "/images/channel/thumbnail/" + storedFileName;
             default:  return  "/images/post/" + storedFileName;
         }
     }

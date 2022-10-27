@@ -1,4 +1,4 @@
-package com.levelup.api.controller.v1.dto.response.exception;
+package com.levelup.common.web.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -6,9 +6,7 @@ import com.levelup.common.exception.AuthenticationErrorCode;
 import com.levelup.common.exception.ErrorCode;
 import lombok.Getter;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Getter
 public class ExceptionResponse {

@@ -19,13 +19,8 @@ public interface ChannelArticleRepository extends JpaRepository<ChannelArticle, 
             countQuery = "select count(ca) from ChannelArticle ca where ca.channel.id = :channelId")
     Page<ChannelArticle> findByChannelId(@Param("channelId") Long channelId, Pageable pageable);
 
-    @Query(value = "select ca.* from channel_article ca " +
-            "join channel c on ca.channel_id = c.channel_id " +
-            "where c.channel_id = :channelId and match(ca.title) against(:title in boolean mode)",
-            countQuery = "select count(1) from channel_article ca " +
-                    "join channel c on ca.channel_id = c.channel_id " +
-                    "where c.channel_id = :channelId and match(ca.title) against(:title in boolean mode)",
-            nativeQuery = true)
+    @Query(value = "select ca from ChannelArticle ca where ca.channel.id = :channelId and match(ca.title, :title) > 0",
+            countQuery = "select count(ca) from ChannelArticle ca where ca.channel.id = :channelId and match(ca.title, :title) > 0")
     Page<ChannelArticle> findByChannelIdAndTitle(@Param("channelId") Long channelId,
                                                  @Param("title") String title,
                                                  Pageable pageable);

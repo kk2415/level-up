@@ -1,12 +1,12 @@
 package com.levelup.member.service;
 
-import com.levelup.common.util.file.FileStore;
 import com.levelup.event.events.EventPublisher;
 import com.levelup.event.events.MemberCreatedEvent;
 import com.levelup.event.events.MemberUpdatedEvent;
 import com.levelup.member.TestSupporter;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.service.MemberService;
+import com.levelup.member.domain.service.dto.CreateMemberDto;
 import com.levelup.member.domain.service.dto.MemberDto;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.repository.MemberRepository;
@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
@@ -38,7 +37,6 @@ class MemberServiceTest extends TestSupporter {
 
     @Mock private MemberRepository memberRepository;
     @Mock private PasswordEncoder passwordEncoder;
-    @Mock private FileStore fileStore;
 
     @InjectMocks private MemberService memberService;
 
@@ -60,14 +58,13 @@ class MemberServiceTest extends TestSupporter {
         // Given
         MemberDto memberDto1 = MemberDto.from(createMember("test1@email.com", "test1"));
 
-        given(fileStore.storeFile(any(), any())).willReturn(memberDto1.getProfileImage());
         given(passwordEncoder.encode(eq(memberDto1.getPassword()))).willReturn("changed password");
         given(memberRepository.save(any(Member.class))).willReturn(memberDto1.toEntity());
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
                 .thenReturn(MemberCreatedEvent.of(1L, memberDto1.getEmail(), memberDto1.getNickname()));
 
         // When
-        MemberDto newMemberDto1 = memberService.save(memberDto1, new MockMultipartFile("profile", new byte[]{}));
+        CreateMemberDto newMemberDto1 = memberService.save(memberDto1);
 
         // Then
         assertThat(newMemberDto1.getEmail()).isEqualTo(memberDto1.getEmail());
@@ -86,14 +83,13 @@ class MemberServiceTest extends TestSupporter {
         Member member = MemberDto.from(createMember("test1@email.com", "test1")).toEntity();
 
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
-                .thenReturn(MemberUpdatedEvent.of(1L, member.getEmail(), member.getNickname(), member.getProfileImage()));
-        given(fileStore.storeFile(any(), any())).willReturn(member.getProfileImage());
+                .thenReturn(MemberUpdatedEvent.of(1L, member.getEmail(), member.getNickname()));
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
         given(memberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
         given(passwordEncoder.encode(anyString())).willReturn(updatePasswordDto.getPassword());
 
         // When
-        memberService.update(updateMemberDto, member.getId(), new MockMultipartFile("profile", new byte[]{}));
+        memberService.update(updateMemberDto, member.getId());
         memberService.updatePassword(updatePasswordDto, member.getEmail());
 
         // Then

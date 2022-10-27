@@ -5,6 +5,7 @@ import com.levelup.common.exception.CustomAuthenticationException;
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.time.Instant;
@@ -12,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Getter
+@Component
 public class TokenProvider {
 
     private Date expireDate;
@@ -65,23 +67,6 @@ public class TokenProvider {
             return AuthenticationErrorCode.NULL_TOKEN;
         } catch (MalformedJwtException e) {
             return AuthenticationErrorCode.INVALID_TOKEN;
-        }
-    }
-
-    public void validateToken2(String token) throws RuntimeException {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKeyResolver(SigningKeyResolver.instance) //JWT 만들었을 때 사용했던 비밀키를 넣어줘야됨
-                    .build()
-                    .parseClaimsJws(token);
-        } catch (ExpiredJwtException e) {
-            throw new CustomAuthenticationException(AuthenticationErrorCode.EXPIRED_TOKEN);
-        } catch (SignatureException e) {
-            throw new CustomAuthenticationException(AuthenticationErrorCode.INVALID_SIGNATURE);
-        } catch (IllegalArgumentException e) {
-            throw new CustomAuthenticationException(AuthenticationErrorCode.NULL_TOKEN);
-        } catch (MalformedJwtException e) {
-            throw new CustomAuthenticationException(AuthenticationErrorCode.INVALID_TOKEN);
         }
     }
 

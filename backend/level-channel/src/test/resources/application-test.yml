@@ -1,15 +1,13 @@
 spring:
-  application:
-    name: level-up-test
+  sql:
+    init:
+      mode: NEVER
 
-  cloud:
-    config:
-      name: levelup
-
-  config:
-    import: optional:configserver:http://localhost:8888
-    activate:
-      on-profile: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/level_up_test?serverTimezone=Asia/Seoul
+    username: root
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     database-platform: com.levelup.common.config.MySQL8DialectCustom
@@ -20,7 +18,3 @@ spring:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
-
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher #actuator 설정실패

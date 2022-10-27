@@ -4,7 +4,6 @@ import com.levelup.channel.domain.entity.ChannelMember;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
 public class ChannelMemberDto {
 
@@ -12,25 +11,36 @@ public class ChannelMemberDto {
     private Long memberId;
     private String email;
     private String nickname;
-    private String storeFileName;
     private boolean isManager;
-    
+    private boolean isWaitingMember;
+
     protected ChannelMemberDto() {}
 
-    public ChannelMemberDto(
+    private ChannelMemberDto(
             Long channelMemberId, 
             Long memberId, 
             String email, 
             String nickname, 
-            String storeFileName, 
-            boolean isManager)
+            boolean isManager,
+            boolean isWaitingMember)
     {
         this.channelMemberId = channelMemberId;
         this.memberId = memberId;
         this.email = email;
         this.nickname = nickname;
-        this.storeFileName = storeFileName;
         this.isManager = isManager;
+        this.isWaitingMember = isWaitingMember;
+    }
+
+    public static ChannelMemberDto of(
+            Long channelMemberId,
+            Long memberId,
+            String email,
+            String nickname,
+            boolean isManager,
+            boolean isWaitingMember)
+    {
+        return new ChannelMemberDto(channelMemberId, memberId, email, nickname, isManager, isWaitingMember);
     }
 
     public static ChannelMemberDto from(ChannelMember channelMember) {
@@ -39,7 +49,7 @@ public class ChannelMemberDto {
                 channelMember.getMemberId(),
                 channelMember.getEmail(),
                 channelMember.getNickname(),
-                channelMember.getProfileImage(),
-                channelMember.getIsManager());
+                channelMember.getIsManager(),
+                channelMember.getIsWaitingMember());
     }
 }

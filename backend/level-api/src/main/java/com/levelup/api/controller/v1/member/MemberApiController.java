@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -35,10 +34,9 @@ public class MemberApiController {
     @PatchMapping({"/{memberId}","/{memberId}/"})
     public ResponseEntity<Void> update(
             @Valid @RequestPart(value = "request") UpdateMemberRequest request,
-            @PathVariable Long memberId,
-            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
+            @PathVariable Long memberId
     ) throws IOException {
-        memberService.update(request.toDto(), memberId, profileImage);
+        memberService.update(request.toDto(), memberId);
 
         return ResponseEntity.ok().build();
     }

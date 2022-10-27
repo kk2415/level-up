@@ -1,8 +1,8 @@
 package com.levelup.api.controller.v1.channel;
 
-import com.levelup.api.adapter.client.MemberClient;
 import com.levelup.api.controller.v1.dto.request.channel.ChannelRequest;
-import com.levelup.api.controller.v1.dto.response.member.MemberResponse;
+import com.levelup.api.controller.v1.dto.request.channel.CreateChannelRequest;
+import com.levelup.channel.domain.service.ChannelSort;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelStatInfoResponse;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelResponse;
@@ -14,10 +14,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -29,22 +28,14 @@ import java.io.IOException;
 @RestController
 public class ChannelApiController {
 
-    private final MemberClient memberClient;
     private final ChannelService channelService;
 
     @PostMapping({"", "/"})
     public ResponseEntity<ChannelResponse> create(
-            @RequestPart(value = "request") @Valid ChannelRequest request,
-            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail,
+            @RequestBody @Valid CreateChannelRequest request,
             @RequestParam("member") Long memberId) throws IOException
     {
-        MemberResponse member = memberClient.get(memberId);
-
-        ChannelDto dto = channelService.save(
-                request.toDto(memberId, member.getNickname()),
-                thumbnail,
-                member.getEmail(),
-                member.getUploadFile().getStoreFileName());
+        ChannelDto dto = channelService.save(request.toDto(), memberId);
 
         return ResponseEntity.ok().body(ChannelResponse.from(dto));
     }
@@ -62,11 +53,12 @@ public class ChannelApiController {
     @GetMapping({"", "/"})
     public ResponseEntity<Page<ChannelResponse>> getChannels(
             @RequestParam ChannelCategory category,
-            @RequestParam(defaultValue = "id") String order,
-            Pageable pageable)
+            @RequestParam ChannelSort sort,
+            @RequestParam int page,
+            @RequestParam int size)
     {
-        Page<ChannelResponse> response
-                = channelService.getChannels(category, order, pageable).map(ChannelResponse::from);
+        Page<ChannelResponse> response = channelService.getChannels(category, sort, PageRequest.of(page, size))
+                .map(ChannelResponse::from);
 
         return ResponseEntity.ok().body(response);
     }
@@ -87,10 +79,9 @@ public class ChannelApiController {
     @PatchMapping({"/{channelId}", "/{channelId}/"})
     public ResponseEntity<Void> update(
             @PathVariable Long channelId,
-            @RequestPart(value = "request") @Valid ChannelRequest request,
-            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail) throws IOException
+            @RequestBody @Valid ChannelRequest request) throws IOException
     {
-        channelService.update(request.toDto(), thumbnail, channelId);
+        channelService.update(request.toDto(), channelId);
 
         return ResponseEntity.ok().build();
     }

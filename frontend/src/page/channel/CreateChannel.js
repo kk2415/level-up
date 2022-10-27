@@ -8,6 +8,7 @@ import ChannelService from '../../api/service/channel/ChannelService'
 import {createChannelValidation as validation} from "../../api/Validation";
 
 import {UserInfo} from "../../api/const/UserInfo";
+import {FileService} from "../../api/service/file/FileService";
 
 const CreateChannel = () => {
     let navigate = new useNavigate();
@@ -22,6 +23,8 @@ const CreateChannel = () => {
 
         let channel = {
             name : formData.get('name'),
+            managerNickname : memberNickname,
+            managerEmail : memberEmail,
             limitedMemberNumber : formData.get('limitedMemberNumber'),
             description : $('#summernote').val(),
             category : formData.get('category'),
@@ -30,8 +33,10 @@ const CreateChannel = () => {
         }
 
         if (validate(channel)) {
-            let result = await ChannelService.create(channel, memberId, thumbnail);
+            let result = await ChannelService.create(channel, memberId);
             if (result) {
+                console.log(result)
+                await FileService.create(result.id, 'CHANNEL', thumbnail)
                 navigate('/')
             }
         }
@@ -138,6 +143,8 @@ const CreateChannel = () => {
     }
 
     const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
+    const [memberNickname, setMemberNickname] = useState(localStorage.getItem(UserInfo.NICKNAME))
+    const [memberEmail, setMemberEmail] = useState(localStorage.getItem(UserInfo.EMAIL))
     const [thumbnail, setThumbnail] = useState(null)
 
     useEffect(() => {

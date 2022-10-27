@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EntityScan("com.levelup")
 @EnableJpaRepositories("com.levelup")
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
+@EnableJpaAuditing(auditorAwareRef = "entityAuditorProvider")
 @Configuration
 public class JpaConfig {
 }

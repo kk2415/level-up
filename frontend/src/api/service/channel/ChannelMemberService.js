@@ -1,16 +1,16 @@
 import { send } from "../../Request"
 import {HttpMethod} from "../../const/HttpMethod";
+import {SERVICE_APP_URL} from "../../const/BackEndHost";
 
-const urlPrefix = '/api/v1/channel/members/'
+const urlPrefix = SERVICE_APP_URL + '/api/v1/channel/members/'
 
 const ChannelMemberService = {
 
-    create: async (channelId, memberId, isManager, isWaitingMember) => {
+    create: async (channelId, memberId, channelMember) => {
         let result = false
-        let url = urlPrefix + '?channel=' + channelId + '&member=' + memberId +
-            '&isManager=' + isManager + '&isWaitingMember=' + isWaitingMember
+        let url = urlPrefix + '?channel=' + channelId + '&member=' + memberId
 
-        await send(HttpMethod.POST, url)
+        await send(HttpMethod.POST, url, channelMember)
             .then(() => {
                 result = true
             })

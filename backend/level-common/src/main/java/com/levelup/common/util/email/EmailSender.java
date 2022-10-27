@@ -13,8 +13,8 @@ import javax.mail.internet.MimeMessage;
 
 import static java.util.Locale.KOREAN;
 
-@Component
 @RequiredArgsConstructor
+@Component
 public class EmailSender {
 
     private final JavaMailSender sender;

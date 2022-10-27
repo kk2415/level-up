@@ -6,10 +6,9 @@ import com.levelup.channel.domain.service.ChannelService;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.common.util.file.FileStore;
+import com.levelup.channel.domain.service.dto.CreateChannelDto;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.event.events.EventPublisher;
-import com.levelup.member.domain.entity.Member;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -34,7 +32,6 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class ChannelServiceTest extends TestSupporter {
 
-    @Mock private FileStore fileStore;
     @Mock private ChannelRepository channelRepository;
 
     @InjectMocks private ChannelService channelService;
@@ -55,41 +52,31 @@ class ChannelServiceTest extends TestSupporter {
     @Test
     void save() throws IOException {
         // Given
-        Member member1 = createMember(1L, "manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(
-                1L,
-                member1.getEmail(),
-                member1.getNickname(),
-                member1.getProfileImage().getStoreFileName(),
-                true,
-                false);
-        Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
+        ChannelMember channelManager1 = createChannelMember(1L, 1L, "manager1", "manager1", true, false);
+        Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
 
-        ChannelDto channelDto = ChannelDto.builder()
-                .channelId(1L)
-                .managerId(1L)
-                .name(channel1.getName())
-                .managerNickname(member1.getNickname())
-                .description(channel1.getDescription())
-                .limitedMemberNumber(channel1.getMemberMaxNumber())
-                .thumbnailImage(channel1.getThumbnail())
-                .category(channel1.getCategory())
-                .expectedStartDate(LocalDate.of(1997, 9, 27))
-                .expectedEndDate(LocalDate.of(1997, 9, 27))
-                .build();
+        CreateChannelDto channelDto = CreateChannelDto.of(
+                1L,
+                1L,
+                channel1.getName(),
+                channelManager1.getNickname(),
+                channelManager1.getEmail(),
+                channel1.getMemberMaxNumber(),
+                channel1.getDescription(),
+                channel1.getDescription(),
+                0L,
+                channel1.getCategory(),
+                LocalDate.of(1997, 9, 27),
+                LocalDate.of(1997, 9, 27)
+        );
 
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(ChannelCreatedEvent.class)))
-                .thenReturn(ChannelCreatedEvent.of(manager1.getMemberId()));
+                .thenReturn(ChannelCreatedEvent.of(channelManager1.getMemberId()));
 
-        given(channelRepository.save(any(Channel.class))).willReturn(channelDto.toEntity(channel1.getThumbnail()));
-        given(fileStore.storeFile(any(), any())).willReturn(channel1.getThumbnail());
+        given(channelRepository.save(any(Channel.class))).willReturn(channelDto.toEntity());
 
         // When
-        ChannelDto newChannelDto = channelService.save(
-                channelDto,
-                new MockMultipartFile("thumbnail", new byte[]{}),
-                member1.getEmail(),
-                member1.getProfileImage().getStoreFileName());
+        ChannelDto newChannelDto = channelService.save(channelDto, channelManager1.getId());
 
         // Then
         assertThat(newChannelDto.getManagerId()).isEqualTo(1L);

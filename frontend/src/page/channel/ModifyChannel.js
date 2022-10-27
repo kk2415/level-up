@@ -6,8 +6,7 @@ import $ from "jquery";
 import ChannelService from '../../api/service/channel/ChannelService'
 import {Container, FloatingLabel, Form, Row} from 'react-bootstrap'
 import {createChannelValidation as validation} from "../../api/Validation";
-
-import {BACKEND_URL, S3_URL} from "../../api/const/BackEndHost"
+import {FileService} from "../../api/service/file/FileService";
 
 const CreateChannel = () => {
     const navigate = useNavigate();
@@ -38,17 +37,18 @@ const CreateChannel = () => {
             limitedMemberNumber : $('#limitedMemberNumber').val(),
             description : $('#summernote').val(),
             category : $('#category').val(),
-            thumbnailImage : description.thumbnailImage,
             expectedStartDate : $('#expectedStartDate').val(),
             expectedEndDate : $('#expectedEndDate').val(),
         }
 
         if (validate(channel)) {
-            let result = await ChannelService.modify(channel, thumbnail, channelId);
-            if (result) {
-                alert('수정되었습니다.')
-                navigate('/channel/description/' + channelId)
-            }
+            // let result = await ChannelService.modify(channel, channelId);
+            await FileService.update(channelId, 'CHANNEL', thumbnail)
+            // if (result) {
+            //
+            //     alert('수정되었습니다.')
+            //     navigate('/channel/description/' + channelId)
+            // }
         }
     }
 

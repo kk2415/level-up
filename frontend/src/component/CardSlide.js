@@ -22,7 +22,6 @@ const CardSlide = ({ channel }) => {
 
 	const handleCardImage = () => {
 		navigate(`/channel/description/` + channel.id)
-		// window.location.href = `/channel/description/` + channel.id
 	}
 
 	return (

@@ -41,7 +41,6 @@ public class ChannelHandler {
                         .ifPresent(channelMember ->
                                 channelMember.update(
                                         event.getEmail(),
-                                        event.getNickname(),
-                                        event.getProfileImage().getStoreFileName()));
+                                        event.getNickname()));
     }
 }

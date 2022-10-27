@@ -1,11 +1,11 @@
 package com.levelup.api.exception;
 
-import com.levelup.api.controller.v1.dto.response.exception.ExceptionResponse;
-import com.levelup.api.controller.v1.dto.response.exception.FieldExceptionResponse;
 import com.levelup.article.exception.ArticleException;
 import com.levelup.channel.exception.ChannelException;
 import com.levelup.common.exception.BusinessException;
 import com.levelup.common.exception.ErrorCode;
+import com.levelup.common.web.dto.ExceptionResponse;
+import com.levelup.common.web.dto.FieldExceptionResponse;
 import com.levelup.member.exception.MemberException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

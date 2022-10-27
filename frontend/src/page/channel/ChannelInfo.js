@@ -10,6 +10,7 @@ import HorizonLine from "../../component/HorizonLine";
 import {AiOutlineImport} from "react-icons/ai";
 import MemberRow from "../../component/channel/manager/MemberRow";
 import {useNavigate} from "react-router-dom";
+import {FileService} from "../../api/service/file/FileService";
 
 const getChannelId = () => {
     let pathname = decodeURI($(window.location).attr('pathname'))
@@ -21,7 +22,7 @@ const ChannelInfo = () => {
     let navigate = new useNavigate();
 
     const handleEnterChannel = () => {
-        if (memberId === null) {
+        if (memberEmail === null) {
             alert('로그인해야 합니다.')
             return
         }
@@ -60,7 +61,13 @@ const ChannelInfo = () => {
 
     const handleRegisterChannel = async () => {
         if (localStorage.getItem(UserInfo.TOKEN)) {
-            let result = await ChannelMemberService.create(channelId, localStorage.getItem(UserInfo.ID), false, true);
+            const channelMember = {
+                memberEmail : memberEmail,
+                memberNickname : memberNickname,
+                isManager : false,
+                isWaitingMember : true,
+            }
+            let result = await ChannelMemberService.create(channelId, memberId, channelMember);
 
             if (result) {
                 alert('신청되었습니다. 매니저가 수락할 때 까지 기다려주세요.')
@@ -74,8 +81,27 @@ const ChannelInfo = () => {
     const loadChannelMembers = async (channelId) => {
         const pageable = 'page=0&size=100&sort=id,desc'
         let result = await ChannelMemberService.getAll(channelId, false, pageable);
+        let memberIds = parseChannelMemberIds(result.content);
+        let profileFiles = await FileService.getFiles(memberIds, 'MEMBER');
 
+        combineChannelMemberAndProfileUrl(result.content, profileFiles)
         setChannelMembers(result.content)
+    }
+
+    const combineChannelMemberAndProfileUrl = (channelMembers, profileFiles) => {
+        channelMembers.forEach((channelMember, index) => {
+            let file = profileFiles.filter(file => file.ownerId === channelMember.memberId);
+            channelMember.storeFileName = file[0].uploadFile.storeFileName
+        })
+    }
+
+    const parseChannelMemberIds = (channelMembers) => {
+        let channelIdList = []
+
+        channelMembers.forEach((channelMember, index) => {
+            channelIdList.push(channelMember.memberId)
+        })
+        return channelIdList
     }
 
     const loadChannelInfo = async (channelId) => {
@@ -84,6 +110,8 @@ const ChannelInfo = () => {
     }
 
     const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
+    const [memberNickname, setMemberNickname] = useState(localStorage.getItem(UserInfo.NICKNAME))
+    const [memberEmail, setMemberEmail] = useState(localStorage.getItem(UserInfo.EMAIL))
     const [channelMembers, setChannelMembers] = useState([])
     const [channelInfo, setChannelInfo] = useState({})
     const [channelId, setChannelId] = useState(getChannelId())

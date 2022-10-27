@@ -10,12 +10,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @EntityGraph(attributePaths = {"writer", "comments"})
     Optional<Article> findById(Long id);
+
+    @Query("select a from Article a where a.writer.id = :writerId")
+    List<Article> findByWriterId(@Param("writerId") Long writerId);
 
     @Query(value = "select new com.levelup.article.domain.service.dto.ArticleDto(a, w.memberId, w.nickname) " +
             "from Article a " +

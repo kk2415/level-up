@@ -4,7 +4,8 @@ import com.levelup.common.domain.base.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -28,9 +29,6 @@ public class ChannelMember extends BaseTimeEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    String profileImage;
-
     @Setter
     @Column(nullable = false)
     private Boolean isManager;
@@ -43,6 +41,9 @@ public class ChannelMember extends BaseTimeEntity {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    @OneToMany(mappedBy = "channelMember", cascade = CascadeType.REMOVE)
+    private List<ChannelArticle> articles = new ArrayList<>();
+
     protected ChannelMember() {}
 
     public static ChannelMember of(
@@ -50,7 +51,6 @@ public class ChannelMember extends BaseTimeEntity {
             Long memberId,
             String email,
             String nickname,
-            String profileImage,
             Boolean isManager,
             Boolean isWaitingMember)
     {
@@ -59,10 +59,10 @@ public class ChannelMember extends BaseTimeEntity {
                 memberId,
                 email,
                 nickname,
-                profileImage,
                 isManager,
                 isWaitingMember,
-                null);
+                null,
+                new ArrayList<>());
     }
 
     public void setChannel(Channel channel) {
@@ -73,10 +73,9 @@ public class ChannelMember extends BaseTimeEntity {
         this.channel = channel;
     }
 
-    public void update(String email, String nickname, String profileImage) {
+    public void update(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
-        this.profileImage = profileImage;
     }
 
     @Override

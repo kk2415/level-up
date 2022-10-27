@@ -18,13 +18,17 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
             "where ch.id = :id")
     Optional<Channel> findById(@Param("id") Long id);
 
-    Page<Channel> findByCategory(ChannelCategory category, Pageable pageable);
+    @Query("select c from Channel c where c.category = :category order by c.id asc")
+    Page<Channel> findByCategoryOrderByIdAsc(@Param("category") ChannelCategory category, Pageable pageable);
+
+    @Query("select c from Channel c join c.channelMembers cm where c.category = :category group by c.id order by count(c.id) desc")
+    Page<Channel> findByCategoryOrderByMemberCountDesc(@Param("category") ChannelCategory category, Pageable pageable);
 
     @Query(value =
             "select c.*, " +
-                    "(select count(1) from channel_member cm_2 " +
-                    "where exists (select 1 from channel c_2 where cm_2.channel_id = c.channel_id)) as memberCount " +
-                    "from channel c where channel_category = :category order by memberCount desc limit 10 offset 0",
+            "(select count(1) from channel_member cm_2 " +
+                "where exists (select 1 from channel c_2 where cm_2.channel_id = c.channel_id)) as memberCount " +
+            "from channel c where channel_category = :category order by memberCount desc limit 10 offset 0",
             countQuery = "select count(*) from channel c where c.channel_category = :category",
             nativeQuery = true)
     List<Channel> findByCategoryAndOrderByMemberCount(@Param("category") String category);

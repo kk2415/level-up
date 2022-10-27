@@ -63,10 +63,11 @@ public class ChannelArticle extends BaseTimeEntity {
                 title,
                 0L,
                 null,
-                channelMember,
+                null,
                 new ArrayList<>(),
                 new ArrayList<>());
 
+        channelArticle.setChannelMember(channelMember);
         channelArticle.setChannel(channel);
         return channelArticle;
     }
@@ -78,6 +79,15 @@ public class ChannelArticle extends BaseTimeEntity {
 
         this.channel = channel;
         channel.getChannelArticles().add(this);
+    }
+
+    public void setChannelMember(ChannelMember channelMember) {
+        if (this.channelMember != null) {
+            channelMember.getArticles().remove(this);
+        }
+
+        this.channelMember = channelMember;
+        channelMember.getArticles().add(this);
     }
 
     public void update(String title, String content, ChannelArticleCategory postCategory) {

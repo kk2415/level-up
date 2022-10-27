@@ -10,6 +10,7 @@ import MemberFrame from "../../component/channel/manager/MemberFrame";
 
 import {UserInfo} from "../../api/const/UserInfo";
 import { S3_URL } from "../../api/const/BackEndHost.js"
+import {FileService} from "../../api/service/file/FileService";
 
 const ChannelManager = () => {
     const navigate = useNavigate();
@@ -22,6 +23,8 @@ const ChannelManager = () => {
 
     const loadManager = async (channelId) => {
         let result = await ChannelService.getManager(memberId, channelId)
+        let thumbnail = await FileService.get(channelId, 'CHANNEL');
+        result.thumbnail = thumbnail.uploadFile.storeFileName
 
         setManager(result)
     }

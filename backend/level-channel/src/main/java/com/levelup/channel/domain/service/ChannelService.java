@@ -4,14 +4,12 @@ import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.channel.domain.service.dto.ChannelStatInfoDto;
+import com.levelup.channel.domain.service.dto.CreateChannelDto;
 import com.levelup.channel.exception.ChannelException;
-import com.levelup.common.domain.FileType;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.common.util.file.FileStore;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.common.util.file.UploadFile;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.event.events.EventPublisher;
 import lombok.RequiredArgsConstructor;
@@ -19,44 +17,41 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class ChannelService {
 
-    private final FileStore fileStore;
     private final ChannelRepository channelRepository;
 
+
+    /**
+     * 채널 생성 시 회원의 권한을 수정하기 위해 이벤트 발행함
+     * */
     @Caching(evict = {
-            @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':id'}"),
-            @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':memberCount'}")
+            @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':ID'}"),
+            @CacheEvict(cacheNames = "channel", key = "{#dto.category + ':MEMBER_COUNT'}")
     })
-    public ChannelDto save(ChannelDto dto, MultipartFile file, String managerEmail, String managerProfileImage) throws IOException {
-        UploadFile thumbnail = fileStore.storeFile(FileType.CHANNEL_THUMBNAIL, file);
-        Channel channel = dto.toEntity(thumbnail);
+    public ChannelDto save(CreateChannelDto dto, Long memberId) throws IOException {
+        Channel channel = dto.toEntity();
         ChannelMember manager = ChannelMember.of(
                 null,
-                dto.getManagerId(),
-                managerEmail,
+                memberId,
+                dto.getManagerEmail(),
                 dto.getManagerNickname(),
-                managerProfileImage,
                 true,
                 false);
 
         channel.addChannelMember(manager);
         channelRepository.save(channel);
 
-        EventPublisher.raise(ChannelCreatedEvent.of(dto.getManagerId()));
+        EventPublisher.raise(ChannelCreatedEvent.of(memberId));
 
         return ChannelDto.from(channel);
     }
@@ -70,17 +65,15 @@ public class ChannelService {
         return ChannelDto.from(findChannel);
     }
 
-    @Cacheable(cacheNames = "channel", key = "{#category + ':' + #order}")
+    @Cacheable(cacheNames = "channel", key = "{#category + ':' + #sort}")
     @Transactional(readOnly = true)
-    public Page<ChannelDto> getChannels(ChannelCategory category, String order, Pageable pageable) {
-        if ("memberCount".equals(order)) {
-            List<ChannelDto> collect = channelRepository.findByCategoryAndOrderByMemberCount(category.toString())
-                    .stream().map(ChannelDto::from)
-                    .collect(Collectors.toUnmodifiableList());
-
-            return new PageImpl<ChannelDto>(collect);
+    public Page<ChannelDto> getChannels(ChannelCategory category, ChannelSort sort, Pageable pageable) {
+        if (ChannelSort.MEMBER_COUNT.equals(sort)) {
+            return channelRepository.findByCategoryOrderByMemberCountDesc(category, pageable)
+                    .map(ChannelDto::from);
         }
-        return channelRepository.findByCategory(category, pageable)
+
+        return channelRepository.findByCategoryOrderByIdAsc(category, pageable)
                 .map(ChannelDto::from);
     }
 
@@ -98,32 +91,24 @@ public class ChannelService {
 
 
     @CacheEvict(cacheNames = "channel", allEntries = true)
-    public void update(ChannelDto dto, MultipartFile file, Long channelId) throws IOException {
+    public void update(ChannelDto dto, Long channelId) throws IOException {
         Channel channel = channelRepository.findById(channelId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CHANNEL_NOT_FOUND));
 
-        UploadFile thumbnail = storeUpdateThumbnail(channel, file);
         channel.updateChannel(
                 dto.getName(),
                 dto.getCategory(),
                 dto.getLimitedMemberNumber(),
-                dto.getDescription(),
-                thumbnail);
-    }
-
-    private UploadFile storeUpdateThumbnail(Channel channel, MultipartFile file) throws IOException {
-        if (file == null) {
-            return channel.getThumbnail();
-        }
-
-        fileStore.deleteFile(channel.getThumbnail().getStoreFileName());
-        return fileStore.storeFile(FileType.CHANNEL_THUMBNAIL, file);
+                dto.getDescription());
     }
 
 
+    /*
+    * 채널 삭제 시에는 채널에 가입된 채널 회원과, 게시글이 모두 삭제된다.
+    * */
     @Caching(evict = {
-            @CacheEvict(cacheNames = "channel", key = "{#category + ':id'}"),
-            @CacheEvict(cacheNames = "channel", key = "{#category + ':memberCount'}")
+            @CacheEvict(cacheNames = "channel", key = "{#category + ':ID'}"),
+            @CacheEvict(cacheNames = "channel", key = "{#category + ':MEMBER_COUNT'}")
     })
     public void delete(Long channelId, ChannelCategory category) {
         Channel channel = channelRepository.findById(channelId)

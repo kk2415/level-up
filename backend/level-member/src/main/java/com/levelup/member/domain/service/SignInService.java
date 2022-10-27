@@ -2,8 +2,8 @@ package com.levelup.member.domain.service;
 
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.member.domain.MemberPrincipal;
 import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberPrincipal;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.entity.RoleName;
 import com.levelup.member.domain.repository.MemberRepository;
@@ -42,6 +42,7 @@ public class SignInService implements UserDetailsService {
 
         return new MemberPrincipal(
                 member.getId(),
+                member.getNickname(),
                 member.getEmail(),
                 member.getPassword(),
                 isAdmin,

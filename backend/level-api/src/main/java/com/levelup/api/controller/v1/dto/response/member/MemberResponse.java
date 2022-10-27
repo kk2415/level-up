@@ -2,7 +2,6 @@ package com.levelup.api.controller.v1.dto.response.member;
 
 import com.levelup.member.domain.service.dto.MemberDto;
 import com.levelup.common.util.DateFormat;
-import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Gender;
 import com.levelup.member.domain.entity.RoleName;
 import lombok.Getter;
@@ -20,20 +19,19 @@ public class MemberResponse implements Serializable {
     private String birthday;
     private Gender gender;
     private String phone;
-    private UploadFile uploadFile;
     private RoleName role;
 
     protected MemberResponse() {}
 
-    public MemberResponse(Long id,
-                          String email,
-                          String name,
-                          String nickname,
-                          Gender gender,
-                          String birthday,
-                          String phone,
-                          UploadFile uploadFile,
-                          RoleName role)
+    public MemberResponse(
+            Long id,
+            String email,
+            String name,
+            String nickname,
+            Gender gender,
+            String birthday,
+            String phone,
+            RoleName role)
     {
         this.id = id;
         this.email = email;
@@ -42,7 +40,6 @@ public class MemberResponse implements Serializable {
         this.gender = gender;
         this.birthday = birthday;
         this.phone = phone;
-        this.uploadFile = uploadFile;
         this.role = role;
     }
 
@@ -55,7 +52,6 @@ public class MemberResponse implements Serializable {
                 dto.getGender(),
                 dto.getBirthday().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
                 dto.getPhone(),
-                dto.getProfileImage(),
                 dto.getRole()
         );
     }

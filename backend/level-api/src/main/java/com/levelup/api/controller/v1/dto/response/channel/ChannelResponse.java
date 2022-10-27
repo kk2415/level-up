@@ -3,7 +3,6 @@ package com.levelup.api.controller.v1.dto.response.channel;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.common.util.DateFormat;
 import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.common.util.file.UploadFile;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
@@ -19,29 +18,27 @@ public class ChannelResponse {
     private String description;
     private String descriptionSummary;
     private Long memberCount;
-    private String storeFileName;
     private ChannelCategory category;
-    private UploadFile thumbnailImage;
     private String createdAt;
     private String expectedStartDate;
     private String expectedEndDate;
 
     protected ChannelResponse() {}
 
-    private ChannelResponse(Long id,
-                            Long managerId,
-                            String name,
-                            String managerName,
-                            Long limitedMemberNumber,
-                            String description,
-                            String descriptionSummary,
-                            Long memberCount,
-                            String createdAt,
-                            String storeFileName,
-                            String expectedStartDate,
-                            String expectedEndDate,
-                            ChannelCategory category,
-                            UploadFile thumbnailImage) {
+    private ChannelResponse(
+            Long id,
+            Long managerId,
+            String name,
+            String managerName,
+            Long limitedMemberNumber,
+            String description,
+            String descriptionSummary,
+            Long memberCount,
+            String createdAt,
+            String expectedStartDate,
+            String expectedEndDate,
+            ChannelCategory category)
+    {
         this.id = id;
         this.managerId = managerId;
         this.name = name;
@@ -51,11 +48,9 @@ public class ChannelResponse {
         this.descriptionSummary = descriptionSummary;
         this.memberCount = memberCount;
         this.createdAt = createdAt;
-        this.storeFileName = storeFileName;
         this.expectedStartDate = expectedStartDate;
         this.expectedEndDate = expectedEndDate;
         this.category = category;
-        this.thumbnailImage = thumbnailImage;
     }
 
     public static ChannelResponse from(ChannelDto dto) {
@@ -69,11 +64,9 @@ public class ChannelResponse {
                 dto.getDescriptionSummary(),
                 dto.getMemberCount(),
                 dto.getCreatedAt().format(DateTimeFormatter.ofPattern(DateFormat.DATE_TIME_FORMAT)),
-                dto.getThumbnailImage().getStoreFileName(),
                 dto.getExpectedStartDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
                 dto.getExpectedEndDate().format(DateTimeFormatter.ofPattern(DateFormat.DATE_FORMAT)),
-                dto.getCategory(),
-                dto.getThumbnailImage()
+                dto.getCategory()
         );
     }
 }

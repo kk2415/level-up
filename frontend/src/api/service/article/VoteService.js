@@ -1,7 +1,8 @@
 import { send } from "../../Request"
 import {HttpMethod} from "../../const/HttpMethod";
+import {SERVICE_APP_URL} from "../../const/BackEndHost";
 
-const urlPrefix = '/api/v1/votes/'
+const urlPrefix = SERVICE_APP_URL + '/api/v1/votes/'
 
 const VoteService = {
 

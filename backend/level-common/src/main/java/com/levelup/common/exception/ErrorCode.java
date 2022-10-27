@@ -14,11 +14,14 @@ public enum ErrorCode {
     CHANNEL_NOT_FOUND(400, "존재하지 않는 채널입니다."),
     CHANNEL_MEMBER_NOT_FOUND(400, "존재하지 않는 채널 회원입니다."),
     IMAGE_NOT_FOUND(400, "이미지를 찾을 수 없습니다."),
+    FILE_NOT_FOUND(400, "파일을 찾을 수 없습니다."),
 
     VOTE_DUPLICATION(400, "추천은 한 번만 가능합니다."),
     EMAIL_DUPLICATION(400, "이미 존재하는 이메일입니다."),
     NICKNAME_DUPLICATION(400, "이미 존재하는 닉네임입니다."),
     CHANNEL_MEMBER_DUPLICATION(400, "이미 채널에 등록된 회원입니다."),
+    FILE_DUPLICATION(400, "중복된 파일입니다."),
+
 
     SECURITY_CODE_EXPIRED(400, "인증코드가 만료되었습니다."),
     NOT_MATCH_SECURITY_CODE(400, "인증코드가 일치하지 않습니다."),

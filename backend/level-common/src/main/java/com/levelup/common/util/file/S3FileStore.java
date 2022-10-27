@@ -54,7 +54,7 @@ public class S3FileStore implements FileStore {
 
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                UploadFile uploadFile = storeFile(FileType.POST, multipartFile);
+                UploadFile uploadFile = storeFile(FileType.ARTICLE, multipartFile);
                 uploadFiles.add(uploadFile);
             }
         }

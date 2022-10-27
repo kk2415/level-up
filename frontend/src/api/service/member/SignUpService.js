@@ -1,19 +1,16 @@
 import {send, sendMultiPart} from "../../Request"
 import {HttpMethod} from "../../const/HttpMethod";
+import {SERVICE_APP_URL} from "../../const/BackEndHost";
 
-const urlPrefix = '/api/v1/sign-up'
+const urlPrefix = SERVICE_APP_URL + '/api/v1/sign-up'
 
 export const SignUpService = {
 
-    signUp : async (member, file) => {
+    signUp : async (member) => {
         let result = null
         const url = urlPrefix
 
-        let form = new FormData();
-        form.append('request', new Blob([JSON.stringify(member)], { type: "application/json" }))
-        form.append('profileImage', file)
-
-        await sendMultiPart(HttpMethod.POST, url, form)
+        await send(HttpMethod.POST, url, member)
             .then((data) => {
                 result = data
             })

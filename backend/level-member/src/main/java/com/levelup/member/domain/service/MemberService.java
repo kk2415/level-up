@@ -1,15 +1,13 @@
 package com.levelup.member.domain.service;
 
-import com.levelup.common.domain.FileType;
 import com.levelup.common.exception.EntityDuplicationException;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.common.util.file.FileStore;
-import com.levelup.common.util.file.UploadFile;
 import com.levelup.event.events.*;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.service.dto.CreateMemberDto;
 import com.levelup.member.domain.service.dto.UpdateMemberDto;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.domain.service.dto.MemberDto;
@@ -21,7 +19,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -31,23 +28,20 @@ import java.io.IOException;
 @Service
 public class MemberService {
 
-    private final FileStore fileStore;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-    public MemberDto save(MemberDto dto, MultipartFile file) throws IOException {
+    public CreateMemberDto save(MemberDto dto) throws IOException {
         validateDuplicationMember(dto.getEmail(), dto.getNickname());
 
-        UploadFile profileImage = fileStore.storeFile(FileType.MEMBER, file);
-
-        Member member = dto.toEntity(profileImage);
+        Member member = dto.toEntity();
         member.updatePassword(passwordEncoder.encode(member.getPassword()));
         member.addRole(Role.of(RoleName.ANONYMOUS, member));
         memberRepository.save(member);
 
         EventPublisher.raise(MemberCreatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
 
-        return MemberDto.from(member);
+        return CreateMemberDto.from(member);
     }
 
     private void validateDuplicationMember(String email, String nickname) {
@@ -70,27 +64,16 @@ public class MemberService {
 
 
     @CacheEvict(cacheNames = "member", key = "#memberId")
-    public void update(UpdateMemberDto dto, Long memberId, MultipartFile file) throws IOException {
+    public void update(UpdateMemberDto dto, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
-        UploadFile profileImage = storeUpdateProfileImage(member, file);
-        member.update(dto.getNickname(), profileImage);
+        member.update(dto.getNickname());
 
         EventPublisher.raise(MemberUpdatedEvent.of(
                 member.getId(),
                 member.getEmail(),
-                member.getNickname(),
-                member.getProfileImage()));
-    }
-
-    private UploadFile storeUpdateProfileImage(Member member, MultipartFile file) throws IOException {
-        if (file == null) {
-            return member.getProfileImage();
-        }
-
-        fileStore.deleteFile(member.getProfileImage().getStoreFileName());
-        return fileStore.storeFile(FileType.MEMBER, file);
+                member.getNickname()));
     }
 
     public void updatePassword(UpdatePasswordDto dto, String email) {

@@ -1,0 +1,70 @@
+server:
+  port: 8090
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(q1XudM9h+EibBuL782x29vfYI9SUQ/XgcODfYf0kipw=)
+      secret-key: ENC(f+2QHHoe7rHJ+h8wQ+JbvtOU91GIzfwnNki7D4T4x5EKbmEgVizdgL+9WbWHn56tOPFZvr7vNQo=)
+    s3:
+      bucket: mylevelupbuckets3
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+spring:
+  sql:
+    init:
+      mode: NEVER
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/image?serverTimezone=Asia/Seoul
+    username: root
+    password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+    open-in-view: false
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #actuator 설정실패 때문에 삽입
+
+  mail:
+    username: koria789@gmail.com
+    password: ENC(EhKyuZGqPjEGv/aFgLCwxnik+I8z+cTkjHNtWZanjok=)
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        debug: true
+        smtp:
+          connectiontimeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+jasypt:
+  encryptor:
+    bean: encryptorBean
+
+#actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh
+
+file:
+  local_dir: C:/Task/study/levelup
+  s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
+

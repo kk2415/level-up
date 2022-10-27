@@ -27,8 +27,8 @@ public class TestSupporter {
                 Gender.MALE,
                 LocalDate.of(1997, 9, 27),
                 "010-2354-9960",
-                new UploadFile("default.png", "thumbnail/as154-asda"),
-                new ArrayList<>());
+                new ArrayList<>(),
+                email);
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);
@@ -46,8 +46,8 @@ public class TestSupporter {
                 Gender.MALE,
                 LocalDate.of(1997, 9, 27),
                 "010-2354-9960",
-                new UploadFile("default.png", "thumbnail/as154-asda"),
-                new ArrayList<>());
+                new ArrayList<>(),
+                email);
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);

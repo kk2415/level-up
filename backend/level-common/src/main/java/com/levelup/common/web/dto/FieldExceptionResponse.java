@@ -1,4 +1,4 @@
-package com.levelup.api.controller.v1.dto.response.exception;
+package com.levelup.common.web.dto;
 
 import com.levelup.common.exception.ErrorCode;
 import lombok.Getter;
