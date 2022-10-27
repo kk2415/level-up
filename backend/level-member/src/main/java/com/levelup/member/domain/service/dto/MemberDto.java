@@ -90,7 +90,25 @@ public class MemberDto implements Serializable {
                 member.getGender(),
                 member.getBirthday(),
                 member.getPhone(),
-                member.getProfileImage(),
+                null,
+                member.getRoles().stream()
+                        .min(Comparator.comparing(r -> r.getRoleName().getPriority()))
+                        .map(Role::getRoleName)
+                        .orElse(RoleName.ANONYMOUS)
+        );
+    }
+
+    public static MemberDto from(Member member, UploadFile profile) {
+        return new MemberDto(
+                member.getId(),
+                member.getEmail(),
+                member.getPassword(),
+                member.getName(),
+                member.getNickname(),
+                member.getGender(),
+                member.getBirthday(),
+                member.getPhone(),
+                profile,
                 member.getRoles().stream()
                         .min(Comparator.comparing(r -> r.getRoleName().getPriority()))
                         .map(Role::getRoleName)
@@ -99,10 +117,10 @@ public class MemberDto implements Serializable {
     }
 
     public Member toEntity() {
-        return Member.of(null, email, password, name, nickname, gender, birthday, phone, profileImage, new ArrayList<>());
+        return Member.of(null, email, password, name, nickname, gender, birthday, phone, new ArrayList<>(), email);
     }
 
     public Member toEntity(UploadFile profileImage) {
-        return Member.of(null, email, password, name, nickname, gender, birthday, phone, profileImage, new ArrayList<>());
+        return Member.of(null, email, password, name, nickname, gender, birthday, phone, new ArrayList<>(), email);
     }
 }

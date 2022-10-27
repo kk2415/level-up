@@ -7,6 +7,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Builder
 @AllArgsConstructor
 @Getter
@@ -14,7 +16,7 @@ import javax.persistence.*;
 @Entity
 public class Writer extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "writer_id")
     private Long id;
 

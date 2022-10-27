@@ -9,19 +9,21 @@ import lombok.Getter;
 public class LogInMemberResponse {
     private Long id;
     private String email;
+    private String nickname;
     private AccessToken accessToken;
     private boolean isAdmin;
 
     protected LogInMemberResponse() {}
 
-    private LogInMemberResponse(Long id, String email, AccessToken token, boolean isAdmin) {
+    private LogInMemberResponse(Long id, String email, String nickname, AccessToken token, boolean isAdmin) {
         this.id = id;
         this.email = email;
+        this.nickname = nickname;
         this.accessToken = token;
         this.isAdmin = isAdmin;
     }
 
-    public static LogInMemberResponse of(Long id, String email, AccessToken token, boolean isAdmin) {
-        return new LogInMemberResponse(id, email, token, isAdmin);
+    public static LogInMemberResponse of(Long id, String email, String nickname, AccessToken token, boolean isAdmin) {
+        return new LogInMemberResponse(id, email, nickname, token, isAdmin);
     }
 }

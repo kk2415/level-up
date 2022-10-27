@@ -6,6 +6,7 @@ import com.levelup.api.config.SecurityConfig;
 import com.levelup.api.config.TestJpaConfig;
 import com.levelup.api.controller.v1.member.SignUpApiController;
 import com.levelup.api.filter.JwtAuthenticationFilter;
+import com.levelup.member.domain.service.dto.CreateMemberDto;
 import com.levelup.member.domain.service.dto.MemberDto;
 import com.levelup.member.domain.service.MemberService;
 import com.levelup.api.controller.v1.dto.request.member.MemberRequest;
@@ -23,8 +24,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -32,10 +31,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,7 +71,7 @@ class SignUpApiControllerTest extends TestSupporter {
                 "request",
                 "application/json",
                 jsonRequest.getBytes(StandardCharsets.UTF_8));
-        given(memberService.save(any(), any())).willReturn(memberDto);
+        given(memberService.save(any())).willReturn(CreateMemberDto.from(memberDto.toEntity()));
 
         // When & Then
         mvc.perform(

@@ -1,15 +1,9 @@
 spring:
-  application:
-    name: level-up-test
-
-  cloud:
-    config:
-      name: levelup
-
-  config:
-    import: optional:configserver:http://localhost:8888
-    activate:
-      on-profile: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/level_up_test?serverTimezone=Asia/Seoul
+    username: root
+    password: Dudrhkd10ck!
 
   jpa:
     database-platform: com.levelup.common.config.MySQL8DialectCustom

@@ -5,7 +5,7 @@ import com.levelup.common.exception.ErrorCode;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.common.exception.AuthenticationErrorCode;
 import com.levelup.member.util.jwt.TokenProvider;
-import com.levelup.member.domain.MemberPrincipal;
+import com.levelup.member.domain.entity.MemberPrincipal;
 import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;

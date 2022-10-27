@@ -24,8 +24,8 @@ public class TestSupporter {
                 Gender.MALE,
                 LocalDate.of(1997, 9, 27),
                 "010-2354-9960",
-                new UploadFile("default.png", "thumbnail/as154-asda"),
-                new ArrayList<>());
+                new ArrayList<>(),
+                email);
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);
@@ -43,8 +43,8 @@ public class TestSupporter {
                 Gender.MALE,
                 LocalDate.of(1997, 9, 27),
                 "010-2354-9960",
-                new UploadFile("default.png", "thumbnail/as154-asda"),
-                new ArrayList<>());
+                new ArrayList<>(),
+                email);
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);
@@ -59,7 +59,6 @@ public class TestSupporter {
                 channelName,
                 10L,
                 category,
-                new UploadFile("default.png", "thumbnail/as154-asda"),
                 LocalDate.of(1997, 9, 27),
                 LocalDate.of(1997, 9, 27)
         );
@@ -75,44 +74,40 @@ public class TestSupporter {
                 channelName,
                 10L,
                 category,
-                new UploadFile("default.png", "thumbnail/as154-asda"),
                 LocalDate.of(1997, 9, 27),
                 LocalDate.of(1997, 9, 27)
-                );
+            );
 
         channel.addChannelMember(manager);
         return channel;
     }
 
-    protected ChannelMember createChannelMember(Long id, Long memberId, String email, String nickname, String profileImage, Boolean isManager, Boolean isWaitingMember) {
+    protected ChannelMember createChannelMember(Long id, Long memberId, String email, String nickname, Boolean isManager, Boolean isWaitingMember) {
         return ChannelMember.of(
                 id,
                 memberId,
                 email,
                 nickname,
-                profileImage,
                 isManager,
                 isWaitingMember);
     }
 
-    protected ChannelMember createChannelMember(Long memberId, String email, String nickname, String profileImage, Boolean isManager, Boolean isWaitingMember) {
+    protected ChannelMember createChannelMember(Long memberId, String email, String nickname, Boolean isManager, Boolean isWaitingMember) {
         return ChannelMember.of(
                 null,
                 memberId,
                 email,
                 nickname,
-                profileImage,
                 isManager,
                 isWaitingMember);
     }
 
-    protected ChannelMember createChannelMember(Member member, Channel channel, boolean isManager) {
+    protected ChannelMember createChannelMember(Member member, boolean isManager) {
         return ChannelMember.of(
                 null,
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
-                member.getProfileImage().getStoreFileName(),
                 isManager,
                 false);
     }
@@ -123,7 +118,6 @@ public class TestSupporter {
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
-                member.getProfileImage().getStoreFileName(),
                 isManager,
                 isWaitingMember);
     }
@@ -134,7 +128,6 @@ public class TestSupporter {
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
-                member.getProfileImage().getStoreFileName(),
                 isManager,
                 isWaitingMember);
     }

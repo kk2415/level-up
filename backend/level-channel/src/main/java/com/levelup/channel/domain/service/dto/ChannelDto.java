@@ -2,15 +2,12 @@ package com.levelup.channel.domain.service.dto;
 
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.common.util.file.UploadFile;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
 public class ChannelDto implements Serializable {
 
@@ -22,29 +19,27 @@ public class ChannelDto implements Serializable {
     private String description;
     private String descriptionSummary;
     private Long memberCount;
-    private String storeFileName;
     private ChannelCategory category;
-    private UploadFile thumbnailImage;
     private LocalDateTime createdAt;
     private LocalDate expectedStartDate;
     private LocalDate expectedEndDate;
 
     protected ChannelDto() {}
 
-    private ChannelDto(Long channelId,
-                       Long managerId,
-                       String name,
-                       String managerNickname,
-                       Long limitedMemberNumber,
-                       String description,
-                       String descriptionSummary,
-                       Long memberCount,
-                       String storeFileName,
-                       ChannelCategory category,
-                       UploadFile thumbnailImage,
-                       LocalDateTime createdAt,
-                       LocalDate expectedStartDate,
-                       LocalDate expectedEndDate) {
+    private ChannelDto(
+            Long channelId,
+            Long managerId,
+            String name,
+            String managerNickname,
+            Long limitedMemberNumber,
+            String description,
+            String descriptionSummary,
+            Long memberCount,
+            ChannelCategory category,
+            LocalDateTime createdAt,
+            LocalDate expectedStartDate,
+            LocalDate expectedEndDate)
+    {
         this.channelId = channelId;
         this.managerId = managerId;
         this.name = name;
@@ -53,12 +48,54 @@ public class ChannelDto implements Serializable {
         this.description = description;
         this.descriptionSummary = descriptionSummary;
         this.memberCount = memberCount;
-        this.storeFileName = storeFileName;
         this.category = category;
-        this.thumbnailImage = thumbnailImage;
         this.createdAt = createdAt;
         this.expectedStartDate = expectedStartDate;
         this.expectedEndDate = expectedEndDate;
+    }
+
+    public ChannelDto (Channel channel, Long memberCount) {
+        this.channelId = channel.getId();
+        this.managerId = channel.getManagerId();
+        this.name = channel.getName();
+        this.managerNickname = channel.getManagerNickname();
+        this.limitedMemberNumber = channel.getMemberMaxNumber();
+        this.description = channel.getDescription();
+        this.descriptionSummary = channel.getDescriptionSummary();
+        this.memberCount = memberCount;
+        this.category = channel.getCategory();
+        this.createdAt = channel.getCreatedAt();
+        this.expectedStartDate = channel.getExpectedStartDate();
+        this.expectedEndDate = channel.getExpectedEndDate();
+    }
+
+    public static ChannelDto of(
+            Long channelId,
+            Long managerId,
+            String name,
+            String managerNickname,
+            Long limitedMemberNumber,
+            String description,
+            String descriptionSummary,
+            Long memberCount,
+            ChannelCategory category,
+            LocalDateTime createdAt,
+            LocalDate expectedStartDate,
+            LocalDate expectedEndDate)
+    {
+        return new ChannelDto(
+                channelId,
+                managerId,
+                name,
+                managerNickname,
+                limitedMemberNumber,
+                description,
+                descriptionSummary,
+                memberCount,
+                category,
+                createdAt,
+                expectedStartDate,
+                expectedEndDate);
     }
 
     public static ChannelDto from(Channel channel) {
@@ -71,23 +108,20 @@ public class ChannelDto implements Serializable {
                 channel.getDescription(),
                 channel.getDescriptionSummary(),
                 channel.getMemberCount(),
-                channel.getThumbnail().getStoreFileName(),
                 channel.getCategory(),
-                channel.getThumbnail(),
                 channel.getCreatedAt(),
                 channel.getExpectedStartDate(),
                 channel.getExpectedEndDate()
         );
     }
 
-    public Channel toEntity(UploadFile thumbnail) {
+    public Channel toEntity() {
         return Channel.of(
                 null,
                 description,
                 name,
                 limitedMemberNumber,
                 category,
-                thumbnail,
                 expectedStartDate,
                 expectedEndDate);
     }

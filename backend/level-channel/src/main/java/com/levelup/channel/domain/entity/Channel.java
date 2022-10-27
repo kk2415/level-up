@@ -36,9 +36,6 @@ public class Channel extends BaseTimeEntity {
     @Column(name = "channel_category", nullable = false)
     private ChannelCategory category;
 
-    @Embedded
-    private UploadFile thumbnail;
-
     @Column(nullable = false)
     private LocalDate expectedStartDate;
 
@@ -59,7 +56,6 @@ public class Channel extends BaseTimeEntity {
             String name,
             Long memberMaxNumber,
             ChannelCategory category,
-            UploadFile thumbnail,
             LocalDate expectedStartDate,
             LocalDate expectedEndDate)
     {
@@ -69,7 +65,6 @@ public class Channel extends BaseTimeEntity {
                 name,
                 memberMaxNumber,
                 category,
-                thumbnail,
                 expectedStartDate,
                 expectedEndDate,
                 new ArrayList<>(),
@@ -126,13 +121,11 @@ public class Channel extends BaseTimeEntity {
     public void updateChannel(String name,
                               ChannelCategory category,
                               Long memberMaxNumber,
-                              String description,
-                              UploadFile thumbnail) {
+                              String description) {
         this.name = name == null ? this.name : name;
         this.category = category == null ? this.category : category;
         this.memberMaxNumber = memberMaxNumber == null ? this.memberMaxNumber : memberMaxNumber;
         this.description = description == null ? this.description : description;
-        this.thumbnail = thumbnail == null ? this.thumbnail : thumbnail;
     }
 
     public void removeMembers(List<ChannelMember> channelMembers) {

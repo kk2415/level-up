@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +50,7 @@ class ChannelRepositoryTest extends TestSupporter {
 
     @DisplayName("채널 카테고리별 조회")
     @Test
-    void findByCategoryAndOrderByMemberCount() {
+    void findByCategoryOrderByMemberCount() {
         Member manager1 = createMember("manager1", "manager1");
         Member manager2 = createMember("manager2", "manager2");
         Member manager3 = createMember("manager3", "manager3");
@@ -73,12 +75,12 @@ class ChannelRepositoryTest extends TestSupporter {
         Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
         Channel channel2 = createChannel(channelManager2, "test channel2", ChannelCategory.STUDY);
         Channel channel3 = createChannel(channelManager3, "test channel3", ChannelCategory.STUDY);
-        ChannelMember channelMember1 = createChannelMember(member1, channel1, false);
-        ChannelMember channelMember2 = createChannelMember(member2, channel1, false);
-        ChannelMember channelMember3 = createChannelMember(member3, channel2, false);
-        ChannelMember channelMember4 = createChannelMember(member4, channel2, false);
-        ChannelMember channelMember5 = createChannelMember(member5, channel2, false);
-        ChannelMember channelMember6 = createChannelMember(member5, channel3, false);
+        ChannelMember channelMember1 = createChannelMember(member1, false);
+        ChannelMember channelMember2 = createChannelMember(member2, false);
+        ChannelMember channelMember3 = createChannelMember(member3, false);
+        ChannelMember channelMember4 = createChannelMember(member4, false);
+        ChannelMember channelMember5 = createChannelMember(member5, false);
+        ChannelMember channelMember6 = createChannelMember(member5, false);
         channel3.addChannelMember(channelMember6);
         channel1.addChannelMembers(channelMember1, channelMember2);
         channel2.addChannelMembers(channelMember3, channelMember4, channelMember5);
@@ -86,9 +88,15 @@ class ChannelRepositoryTest extends TestSupporter {
         channelRepository.save(channel2);
         channelRepository.save(channel3);
 
-        List<Channel> channels = channelRepository.findByCategoryAndOrderByMemberCount(ChannelCategory.STUDY.name());
-        assertThat(channels.get(0)).isEqualTo(channel2);
-        assertThat(channels.get(1)).isEqualTo(channel1);
-        assertThat(channels.get(2)).isEqualTo(channel3);
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Channel> channels1 = channelRepository.findByCategoryOrderByMemberCountDesc(ChannelCategory.STUDY, pageable).getContent();
+        assertThat(channels1.get(0)).isEqualTo(channel2);
+        assertThat(channels1.get(1)).isEqualTo(channel1);
+        assertThat(channels1.get(2)).isEqualTo(channel3);
+
+        List<Channel> channels2 = channelRepository.findByCategoryOrderByIdAsc(ChannelCategory.STUDY, pageable).getContent();
+        assertThat(channels2.get(0)).isEqualTo(channel1);
+        assertThat(channels2.get(1)).isEqualTo(channel2);
+        assertThat(channels2.get(2)).isEqualTo(channel3);
     }
 }

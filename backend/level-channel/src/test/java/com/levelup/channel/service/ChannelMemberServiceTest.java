@@ -44,7 +44,6 @@ class ChannelMemberServiceTest extends TestSupporter {
                 1L,
                 member1.getEmail(),
                 member1.getNickname(),
-                member1.getProfileImage().getStoreFileName(),
                 true,
                 false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
@@ -58,7 +57,6 @@ class ChannelMemberServiceTest extends TestSupporter {
                 1L,
                 manager1.getEmail(),
                 manager1.getNickname(),
-                manager1.getProfileImage(),
                 true,
                 false);
 
@@ -76,7 +74,6 @@ class ChannelMemberServiceTest extends TestSupporter {
                 member1.getId(),
                 member1.getEmail(),
                 member1.getNickname(),
-                member1.getProfileImage().getStoreFileName(),
                 true,
                 false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
@@ -91,7 +88,6 @@ class ChannelMemberServiceTest extends TestSupporter {
                 1L,
                 manager1.getEmail(),
                 manager1.getNickname(),
-                manager1.getProfileImage(),
                 true,
                 false))
                 .isInstanceOf(EntityDuplicationException.class);
@@ -106,25 +102,24 @@ class ChannelMemberServiceTest extends TestSupporter {
                 1L,
                 member1.getEmail(),
                 member1.getNickname(),
-                member1.getProfileImage().getStoreFileName(),
                 true,
                 false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
         List<ChannelMember> channelMembers = List.of(
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false),
-                createChannelMember(member1, channel1, false)
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false),
+                createChannelMember(member1, false)
         );
 
         for (ChannelMember channelMember : channelMembers) {
@@ -141,7 +136,6 @@ class ChannelMemberServiceTest extends TestSupporter {
                 manager1.getMemberId(),
                 manager1.getEmail(),
                 manager1.getNickname(),
-                manager1.getProfileImage(),
                 true,
                 false))
                 .isInstanceOf(NoPlaceChannelException.class);
@@ -158,14 +152,13 @@ class ChannelMemberServiceTest extends TestSupporter {
                 member1.getId(),
                 member1.getEmail(),
                 member1.getNickname(),
-                member1.getProfileImage().getStoreFileName(),
                 true,
                 false);
         Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
 
-        ChannelMember channelMember2 = createChannelMember(member1, channel1, false);
-        ChannelMember channelMember3 = createChannelMember(member2, channel1, false);
-        ChannelMember channelMember4 = createChannelMember(member3, channel1, false);
+        ChannelMember channelMember2 = createChannelMember(member1, false);
+        ChannelMember channelMember3 = createChannelMember(member2, false);
+        ChannelMember channelMember4 = createChannelMember(member3, false);
         channel1.addChannelMembers(channelMember2, channelMember3, channelMember4);
 
         given(channelMemberRepository.findById(anyLong())).willReturn(Optional.of(channelMember2));

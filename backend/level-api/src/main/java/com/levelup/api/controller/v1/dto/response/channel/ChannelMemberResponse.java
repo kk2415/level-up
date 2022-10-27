@@ -11,7 +11,6 @@ public class ChannelMemberResponse {
     private Long memberId;
     private String email;
     private String nickname;
-    private String storeFileName;
     private boolean isManager;
 
     protected ChannelMemberResponse() {}
@@ -21,14 +20,12 @@ public class ChannelMemberResponse {
             Long memberId,
             String email,
             String nickname,
-            String storeFileName,
             boolean isManager)
     {
         this.channelMemberId = channelMemberId;
         this.memberId = memberId;
         this.email = email;
         this.nickname = nickname;
-        this.storeFileName = storeFileName;
         this.isManager = isManager;
     }
 
@@ -38,7 +35,6 @@ public class ChannelMemberResponse {
                 dto.getMemberId(),
                 dto.getEmail(),
                 dto.getNickname(),
-                dto.getStoreFileName(),
                 dto.isManager()
         );
     }
@@ -49,7 +45,6 @@ public class ChannelMemberResponse {
                 channelMember.getMemberId(),
                 channelMember.getEmail(),
                 channelMember.getNickname(),
-                channelMember.getProfileImage(),
                 channelMember.getIsManager());
     }
 }

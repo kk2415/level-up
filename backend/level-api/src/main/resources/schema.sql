@@ -2,7 +2,6 @@ use level_up;
 
 drop table if exists hibernate_sequence;
 drop table if exists stopwords;
-drop table if exists file;
 
 drop table if exists channel_article_vote;
 drop table if exists channel_comment_vote;
@@ -36,10 +35,10 @@ create table member (
     gender varchar(6) not null,
     birthday date not null,
     phone varchar(13) not null,
-    upload_file_name varchar(255) not null,
-    store_file_name varchar(255) not null,
     created_at datetime not null default '2022-01-01 00:00:00',
-    updated_at datetime not null default '2022-01-01 00:00:00'
+    updated_at datetime not null default '2022-01-01 00:00:00',
+    created_by varchar(255) not null,
+    updated_by varchar(255) not null
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
 create table role (
@@ -140,8 +139,6 @@ create table channel (
     channel_name varchar(30) not null,
     member_max_number bigint not null,
     channel_category varchar(10) not null,
-    upload_file_name varchar(255) not null,
-    store_file_name varchar(255) not null,
     expected_start_date date not null,
     expected_end_date date not null,
     created_at datetime not null default '2022-01-01 00:00:00',
@@ -152,7 +149,6 @@ create table channel_member (
     channel_member_id bigint not null auto_increment primary key,
     email varchar(255) not null,
     nickname varchar(255) not null,
-    profile_image varchar(255) not null,
     is_manager bit(1) not null,
     is_waiting_member bit(1) not null,
     member_id bigint not null,
@@ -209,19 +205,6 @@ create table channel_comment_vote (
     updated_at datetime not null default '2022-01-01 00:00:00',
     index channel_member_id (channel_member_id),
     index channel_comment_id (channel_comment_id)
-) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
-
-#######################################################################################################################
-
-create table file (
-    file_id bigint not null auto_increment primary key,
-    upload_file_name varchar(30) not null,
-    store_file_name varchar(100) not null,
-    article_id bigint not null,
-    channel_id bigint not null,
-    created_at datetime not null default '2022-01-01 00:00:00',
-    updated_at datetime not null default '2022-01-01 00:00:00',
-    constraint file_channel_foreign foreign key (channel_id) references channel(channel_id)
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
 
 #######################################################################################################################

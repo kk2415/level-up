@@ -3,7 +3,7 @@ package com.levelup.api.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.levelup.member.domain.service.dto.AccessToken;
 import com.levelup.member.util.jwt.TokenProvider;
-import com.levelup.member.domain.MemberPrincipal;
+import com.levelup.member.domain.entity.MemberPrincipal;
 import com.levelup.api.controller.v1.dto.request.member.LogInMemberRequest;
 import com.levelup.api.controller.v1.dto.response.member.LogInMemberResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,10 +63,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         MemberPrincipal principal = (MemberPrincipal) authResult.getPrincipal();
         String token = tokenProvider.createAccessToken(principal.getUsername());
 
-        AccessToken accessToken
-                = AccessToken.of(token, tokenProvider.getExpiration(token), tokenProvider.getIssuedAt(token));
-        LogInMemberResponse loginResponse
-                = LogInMemberResponse.of(principal.getId(), principal.getUsername(), accessToken, principal.isAdmin());
+        AccessToken accessToken = AccessToken.of(
+                token,
+                tokenProvider.getExpiration(token),
+                tokenProvider.getIssuedAt(token));
+        LogInMemberResponse loginResponse = LogInMemberResponse.of(
+                principal.getId(),
+                principal.getUsername(),
+                principal.getNickname(),
+                accessToken,
+                principal.isAdmin());
 
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(loginResponse));

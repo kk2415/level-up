@@ -1,7 +1,7 @@
 package com.levelup.api.filter;
 
-import com.levelup.api.controller.v1.dto.response.exception.ExceptionResponse;
 import com.levelup.common.exception.AuthenticationErrorCode;
+import com.levelup.common.web.dto.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

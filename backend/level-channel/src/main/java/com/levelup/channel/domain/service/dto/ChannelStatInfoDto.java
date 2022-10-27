@@ -16,7 +16,6 @@ public class ChannelStatInfoDto {
     private Long memberCount;
     private Long waitingMemberCount;
     private Long postCount;
-    private String thumbnail;
 
     protected ChannelStatInfoDto() {}
 
@@ -26,8 +25,7 @@ public class ChannelStatInfoDto {
             String date,
             Long memberCount,
             Long waitingMemberCount,
-            Long postCount,
-            String thumbnail)
+            Long postCount)
     {
         this.channelName = channelName;
         this.manager = manager;
@@ -35,7 +33,6 @@ public class ChannelStatInfoDto {
         this.memberCount = memberCount;
         this.waitingMemberCount = waitingMemberCount;
         this.postCount = postCount;
-        this.thumbnail = thumbnail;
     }
 
     public static ChannelStatInfoDto from(Channel channel) {
@@ -49,8 +46,7 @@ public class ChannelStatInfoDto {
             channel.getChannelMembers().stream()
                     .filter(ChannelMember::getIsWaitingMember)
                     .count(),
-            (long) channel.getChannelArticles().size(),
-            channel.getThumbnail().getStoreFileName()
+            (long) channel.getChannelArticles().size()
         );
     }
 }
