@@ -4,8 +4,8 @@ server:
 cloud:
   aws:
     credentials:
-      access-key: AKIATUP22VXYBWZL3GAV
-      secret-key: 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
+      access-key: ENC(tjOm3RFJBf/o8xVrARBnEeIuFr0Xlwk13NsNKfC845Y=)
+      secret-key: ENC(lcTYXZymgxQ1O7jjCj/eAEFrmIELJ9BL78biwGJTyMJLamhrWO/DxRmRoOjrqthW84Voi7rzpgQ=)
     s3:
       bucket: mylevelupbuckets3
     region:
