@@ -4,8 +4,8 @@ server:
 cloud:
   aws:
     credentials:
-      access-key: AKIATUP22VXYIKOSV45L
-      secret-key: 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
+      access-key: ENC(q1XudM9h+EibBuL782x29vfYI9SUQ/XgcODfYf0kipw=)
+      secret-key: ENC(f+2QHHoe7rHJ+h8wQ+JbvtOU91GIzfwnNki7D4T4x5EKbmEgVizdgL+9WbWHn56tOPFZvr7vNQo=)
     s3:
       bucket: mylevelupbuckets3
     region:
@@ -22,7 +22,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3308/image?serverTimezone=Asia/Seoul
     username: root
-    password: Dudrhkd10ck!
+    password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
 
   jpa:
     hibernate:
@@ -40,7 +40,7 @@ spring:
 
   mail:
     username: koria789@gmail.com
-    password: dlxpnbkbcbaorjuh
+    password: ENC(EhKyuZGqPjEGv/aFgLCwxnik+I8z+cTkjHNtWZanjok=)
     host: smtp.gmail.com
     port: 587
     properties:
@@ -53,9 +53,9 @@ spring:
             enable: true
             required: true
 
-file:
-  local_dir: C:/Task/study/levelup
-  s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
+jasypt:
+  encryptor:
+    bean: encryptorBean
 
 #actuator 설정
 management:
@@ -63,3 +63,8 @@ management:
     web:
       exposure:
         include: refresh, health, beans, busrefresh
+
+file:
+  local_dir: C:/Task/study/levelup
+  s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
+

@@ -69,6 +69,8 @@ subprojects {
         jmhImplementation 'org.openjdk.jmh:jmh-core:1.35'
         jmhImplementation 'org.openjdk.jmh:jmh-generator-annprocess:1.35'
 
+        implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
+
         implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
         runtimeOnly 'com.h2database:h2'
