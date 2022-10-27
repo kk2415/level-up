@@ -11,22 +11,26 @@ import {UserInfo} from "../../api/const/UserInfo";
 
 import '../../css/mypage.css'
 import {Role} from "../../api/const/Role";
+import {FileService} from "../../api/service/file/FileService";
 
 const MyPage = () => {
     const navigate = useNavigate();
 
     const loadMember = async () => {
-        let result = await MemberService.get(localStorage.getItem(UserInfo.ID))
-        if (!result) {
+        let memberResponse = await MemberService.get(memberId)
+        if (!memberResponse) {
             alert('권한이 없습니다')
             navigate('/')
         }
 
-        setMember(result)
+        let fileResponse = await FileService.get(memberId, 'MEMBER');
+        setCurProfileImageUrl(fileResponse.uploadFile)
+
+        setMember(memberResponse)
     }
 
     const handleChangeFile = (event) => {
-        setMyPageFile(event.target.files[0])
+        setUpdateProfileImage(event.target.files[0])
     }
 
     const handleModify = () => {
@@ -46,8 +50,12 @@ const MyPage = () => {
                 updateMember.nickname = member.nickname
             }
 
-            let result = await MemberService.modify(member.id, updateMember, myPageFile);
+            let result = await MemberService.modify(member.id, updateMember, curProfileImageUrl);
             if (result) {
+                if (updateProfileImage) {
+                    await FileService.update(member.id, 'MEMBER', updateProfileImage)
+                }
+
                 alert('수정되었습니다')
             }
 
@@ -75,7 +83,9 @@ const MyPage = () => {
         }
     }
 
-    const [myPageFile, setMyPageFile] = useState(null)
+    const [memberId, setMemberId] = useState(localStorage.getItem(UserInfo.ID))
+    const [updateProfileImage, setUpdateProfileImage] = useState(null)
+    const [curProfileImageUrl, setCurProfileImageUrl] = useState(null)
     const [onModifyButton, setOnModifyButton] = useState(false)
     const [member, setMember] = useState(null)
 
@@ -91,10 +101,10 @@ const MyPage = () => {
                     <Row className='d-flex justify-content-center align-items-center'>
                         <Form id='signUpForm' className='mt-5' style={{width: "80%"}}>
                             {
-                                member.uploadFile &&
+                                curProfileImageUrl &&
                                 <Container className='w-100' style={{ textAlign: "center", width: "10xp", height: "10xp" }}>
                                     <Image thumbnail roundedCircle fluid
-                                           src={S3_URL + member.uploadFile.storeFileName}
+                                           src={S3_URL + curProfileImageUrl.storeFileName}
                                            className='mb-5 img-fluid'
                                            id='profileImage'
                                            style={{width: "30%", height: "30%", objectFit: "contain"}}

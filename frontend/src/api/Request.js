@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {BACKEND_URL} from "./const/BackEndHost.js"
+import {IMAGE_SERVER_URL, SERVICE_APP_URL} from "./const/BackEndHost.js"
 import {UserInfo} from './const/UserInfo'
 import {useNavigate as navigate} from 'react-router-dom'
 
@@ -20,7 +20,7 @@ export async function send(method, url, requestBody) {
 	}
 
 	let options = {
-		url: BACKEND_URL + url,
+		url: url,
 		method: method,
 		headers : headers,
 		async: false,
@@ -83,7 +83,7 @@ const requestAccessToken = (accessToken) => {
 	}
 
 	$.ajax({
-		url: BACKEND_URL + '/api/v1/access-token',
+		url: SERVICE_APP_URL + '/api/v1/access-token',
 		type: 'POST',
 		data: JSON.stringify(data),
 		contentType: 'application/json',
@@ -116,7 +116,7 @@ export async function sendMultiPart(method, url, requestBody) {
 	}
 
 	let options = {
-		url: BACKEND_URL + url,
+		url: url,
 		method: method,
 		headers : headers,
 		async: false,

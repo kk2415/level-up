@@ -4,11 +4,11 @@ import {useNavigate} from 'react-router-dom'
 import { GoogleLogin } from 'react-google-login'
 import $ from 'jquery'
 
-import { MemberService } from '../../api/service/member/MemberService'
 import { SignUpService } from '../../api/service/member/SignUpService'
 import {createMemberValidation as validation} from '../../api/Validation'
 import {EmailService} from "../../api/service/member/EmailService";
 import {LogInService} from "../../api/service/member/LogInService";
+import {FileService} from "../../api/service/file/FileService";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -22,7 +22,6 @@ const SignUp = () => {
 
     async function HandleSignUpButton() {
         let formData = new FormData(document.getElementById('signUpForm'));
-        // let profileImage = await MemberService.uploadProfile(file)
 
         let member = {
             email : formData.get('email'),
@@ -35,9 +34,11 @@ const SignUp = () => {
         }
 
         if (validate(member)) {
-            let newMember = await SignUpService.signUp(member, file);
+            let newMember = await SignUpService.signUp(member);
 
             if (newMember) {
+                await FileService.create(newMember.id, 'MEMBER', file);
+
                 let logInMember = {
                     email : formData.get('email'),
                     password : formData.get('password'),

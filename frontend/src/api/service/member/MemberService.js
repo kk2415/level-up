@@ -1,8 +1,9 @@
 import {send, sendMultiPart} from "../../Request"
 import {uploadFile} from "../../UploadFile";
 import {HttpMethod} from "../../const/HttpMethod";
+import {SERVICE_APP_URL} from "../../const/BackEndHost";
 
-const urlPrefix = '/api/v1/members/'
+const urlPrefix = SERVICE_APP_URL + '/api/v1/members/'
 
 export const MemberService = {
 

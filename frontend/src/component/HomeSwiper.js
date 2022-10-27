@@ -12,6 +12,8 @@ import ChannelService from "../api/service/channel/ChannelService";
 import $ from "jquery";
 import CardSlide from "./CardSlide";
 import {UserInfo} from "../api/const/UserInfo";
+import {ChannelSort} from "../api/const/ChannelSort";
+import {FileService} from "../api/service/file/FileService";
 
 const StudySwiper = ({category}) => {
 	const navigate = useNavigate();
@@ -19,13 +21,13 @@ const StudySwiper = ({category}) => {
 	const orderByCreatedAtButton = category + 'orderByCreatedAt'
 
 	const handleOrderByPopularButton = () => {
-		setOrderBy('memberCount')
+		setSort(ChannelSort.MEMBER_COUNT)
 		$('#' + orderByPopularButton).attr('checked', true)
 		$('#' + orderByCreatedAtButton).attr('checked', false)
 	}
 
 	const handleOrderByCreatedAtButton = () => {
-		setOrderBy('id')
+		setSort(ChannelSort.ID)
 		$('#' + orderByCreatedAtButton).attr('checked', true)
 		$('#' + orderByPopularButton).attr('checked', false)
 	}
@@ -40,21 +42,40 @@ const StudySwiper = ({category}) => {
 	}
 
 	const loadChannels = async (category) => {
-		const pageable = 'page=0&size=10&sort=' + orderBy + ',desc'
-		let result = await ChannelService.getByCategory(category, orderBy, pageable);
+		let result = await ChannelService.getByCategory(category, sort, 0, 10);
 		if (result) {
+			let channelIdList = parseChannelIds(result.content)
+			let thumbnailFiles = await FileService.getFiles(channelIdList, 'CHANNEL');
+
+			combineChannelAndThumbnailUrl(result.content, thumbnailFiles)
 			setChannels(result.content)
 		}
 	}
 
+	const combineChannelAndThumbnailUrl = (channels, thumbnailFiles) => {
+		channels.forEach((channel, index) => {
+			let file = thumbnailFiles.filter(file => file.ownerId === channel.id);
+			channel.storeFileName = file[0].uploadFile.storeFileName
+		})
+	}
+
+	const parseChannelIds = (channels) => {
+		let channelIdList = []
+
+		channels.forEach((object, index) => {
+			channelIdList.push(object.id)
+		})
+		return channelIdList
+	}
+
 	const [channels, setChannels] = useState([])
-	const [orderBy, setOrderBy] = useState('id')
+	const [sort, setSort] = useState(ChannelSort.ID)
 
 	useLayoutEffect(() => {
 		loadChannels(category)
 		$('#' + orderByCreatedAtButton).attr('checked', true)
 
-	}, [orderBy])
+	}, [sort])
 
 	return (
 	  <>

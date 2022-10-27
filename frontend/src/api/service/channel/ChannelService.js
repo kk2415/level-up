@@ -1,22 +1,18 @@
 import {send, sendMultiPart} from "../../Request"
-import {uploadFile} from "../../UploadFile";
 import {HttpMethod} from "../../const/HttpMethod";
+import {SERVICE_APP_URL} from "../../const/BackEndHost";
 
-const urlPrefix = '/api/v1/channels/'
+const urlPrefix = SERVICE_APP_URL + '/api/v1/channels'
 const ChannelService = {
 
-    create: async (channel, memberId, file) => {
+    create: async (channel, memberId) => {
         let result = false
         const url = urlPrefix + '?member=' + memberId
 
-        let form = new FormData();
-        form.append('request', new Blob([JSON.stringify(channel)], { type: "application/json" }))
-        form.append('thumbnail', file)
-
-        await sendMultiPart(HttpMethod.POST, url, form)
-            .then(() => {
+        await send(HttpMethod.POST, url, channel)
+            .then((data) => {
                 alert('채널을 만들었습니다.')
-                result = true
+                result = data
             })
             .catch((error) => {
                 if (error.status === 403) {
@@ -28,15 +24,9 @@ const ChannelService = {
         return result
     },
 
-    uploadThumbnail: async (thumbnail) => {
-        const url = urlPrefix + 'thumbnail'
-
-        return await uploadFile(HttpMethod.POST , url, thumbnail)
-    },
-
     get: async (channelId) => {
         let result = {}
-        const url = urlPrefix + channelId
+        const url = urlPrefix + '/' + channelId
 
         await send(HttpMethod.GET, url)
             .then((data) => {
@@ -50,9 +40,9 @@ const ChannelService = {
         return result;
     },
 
-    getByCategory: async (category, sort, pageable) => {
+    getByCategory: async (category, sort, page, size) => {
         let result = {}
-        const url = urlPrefix + '?category=' + category + '&order=' + sort + '&' + pageable
+        const url = urlPrefix + '?category=' + category + '&sort=' + sort + '&page=' + page + '&size=' + size
 
         await send(HttpMethod.GET, url)
             .then((data) => {
@@ -68,7 +58,7 @@ const ChannelService = {
 
     getManager: async (memberId, channelId) => {
         let result = {}
-        const url = urlPrefix + channelId + '/manager?member=' + memberId
+        const url = urlPrefix + '/' + channelId + '/manager?member=' + memberId
 
         await send(HttpMethod.GET, url)
             .then((data) => {
@@ -82,15 +72,11 @@ const ChannelService = {
         return result
     },
 
-    modify: async (channel, file, channelId) => {
+    modify: async (channel, channelId) => {
         let result = false
-        const url = urlPrefix + channelId
+        const url = urlPrefix + '/' + channelId
 
-        let form = new FormData();
-        form.append('request', new Blob([JSON.stringify(channel)], { type: "application/json" }))
-        form.append('thumbnail', file)
-
-        await sendMultiPart(HttpMethod.PATCH, url, form)
+        await send(HttpMethod.PATCH, url, channel)
             .then(() => {
                 result = true
             })
@@ -103,7 +89,7 @@ const ChannelService = {
 
     delete: async (channelId, category) => {
         let result = true
-        const url = urlPrefix + channelId + '?category=' + category
+        const url = urlPrefix + '/' + channelId + '?category=' + category
 
         await send(HttpMethod.DELETE, url)
             .then(() => {
