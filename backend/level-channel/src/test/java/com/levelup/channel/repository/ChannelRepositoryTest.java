@@ -8,9 +8,6 @@ import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,17 +30,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Import(TestJpaConfig.class)
 @DataJpaTest
-@ContextConfiguration(classes = {ChannelApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ChannelApplicationTest.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ChannelRepositoryTest extends TestSupporter {
 
-    @Autowired MemberRepository memberRepository;
     @Autowired ChannelRepository channelRepository;
     @Autowired ChannelMemberRepository channelMemberRepository;
 
     @BeforeEach
     public void before() {
-        memberRepository.deleteAll();
         channelRepository.deleteAll();
         channelMemberRepository.deleteAll();
     }
@@ -51,36 +46,19 @@ class ChannelRepositoryTest extends TestSupporter {
     @DisplayName("채널 카테고리별 조회")
     @Test
     void findByCategoryOrderByMemberCount() {
-        Member manager1 = createMember("manager1", "manager1");
-        Member manager2 = createMember("manager2", "manager2");
-        Member manager3 = createMember("manager3", "manager3");
-        Member member1 = createMember("member1", "member1");
-        Member member2 = createMember("member2", "member2");
-        Member member3 = createMember("member3", "member3");
-        Member member4 = createMember("member4", "member4");
-        Member member5 = createMember("member5", "member5");
-        memberRepository.save(manager1);
-        memberRepository.save(manager2);
-        memberRepository.save(manager3);
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
-        memberRepository.save(member4);
-        memberRepository.save(member5);
-
-        ChannelMember channelManager1 = createChannelMember(manager1, true, false);
-        ChannelMember channelManager2 = createChannelMember(manager2, true, false);
-        ChannelMember channelManager3 = createChannelMember(manager3, true, false);
-
+        ChannelMember channelManager1 = createChannelMember(1L, "manager1", "manager1", true, false);
+        ChannelMember channelManager2 = createChannelMember(2L, "manager2", "manager2", true, false);
+        ChannelMember channelManager3 = createChannelMember(3L, "manager3", "manager3", true, false);
         Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
         Channel channel2 = createChannel(channelManager2, "test channel2", ChannelCategory.STUDY);
         Channel channel3 = createChannel(channelManager3, "test channel3", ChannelCategory.STUDY);
-        ChannelMember channelMember1 = createChannelMember(member1, false);
-        ChannelMember channelMember2 = createChannelMember(member2, false);
-        ChannelMember channelMember3 = createChannelMember(member3, false);
-        ChannelMember channelMember4 = createChannelMember(member4, false);
-        ChannelMember channelMember5 = createChannelMember(member5, false);
-        ChannelMember channelMember6 = createChannelMember(member5, false);
+
+        ChannelMember channelMember1 = createChannelMember(4L, "member1", "member1", false, false);
+        ChannelMember channelMember2 = createChannelMember(5L, "member2", "member2", false, false);
+        ChannelMember channelMember3 = createChannelMember(6L, "member2", "member2", false, false);
+        ChannelMember channelMember4 = createChannelMember(7L, "member2", "member2", false, false);
+        ChannelMember channelMember5 = createChannelMember(8L, "member2", "member2", false, false);
+        ChannelMember channelMember6 = createChannelMember(9L, "member2", "member2", false, false);
         channel3.addChannelMember(channelMember6);
         channel1.addChannelMembers(channelMember1, channelMember2);
         channel2.addChannelMembers(channelMember3, channelMember4, channelMember5);

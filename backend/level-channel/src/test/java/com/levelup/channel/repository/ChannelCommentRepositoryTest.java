@@ -12,9 +12,6 @@ import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.domain.repository.comment.ChannelCommentRepository;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,16 +27,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DisplayName("채널 댓글 테스트")
+@DisplayName("채널 댓글 레포지토리 테스트")
 @Transactional
 @ActiveProfiles("test")
 @Import(TestJpaConfig.class)
 @DataJpaTest
-@ContextConfiguration(classes = {ChannelApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ChannelApplicationTest.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ChannelCommentRepositoryTest extends TestSupporter {
 
-    @Autowired private MemberRepository memberRepository;
     @Autowired private ChannelMemberRepository channelMemberRepository;
     @Autowired private ChannelRepository channelRepository;
     @Autowired private ChannelArticleRepository channelArticleRepository;
@@ -47,7 +43,6 @@ class ChannelCommentRepositoryTest extends TestSupporter {
 
     @BeforeEach
     public void before() {
-        memberRepository.deleteAll();
         channelMemberRepository.deleteAll();
         channelRepository.deleteAll();
         channelArticleRepository.deleteAll();
@@ -58,10 +53,7 @@ class ChannelCommentRepositoryTest extends TestSupporter {
     @Test
     void findByArticleId() {
         // Given
-        Member member = createMember("test", "test");
-        memberRepository.save(member);
-
-        ChannelMember channelMember = createChannelMember(member, true, false);
+        ChannelMember channelMember = createChannelMember(1L, "member1", "member1", true, false);
         Channel channel = createChannel(channelMember, "test channel", ChannelCategory.STUDY);
         channelRepository.save(channel);
 
@@ -83,7 +75,7 @@ class ChannelCommentRepositoryTest extends TestSupporter {
         // Then
         assertThat(comments.size()).isEqualTo(2);
         assertThat(comments.get(0).getChannelMember().getId()).isEqualTo(channelMember.getId());
-        assertThat(comments.get(0).getChannelMember().getMemberId()).isEqualTo(member.getId());
+        assertThat(comments.get(0).getChannelMember().getMemberId()).isEqualTo(channelMember.getMemberId());
         assertThat(comments.get(0).getArticle().getId()).isEqualTo(article1.getId());
     }
 
@@ -91,10 +83,7 @@ class ChannelCommentRepositoryTest extends TestSupporter {
     @Test
     void findReplyByParentId() {
         // Given
-        Member member = createMember("test", "test");
-        memberRepository.save(member);
-
-        ChannelMember channelMember = createChannelMember(member, true, false);
+        ChannelMember channelMember = createChannelMember(1L, "member1", "member1", true, false);
         Channel channel = createChannel(channelMember, "test channel", ChannelCategory.STUDY);
         channelRepository.save(channel);
 

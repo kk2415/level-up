@@ -2,6 +2,7 @@ package com.levelup.channel.repository;
 
 import com.levelup.channel.ChannelApplicationTest;
 import com.levelup.channel.TestSupporter;
+import com.levelup.channel.config.TestJasyptConfig;
 import com.levelup.channel.config.TestJpaConfig;
 import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.entity.Channel;
@@ -10,9 +11,8 @@ import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
-import com.levelup.member.MemberApplication;
-import com.levelup.member.domain.entity.Member;
-import com.levelup.member.domain.repository.MemberRepository;
+import com.levelup.common.CommonApplication;
+import com.levelup.common.config.JasyptConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -32,13 +32,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("채널 게시글 레포지토리 테스트")
 @Transactional
 @ActiveProfiles("test")
-@Import(TestJpaConfig.class)
+@Import({TestJpaConfig.class, JasyptConfig.class})
 @DataJpaTest
-@ContextConfiguration(classes = {ChannelApplicationTest.class, MemberApplication.class})
+@ContextConfiguration(classes = {ChannelApplicationTest.class, CommonApplication.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ChannelArticleRepositoryTest extends TestSupporter {
 
-    @Autowired MemberRepository memberRepository;
     @Autowired ChannelRepository channelRepository;
     @Autowired ChannelMemberRepository channelMemberRepository;
     @Autowired ChannelArticleRepository channelArticleRepository;
@@ -46,7 +45,6 @@ class ChannelArticleRepositoryTest extends TestSupporter {
     @BeforeEach
     public void before() {
         channelRepository.deleteAll();
-        memberRepository.deleteAll();
         channelMemberRepository.deleteAll();
         channelArticleRepository.deleteAll();
     }
@@ -55,25 +53,18 @@ class ChannelArticleRepositoryTest extends TestSupporter {
     @DisplayName("채널 게시글 제목 검색")
     @Test
     void findByChannelIdAndTitle() {
-        Member manager1 = createMember("manager1", "manager1");
-        Member manager2 = createMember("manager2", "manager2");
-        Member manager3 = createMember("manager3", "manager3");
-        memberRepository.save(manager1);
-        memberRepository.save(manager2);
-        memberRepository.save(manager3);
+        ChannelMember channelManager1 = createChannelMember(1L, "manager1", "manager1", true, false);
+        ChannelMember channelManager2 = createChannelMember(2L, "manager2", "manager2", true, false);
+        ChannelMember channelManager3 = createChannelMember(3L, "manager3", "manager3", true, false);
 
-        ChannelMember channelMember1 = createChannelMember(manager1, true, false);
-        ChannelMember channelMember2 = createChannelMember(manager2, true, false);
-        ChannelMember channelMember3 = createChannelMember(manager3, true, false);
-
-        Channel channel1 = createChannel(channelMember1, "test channel1", ChannelCategory.STUDY);
-        Channel channel2 = createChannel(channelMember2, "test channel2", ChannelCategory.PROJECT);
+        Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
+        Channel channel2 = createChannel(channelManager2, "test channel2", ChannelCategory.PROJECT);
         channelRepository.save(channel1);
         channelRepository.save(channel2);
 
-        ChannelArticle channelPost1 = createChannelArticle(channelMember2, channel1, "test post1 in channel1");
-        ChannelArticle channelPost2 = createChannelArticle(channelMember1, channel2, "test post2 in channel2");
-        ChannelArticle channelPost3 = createChannelArticle(channelMember2, channel2, "test post2 in channel2");
+        ChannelArticle channelPost1 = createChannelArticle(channelManager2, channel1, "test post1 in channel1");
+        ChannelArticle channelPost2 = createChannelArticle(channelManager1, channel2, "test post2 in channel2");
+        ChannelArticle channelPost3 = createChannelArticle(channelManager3, channel2, "test post2 in channel2");
         channelArticleRepository.save(channelPost1);
         channelArticleRepository.save(channelPost2);
         channelArticleRepository.save(channelPost3);
@@ -87,35 +78,29 @@ class ChannelArticleRepositoryTest extends TestSupporter {
     @DisplayName("채널 게시글 작성자 검색")
     @Test
     void findByChannelIdAndNickname() {
-        Member manager1 = createMember("manager1", "manager1");
-        Member manager2 = createMember("manager2", "manager2");
-        Member manager3 = createMember("manager3", "manager3");
-        memberRepository.save(manager1);
-        memberRepository.save(manager2);
-        memberRepository.save(manager3);
+        ChannelMember channelManager1 = createChannelMember(1L, "manager1", "manager1", true, false);
+        ChannelMember channelManager2 = createChannelMember(2L, "manager2", "manager2", true, false);
+        ChannelMember channelManager3 = createChannelMember(3L, "manager3", "manager3", true, false);
 
-        ChannelMember channelMember1 = createChannelMember(manager1, true, false);
-        ChannelMember channelMember2 = createChannelMember(manager2, true, false);
-        ChannelMember channelMember3 = createChannelMember(manager3, true, false);
-
-        Channel channel1 = createChannel(channelMember1, "test channel1", ChannelCategory.STUDY);
-        Channel channel2 = createChannel(channelMember2, "test channel2", ChannelCategory.PROJECT);
+        Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
+        Channel channel2 = createChannel(channelManager2, "test channel2", ChannelCategory.PROJECT);
+        channel2.addChannelMember(channelManager3);
         channelRepository.save(channel1);
         channelRepository.save(channel2);
 
-        ChannelArticle channelPost1 = createChannelArticle(channelMember2, channel1, "test post1 in channel1");
-        ChannelArticle channelPost2 = createChannelArticle(channelMember1, channel2, "test post1 in channel2");
-        ChannelArticle channelPost3 = createChannelArticle(channelMember2, channel2, "test post2 in channel2");
-        channelArticleRepository.save(channelPost1);
-        channelArticleRepository.save(channelPost2);
-        channelArticleRepository.save(channelPost3);
+        ChannelArticle channelArticle1 = createChannelArticle(channelManager2, channel1, "test post1 in channel1");
+        ChannelArticle channelArticle2 = createChannelArticle(channelManager1, channel2, "test post1 in channel2");
+        ChannelArticle channelArticle3 = createChannelArticle(channelManager3, channel2, "test post2 in channel2");
+        channelArticleRepository.save(channelArticle1);
+        channelArticleRepository.save(channelArticle2);
+        channelArticleRepository.save(channelArticle3);
 
-        Page<ChannelArticle> channelPosts = channelArticleRepository.findByChannelIdAndNickname(
-                channel2.getId(), manager1.getNickname(), PageRequest.of(0, 10));
+        Page<ChannelArticle> channelArticles = channelArticleRepository.findByChannelIdAndNickname(
+                channel2.getId(), channelManager1.getNickname(), PageRequest.of(0, 10));
 
-        assertThat(channelPosts.getTotalElements()).isEqualTo(1);
-        for (ChannelArticle channelPost : channelPosts) {
-            assertThat(channelPost.getChannelMember().getEmail()).isEqualTo(manager1.getEmail());
+        assertThat(channelArticles.getTotalElements()).isEqualTo(1);
+        for (ChannelArticle channelPost : channelArticles) {
+            assertThat(channelPost.getChannelMember().getEmail()).isEqualTo(channelManager1.getEmail());
         }
     }
 }

@@ -9,7 +9,6 @@ import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.service.dto.CreateChannelDto;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.event.events.EventPublisher;
-import com.levelup.member.domain.entity.Member;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,21 +52,15 @@ class ChannelServiceTest extends TestSupporter {
     @Test
     void save() throws IOException {
         // Given
-        Member member1 = createMember(1L, "manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(
-                1L,
-                member1.getEmail(),
-                member1.getNickname(),
-                true,
-                false);
-        Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
+        ChannelMember channelManager1 = createChannelMember(1L, 1L, "manager1", "manager1", true, false);
+        Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
 
         CreateChannelDto channelDto = CreateChannelDto.of(
                 1L,
                 1L,
                 channel1.getName(),
-                member1.getNickname(),
-                member1.getEmail(),
+                channelManager1.getNickname(),
+                channelManager1.getEmail(),
                 channel1.getMemberMaxNumber(),
                 channel1.getDescription(),
                 channel1.getDescription(),
@@ -78,12 +71,12 @@ class ChannelServiceTest extends TestSupporter {
         );
 
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(ChannelCreatedEvent.class)))
-                .thenReturn(ChannelCreatedEvent.of(manager1.getMemberId()));
+                .thenReturn(ChannelCreatedEvent.of(channelManager1.getMemberId()));
 
         given(channelRepository.save(any(Channel.class))).willReturn(channelDto.toEntity());
 
         // When
-        ChannelDto newChannelDto = channelService.save(channelDto, member1.getId());
+        ChannelDto newChannelDto = channelService.save(channelDto, channelManager1.getId());
 
         // Then
         assertThat(newChannelDto.getManagerId()).isEqualTo(1L);

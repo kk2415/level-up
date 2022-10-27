@@ -8,7 +8,6 @@ import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelCategory;
 import com.levelup.channel.domain.entity.ChannelArticle;
 import com.levelup.common.exception.EntityNotFoundException;
-import com.levelup.member.domain.entity.Member;
 import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,10 +35,9 @@ class ChannelArticleServiceTest extends TestSupporter {
     @Test
     void get() {
         // Given
-        Member member1 = createMember("manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(member1, true, false);
-        Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
-        ChannelArticle channelArticle1 = createChannelArticle(manager1, channel1, "test post1 in channel2");
+        ChannelMember channelManager1 = createChannelMember(1L, "manager1", "manager1", true, false);
+        Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
+        ChannelArticle channelArticle1 = createChannelArticle(channelManager1, channel1, "test post1 in channel2");
 
         // When
         given(mockChannelArticleRepository.findById(anyLong())).willReturn(Optional.of(channelArticle1));
@@ -53,18 +51,17 @@ class ChannelArticleServiceTest extends TestSupporter {
     @Test
     void update() {
         // Given
-        Member member1 = createMember(1L, "manager1", "manager1");
+        ChannelMember channelManager1 = createChannelMember(1L, 1L, "manager1", "manager1", true, false);
+        ChannelMember channelManager2 = createChannelMember(2L, 2L, "manager2", "manager2", true, false);
+        Channel channel1 = createChannel(1L, channelManager1, "test channel1", ChannelCategory.STUDY);
+        ChannelArticle channelArticle1 = createChannelArticle(channelManager1, channel1, "unchanged title");
 
-        ChannelMember manager1 = createChannelMember(1L, member1, true, false);
-        Channel channel1 = createChannel(1L, manager1, "test channel1", ChannelCategory.STUDY);
-        ChannelArticle channelArticle1 = createChannelArticle(manager1, channel1, "unchanged title");
-
-        ChannelArticleDto updateDto = ChannelArticleDto.from(createChannelArticle(manager1, channel1, "changed title"));
+        ChannelArticleDto updateDto = ChannelArticleDto.from(createChannelArticle(channelManager1, channel1, "changed title"));
 
         given(mockChannelArticleRepository.findById(anyLong())).willReturn(Optional.of(channelArticle1));
 
         // When
-        ChannelArticleDto newChannelDto = channelArticleService.update(updateDto, 1L, manager1.getMemberId(), channel1.getId());
+        ChannelArticleDto newChannelDto = channelArticleService.update(updateDto, 1L, channelManager1.getMemberId(), channel1.getId());
 
         // Then
         assertThat(newChannelDto.getTitle()).isEqualTo(updateDto.getTitle());
@@ -74,21 +71,18 @@ class ChannelArticleServiceTest extends TestSupporter {
     @Test
     void updateFail() {
         // Given
-        Member member1 = createMember(1L, "manager1", "manager1");
-        Member member2 = createMember(2L, "manager1", "manager1");
-        ChannelMember manager1 = createChannelMember(1L, member1, true, false);
-        ChannelMember manager2 = createChannelMember(2L, member1, true, false);
+        ChannelMember channelManager1 = createChannelMember(1L, 1L, "manager1", "manager1", true, false);
+        ChannelMember channelManager2 = createChannelMember(2L, 2L, "manager2", "manager2", true, false);
 
+        Channel channel1 = createChannel(channelManager1, "test channel1", ChannelCategory.STUDY);
+        ChannelArticle channelPost1 = createChannelArticle(channelManager1, channel1, "unchanged title");
 
-        Channel channel1 = createChannel(manager1, "test channel1", ChannelCategory.STUDY);
-        ChannelArticle channelPost1 = createChannelArticle(manager1, channel1, "unchanged title");
-
-        ChannelArticleDto updateDto = ChannelArticleDto.from(createChannelArticle(manager1, channel1, "changed title"));
+        ChannelArticleDto updateDto = ChannelArticleDto.from(createChannelArticle(channelManager1, channel1, "changed title"));
 
         given(mockChannelArticleRepository.findById(anyLong())).willReturn(Optional.of(channelPost1));
 
         // When & than
-        assertThatThrownBy(() -> channelArticleService.update(updateDto, 1L, manager2.getId(), channel1.getId()))
+        assertThatThrownBy(() -> channelArticleService.update(updateDto, 1L, channelManager2.getId(), channel1.getId()))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 }
