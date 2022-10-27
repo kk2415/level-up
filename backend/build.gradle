@@ -63,13 +63,6 @@ subprojects {
         implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
         implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.4'
         implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-
-        implementation 'org.springframework.cloud:spring-cloud-starter-config'
-        implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-
         implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
         implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.2'
@@ -83,7 +76,6 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
 
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testImplementation 'org.springframework.security:spring-security-test'
         testImplementation 'org.mockito:mockito-inline:3.6.0'
     }
  
