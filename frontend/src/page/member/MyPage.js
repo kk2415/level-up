@@ -24,7 +24,9 @@ const MyPage = () => {
         }
 
         let fileResponse = await FileService.get(memberId, 'MEMBER');
-        setCurProfileImageUrl(fileResponse.uploadFile)
+        if (fileResponse) {
+            setCurProfileImageUrl(fileResponse.uploadFile)
+        }
 
         setMember(memberResponse)
     }
