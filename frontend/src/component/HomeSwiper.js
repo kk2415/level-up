@@ -14,6 +14,7 @@ import CardSlide from "./CardSlide";
 import {UserInfo} from "../api/const/UserInfo";
 import {ChannelSort} from "../api/const/ChannelSort";
 import {FileService} from "../api/service/file/FileService";
+import {DEFAULT_IMAGE_URL} from "../api/const/BackEndHost";
 
 const StudySwiper = ({category}) => {
 	const navigate = useNavigate();
@@ -53,10 +54,17 @@ const StudySwiper = ({category}) => {
 	}
 
 	const combineChannelAndThumbnailUrl = (channels, thumbnailFiles) => {
-		channels.forEach((channel, index) => {
-			let file = thumbnailFiles.filter(file => file.ownerId === channel.id);
-			channel.storeFileName = file[0].uploadFile.storeFileName
-		})
+		if (thumbnailFiles) {
+			channels.forEach((channel, index) => {
+				let file = thumbnailFiles.filter(file => file.ownerId === channel.id);
+				channel.storeFileName = DEFAULT_IMAGE_URL
+				if (file && file[0]) {
+					channel.storeFileName = file[0].uploadFile.storeFileName
+					console.log(channel.storeFileName)
+					console.log(DEFAULT_IMAGE_URL)
+				}
+			})
+		}
 	}
 
 	const parseChannelIds = (channels) => {
