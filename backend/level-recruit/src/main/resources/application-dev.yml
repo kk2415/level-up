@@ -1,17 +1,5 @@
 server:
-  port: 8090
-
-cloud:
-  aws:
-    credentials:
-      access-key: ENC(tjOm3RFJBf/o8xVrARBnEeIuFr0Xlwk13NsNKfC845Y=)
-      secret-key: ENC(lcTYXZymgxQ1O7jjCj/eAEFrmIELJ9BL78biwGJTyMJLamhrWO/DxRmRoOjrqthW84Voi7rzpgQ=)
-    s3:
-      bucket: mylevelupbuckets3
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
+  port: 8070
 
 spring:
   sql:
@@ -20,7 +8,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3308/image?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3309/recruit?serverTimezone=Asia/Seoul
     username: root
     password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
 
@@ -55,7 +43,8 @@ spring:
 
 jasypt:
   encryptor:
-    bean: imageEncryptorBean
+    password: p3uVnuqs1asQda
+    bean: recruitEncryptorBean
 
 #actuator 설정
 management:

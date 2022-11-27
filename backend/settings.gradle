@@ -6,4 +6,4 @@ include 'level-article'
 include 'level-member'
 include 'level-common'
 include 'level-image'
-
+include 'level-recruit'

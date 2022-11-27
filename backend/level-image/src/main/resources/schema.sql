@@ -1,5 +1,14 @@
 use image;
 
+DROP TABLE IF EXISTS joke;
+CREATE TABLE joke(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    joke_text TEXT,
+    joke_date DATE NOT NULL
+) DEFAULT CHARSET=utf8  ENGINE=InnoDB;
+
+INSERT INTO joke(joke_text, joke_date) VALUES ('hello', '2022-10-31');
+
 DROP TABLE IF EXISTS hibernate_sequence;
 DROP TABLE IF EXISTS file;
 
