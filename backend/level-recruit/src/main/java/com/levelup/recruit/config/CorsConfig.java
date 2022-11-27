@@ -1,4 +1,4 @@
-package com.level.recruit.config;
+package com.levelup.recruit.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

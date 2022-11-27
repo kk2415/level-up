@@ -55,7 +55,7 @@ spring:
 
 jasypt:
   encryptor:
-    bean: imageEncryptorBean
+    bean: encryptorBean
 
 #actuator 설정
 management:

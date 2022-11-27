@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -70,6 +71,7 @@ public class ArticleService {
         return pages;
     }
 
+    @Transactional(readOnly = true)
     public ArticleDto getNext(Long articleId, ArticleType articleType) {
         final Article article = articleRepository.findNextByIdAndArticleType(articleId, articleType.toString())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
@@ -77,6 +79,7 @@ public class ArticleService {
         return ArticleDto.from(article);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public ArticleDto getPrev(Long articleId, ArticleType articleType) {
         final Article article = articleRepository.findPrevByIdAndArticleType(articleId, articleType.toString())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));

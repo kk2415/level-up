@@ -1,4 +1,4 @@
-package com.level.recruit.config;
+package com.levelup.recruit.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;

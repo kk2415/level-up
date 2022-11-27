@@ -1,11 +1,19 @@
 server:
-  port: 8070
+  port: 8080
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(tjOm3RFJBf/o8xVrARBnEeIuFr0Xlwk13NsNKfC845Y=)
+      secret-key: ENC(lcTYXZymgxQ1O7jjCj/eAEFrmIELJ9BL78biwGJTyMJLamhrWO/DxRmRoOjrqthW84Voi7rzpgQ=)
+    s3:
+      bucket: mylevelupbuckets3
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 spring:
-  sql:
-    init:
-      mode: NEVER
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3309/recruit?serverTimezone=Asia/Seoul
@@ -43,8 +51,7 @@ spring:
 
 jasypt:
   encryptor:
-    password: p3uVnuqs1asQda
-    bean: recruitEncryptorBean
+    bean: encryptorBean
 
 #actuator 설정
 management:
