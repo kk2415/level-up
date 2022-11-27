@@ -1,4 +1,4 @@
-package com.levelup.common.config;
+package com.levelup.image.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
@@ -13,7 +13,7 @@ public class JasyptConfig {
     @Value("${jasypt.encryptor.password}")
     private String password;
 
-    @Bean("encryptorBean")
+    @Bean(name = "imageEncryptorBean")
     public StringEncryptor stringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
