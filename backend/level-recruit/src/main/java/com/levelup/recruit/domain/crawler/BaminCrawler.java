@@ -11,13 +11,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class KakaoCrawler implements Crawler {
+public class BaminCrawler implements Crawler {
 
     private final KakaoCrawlerHelper crawlerHelper;
     private final String JOB_LIST_SELECTOR = "ul.list_jobs li";
@@ -27,22 +28,16 @@ public class KakaoCrawler implements Crawler {
 
     @Override
     public List<Job> crawling() {
-        final String rootUrl = Company.KAKAO.getUrl();
+        final String rootUrl = Company.BAMIN.getUrl();
         final Document doc = crawlerHelper.getDocument(rootUrl);
 
         return crawlingJobs(rootUrl, doc);
     }
 
     private List<Job> crawlingJobs(String rootUrl, Document doc) {
-        final Elements jobList = crawlerHelper.crawling(JOB_LIST_SELECTOR, () -> doc.select(JOB_LIST_SELECTOR));
 
-        return jobList.stream().map(job -> {
-            final String title = crawlingTitle(job);
-            final String url = rootUrl + crawlingURL(job);
-            final String rawClosingDate = crawlingClosingDate(job);
 
-            return KakaoJob.of(title, url, rawClosingDate);
-        }).collect(Collectors.toUnmodifiableList());
+        return new ArrayList<>();
     }
 
     private String crawlingTitle(Element job) {

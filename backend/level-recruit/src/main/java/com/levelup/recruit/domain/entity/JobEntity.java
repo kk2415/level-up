@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "job")
 @Entity
-public class Job {
+public class JobEntity {
 
     @Id @GeneratedValue
     @Column(name = "job_id")
@@ -23,11 +23,11 @@ public class Job {
     @Column(nullable = false)
     private String title;
 
+    private String url;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Company company;
-
-    private String url;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -41,7 +41,7 @@ public class Job {
 
     private LocalDateTime closingDate;
 
-    public static Job of(
+    public static JobEntity of(
             String title,
             Company company,
             String url,
@@ -50,21 +50,21 @@ public class Job {
             LocalDateTime openDate,
             LocalDateTime closingDate)
     {
-        return new Job(null, title, company, url, jobStatus, closingType, openDate, closingDate);
+        return new JobEntity(null, title, url, company, jobStatus, closingType, openDate, closingDate);
     }
 
-    public static Job of(
+    public static JobEntity of(
             String title,
             Company company,
             String url,
             JobStatus jobStatus,
             LocalDateTime openDate)
     {
-        return new Job(
+        return new JobEntity(
                 null,
                 title,
-                company,
                 url,
+                company,
                 jobStatus,
                 ClosingType.INFINITE,
                 openDate,

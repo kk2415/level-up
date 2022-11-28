@@ -1,7 +1,6 @@
 package com.levelup.recruit.domain.entity.enumeration;
 
 import lombok.Getter;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Getter
 public enum Company {
@@ -13,9 +12,10 @@ public enum Company {
     BAMIN("url"),
     ;
 
-    private String page;
+    /*채용 공고 사이트 주소*/
+    private String url;
 
-    Company(String page) {
-        this.page = page;
+    Company(String url) {
+        this.url = url;
     }
 }
