@@ -1,10 +1,17 @@
-drop table if exists `jobs`;
+drop table if exists `hibernate_sequence`;
+drop table if exists `job`;
 
-create table `jobs` (
+create table hibernate_sequence
+(
+    next_val bigint null
+) engine=InnoDB;
+insert into hibernate_sequence values (1);
+
+create table `job` (
     job_id bigint not null auto_increment primary key,
     title text not null,
+    url text not null,
     company varchar(50) not null,
-    url text,
     job_status varchar(20) not null,
     closing_type varchar(20) not null,
     open_date datetime not null,

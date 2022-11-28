@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mysql:
-    container_name: level_up
+    container_name: level-up-main
     image: mysql/mysql-server:8.0.26
     environment:
       MYSQL_ROOT_HOST: '%'
