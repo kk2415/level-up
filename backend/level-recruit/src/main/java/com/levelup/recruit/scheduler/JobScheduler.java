@@ -1,6 +1,6 @@
 package com.levelup.recruit.scheduler;
 
-import com.levelup.recruit.domain.crawler.Crawler;
+import com.levelup.recruit.crawler.Crawler;
 import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.service.JobService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,10 @@ public class JobScheduler {
         crawlers.forEach(crawler -> {
             List<Job> jobs = crawler.crawling();
 
-            jobService.saveIfAbsent(jobs);
+            jobService.saveIfAbsent(jobs, crawler.getCompany());
+
+            List<Job> deleteJobs = jobService.getNotMatched(jobs, crawler.getCompany());
+            jobService.deleteAll(deleteJobs);
         });
     }
 }

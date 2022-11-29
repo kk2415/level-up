@@ -1,6 +1,7 @@
-package com.levelup.recruit.domain.crawler;
+package com.levelup.recruit.crawler;
 
 import com.levelup.recruit.domain.domain.Job;
+import com.levelup.recruit.domain.entity.enumeration.Company;
 
 import java.util.List;
 
@@ -10,5 +11,6 @@ import java.util.List;
  * */
 public interface Crawler {
 
+    Company getCompany();
     List<Job> crawling();
 }

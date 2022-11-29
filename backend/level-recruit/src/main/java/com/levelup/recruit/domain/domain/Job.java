@@ -1,31 +1,46 @@
 package com.levelup.recruit.domain.domain;
 
 import com.levelup.recruit.domain.entity.JobEntity;
-import com.levelup.recruit.domain.entity.enumeration.ClosingType;
 import com.levelup.recruit.domain.entity.enumeration.Company;
-import com.levelup.recruit.domain.entity.enumeration.JobStatus;
+import com.levelup.recruit.domain.entity.enumeration.OpenStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.util.Objects;
 
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public abstract class Job {
+public class Job {
 
     protected Long id;
     protected String title;
     protected Company company;
     protected String url;
-    protected JobStatus jobStatus;
-    protected ClosingType closingType;
-    protected LocalDateTime openDate;
-    protected LocalDateTime closingDate;
+    protected OpenStatus openStatus;
+    protected String noticeEndDate;
 
-    public abstract JobEntity toEntity();
-    public abstract ClosingType matchClosingType(String closingDate);
-    public abstract LocalDateTime parseClosingDate(String closingDate);
+    public static Job from(JobEntity jobEntity) {
+        return new Job(jobEntity.getId(), jobEntity.getTitle(), jobEntity.getCompany(), jobEntity.getUrl(), jobEntity.getOpenStatus(), jobEntity.getNoticeEndDate());
+    }
+
+    public JobEntity toEntity() {
+        return JobEntity.of(title, company, url, openStatus, noticeEndDate);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Job)) return false;
+        Job job = (Job) o;
+
+        return (company != null && company.equals(job.company)) && (url != null && url.equals(job.url));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(company, url);
+    }
 }

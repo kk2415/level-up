@@ -7,9 +7,9 @@ public enum Company {
 
     NAVER("url"),
     KAKAO("https://careers.kakao.com/jobs"),
-    LINE("url"),
+    LINE("https://careers.linecorp.com/ko/jobs"),
     COPANG("url"),
-    BAMIN("url"),
+    BAMIN("https://career.woowahan.com/?keyword=&category=jobGroupCodes%3ABA005001#recruit-list"),
     ;
 
     /*채용 공고 사이트 주소*/
