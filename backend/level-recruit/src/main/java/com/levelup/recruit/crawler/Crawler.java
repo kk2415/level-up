@@ -1,7 +1,7 @@
 package com.levelup.recruit.crawler;
 
 import com.levelup.recruit.domain.domain.Job;
-import com.levelup.recruit.domain.entity.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.Company;
 
 import java.util.List;
 

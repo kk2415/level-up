@@ -1,8 +1,8 @@
 package com.levelup.recruit.domain.domain;
 
 import com.levelup.recruit.domain.entity.JobEntity;
-import com.levelup.recruit.domain.entity.enumeration.Company;
-import com.levelup.recruit.domain.entity.enumeration.OpenStatus;
+import com.levelup.recruit.domain.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.OpenStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +21,10 @@ public class Job {
     protected String url;
     protected OpenStatus openStatus;
     protected String noticeEndDate;
+
+    public static Job of(String title, Company company, String url, OpenStatus openStatus, String noticeEndDate) {
+        return new Job(null, title, company, url, openStatus, noticeEndDate);
+    }
 
     public static Job from(JobEntity jobEntity) {
         return new Job(jobEntity.getId(), jobEntity.getTitle(), jobEntity.getCompany(), jobEntity.getUrl(), jobEntity.getOpenStatus(), jobEntity.getNoticeEndDate());

@@ -1,8 +1,8 @@
 package com.levelup.recruit.domain.entity;
 
-import com.levelup.common.domain.base.BaseTimeEntity;
-import com.levelup.recruit.domain.entity.enumeration.Company;
-import com.levelup.recruit.domain.entity.enumeration.OpenStatus;
+import com.levelup.recruit.domain.entity.base.BaseTimeEntity;
+import com.levelup.recruit.domain.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.OpenStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,5 +42,13 @@ public class JobEntity extends BaseTimeEntity {
             String noticeEndDate)
     {
         return new JobEntity(null, title, url, company, openStatus, noticeEndDate);
+    }
+
+    public void update(String title, String url, Company company, OpenStatus openStatus, String noticeEndDate) {
+        this.title = title;
+        this.url = url;
+        this.company = company;
+        this.openStatus = openStatus;
+        this.noticeEndDate = noticeEndDate;
     }
 }

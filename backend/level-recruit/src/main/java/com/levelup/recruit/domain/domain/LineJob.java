@@ -1,8 +1,8 @@
 package com.levelup.recruit.domain.domain;
 
 import com.levelup.recruit.domain.entity.JobEntity;
-import com.levelup.recruit.domain.entity.enumeration.Company;
-import com.levelup.recruit.domain.entity.enumeration.OpenStatus;
+import com.levelup.recruit.domain.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.OpenStatus;
 
 public class LineJob extends Job {
 

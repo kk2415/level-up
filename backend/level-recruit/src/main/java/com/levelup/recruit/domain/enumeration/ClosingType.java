@@ -1,4 +1,4 @@
-package com.levelup.recruit.domain.entity.enumeration;
+package com.levelup.recruit.domain.enumeration;
 
 /**
  * 채용 공고 마감일은 기간이 정해진 경우와 기간이 없는 상시 채용으로 구분된다.

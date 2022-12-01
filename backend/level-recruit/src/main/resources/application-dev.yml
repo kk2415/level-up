@@ -21,13 +21,15 @@ spring:
     password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
+        dialect:
     open-in-view: false
 
   mvc:

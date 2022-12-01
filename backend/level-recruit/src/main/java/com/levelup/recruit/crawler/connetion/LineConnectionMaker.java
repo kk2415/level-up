@@ -1,6 +1,6 @@
 package com.levelup.recruit.crawler.connetion;
 
-import com.levelup.recruit.domain.entity.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.Company;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.levelup.recruit.domain.entity.enumeration;
+package com.levelup.recruit.domain.enumeration;
 
 public enum HiringType {
 

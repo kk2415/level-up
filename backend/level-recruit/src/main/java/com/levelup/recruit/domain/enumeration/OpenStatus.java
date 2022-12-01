@@ -1,4 +1,4 @@
-package com.levelup.recruit.domain.entity.enumeration;
+package com.levelup.recruit.domain.enumeration;
 
 /**
  * 채용 공고가 현재 모집 중인지 마감됐는지 표현

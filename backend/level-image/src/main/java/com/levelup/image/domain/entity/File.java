@@ -1,8 +1,8 @@
 package com.levelup.image.domain.entity;
 
 import com.levelup.common.domain.FileType;
-import com.levelup.common.domain.base.BaseTimeEntity;
 import com.levelup.common.util.file.UploadFile;
+import com.levelup.image.domain.entity.base.BaseTimeEntity;
 import lombok.Getter;
 
 import javax.persistence.*;

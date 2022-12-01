@@ -1,7 +1,7 @@
 package com.levelup.recruit.domain.repository;
 
 import com.levelup.recruit.domain.entity.JobEntity;
-import com.levelup.recruit.domain.entity.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface JobRepository extends JpaRepository<JobEntity, Long> {
+public interface JobRepository extends JpaRepository<JobEntity, Long>, JobRepositoryCustom {
 
     List<JobEntity> findByCompany(Company company);
 

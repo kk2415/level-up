@@ -1,6 +1,6 @@
 package com.levelup.recruit.crawler;
 
-import com.levelup.recruit.crawler.scraper.LineScraper;
+import com.levelup.recruit.crawler.scraper.NaverScraper;
 import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.enumeration.Company;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,10 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component("LineCrawler")
-public class LineCrawler implements Crawler {
+@Component("NaverCrawler")
+public class NaverCrawler implements Crawler {
 
-    private final LineScraper lineScraper;
+    private final NaverScraper naverScraper;
 
     @Override
     public Company getCompany() {
@@ -23,7 +23,7 @@ public class LineCrawler implements Crawler {
 
     @Override
     public List<Job> crawling() {
-        return lineScraper.findJobs();
+        return naverScraper.findJobs();
     }
 }
 

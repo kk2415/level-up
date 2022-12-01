@@ -3,7 +3,7 @@ package com.levelup.recruit.crawler.scraper;
 import com.levelup.recruit.crawler.connetion.JsoupConnectionMaker;
 import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.domain.KakaoJob;
-import com.levelup.recruit.domain.entity.enumeration.Company;
+import com.levelup.recruit.domain.enumeration.Company;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
