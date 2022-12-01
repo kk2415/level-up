@@ -20,6 +20,15 @@ public class JsoupTemplate {
         return new JsoupTemplate(connectionMaker);
     }
 
+    public Elements select(String param, String selector) {
+        Connection connection = connectionMaker.makeConnection(param);
+
+        Connection.Response html = requestHTML(connection);
+        Document doc = parseHTML(html);
+
+        return doc.select(selector);
+    }
+
     public Elements select(String selector) {
         Connection connection = connectionMaker.makeConnection();
 

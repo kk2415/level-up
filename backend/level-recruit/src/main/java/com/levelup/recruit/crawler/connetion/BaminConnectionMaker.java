@@ -12,4 +12,9 @@ public class BaminConnectionMaker implements JsoupConnectionMaker {
     public Connection makeConnection() {
         return Jsoup.connect(Company.BAMIN.getUrl());
     }
+
+    @Override
+    public Connection makeConnection(String param) {
+        return Jsoup.connect(Company.BAMIN.getUrl() + param);
+    }
 }

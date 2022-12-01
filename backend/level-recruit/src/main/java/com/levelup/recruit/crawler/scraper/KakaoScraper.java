@@ -14,14 +14,15 @@ import java.util.stream.Collectors;
 @Component
 public class KakaoScraper {
 
-    private JsoupTemplate jsoupTemplate;
+    private final JsoupTemplate jsoupTemplate;
 
     public KakaoScraper(@Qualifier("KakaoConnectionMaker") JsoupConnectionMaker connectionMaker) {
         jsoupTemplate = JsoupTemplate.from(connectionMaker);
     }
 
     public List<Job> findJobs() {
-        Elements jobList = jsoupTemplate.select("ul.list_jobs li");
+        String param = "?company=ALL";
+        Elements jobList = jsoupTemplate.select(param, "ul.list_jobs li");
 
         return jobList.stream().map(job -> {
             final String title = jsoupTemplate.selectSub(job, "a.link_jobs > h4.tit_jobs").text();

@@ -5,15 +5,16 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 
-@Component("KakaoConnectionMaker")
-public class KakaoConnectionMaker implements JsoupConnectionMaker {
+@Component("TossConnectionMaker")
+public class TossConnectionMaker implements JsoupConnectionMaker {
 
     @Override
     public Connection makeConnection() {
-        return Jsoup.connect(Company.KAKAO.getUrl());
+        return Jsoup.connect(Company.NAVER.getUrl());
     }
 
+    @Override
     public Connection makeConnection(String param) {
-        return Jsoup.connect(Company.KAKAO.getUrl() + param);
+        return Jsoup.connect(Company.NAVER.getUrl() + param);
     }
 }
