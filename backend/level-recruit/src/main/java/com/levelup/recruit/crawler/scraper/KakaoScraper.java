@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,15 +22,26 @@ public class KakaoScraper {
     }
 
     public List<Job> findJobs() {
-        String param = "?company=ALL";
-        Elements jobList = jsoupTemplate.select(param, "ul.list_jobs li");
+        int page = 1;
+        int lastPage = 3;
+        String param;
 
-        return jobList.stream().map(job -> {
-            final String title = jsoupTemplate.selectSub(job, "a.link_jobs > h4.tit_jobs").text();
-            final String url = Company.KAKAO.getUrl() + jsoupTemplate.selectSub(job, "a.link_jobs").attr("href");
-            final String noticeEndDate = jsoupTemplate.selectSub(job, "dl.list_info > dt:contains(영입마감일) + dd").text();
+        List<Job> jobs = new ArrayList<>();
+        for (; page <= lastPage; ++page) {
+            param = "?company=ALL&page=" + page;
+            Elements jobList = jsoupTemplate.select(param, "ul.list_jobs li");
 
-            return KakaoJob.of(title, url, noticeEndDate);
-        }).collect(Collectors.toUnmodifiableList());
+            List<KakaoJob> scrapedJobs = jobList.stream().map(job -> {
+                final String title = jsoupTemplate.selectSub(job, "a.link_jobs > h4.tit_jobs").text();
+                final String url = Company.KAKAO.getUrl() + jsoupTemplate.selectSub(job, "a.link_jobs").attr("href");
+                final String noticeEndDate = jsoupTemplate.selectSub(job, "dl.list_info > dt:contains(영입마감일) + dd").text();
+
+                return KakaoJob.of(title, url, noticeEndDate);
+            }).collect(Collectors.toUnmodifiableList());
+
+            jobs.addAll(scrapedJobs);
+        }
+
+        return jobs;
     }
 }

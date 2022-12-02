@@ -1,6 +1,9 @@
 package com.levelup.recruit.crawler.scraper;
 
+import com.levelup.common.exception.ErrorCode;
 import com.levelup.recruit.crawler.connetion.JsoupConnectionMaker;
+import com.levelup.recruit.exception.JsoupConnectionException;
+import com.levelup.recruit.exception.JsoupHtmlParsingException;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -42,11 +45,11 @@ public class JsoupTemplate {
         return element.select(selector);
     }
 
-    private Connection.Response requestHTML(Connection connect) {
+    private Connection.Response requestHTML(Connection connection) {
         try {
-            return connect.execute().bufferUp();
+            return connection.execute().bufferUp();
         } catch (IOException e) {
-            throw new IllegalStateException("HTML을 불러 올 수 없습니다.");
+            throw new JsoupConnectionException(ErrorCode.JSOUP_FAIL_CONNECTING);
         }
     }
 
@@ -54,7 +57,7 @@ public class JsoupTemplate {
         try {
             return html.parse();
         } catch (IOException e) {
-            throw new IllegalStateException("HTTML 파싱 예외 발생");
+            throw new JsoupHtmlParsingException(ErrorCode.SECURITY_CODE_EXPIRED);
         }
     }
 }

@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
-        ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
+        ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.valueOf(response.getStatus()));
     }
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
-        ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
+        ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.valueOf(response.getStatus()));
     }
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
-        ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
+        ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.valueOf(response.getStatus()));
     }
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
 
-        ExceptionResponse response = ExceptionResponse.from(e.getErrorCode());
+        ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
         return new ResponseEntity<ExceptionResponse>(response, HttpStatus.valueOf(response.getStatus()));
     }

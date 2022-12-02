@@ -32,7 +32,11 @@ public enum ErrorCode {
     CHANNEL_AUTHORITY_EXCEPTION(403, "채널 매니저가 아닙니다."),
 
     INVALID_REQUEST_BODY(400, "HTTP 리퀘스트 바디 유효성 체크 에러"),
-    BAD_REQUEST(400, "잘못된 접근입니다");
+    BAD_REQUEST(400, "잘못된 접근입니다"),
+
+    JSOUP_FAIL_CONNECTING(500, "커넥팅에 실패하였습니다."),
+    JSOUP_FAIL_HTML_PARSING(500, "HTML 파싱에 실패하였습니다."),
+    ;
 
     private final int httpStatus;
     private final String message;
