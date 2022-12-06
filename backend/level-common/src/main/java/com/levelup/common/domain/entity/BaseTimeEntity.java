@@ -1,4 +1,4 @@
-package com.levelup.common.domain.base;
+package com.levelup.common.domain.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

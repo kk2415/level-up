@@ -1,6 +1,6 @@
 package com.levelup.common.util.file;
 
-import com.levelup.common.domain.FileType;
+import com.levelup.common.domain.constant.FileType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

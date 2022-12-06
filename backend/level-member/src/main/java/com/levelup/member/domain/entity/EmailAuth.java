@@ -1,6 +1,6 @@
 package com.levelup.member.domain.entity;
 
-import com.levelup.common.domain.base.BaseTimeEntity;
+import com.levelup.common.domain.entity.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.*;

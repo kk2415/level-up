@@ -1,4 +1,4 @@
-package com.levelup.channel.domain.entity;
+package com.levelup.channel.domain.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

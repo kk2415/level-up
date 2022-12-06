@@ -5,7 +5,7 @@ import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.channel.domain.service.ChannelService;
 import com.levelup.channel.domain.service.dto.ChannelDto;
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import com.levelup.channel.domain.service.dto.CreateChannelDto;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.event.events.EventPublisher;

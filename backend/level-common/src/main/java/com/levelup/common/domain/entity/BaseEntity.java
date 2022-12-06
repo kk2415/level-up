@@ -1,4 +1,4 @@
-package com.levelup.common.domain.base;
+package com.levelup.common.domain.entity;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;

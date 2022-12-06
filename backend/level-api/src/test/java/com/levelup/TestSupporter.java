@@ -1,12 +1,6 @@
 package com.levelup;
 
 import com.levelup.article.domain.entity.*;
-import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.entity.ChannelCategory;
-import com.levelup.channel.domain.entity.ChannelMember;
-import com.levelup.channel.domain.entity.ChannelArticle;
-import com.levelup.channel.domain.entity.ChannelArticleCategory;
-import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.entity.Gender;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;

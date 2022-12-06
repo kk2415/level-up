@@ -9,7 +9,7 @@ import com.levelup.channel.exception.ChannelException;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.event.events.EventPublisher;
 import lombok.RequiredArgsConstructor;

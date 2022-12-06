@@ -1,6 +1,6 @@
 package com.levelup.api.adapter.client;
 
-import com.levelup.common.domain.FileType;
+import com.levelup.common.domain.constant.FileType;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.common.web.dto.OkResponse;
 import org.springframework.cloud.openfeign.FeignClient;

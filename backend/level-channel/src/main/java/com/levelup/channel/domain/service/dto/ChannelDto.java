@@ -1,7 +1,7 @@
 package com.levelup.channel.domain.service.dto;
 
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import lombok.Getter;
 
 import java.io.Serializable;

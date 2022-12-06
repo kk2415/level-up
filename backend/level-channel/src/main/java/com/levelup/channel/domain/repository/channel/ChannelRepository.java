@@ -1,6 +1,6 @@
 package com.levelup.channel.domain.repository.channel;
 
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import com.levelup.channel.domain.entity.Channel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

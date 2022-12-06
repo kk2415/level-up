@@ -5,7 +5,45 @@ server:
       tracking-modes: COOKIE
       timeout: 1800
 
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(tjOm3RFJBf/o8xVrARBnEeIuFr0Xlwk13NsNKfC845Y=)
+      secret-key: ENC(lcTYXZymgxQ1O7jjCj/eAEFrmIELJ9BL78biwGJTyMJLamhrWO/DxRmRoOjrqthW84Voi7rzpgQ=)
+    s3:
+      bucket: mylevelupbuckets3
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/level_up?serverTimezone=Asia/Seoul
+    username: root
+    password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
+
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+
+  mail:
+    username: koria789@gmail.com
+    password: ENC(EhKyuZGqPjEGv/aFgLCwxnik+I8z+cTkjHNtWZanjok=)
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        debug: true
+        smtp:
+          connectiontimeout: 5000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
   thymeleaf:
     cache: false
     prefix: file:level-api/src/main/resources/templates/
@@ -19,26 +57,27 @@ spring:
 
   sql:
     init:
-      mode: NEVER
+      mode: always
 
   jpa:
     database-platform: com.levelup.common.config.MySQL8DialectCustom
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
     open-in-view: false
+#    defer-datasource-initialization: true
 
   redis:
     host: localhost
     port: 6379
     password: ''
 
-  config:
-    import: optional:configserver:http://localhost:8888
+#  config:
+#    import: optional:configserver:http://localhost:8888
 
   mvc:
     pathmatch:
@@ -47,8 +86,12 @@ spring:
 logging:
   config: classpath:log4j2-dev.xml
 
+jasypt:
+  encryptor:
+    bean: encryptorBean
+
 file:
-  local_dir: C:/Task/study/levelup
+  local_dir: C:/kyunkim/project/level-up-store
   s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
 
 #actuator 설정

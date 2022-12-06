@@ -1,7 +1,7 @@
 package com.levelup.channel.domain.entity;
 
-import com.levelup.common.domain.base.BaseTimeEntity;
-import com.levelup.common.util.file.UploadFile;
+import com.levelup.channel.domain.constant.ChannelCategory;
+import com.levelup.common.domain.entity.BaseTimeEntity;
 import lombok.*;
 import org.jsoup.Jsoup;
 

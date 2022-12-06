@@ -1,6 +1,6 @@
 package com.levelup.image.domain.service;
 
-import com.levelup.common.domain.FileType;
+import com.levelup.common.domain.constant.FileType;
 import com.levelup.common.exception.ErrorCode;
 import com.levelup.common.util.file.FileStore;
 import com.levelup.common.util.file.UploadFile;

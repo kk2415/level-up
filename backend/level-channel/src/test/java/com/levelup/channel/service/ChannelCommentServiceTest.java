@@ -1,7 +1,7 @@
 package com.levelup.channel.service;
 
 import com.levelup.channel.TestSupporter;
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelArticle;
 import com.levelup.channel.domain.entity.ChannelComment;

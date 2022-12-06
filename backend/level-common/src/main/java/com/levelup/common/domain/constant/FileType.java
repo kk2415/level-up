@@ -1,4 +1,4 @@
-package com.levelup.common.domain;
+package com.levelup.common.domain.constant;
 
 public enum FileType {
 

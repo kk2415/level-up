@@ -4,7 +4,7 @@ import com.levelup.channel.TestSupporter;
 import com.levelup.channel.domain.service.ChannelMemberService;
 import com.levelup.channel.domain.service.dto.ChannelMemberDto;
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import com.levelup.channel.domain.entity.ChannelMember;
 import com.levelup.common.exception.EntityDuplicationException;
 import com.levelup.channel.exception.NoPlaceChannelException;

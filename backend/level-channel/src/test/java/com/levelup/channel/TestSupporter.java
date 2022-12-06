@@ -1,7 +1,7 @@
 package com.levelup.channel;
 
-import com.levelup.channel.domain.entity.ChannelArticleCategory;
-import com.levelup.channel.domain.entity.ChannelCategory;
+import com.levelup.channel.domain.constant.ChannelArticleCategory;
+import com.levelup.channel.domain.constant.ChannelCategory;
 import com.levelup.channel.domain.entity.*;
 
 import java.time.LocalDate;

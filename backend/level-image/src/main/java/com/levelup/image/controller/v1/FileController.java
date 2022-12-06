@@ -1,6 +1,6 @@
 package com.levelup.image.controller.v1;
 
-import com.levelup.common.domain.FileType;
+import com.levelup.common.domain.constant.FileType;
 import com.levelup.common.web.dto.OkResponse;
 import com.levelup.image.controller.v1.dto.FileResponse;
 import com.levelup.image.domain.service.FileService;

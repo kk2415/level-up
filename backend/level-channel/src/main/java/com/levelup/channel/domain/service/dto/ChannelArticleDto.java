@@ -2,14 +2,13 @@ package com.levelup.channel.domain.service.dto;
 
 import com.levelup.channel.domain.entity.Channel;
 import com.levelup.channel.domain.entity.ChannelArticle;
-import com.levelup.channel.domain.entity.ChannelArticleCategory;
+import com.levelup.channel.domain.constant.ChannelArticleCategory;
 import com.levelup.channel.domain.entity.ChannelMember;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Builder
 @Getter

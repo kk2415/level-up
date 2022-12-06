@@ -1,9 +1,8 @@
 package com.levelup.channel.domain.entity;
 
-import com.levelup.common.domain.base.BaseTimeEntity;
+import com.levelup.common.domain.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;

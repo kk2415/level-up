@@ -1,6 +1,6 @@
 package com.levelup.image.domain.service.dto;
 
-import com.levelup.common.domain.FileType;
+import com.levelup.common.domain.constant.FileType;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.image.domain.entity.File;
 import lombok.Getter;
