@@ -54,7 +54,7 @@ public class MemberService {
 
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "member", key = "#memberId")
+    @Cacheable(cacheNames = "MEMBER", key = "#memberId")
     public MemberDto get(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -63,7 +63,7 @@ public class MemberService {
     }
 
 
-    @CacheEvict(cacheNames = "member", key = "#memberId")
+    @CacheEvict(cacheNames = "MEMBER", key = "#memberId")
     public void update(UpdateMemberDto dto, Long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -84,7 +84,7 @@ public class MemberService {
     }
 
 
-    @CacheEvict(cacheNames = "member", key = "#memberId")
+    @CacheEvict(cacheNames = "MEMBER", key = "#memberId")
     public void delete(Long memberId) {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));

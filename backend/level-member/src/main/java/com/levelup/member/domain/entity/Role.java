@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -13,7 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Table(name = "role")
 @Entity
-public class Role extends BaseTimeEntity {
+public class Role extends BaseTimeEntity implements Serializable {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "role_id")

@@ -1,11 +1,6 @@
 package com.levelup.api.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.levelup.member.domain.entity.Member;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -16,17 +11,15 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
-
 @EnableCaching
 @Configuration
-public class CacheConfig {
+public class RedisConfig {
 
     private static final Integer TTL = 60 * 60 * 1;
 
@@ -47,30 +40,27 @@ public class CacheConfig {
         redisStandaloneConfiguration.setPort(redisPort);
         redisStandaloneConfiguration.setPassword(redisPassword);
 
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
+        LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
+        connectionFactory.afterPropertiesSet();
+        return connectionFactory;
     }
 
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .computePrefixWith(name -> name + ":")
                 .entryTtl(Duration.ofSeconds(TTL))
-                .serializeKeysWith(fromSerializer(new StringRedisSerializer()));
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()));
 //                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
 //                        new GenericJackson2JsonRedisSerializer(objectMapper())
 //                ));
     }
 
-    private ObjectMapper objectMapper() {
-        // jackson 2.10이상 3.0버전까지 적용 가능
-        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
-                .allowIfSubType(Object.class)
-                .build();
-
-        return JsonMapper.builder()
-                .polymorphicTypeValidator(ptv)
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .addModule(new JavaTimeModule())
-                .activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
-                .build();
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisCacheConnectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisCacheConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Member>(Member.class));
+        return redisTemplate;
     }
 }
