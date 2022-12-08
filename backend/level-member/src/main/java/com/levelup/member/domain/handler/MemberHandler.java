@@ -4,7 +4,7 @@ import com.levelup.common.exception.ErrorCode;
 import com.levelup.event.events.ChannelCreatedEvent;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,9 @@
 package com.levelup.api.controller.v1.dto.response.member;
 
 import com.levelup.common.util.DateFormat;
-import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.Gender;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.service.dto.CreateMemberDto;
-import com.levelup.member.domain.service.dto.MemberDto;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;

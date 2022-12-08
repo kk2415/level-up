@@ -1,7 +1,7 @@
 package com.levelup.member.domain.service.dto;
 
 import com.levelup.member.domain.entity.EmailAuth;
-import com.levelup.member.domain.entity.EmailAuthType;
+import com.levelup.member.domain.constant.EmailAuthType;
 import com.levelup.member.domain.entity.Member;
 import lombok.Getter;
 

@@ -1,10 +1,10 @@
 package com.levelup;
 
 import com.levelup.api.config.SecurityConfig;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.service.dto.MemberDto;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
+import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.repository.MemberRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;

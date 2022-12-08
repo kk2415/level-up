@@ -1,10 +1,12 @@
 package com.levelup.member.service;
 
+import com.levelup.common.domain.entity.SkillEntity;
+import com.levelup.common.domain.repository.SkillRepository;
 import com.levelup.event.events.EventPublisher;
 import com.levelup.event.events.MemberCreatedEvent;
 import com.levelup.event.events.MemberUpdatedEvent;
 import com.levelup.member.TestSupporter;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.service.MemberService;
 import com.levelup.member.domain.service.dto.CreateMemberDto;
 import com.levelup.member.domain.service.dto.MemberDto;
@@ -25,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +39,7 @@ import static org.mockito.BDDMockito.*;
 class MemberServiceTest extends TestSupporter {
 
     @Mock private MemberRepository memberRepository;
+    @Mock private SkillRepository skillRepository;
     @Mock private PasswordEncoder passwordEncoder;
 
     @InjectMocks private MemberService memberService;
@@ -56,20 +60,23 @@ class MemberServiceTest extends TestSupporter {
     @Test
     void save() throws IOException {
         // Given
+        List<SkillEntity> skills = List.of(SkillEntity.of(1L, "Spring"), SkillEntity.of(2L, "Java"), SkillEntity.of(2L, "PHP"));
         MemberDto memberDto1 = MemberDto.from(createMember("test1@email.com", "test1"));
 
         given(passwordEncoder.encode(eq(memberDto1.getPassword()))).willReturn("changed password");
         given(memberRepository.save(any(Member.class))).willReturn(memberDto1.toEntity());
+        given(skillRepository.findAllById(anyList())).willReturn(skills);
         eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
                 .thenReturn(MemberCreatedEvent.of(1L, memberDto1.getEmail(), memberDto1.getNickname()));
 
         // When
-        CreateMemberDto newMemberDto1 = memberService.save(memberDto1);
+        CreateMemberDto response = memberService.save(memberDto1);
 
         // Then
-        assertThat(newMemberDto1.getEmail()).isEqualTo(memberDto1.getEmail());
-        assertThat(newMemberDto1.getPassword()).isEqualTo("changed password");
-        assertThat(newMemberDto1.getRole()).isEqualTo(RoleName.ANONYMOUS);
+        assertThat(response.getEmail()).isEqualTo(memberDto1.getEmail());
+        assertThat(response.getPassword()).isEqualTo("changed password");
+        assertThat(response.getRole()).isEqualTo(RoleName.ANONYMOUS);
+        assertThat(response.getSkills()).isNotEmpty();
         verify(passwordEncoder, times(1)).encode(anyString());
         verify(memberRepository, times(1)).save(any(Member.class));
     }

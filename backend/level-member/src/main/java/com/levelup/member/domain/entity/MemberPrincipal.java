@@ -1,5 +1,6 @@
 package com.levelup.member.domain.entity;
 
+import com.levelup.member.domain.constant.RoleName;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -8,7 +8,7 @@ import com.levelup.common.util.email.EmailSubject;
 import com.levelup.common.util.email.EmailTemplateName;
 import com.levelup.member.domain.entity.EmailAuth;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.exception.NotMatchSecurityCodeException;
 import com.levelup.member.exception.SecurityCodeExpiredException;

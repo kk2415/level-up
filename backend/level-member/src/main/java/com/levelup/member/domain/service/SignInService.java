@@ -5,7 +5,7 @@ import com.levelup.common.exception.ErrorCode;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.MemberPrincipal;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

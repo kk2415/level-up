@@ -1,10 +1,10 @@
 package com.levelup;
 
 import com.levelup.article.domain.entity.*;
-import com.levelup.member.domain.entity.Gender;
+import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

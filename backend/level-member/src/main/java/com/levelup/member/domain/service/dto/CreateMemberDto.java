@@ -1,14 +1,22 @@
 package com.levelup.member.domain.service.dto;
 
-import com.levelup.member.domain.entity.Gender;
+import com.levelup.common.domain.domain.Skill;
+import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@ToString
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class CreateMemberDto {
 
@@ -21,6 +29,7 @@ public class CreateMemberDto {
     private LocalDate birthday;
     private String phone;
     private RoleName role;
+    private List<Skill> skills;
 
     protected CreateMemberDto() {}
 
@@ -59,7 +68,10 @@ public class CreateMemberDto {
                 member.getRoles().stream()
                         .min(Comparator.comparing(r -> r.getRoleName().getPriority()))
                         .map(Role::getRoleName)
-                        .orElse(RoleName.ANONYMOUS)
+                        .orElse(RoleName.ANONYMOUS),
+                member.getMemberSkills().stream()
+                        .map(memberSkill -> Skill.of(memberSkill.getSkillId(), memberSkill.getSkillName()))
+                        .collect(Collectors.toUnmodifiableList())
         );
     }
 }

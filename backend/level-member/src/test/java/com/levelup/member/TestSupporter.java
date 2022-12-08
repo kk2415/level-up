@@ -1,13 +1,16 @@
 package com.levelup.member;
 
-import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.common.domain.entity.SkillEntity;
+import com.levelup.member.domain.constant.Gender;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberSkillEntity;
 import com.levelup.member.domain.entity.Role;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestSupporter {
 
@@ -26,6 +29,11 @@ public class TestSupporter {
 
         Role role = Role.of(RoleName.ANONYMOUS, member);
         member.addRole(role);
+
+        List<SkillEntity> skills = List.of(SkillEntity.of(1L, "Spring"), SkillEntity.of(2L, "Java"), SkillEntity.of(2L, "PHP"));
+        List<MemberSkillEntity> memberSkills = skills.stream().map(skill -> MemberSkillEntity.of(member, skill)).collect(Collectors.toUnmodifiableList());
+
+        member.addMemberSkills(memberSkills);
 
         return member;
     }

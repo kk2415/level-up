@@ -1,6 +1,7 @@
 package com.levelup.member.domain.entity;
 
 import com.levelup.common.domain.entity.BaseTimeEntity;
+import com.levelup.member.domain.constant.RoleName;
 import lombok.Getter;
 import lombok.Setter;
 

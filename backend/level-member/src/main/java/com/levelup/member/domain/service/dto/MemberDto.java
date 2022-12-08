@@ -1,10 +1,14 @@
 package com.levelup.member.domain.service.dto;
 
+import com.levelup.common.domain.domain.Skill;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
+import com.levelup.member.domain.constant.Gender;
+import com.levelup.member.domain.domain.MemberSkill;
 import com.levelup.member.domain.entity.Member;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,8 +16,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class MemberDto implements Serializable {
 
@@ -27,6 +34,7 @@ public class MemberDto implements Serializable {
     private String phone;
     private UploadFile profileImage;
     private RoleName role;
+    private List<MemberSkill> memberSkills;
 
     protected MemberDto() {}
 
@@ -64,7 +72,7 @@ public class MemberDto implements Serializable {
             LocalDate birthday,
             String phone,
             UploadFile profileImage,
-            RoleName role)
+            List<MemberSkill> memberSkills)
     {
         return new MemberDto(
             memberId,
@@ -76,7 +84,34 @@ public class MemberDto implements Serializable {
             birthday,
             phone,
             profileImage,
-            role
+            RoleName.ANONYMOUS,
+            memberSkills
+        );
+    }
+
+    public static MemberDto of(
+            Long memberId,
+            String email,
+            String password,
+            String name,
+            String nickname,
+            Gender gender,
+            LocalDate birthday,
+            String phone,
+            UploadFile profileImage,
+            RoleName role)
+    {
+        return new MemberDto(
+                memberId,
+                email,
+                password,
+                name,
+                nickname,
+                gender,
+                birthday,
+                phone,
+                profileImage,
+                role
         );
     }
 
@@ -94,7 +129,10 @@ public class MemberDto implements Serializable {
                 member.getRoles().stream()
                         .min(Comparator.comparing(r -> r.getRoleName().getPriority()))
                         .map(Role::getRoleName)
-                        .orElse(RoleName.ANONYMOUS)
+                        .orElse(RoleName.ANONYMOUS),
+                member.getMemberSkills().stream()
+                        .map(MemberSkill::from)
+                        .collect(Collectors.toUnmodifiableList())
         );
     }
 
@@ -120,7 +158,9 @@ public class MemberDto implements Serializable {
         return Member.of(null, email, password, name, nickname, gender, birthday, phone, new ArrayList<>(), email);
     }
 
-    public Member toEntity(UploadFile profileImage) {
-        return Member.of(null, email, password, name, nickname, gender, birthday, phone, new ArrayList<>(), email);
+    public List<Long> getSkillIds() {
+        return this.memberSkills.stream()
+                .map(memberSkill -> memberSkill.getSkill().getId())
+                .collect(Collectors.toUnmodifiableList());
     }
 }

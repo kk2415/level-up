@@ -1,12 +1,8 @@
 package com.levelup.api.controller.v1.dto.request.member;
 
 import com.levelup.member.domain.service.dto.EmailAuthDto;
-import com.levelup.member.domain.entity.EmailAuth;
-import com.levelup.member.domain.entity.EmailAuthType;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.constant.EmailAuthType;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class EmailAuthRequest {

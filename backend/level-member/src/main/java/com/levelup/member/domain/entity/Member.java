@@ -1,14 +1,17 @@
 package com.levelup.member.domain.entity;
 
 import com.levelup.common.domain.entity.BaseTimeEntity;
+import com.levelup.member.domain.constant.Gender;
 import lombok.*;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -47,6 +50,9 @@ public class Member extends BaseTimeEntity implements Serializable {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Role> roles;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private Set<MemberSkillEntity> memberSkills = new LinkedHashSet<>();
+
     @Column(updatable = false)
     private String createdBy;
 
@@ -55,7 +61,7 @@ public class Member extends BaseTimeEntity implements Serializable {
 
     protected Member (){}
 
-    public Member(
+    private Member(
             Long id,
             String email,
             String password,
@@ -79,6 +85,32 @@ public class Member extends BaseTimeEntity implements Serializable {
         this.createdBy = createdBy;
     }
 
+    private Member(
+            Long id,
+            String email,
+            String password,
+            String name,
+            String nickname,
+            Gender gender,
+            LocalDate birthday,
+            String phone,
+            List<Role> roles,
+            Set<MemberSkillEntity> memberSkills,
+            String createdBy)
+    {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.roles = roles;
+        this.memberSkills = memberSkills;
+        this.createdBy = createdBy;
+    }
+
     public static Member of(
             Long id,
             String email,
@@ -94,6 +126,22 @@ public class Member extends BaseTimeEntity implements Serializable {
         return new Member(id, email, password, name, nickname, gender, birthday, phone, roles, createdBy);
     }
 
+    public static Member of(
+            Long id,
+            String email,
+            String password,
+            String name,
+            String nickname,
+            Gender gender,
+            LocalDate birthday,
+            String phone,
+            List<Role> roles,
+            Set<MemberSkillEntity> skills,
+            String createdBy)
+    {
+        return new Member(id, email, password, name, nickname, gender, birthday, phone, roles, skills, createdBy);
+    }
+
     public void addRole(Role role) {
         role.setMember(this);
         this.roles.add(role);
@@ -105,6 +153,10 @@ public class Member extends BaseTimeEntity implements Serializable {
 
     public void update(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void addMemberSkills(List<MemberSkillEntity> memberSkills) {
+        this.memberSkills.addAll(memberSkills);
     }
 
     @Override

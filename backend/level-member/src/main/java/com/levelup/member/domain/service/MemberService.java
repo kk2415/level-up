@@ -1,12 +1,15 @@
 package com.levelup.member.domain.service;
 
+import com.levelup.common.domain.repository.SkillRepository;
 import com.levelup.common.exception.EntityDuplicationException;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
 import com.levelup.event.events.*;
+import com.levelup.member.domain.domain.MemberSkill;
 import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberSkillEntity;
 import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.service.dto.CreateMemberDto;
 import com.levelup.member.domain.service.dto.UpdateMemberDto;
 import com.levelup.member.domain.repository.MemberRepository;
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,14 +34,21 @@ import java.io.IOException;
 public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
+    private final SkillRepository skillRepository;
     private final MemberRepository memberRepository;
 
     public CreateMemberDto save(MemberDto dto) throws IOException {
         validateDuplicationMember(dto.getEmail(), dto.getNickname());
 
         Member member = dto.toEntity();
+        List<MemberSkillEntity> memberSkills = skillRepository.findAllById(dto.getSkillIds())
+                .stream().map(skill -> MemberSkillEntity.of(member, skill))
+                .collect(Collectors.toUnmodifiableList());
+
         member.updatePassword(passwordEncoder.encode(member.getPassword()));
         member.addRole(Role.of(RoleName.ANONYMOUS, member));
+        member.addMemberSkills(memberSkills);
+
         memberRepository.save(member);
 
         EventPublisher.raise(MemberCreatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));

@@ -1,9 +1,8 @@
 package com.levelup.api.config;
 
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
-import com.levelup.member.domain.entity.Role;
-import com.levelup.member.domain.entity.RoleName;
+import com.levelup.member.domain.constant.Gender;
+import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.domain.service.dto.MemberDto;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;

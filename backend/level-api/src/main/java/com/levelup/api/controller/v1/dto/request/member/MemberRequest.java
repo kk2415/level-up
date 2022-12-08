@@ -3,9 +3,11 @@ package com.levelup.api.controller.v1.dto.request.member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.levelup.common.domain.domain.Skill;
+import com.levelup.member.domain.domain.MemberSkill;
 import com.levelup.member.domain.service.dto.MemberDto;
 import com.levelup.common.util.file.UploadFile;
-import com.levelup.member.domain.entity.Gender;
+import com.levelup.member.domain.constant.Gender;
 import lombok.*;
 
 import javax.persistence.EnumType;
@@ -13,6 +15,9 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class MemberRequest {
@@ -44,6 +49,8 @@ public class MemberRequest {
 
     @NotNull
     private String phone;
+
+    List<Long> skillIds = new ArrayList<>();
 
     private UploadFile uploadFile;
 
@@ -93,16 +100,19 @@ public class MemberRequest {
     }
 
     public MemberDto toDto() {
-        return MemberDto.builder()
-                .memberId(null)
-                .email(email)
-                .password(password)
-                .name(name)
-                .nickname(nickname)
-                .gender(gender)
-                .birthday(birthday)
-                .phone(phone)
-                .profileImage(uploadFile)
-                .build();
+        return MemberDto.of(
+                null,
+                email,
+                password,
+                name,
+                nickname,
+                gender,
+                birthday,
+                phone,
+                uploadFile,
+                skillIds.stream()
+                        .map(id -> MemberSkill.from(Skill.from(id)))
+                        .collect(Collectors.toUnmodifiableList())
+        );
     }
 }
