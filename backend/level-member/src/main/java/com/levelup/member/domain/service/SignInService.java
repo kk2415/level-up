@@ -2,7 +2,7 @@ package com.levelup.member.domain.service;
 
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.entity.MemberPrincipal;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.constant.RoleName;
@@ -31,7 +31,7 @@ public class SignInService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.error("start loadUserByUsername");
 
-        final Member member = memberRepository.findByEmail(username)
+        final MemberEntity member = memberRepository.findByEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         Collection<GrantedAuthority> authorities = new ArrayList<>(10);

@@ -1,6 +1,5 @@
 package com.levelup.api.config;
 
-import com.levelup.member.domain.entity.Member;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

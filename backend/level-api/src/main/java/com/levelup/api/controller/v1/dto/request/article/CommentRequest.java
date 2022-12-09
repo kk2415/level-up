@@ -1,13 +1,10 @@
 package com.levelup.api.controller.v1.dto.request.article;
 
 import com.levelup.article.domain.entity.ArticleType;
-import com.levelup.article.domain.entity.Comment;
-import com.levelup.member.domain.entity.Member;
 import com.levelup.article.domain.service.dto.CommentDto;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 
 
 @Getter

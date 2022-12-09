@@ -3,7 +3,7 @@ package com.levelup.member;
 import com.levelup.common.domain.entity.SkillEntity;
 import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.constant.RoleName;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.entity.MemberSkillEntity;
 import com.levelup.member.domain.entity.Role;
 
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 public class TestSupporter {
 
-    protected Member createMember(String email, String nickname) {
-        Member member = Member.of(
+    protected MemberEntity createMember(String email, String nickname) {
+        MemberEntity member = MemberEntity.of(
                 null,
                 email,
                 "00000000",

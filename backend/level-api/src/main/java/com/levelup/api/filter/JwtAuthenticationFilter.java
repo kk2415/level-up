@@ -2,7 +2,7 @@ package com.levelup.api.filter;
 
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.common.exception.AuthenticationErrorCode;
 import com.levelup.member.util.jwt.TokenProvider;
 import com.levelup.member.domain.entity.MemberPrincipal;
@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContext securityContext = SecurityContextHolder.getContext();
 
             if (validationResult.isValid() && securityContext.getAuthentication() == null) {
-                Member member = memberRepository.findByEmail(tokenProvider.getSubject(token))
+                MemberEntity member = memberRepository.findByEmail(tokenProvider.getSubject(token))
                         .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
                 MemberPrincipal userDetails = MemberPrincipal.from(member);
 

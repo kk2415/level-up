@@ -1,6 +1,6 @@
 package com.levelup.member.domain.repository;
 
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,10 +14,10 @@ public class MemberRepositoryImpl implements MemberCustomRepository {
     private final EntityManager em;
 
     @Override
-    public Optional<Member> findByEmail(String email) {
-        Member member = em.createQuery("select m from Member m " +
+    public Optional<MemberEntity> findByEmail(String email) {
+        MemberEntity member = em.createQuery("select m from MemberEntity m " +
                         "join fetch m.roles rs " +
-                        "where m.email = :email", Member.class)
+                        "where m.email = :email", MemberEntity.class)
                 .setParameter("email", email)
                 .getResultList()
                 .stream()

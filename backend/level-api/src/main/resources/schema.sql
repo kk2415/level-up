@@ -20,14 +20,26 @@ drop table if exists writer;
 
 drop table if exists email_auth;
 drop table if exists role;
-drop table if exists `skill`;
 drop table if exists member_skill;
+drop table if exists `skill`;
 drop table if exists member;
 
 create table hibernate_sequence (
     next_val bigint
 ) engine=InnoDB;
 INSERT INTO hibernate_sequence(next_val) VALUES (0);
+
+
+#######################################################################################################################
+
+create table if not exists `skill` (
+    skill_id bigint not null auto_increment primary key,
+    `name` varchar(255) not null unique,
+    created_at datetime not null default '2022-01-01 00:00:00',
+    updated_at datetime not null default '2022-01-01 00:00:00'
+) engine=InnoDB default charset=utf8 collate=utf8_general_ci;
+
+#######################################################################################################################
 
 create table if not exists member (
     member_id bigint not null auto_increment primary key,
@@ -74,15 +86,6 @@ create table if not exists member_skill (
     created_at datetime not null default '2022-01-01 00:00:00',
     updated_at datetime not null default '2022-01-01 00:00:00'
 ) engine=InnoDB default charset=utf8mb4 collate=utf8mb4_unicode_ci;
-
-#######################################################################################################################
-
-create table if not exists `skill` (
-    skill_id bigint not null auto_increment primary key,
-    `name` varchar(255) not null unique,
-    created_at datetime not null default '2022-01-01 00:00:00',
-    updated_at datetime not null default '2022-01-01 00:00:00'
-) engine=InnoDB default charset=utf8 collate=utf8_general_ci;
 
 #######################################################################################################################
 

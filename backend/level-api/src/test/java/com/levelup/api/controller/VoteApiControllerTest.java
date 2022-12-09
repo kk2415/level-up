@@ -12,7 +12,6 @@ import com.levelup.article.domain.service.dto.VoteDto;
 import com.levelup.article.domain.service.vote.VoteServiceImpl;
 import com.levelup.article.domain.entity.Article;
 import com.levelup.article.domain.entity.ArticleType;
-import com.levelup.member.domain.entity.Member;
 import com.levelup.article.domain.entity.VoteType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

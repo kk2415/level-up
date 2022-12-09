@@ -15,7 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "email_auth")
 @Entity
-public class EmailAuth extends BaseTimeEntity {
+public class EmailAuthEntity extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "email_auth_id")
@@ -45,19 +45,19 @@ public class EmailAuth extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity member;
 
-    protected EmailAuth() {}
+    protected EmailAuthEntity() {}
 
-    public static EmailAuth of(
+    public static EmailAuthEntity of(
             EmailAuthType authType,
             String email,
             Boolean isAuthenticated,
             LocalDateTime receivedDate,
             LocalDateTime expireDate,
-            Member member)
+            MemberEntity member)
     {
-        return new EmailAuth(
+        return new EmailAuthEntity(
                 null,
                 authType,
                 email,
@@ -68,7 +68,7 @@ public class EmailAuth extends BaseTimeEntity {
                 member);
     }
 
-    public void setMember(Member member) {
+    public void setMember(MemberEntity member) {
         this.member = member;
     }
 
@@ -91,8 +91,8 @@ public class EmailAuth extends BaseTimeEntity {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof EmailAuth)) return false;
-        return id != null && id.equals(((EmailAuth) obj).getId());
+        if (!(obj instanceof EmailAuthEntity)) return false;
+        return id != null && id.equals(((EmailAuthEntity) obj).getId());
     }
 
     @Override

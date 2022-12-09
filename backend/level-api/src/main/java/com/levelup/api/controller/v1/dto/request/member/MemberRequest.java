@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.levelup.common.domain.domain.Skill;
 import com.levelup.member.domain.domain.MemberSkill;
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.constant.Gender;
 import lombok.*;
@@ -87,7 +87,7 @@ public class MemberRequest {
         return new MemberRequest(email, password, name, nickname, gender, birthday, phone, uploadFile);
     }
 
-    static public MemberRequest from(MemberDto dto) {
+    static public MemberRequest from(Member dto) {
         return new MemberRequest(
                 dto.getEmail(),
                 dto.getPassword(),
@@ -99,8 +99,8 @@ public class MemberRequest {
                 dto.getProfileImage());
     }
 
-    public MemberDto toDto() {
-        return MemberDto.of(
+    public Member toDto() {
+        return Member.of(
                 null,
                 email,
                 password,

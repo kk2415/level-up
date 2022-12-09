@@ -5,15 +5,14 @@ import com.levelup.common.exception.EntityDuplicationException;
 import com.levelup.common.exception.EntityNotFoundException;
 import com.levelup.common.exception.ErrorCode;
 import com.levelup.event.events.*;
-import com.levelup.member.domain.domain.MemberSkill;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.entity.MemberSkillEntity;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.service.dto.CreateMemberDto;
 import com.levelup.member.domain.service.dto.UpdateMemberDto;
 import com.levelup.member.domain.repository.MemberRepository;
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import com.levelup.member.domain.service.dto.UpdatePasswordDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,23 +36,22 @@ public class MemberService {
     private final SkillRepository skillRepository;
     private final MemberRepository memberRepository;
 
-    public CreateMemberDto save(MemberDto dto) throws IOException {
-        validateDuplicationMember(dto.getEmail(), dto.getNickname());
+    public CreateMemberDto save(Member member) throws IOException {
+        validateDuplicationMember(member.getEmail(), member.getNickname());
 
-        Member member = dto.toEntity();
-        List<MemberSkillEntity> memberSkills = skillRepository.findAllById(dto.getSkillIds())
-                .stream().map(skill -> MemberSkillEntity.of(member, skill))
+        MemberEntity memberEntity = member.toEntity();
+        List<MemberSkillEntity> memberSkills = skillRepository.findAllById(member.getSkillIds())
+                .stream().map(skill -> MemberSkillEntity.of(memberEntity, skill))
                 .collect(Collectors.toUnmodifiableList());
 
-        member.updatePassword(passwordEncoder.encode(member.getPassword()));
-        member.addRole(Role.of(RoleName.ANONYMOUS, member));
-        member.addMemberSkills(memberSkills);
+        memberEntity.updatePassword(passwordEncoder.encode(memberEntity.getPassword()));
+        memberEntity.addRole(Role.of(RoleName.ANONYMOUS, memberEntity));
+        memberEntity.addMemberSkills(memberSkills);
+        memberRepository.save(memberEntity);
 
-        memberRepository.save(member);
+        EventPublisher.raise(MemberCreatedEvent.of(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getNickname()));
 
-        EventPublisher.raise(MemberCreatedEvent.of(member.getId(), member.getEmail(), member.getNickname()));
-
-        return CreateMemberDto.from(member);
+        return CreateMemberDto.from(memberEntity);
     }
 
     private void validateDuplicationMember(String email, String nickname) {
@@ -67,17 +65,17 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "MEMBER", key = "#memberId")
-    public MemberDto get(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public Member get(Long memberId) {
+        MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return MemberDto.from(member);
+        return Member.from(member);
     }
 
 
     @CacheEvict(cacheNames = "MEMBER", key = "#memberId")
-    public void update(UpdateMemberDto dto, Long memberId) throws IOException {
-        Member member = memberRepository.findById(memberId)
+    public void update(UpdateMemberDto dto, Long memberId) {
+        MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.update(dto.getNickname());
@@ -89,7 +87,7 @@ public class MemberService {
     }
 
     public void updatePassword(UpdatePasswordDto dto, String email) {
-        Member member = memberRepository.findByEmail(email)
+        MemberEntity member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.updatePassword(passwordEncoder.encode(dto.getPassword()));
@@ -98,7 +96,7 @@ public class MemberService {
 
     @CacheEvict(cacheNames = "MEMBER", key = "#memberId")
     public void delete(Long memberId) {
-        final Member member = memberRepository.findById(memberId)
+        final MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
 
         EventPublisher.raise(MemberDeletedEvent.of(member.getId(), member.getEmail(), member.getNickname()));

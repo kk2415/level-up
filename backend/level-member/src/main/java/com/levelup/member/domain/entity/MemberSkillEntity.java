@@ -22,7 +22,7 @@ public class MemberSkillEntity extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity member;
 
     @JoinColumn(name = "skill_id")
     @ManyToOne
@@ -30,7 +30,7 @@ public class MemberSkillEntity extends BaseTimeEntity {
 
     protected MemberSkillEntity() {}
 
-    public static MemberSkillEntity of(Member member, SkillEntity skill) {
+    public static MemberSkillEntity of(MemberEntity member, SkillEntity skill) {
         return new MemberSkillEntity(null, member, skill);
     }
 

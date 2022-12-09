@@ -7,7 +7,7 @@ import com.levelup.api.config.TestJpaConfig;
 import com.levelup.api.controller.v1.member.SignUpApiController;
 import com.levelup.api.filter.JwtAuthenticationFilter;
 import com.levelup.member.domain.service.dto.CreateMemberDto;
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import com.levelup.member.domain.service.MemberService;
 import com.levelup.api.controller.v1.dto.request.member.MemberRequest;
 import org.junit.jupiter.api.Disabled;
@@ -58,7 +58,7 @@ class SignUpApiControllerTest extends TestSupporter {
     @Test
     void signUpTest() throws Exception {
         // Given
-        MemberDto memberDto = MemberDto.from(createMember("test@gmail.com", "test1"));
+        Member memberDto = Member.from(createMember("test@gmail.com", "test1"));
 
         String jsonRequest = objectMapper.writeValueAsString(MemberRequest.from(memberDto));
         MockMultipartFile profileImage = new MockMultipartFile(

@@ -19,7 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "member")
 @Entity
-public class Member extends BaseTimeEntity implements Serializable {
+public class MemberEntity extends BaseTimeEntity implements Serializable {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "member_id")
@@ -59,9 +59,9 @@ public class Member extends BaseTimeEntity implements Serializable {
     @LastModifiedBy
     private String updatedBy;
 
-    protected Member (){}
+    protected MemberEntity(){}
 
-    private Member(
+    private MemberEntity(
             Long id,
             String email,
             String password,
@@ -85,7 +85,7 @@ public class Member extends BaseTimeEntity implements Serializable {
         this.createdBy = createdBy;
     }
 
-    private Member(
+    private MemberEntity(
             Long id,
             String email,
             String password,
@@ -111,7 +111,7 @@ public class Member extends BaseTimeEntity implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public static Member of(
+    public static MemberEntity of(
             Long id,
             String email,
             String password,
@@ -123,10 +123,10 @@ public class Member extends BaseTimeEntity implements Serializable {
             List<Role> roles,
             String createdBy)
     {
-        return new Member(id, email, password, name, nickname, gender, birthday, phone, roles, createdBy);
+        return new MemberEntity(id, email, password, name, nickname, gender, birthday, phone, roles, createdBy);
     }
 
-    public static Member of(
+    public static MemberEntity of(
             Long id,
             String email,
             String password,
@@ -139,7 +139,7 @@ public class Member extends BaseTimeEntity implements Serializable {
             Set<MemberSkillEntity> skills,
             String createdBy)
     {
-        return new Member(id, email, password, name, nickname, gender, birthday, phone, roles, skills, createdBy);
+        return new MemberEntity(id, email, password, name, nickname, gender, birthday, phone, roles, skills, createdBy);
     }
 
     public void addRole(Role role) {
@@ -162,8 +162,8 @@ public class Member extends BaseTimeEntity implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Member)) return false;
-        return id != null && id.equals(((Member) obj).getId());
+        if (!(obj instanceof MemberEntity)) return false;
+        return id != null && id.equals(((MemberEntity) obj).getId());
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.repository.MemberRepository;
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.event.annotation.BeforeTestMethod;
@@ -28,7 +28,7 @@ public class TestSecurityConfig {
         //테스트용 계정 정보 하나 저장
         //UserDetailsService에서 memberRepository.findById을 사용하니까 미리 데이터를 설정함
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(
-                MemberDto.of(
+                Member.of(
                         1L,
                         "test@email.com",
                         "00000000",

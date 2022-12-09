@@ -1,4 +1,4 @@
-package com.levelup.common.util.email;
+package com.levelup.common.email;
 
 import lombok.Getter;
 

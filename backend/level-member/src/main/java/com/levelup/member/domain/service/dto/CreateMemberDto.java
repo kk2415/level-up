@@ -2,7 +2,7 @@ package com.levelup.member.domain.service.dto;
 
 import com.levelup.common.domain.domain.Skill;
 import com.levelup.member.domain.constant.Gender;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.constant.RoleName;
 import lombok.AccessLevel;
@@ -55,7 +55,7 @@ public class CreateMemberDto {
         this.role = role;
     }
 
-    public static CreateMemberDto from(Member member) {
+    public static CreateMemberDto from(MemberEntity member) {
         return new CreateMemberDto(
                 member.getId(),
                 member.getEmail(),

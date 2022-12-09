@@ -28,16 +28,16 @@ public class Role extends BaseTimeEntity implements Serializable {
     @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity member;
 
     protected Role() {}
 
-    private Role(RoleName roleName, Member member) {
+    private Role(RoleName roleName, MemberEntity member) {
         this.roleName = roleName;
         this.member = member;
     }
 
-    public static Role of(RoleName roleName, Member member) {
+    public static Role of(RoleName roleName, MemberEntity member) {
         return new Role(roleName, member);
     }
 

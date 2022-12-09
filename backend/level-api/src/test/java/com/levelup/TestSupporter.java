@@ -2,7 +2,7 @@ package com.levelup;
 
 import com.levelup.article.domain.entity.*;
 import com.levelup.member.domain.constant.Gender;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.constant.RoleName;
 
@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class TestSupporter {
 
-    protected Member createMember(Long id, String email, String nickname) {
-        Member member = Member.of(
+    protected MemberEntity createMember(Long id, String email, String nickname) {
+        MemberEntity member = MemberEntity.of(
                 id,
                 email,
                 "00000000",
@@ -30,8 +30,8 @@ public class TestSupporter {
         return member;
     }
 
-    protected Member createMember(String email, String nickname) {
-        Member member = Member.of(
+    protected MemberEntity createMember(String email, String nickname) {
+        MemberEntity member = MemberEntity.of(
                 null,
                 email,
                 "00000000",

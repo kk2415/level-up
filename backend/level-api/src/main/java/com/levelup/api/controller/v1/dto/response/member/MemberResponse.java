@@ -1,6 +1,6 @@
 package com.levelup.api.controller.v1.dto.response.member;
 
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import com.levelup.common.util.DateFormat;
 import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.constant.RoleName;
@@ -43,7 +43,7 @@ public class MemberResponse implements Serializable {
         this.role = role;
     }
 
-    public static MemberResponse from(MemberDto dto) {
+    public static MemberResponse from(Member dto) {
         return new MemberResponse(
                 dto.getMemberId(),
                 dto.getEmail(),

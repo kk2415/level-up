@@ -2,7 +2,7 @@ package com.levelup;
 
 import com.levelup.api.config.SecurityConfig;
 import com.levelup.member.domain.constant.RoleName;
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.constant.Gender;
 import com.levelup.member.domain.repository.MemberRepository;
@@ -26,7 +26,7 @@ public class TestSecurityConfig {
         //테스트용 계정 정보 하나 저장
         //UserDetailsService에서 userAccountRepository.findById을 사용하니까 미리 데이터를 설정함
         given(memberRepository.findByEmail(anyString())).willReturn(Optional.ofNullable(
-                MemberDto.of(
+                Member.of(
                         null,
                         "test@test",
                         "00000000",

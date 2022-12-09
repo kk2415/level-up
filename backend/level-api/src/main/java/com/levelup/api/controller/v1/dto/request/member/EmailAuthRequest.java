@@ -1,6 +1,6 @@
 package com.levelup.api.controller.v1.dto.request.member;
 
-import com.levelup.member.domain.service.dto.EmailAuthDto;
+import com.levelup.member.domain.domain.EmailAuth;
 import com.levelup.member.domain.constant.EmailAuthType;
 import lombok.Getter;
 
@@ -21,7 +21,7 @@ public class EmailAuthRequest {
         return new EmailAuthRequest(securityCode, authType);
     }
 
-    public EmailAuthDto toDto() {
-        return EmailAuthDto.of(authType, securityCode, false);
+    public EmailAuth toDto() {
+        return EmailAuth.of(authType, securityCode, false);
     }
 }

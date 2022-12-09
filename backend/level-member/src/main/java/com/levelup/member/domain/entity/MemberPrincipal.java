@@ -47,7 +47,7 @@ public class MemberPrincipal extends User {
         this.isAdmin = isAdmin;
     }
 
-    public static MemberPrincipal from(Member member) {
+    public static MemberPrincipal from(MemberEntity member) {
         return new MemberPrincipal(
                 member.getId(),
                 member.getNickname(),

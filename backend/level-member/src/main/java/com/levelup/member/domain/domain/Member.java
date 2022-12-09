@@ -1,10 +1,8 @@
-package com.levelup.member.domain.service.dto;
+package com.levelup.member.domain.domain;
 
-import com.levelup.common.domain.domain.Skill;
 import com.levelup.common.util.file.UploadFile;
 import com.levelup.member.domain.constant.Gender;
-import com.levelup.member.domain.domain.MemberSkill;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.entity.Role;
 import com.levelup.member.domain.constant.RoleName;
 import lombok.AccessLevel;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class MemberDto implements Serializable {
+public class Member implements Serializable {
 
     private Long memberId;
     private String email;
@@ -36,9 +34,9 @@ public class MemberDto implements Serializable {
     private RoleName role;
     private List<MemberSkill> memberSkills;
 
-    protected MemberDto() {}
+    protected Member() {}
 
-    private MemberDto(
+    private Member(
             Long memberId,
             String email,
             String password,
@@ -62,7 +60,7 @@ public class MemberDto implements Serializable {
         this.role = role;
     }
 
-    public static MemberDto of(
+    public static Member of(
             Long memberId,
             String email,
             String password,
@@ -74,7 +72,7 @@ public class MemberDto implements Serializable {
             UploadFile profileImage,
             List<MemberSkill> memberSkills)
     {
-        return new MemberDto(
+        return new Member(
             memberId,
             email,
             password,
@@ -89,7 +87,7 @@ public class MemberDto implements Serializable {
         );
     }
 
-    public static MemberDto of(
+    public static Member of(
             Long memberId,
             String email,
             String password,
@@ -101,7 +99,7 @@ public class MemberDto implements Serializable {
             UploadFile profileImage,
             RoleName role)
     {
-        return new MemberDto(
+        return new Member(
                 memberId,
                 email,
                 password,
@@ -115,8 +113,8 @@ public class MemberDto implements Serializable {
         );
     }
 
-    public static MemberDto from(Member member) {
-        return new MemberDto(
+    public static Member from(MemberEntity member) {
+        return new Member(
                 member.getId(),
                 member.getEmail(),
                 member.getPassword(),
@@ -136,8 +134,8 @@ public class MemberDto implements Serializable {
         );
     }
 
-    public static MemberDto from(Member member, UploadFile profile) {
-        return new MemberDto(
+    public static Member from(MemberEntity member, UploadFile profile) {
+        return new Member(
                 member.getId(),
                 member.getEmail(),
                 member.getPassword(),
@@ -154,8 +152,8 @@ public class MemberDto implements Serializable {
         );
     }
 
-    public Member toEntity() {
-        return Member.of(null, email, password, name, nickname, gender, birthday, phone, new ArrayList<>(), email);
+    public MemberEntity toEntity() {
+        return MemberEntity.of(null, email, password, name, nickname, gender, birthday, phone, new ArrayList<>(), email);
     }
 
     public List<Long> getSkillIds() {

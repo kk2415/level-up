@@ -23,13 +23,8 @@ public class SignUpApiController {
     private final MemberService memberService;
 
     @PostMapping(value = {"", "/"})
-    public ResponseEntity<CreateMemberResponse> save(
-            @RequestBody @Valid MemberRequest request
-    ) throws IOException
-    {
+    public ResponseEntity<CreateMemberResponse> save(@RequestBody @Valid MemberRequest request) throws IOException {
         CreateMemberDto dto = memberService.save(request.toDto());
-
-        log.info("회원가입 성공 = 이메일 : {}, 본명 : {}", request.getEmail(), request.getName());
 
         return ResponseEntity.ok().body(CreateMemberResponse.from(dto));
     }

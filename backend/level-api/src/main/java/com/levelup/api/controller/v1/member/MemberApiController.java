@@ -4,7 +4,7 @@ import com.levelup.api.controller.v1.dto.request.member.UpdatePasswordRequest;
 import com.levelup.member.domain.service.MemberService;
 import com.levelup.api.controller.v1.dto.response.member.MemberResponse;
 import com.levelup.api.controller.v1.dto.request.member.UpdateMemberRequest;
-import com.levelup.member.domain.service.dto.MemberDto;
+import com.levelup.member.domain.domain.Member;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class MemberApiController {
 
     @GetMapping({"/{memberId}", "/{memberId}/"})
     public ResponseEntity<MemberResponse> get(@PathVariable Long memberId) {
-        MemberDto dto = memberService.get(memberId);
+        Member dto = memberService.get(memberId);
 
         return ResponseEntity.ok().body(MemberResponse.from(dto));
     }

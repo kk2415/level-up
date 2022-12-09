@@ -1,4 +1,4 @@
-package com.levelup.common.util.email;
+package com.levelup.common.email;
 
 import lombok.Getter;
 
@@ -11,5 +11,10 @@ public enum EmailSubject {
 
     EmailSubject(String subject) {
         this.subject = subject;
+    }
+
+    @Override
+    public String toString() {
+        return subject;
     }
 }

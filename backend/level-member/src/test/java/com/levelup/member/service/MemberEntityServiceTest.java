@@ -9,8 +9,8 @@ import com.levelup.member.TestSupporter;
 import com.levelup.member.domain.constant.RoleName;
 import com.levelup.member.domain.service.MemberService;
 import com.levelup.member.domain.service.dto.CreateMemberDto;
-import com.levelup.member.domain.service.dto.MemberDto;
-import com.levelup.member.domain.entity.Member;
+import com.levelup.member.domain.domain.Member;
+import com.levelup.member.domain.entity.MemberEntity;
 import com.levelup.member.domain.repository.MemberRepository;
 import com.levelup.member.domain.service.dto.UpdateMemberDto;
 import com.levelup.member.domain.service.dto.UpdatePasswordDto;
@@ -36,7 +36,7 @@ import static org.mockito.BDDMockito.*;
 
 @DisplayName("회원 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
-class MemberServiceTest extends TestSupporter {
+class MemberEntityServiceTest extends TestSupporter {
 
     @Mock private MemberRepository memberRepository;
     @Mock private SkillRepository skillRepository;
@@ -61,12 +61,12 @@ class MemberServiceTest extends TestSupporter {
     void save() throws IOException {
         // Given
         List<SkillEntity> skills = List.of(SkillEntity.of(1L, "Spring"), SkillEntity.of(2L, "Java"), SkillEntity.of(2L, "PHP"));
-        MemberDto memberDto1 = MemberDto.from(createMember("test1@email.com", "test1"));
+        Member memberDto1 = Member.from(createMember("test1@email.com", "test1"));
 
         given(passwordEncoder.encode(eq(memberDto1.getPassword()))).willReturn("changed password");
-        given(memberRepository.save(any(Member.class))).willReturn(memberDto1.toEntity());
+        given(memberRepository.save(any(MemberEntity.class))).willReturn(memberDto1.toEntity());
         given(skillRepository.findAllById(anyList())).willReturn(skills);
-        eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
+        eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(MemberEntity.class)))
                 .thenReturn(MemberCreatedEvent.of(1L, memberDto1.getEmail(), memberDto1.getNickname()));
 
         // When
@@ -78,7 +78,7 @@ class MemberServiceTest extends TestSupporter {
         assertThat(response.getRole()).isEqualTo(RoleName.ANONYMOUS);
         assertThat(response.getSkills()).isNotEmpty();
         verify(passwordEncoder, times(1)).encode(anyString());
-        verify(memberRepository, times(1)).save(any(Member.class));
+        verify(memberRepository, times(1)).save(any(MemberEntity.class));
     }
 
     @DisplayName("회원 정보 수정 테스트")
@@ -87,9 +87,9 @@ class MemberServiceTest extends TestSupporter {
         // Given
         UpdateMemberDto updateMemberDto = UpdateMemberDto.of("changed nickname");
         UpdatePasswordDto updatePasswordDto = UpdatePasswordDto.of("changed password");
-        Member member = MemberDto.from(createMember("test1@email.com", "test1")).toEntity();
+        MemberEntity member = Member.from(createMember("test1@email.com", "test1")).toEntity();
 
-        eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(Member.class)))
+        eventPublisher.when((MockedStatic.Verification) EventPublisher.raise(any(MemberEntity.class)))
                 .thenReturn(MemberUpdatedEvent.of(1L, member.getEmail(), member.getNickname()));
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
         given(memberRepository.findByEmail(member.getEmail())).willReturn(Optional.of(member));
