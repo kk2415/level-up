@@ -91,7 +91,7 @@ jasypt:
     bean: encryptorBean
 
 file:
-  local_dir: C:/kyunkim/project/level-up-store
+  local_dir: C:/Task/study/levelup/images
   s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
 
 #actuator 설정

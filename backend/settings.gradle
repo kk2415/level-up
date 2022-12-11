@@ -7,3 +7,5 @@ include 'level-member'
 include 'level-common'
 include 'level-image'
 include 'level-recruit'
+include 'level-notification'
+
