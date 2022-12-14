@@ -1,7 +1,7 @@
-package com.levelup.notification.client.domain.domain;
+package com.levelup.notification.domain.domain;
 
-import com.levelup.notification.client.domain.constant.NotificationTemplateType;
-import com.levelup.notification.client.domain.entity.NotificationTemplateEntity;
+import com.levelup.notification.domain.constant.NotificationTemplateType;
+import com.levelup.notification.domain.entity.NotificationTemplateEntity;
 
 public class JobNotificationTemplate extends NotificationTemplate {
 
@@ -17,8 +17,8 @@ public class JobNotificationTemplate extends NotificationTemplate {
         return NotificationTemplateEntity.of(null, createTitle(), createBody(body));
     }
 
-    public NotificationTemplateEntity toEntity(String body) {
-        return NotificationTemplateEntity.of(null, createTitle(), createBody(body));
+    public NotificationTemplateEntity toEntity() {
+        return NotificationTemplateEntity.of(this.getId(), this.getTitle(), this.getBody());
     }
 
     private static String createTitle() {
