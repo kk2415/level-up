@@ -5,16 +5,16 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 
-@Component("TossConnectionMaker")
-public class TossConnectionMaker implements JsoupConnectionMaker {
+@Component("CoupangConnectionMaker")
+public class CoupangConnectionMaker implements JsoupConnectionMaker {
 
     @Override
     public Connection makeConnection() {
-        return Jsoup.connect(Company.TOSS.getUrl());
+        return Jsoup.connect(Company.COUPANG.getUrl());
     }
 
     @Override
     public Connection makeConnection(String param) {
-        return Jsoup.connect(Company.TOSS.getUrl() + param);
+        return Jsoup.connect(Company.COUPANG.getUrl() + param);
     }
 }

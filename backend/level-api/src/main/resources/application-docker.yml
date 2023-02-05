@@ -8,8 +8,8 @@ server:
 cloud:
   aws:
     credentials:
-      access-key: ENC(tjOm3RFJBf/o8xVrARBnEeIuFr0Xlwk13NsNKfC845Y=)
-      secret-key: ENC(lcTYXZymgxQ1O7jjCj/eAEFrmIELJ9BL78biwGJTyMJLamhrWO/DxRmRoOjrqthW84Voi7rzpgQ=)
+      access-key: AKIATUP22VXYB2LH7LJP
+      secret-key: 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
     s3:
       bucket: mylevelupbuckets3
     region:
@@ -20,9 +20,9 @@ cloud:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/level_up?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://172.30.1.34:3307/level_up?serverTimezone=Asia/Seoul
     username: root
-    password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
+    password: Dudrhkd10ck!
 
   servlet:
     multipart:
@@ -31,7 +31,7 @@ spring:
 
   mail:
     username: koria789@gmail.com
-    password: ENC(EhKyuZGqPjEGv/aFgLCwxnik+I8z+cTkjHNtWZanjok=)
+    password: dlxpnbkbcbaorjuh
     host: smtp.gmail.com
     port: 587
     properties:
@@ -72,7 +72,7 @@ spring:
 #    defer-datasource-initialization: true
 
   redis:
-    host: localhost
+    host: 172.30.1.34
     port: 6379
     password: ''
 
@@ -89,6 +89,7 @@ logging:
 jasypt:
   encryptor:
     bean: encryptorBean
+    password: p3uVnuqs1asQda
 
 file:
   local_dir: C:/Task/study/levelup/images

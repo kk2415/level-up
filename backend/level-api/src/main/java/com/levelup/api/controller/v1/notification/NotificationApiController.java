@@ -19,18 +19,18 @@ public class NotificationApiController {
     //신청자 이름, 채널 이름 - NEW_REQUEST_ON_CHANNEL
     //좋아요 누른 사람, 채널 이름 - NEW_LIKE_ON_FEED
 
-    @PostMapping("")
-    public void sendRequestJoinChannel(@RequestBody Request request) {
-
-    }
-
-    @PostMapping("")
-    public void sendNewComment(@RequestBody Request request) {
-
-    }
-
-    @PostMapping("/job")
-    public void sendNewJob() {
-
-    }
+//    @PostMapping("")
+//    public void sendRequestJoinChannel(@RequestBody Request request) {
+//
+//    }
+//
+//    @PostMapping("")
+//    public void sendNewComment(@RequestBody Request request) {
+//
+//    }
+//
+//    @PostMapping("/job")
+//    public void sendNewJob() {
+//
+//    }
 }

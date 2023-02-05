@@ -33,11 +33,4 @@ public class ChannelJoinRequestNotificationDto {
             );
         }
     }
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @Getter
-    public static class Response {
-
-    }
 }

@@ -8,7 +8,7 @@ public enum Company {
     NAVER("https://recruit.navercorp.com/rcrt/list.do"),
     KAKAO("https://careers.kakao.com/jobs"),
     LINE("https://careers.linecorp.com/ko/jobs"),
-    COPANG("url"),
+    COUPANG("https://www.coupang.jobs/kr/jobs"),
     BAMIN("https://career.woowahan.com/?keyword=&category=jobGroupCodes%3ABA005001#recruit-list"),
 
     TOSS("https://toss.im/career/jobs"),
