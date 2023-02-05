@@ -21,8 +21,12 @@ drop table if exists writer;
 drop table if exists email_auth;
 drop table if exists role;
 drop table if exists member_skill;
-drop table if exists `skill`;
 drop table if exists member;
+
+drop table if exists `skill`;
+
+drop table if exists notification;
+drop table if exists notification_template;
 
 create table hibernate_sequence (
     next_val bigint
@@ -37,6 +41,26 @@ create table if not exists `skill` (
     `name` varchar(255) not null unique,
     created_at datetime not null default '2022-01-01 00:00:00',
     updated_at datetime not null default '2022-01-01 00:00:00'
+) engine=InnoDB default charset=utf8 collate=utf8_general_ci;
+
+#######################################################################################################################
+
+create table if not exists notification (
+    notification_id bigint not null auto_increment primary key,
+    title text not null,
+    receiver_id bigint not null,
+    activator_id bigint not null,
+    read_at datetime null,
+    is_read boolean not null,
+    notification_type varchar(255) not null,
+    template_type varchar(255) not null,
+    notification_template_id bigint not null
+) engine=InnoDB default charset=utf8 collate=utf8_general_ci;
+
+create table if not exists notification_template (
+    notification_template_id bigint not null auto_increment primary key,
+    title text not null,
+    `body` longtext not null
 ) engine=InnoDB default charset=utf8 collate=utf8_general_ci;
 
 #######################################################################################################################

@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(Exception e, HttpServletRequest request)
     {
         log.error("{} - {} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI(), e.getStackTrace());
+        e.printStackTrace();
 
         ExceptionResponse response = ExceptionResponse.of(500, e.getMessage());
 
@@ -33,6 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
+        e.printStackTrace();
 
         ExceptionResponse response = FieldExceptionResponse.of(ErrorCode.INVALID_REQUEST_BODY, e.getBindingResult());
 
@@ -43,6 +45,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException e, HttpServletRequest request)
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
+        e.printStackTrace();
 
         ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
@@ -53,6 +56,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleMemberException(MemberException e, HttpServletRequest request)
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
+        e.printStackTrace();
 
         ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
@@ -63,6 +67,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleArticleException(ArticleException e, HttpServletRequest request)
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
+        e.printStackTrace();
 
         ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 
@@ -73,6 +78,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleChannelException(ChannelException e, HttpServletRequest request)
     {
         log.error("{} - {} - {}", e.getClass().getName(), e.getMessage(), request.getRequestURI());
+        e.printStackTrace();
 
         ExceptionResponse response = ExceptionResponse.of(e.getHttpStatus(), e.getMessage());
 

@@ -1,4 +1,4 @@
-package com.levelup.notification.client.domain.constant;
+package com.levelup.notification.domain.constant;
 
 public enum NotificationType {
 
