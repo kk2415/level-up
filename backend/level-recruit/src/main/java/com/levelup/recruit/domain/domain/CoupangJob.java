@@ -1,7 +1,6 @@
 package com.levelup.recruit.domain.domain;
 
 import com.levelup.recruit.domain.entity.JobEntity;
-import com.levelup.recruit.domain.enumeration.ClosingType;
 import com.levelup.recruit.domain.enumeration.Company;
 import com.levelup.recruit.domain.enumeration.OpenStatus;
 
@@ -24,7 +23,7 @@ public class CoupangJob extends Job {
     {
         super(null,
                 title,
-                Company.KAKAO,
+                Company.COUPANG,
                 url,
                 OpenStatus.TODAY,
                 noticeEndDate);
