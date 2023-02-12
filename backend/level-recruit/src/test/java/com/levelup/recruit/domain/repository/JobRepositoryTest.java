@@ -44,7 +44,7 @@ class JobRepositoryTest {
                 JobEntity.of("프론트엔드 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
                 JobEntity.of("데브옵스 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
                 JobEntity.of("머신러닝 채용 공고", Company.BAMIN, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("안드로이드 채용 공고", Company.COPANG, "url", OpenStatus.TODAY, "마감까지"));
+                JobEntity.of("안드로이드 채용 공고", Company.COUPANG, "url", OpenStatus.TODAY, "마감까지"));
         jobRepository.saveAll(saveJobs);
 
         JobFilterCondition filterCondition = JobFilterCondition.of(Company.KAKAO, null);
@@ -67,7 +67,7 @@ class JobRepositoryTest {
                 JobEntity.of("프론트엔드 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
                 JobEntity.of("데브옵스 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
                 JobEntity.of("머신러닝 채용 공고", Company.BAMIN, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("안드로이드 채용 공고", Company.COPANG, "url", OpenStatus.TODAY, "마감까지"));
+                JobEntity.of("안드로이드 채용 공고", Company.COUPANG, "url", OpenStatus.TODAY, "마감까지"));
         jobRepository.saveAll(saveJobs);
 
         JobFilterCondition filterCondition = JobFilterCondition.of(null, null);

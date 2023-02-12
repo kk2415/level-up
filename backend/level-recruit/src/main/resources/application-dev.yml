@@ -19,7 +19,9 @@ spring:
     url: jdbc:mysql://localhost:3309/recruit?serverTimezone=Asia/Seoul
     username: root
     password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
-
+  sql:
+    init:
+      mode: never
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
@@ -65,4 +67,8 @@ management:
 file:
   local_dir: C:/Task/study/levelup
   s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
+
+webdriver:
+  chrome:
+    driver: C:/Task/tools/chromedriver_win32/chromedriver.exe
 

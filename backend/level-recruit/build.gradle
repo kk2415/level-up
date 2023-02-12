@@ -9,6 +9,10 @@ plugins {
 }
 
 dependencies {
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.7.2'
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.4'
+
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
