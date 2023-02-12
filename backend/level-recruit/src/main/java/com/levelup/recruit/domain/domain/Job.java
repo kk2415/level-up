@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @ToString
@@ -21,13 +22,38 @@ public class Job {
     protected String url;
     protected OpenStatus openStatus;
     protected String noticeEndDate;
+    protected LocalDateTime createdAt;
 
-    public static Job of(String title, Company company, String url, OpenStatus openStatus, String noticeEndDate) {
-        return new Job(null, title, company, url, openStatus, noticeEndDate);
+    public Job(Long id, String title, Company company, String url, OpenStatus openStatus, String noticeEndDate) {
+        this.id = id;
+        this.title = title;
+        this.company = company;
+        this.url = url;
+        this.openStatus = openStatus;
+        this.noticeEndDate = noticeEndDate;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public static Job of(
+            String title,
+            Company company,
+            String url,
+            OpenStatus openStatus,
+            String noticeEndDate,
+            LocalDateTime created)
+    {
+        return new Job(null, title, company, url, openStatus, noticeEndDate, created);
     }
 
     public static Job from(JobEntity jobEntity) {
-        return new Job(jobEntity.getId(), jobEntity.getTitle(), jobEntity.getCompany(), jobEntity.getUrl(), jobEntity.getOpenStatus(), jobEntity.getNoticeEndDate());
+        return new Job(
+                jobEntity.getId(),
+                jobEntity.getTitle(),
+                jobEntity.getCompany(),
+                jobEntity.getUrl(),
+                jobEntity.getOpenStatus(),
+                jobEntity.getNoticeEndDate(),
+                jobEntity.getCreatedAt());
     }
 
     public JobEntity toEntity() {

@@ -23,12 +23,14 @@ public class KakaoScraper {
 
     public List<Job> findJobs() {
         int page = 1;
-        int lastPage = 3;
+        int lastPage = 5;
         String param;
 
         List<Job> jobs = new ArrayList<>();
         for (; page <= lastPage; ++page) {
-            param = "?company=ALL&page=" + page;
+            param = "?skilset=Android,iOS,Windows,Web_front,DB,Cloud,Server,Hadoop_eco_system,Algorithm_Ranking,System" +
+                    "&company=ALL" +
+                    "&page=" + page;
             Elements jobList = jsoupTemplate.select(param, "ul.list_jobs li");
 
             List<KakaoJob> scrapedJobs = jobList.stream().map(job -> {

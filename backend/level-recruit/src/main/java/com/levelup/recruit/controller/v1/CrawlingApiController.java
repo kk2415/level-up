@@ -2,6 +2,8 @@ package com.levelup.recruit.controller.v1;
 
 import com.levelup.recruit.crawler.Crawler;
 import com.levelup.recruit.domain.domain.Job;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "채용 사이트 크롤링 API")
 @RequestMapping("/api/v1/jobs/crawling")
 @RestController
 public class CrawlingApiController {
 
     private Crawler kakaoCrawler;
-    private Crawler baminCrawler;
     private Crawler LineCrawler;
     private Crawler naverCrawler;
-    private Crawler tossCrawler;
     private Crawler coupangCrawler;
+    private Crawler baminCrawler;
+    private Crawler tossCrawler;
 
     @Autowired
     public CrawlingApiController(
@@ -39,6 +42,7 @@ public class CrawlingApiController {
         this.coupangCrawler = coupangCrawler;
     }
 
+    @Operation(summary = "카카오 채용 크롤링")
     @PostMapping("/kakao")
     public ResponseEntity<Void> crawlingKakao() {
         List<Job> crawling = kakaoCrawler.crawling();
@@ -47,14 +51,7 @@ public class CrawlingApiController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/bamin")
-    public ResponseEntity<Void> crawlingBamin() {
-        List<Job> crawling = baminCrawler.crawling();
-        crawling.forEach(System.out::println);
-
-        return ResponseEntity.ok().build();
-    }
-
+    @Operation(summary = "라인 채용 크롤링")
     @PostMapping("/line")
     public ResponseEntity<Void> crawlingLine() {
         List<Job> crawling = LineCrawler.crawling();
@@ -63,6 +60,7 @@ public class CrawlingApiController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "네이버 채용 크롤링")
     @PostMapping("/naver")
     public ResponseEntity<Void> crawlingNaver() {
         List<Job> crawling = naverCrawler.crawling();
@@ -71,14 +69,7 @@ public class CrawlingApiController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/toss")
-    public ResponseEntity<Void> crawlingToss() {
-        List<Job> crawling = tossCrawler.crawling();
-        crawling.forEach(System.out::println);
-
-        return ResponseEntity.ok().build();
-    }
-
+    @Operation(summary = "쿠팡 채용 크롤링")
     @PostMapping("/coupang")
     public ResponseEntity<Void> crawlingCoupang() {
         List<Job> crawling = coupangCrawler.crawling();
@@ -86,4 +77,20 @@ public class CrawlingApiController {
 
         return ResponseEntity.ok().build();
     }
+
+    //    @PostMapping("/toss")
+//    public ResponseEntity<Void> crawlingToss() {
+//        List<Job> crawling = tossCrawler.crawling();
+//        crawling.forEach(System.out::println);
+//
+//        return ResponseEntity.ok().build();
+//    }
+
+    //    @PostMapping("/bamin")
+//    public ResponseEntity<Void> crawlingBamin() {
+//        List<Job> crawling = baminCrawler.crawling();
+//        crawling.forEach(System.out::println);
+//
+//        return ResponseEntity.ok().build();
+//    }
 }

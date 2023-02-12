@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class JobDto {
 
@@ -38,7 +39,7 @@ public class JobDto {
         }
 
         public Job toDomain() {
-            return Job.of(title, company, url, openStatus, noticeEndDate);
+            return Job.of(title, company, url, openStatus, noticeEndDate, LocalDateTime.now());
         }
     }
 
@@ -53,13 +54,17 @@ public class JobDto {
         private String url;
         private OpenStatus openStatus;
         private String noticeEndDate;
+        private LocalDateTime created;
 
         public static Response from(Job job) {
-            return new Response(job.getId(), job.getTitle(), job.getCompany(), job.getUrl(), job.getOpenStatus(), job.getNoticeEndDate());
-        }
-
-        public static Response of(Long id, String title, Company company, String url, OpenStatus openStatus, String noticeEndDate) {
-            return new Response(id, title, company, url, openStatus, noticeEndDate);
+            return new Response(
+                    job.getId(),
+                    job.getTitle(),
+                    job.getCompany(),
+                    job.getUrl(),
+                    job.getOpenStatus(),
+                    job.getNoticeEndDate(),
+                    job.getCreatedAt());
         }
     }
 }
