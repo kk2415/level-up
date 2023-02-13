@@ -97,13 +97,28 @@ public class SeleniumTest {
             }
 
             elements = driver.findElements(By.cssSelector("ul.card_list > li"));
+            int curSize = elements.size();
+
+            if (prevSize == curSize) {
+                break;
+            }
+
+            prevSize = curSize;
         }
 
         elements.forEach(jobElement -> {
             String title = jobElement.findElement(By.cssSelector("a.card_link > h4.card_title")).getText();
 
             String htmlOnClickAttrValue = jobElement.findElement(By.cssSelector("a.card_link")).getAttribute("onclick");
-            String jobNoticeKey = htmlOnClickAttrValue.substring(htmlOnClickAttrValue.indexOf("'") + 1, htmlOnClickAttrValue.lastIndexOf("'"));
+            System.out.println("htmlOnClickAttrValue: " + htmlOnClickAttrValue);
+
+            String jobNoticeKey;
+            if (htmlOnClickAttrValue.contains("'")) {
+                jobNoticeKey = htmlOnClickAttrValue.substring(htmlOnClickAttrValue.indexOf("'") + 1, htmlOnClickAttrValue.lastIndexOf("'"));
+            } else {
+                jobNoticeKey = htmlOnClickAttrValue.substring(htmlOnClickAttrValue.indexOf("(") + 1, htmlOnClickAttrValue.lastIndexOf(")"));
+            }
+
             String url = "https://recruit.navercorp.com/rcrt/view.do?annoId=" + jobNoticeKey;
 
             String noticeEndDate = jobElement.findElement(By.cssSelector("dl.card_info dd.info_text:last-child")).getText();
