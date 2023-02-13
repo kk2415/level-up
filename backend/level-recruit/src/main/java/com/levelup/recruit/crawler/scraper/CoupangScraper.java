@@ -53,6 +53,7 @@ public class CoupangScraper {
 
             jobs.addAll(scrapedJobs);
         }
+        driver.quit();
 
         return jobs;
     }

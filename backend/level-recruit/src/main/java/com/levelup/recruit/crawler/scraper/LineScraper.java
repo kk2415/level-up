@@ -4,7 +4,6 @@ import com.levelup.recruit.crawler.connetion.JsoupConnectionMaker;
 import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.domain.LineJob;
 import com.levelup.recruit.domain.enumeration.Company;
-import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

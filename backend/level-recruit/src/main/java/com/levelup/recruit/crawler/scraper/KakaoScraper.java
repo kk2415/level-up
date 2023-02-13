@@ -54,6 +54,7 @@ public class KakaoScraper {
 
             jobs.addAll(scrapedJobs);
         }
+        driver.quit();
 
         return jobs;
     }
