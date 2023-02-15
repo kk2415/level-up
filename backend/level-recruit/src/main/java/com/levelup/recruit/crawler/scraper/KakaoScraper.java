@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +20,6 @@ public class KakaoScraper {
 
     @Value("${webdriver.chrome.driver}")
     private String chromeDriver;
-
-    private final JsoupTemplate jsoupTemplate;
-
-    public KakaoScraper(@Qualifier("KakaoConnectionMaker") JsoupConnectionMaker connectionMaker) {
-        jsoupTemplate = JsoupTemplate.from(connectionMaker);
-    }
 
     public List<Job> findJobs() {
         int page = 1;
@@ -42,11 +35,12 @@ public class KakaoScraper {
                     "&company=ALL" +
                     "&page=" + page;
             driver.get(Company.KAKAO.getUrl() + params);
-            List<WebElement> jobList = driver.findElements(By.cssSelector("ul.list_jobs li"));
+            List<WebElement> jobList = driver.findElements(By.cssSelector("div.wrap_recruit > ul.list_jobs > a"));
+            System.out.println("size: " + jobList.size());
 
             List<KakaoJob> scrapedJobs = jobList.stream().map(job -> {
-                String title = job.findElement(By.cssSelector("a.link_jobs > h4.tit_jobs")).getText();
-                final String url = job.findElement(By.cssSelector("a.link_jobs")).getAttribute("href");
+                String title = job.findElement(By.cssSelector("h4.tit_jobs")).getText();
+                final String url = job.getAttribute("href");
                 final String noticeEndDate = job.findElement(By.cssSelector("dl.list_info > dd")).getText();
 
                 return KakaoJob.of(title, url, noticeEndDate);
@@ -54,6 +48,7 @@ public class KakaoScraper {
 
             jobs.addAll(scrapedJobs);
         }
+
         driver.quit();
 
         return jobs;

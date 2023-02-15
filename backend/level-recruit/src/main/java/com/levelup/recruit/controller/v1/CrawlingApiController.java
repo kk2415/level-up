@@ -22,20 +22,17 @@ public class CrawlingApiController {
     private Crawler LineCrawler;
     private Crawler naverCrawler;
     private Crawler coupangCrawler;
-    private Crawler baminCrawler;
     private Crawler tossCrawler;
 
     @Autowired
     public CrawlingApiController(
             @Qualifier("KakaoCrawler") Crawler kakaoCrawler,
-            @Qualifier("BaminCrawler") Crawler baminCrawler,
             @Qualifier("LineCrawler") Crawler lineCrawler,
             @Qualifier("NaverCrawler") Crawler naverCrawler,
             @Qualifier("TossCrawler") Crawler tossCrawler,
             @Qualifier("CoupangCrawler") Crawler coupangCrawler)
     {
         this.kakaoCrawler = kakaoCrawler;
-        this.baminCrawler = baminCrawler;
         this.LineCrawler = lineCrawler;
         this.naverCrawler = naverCrawler;
         this.tossCrawler = tossCrawler;
@@ -78,19 +75,12 @@ public class CrawlingApiController {
         return ResponseEntity.ok().build();
     }
 
-    //    @PostMapping("/toss")
-//    public ResponseEntity<Void> crawlingToss() {
-//        List<Job> crawling = tossCrawler.crawling();
-//        crawling.forEach(System.out::println);
-//
-//        return ResponseEntity.ok().build();
-//    }
+    @Operation(summary = "토스 채용 크롤링")
+    @PostMapping("/toss")
+    public ResponseEntity<Void> crawlingToss() {
+        List<Job> crawling = tossCrawler.crawling();
+        crawling.forEach(System.out::println);
 
-    //    @PostMapping("/bamin")
-//    public ResponseEntity<Void> crawlingBamin() {
-//        List<Job> crawling = baminCrawler.crawling();
-//        crawling.forEach(System.out::println);
-//
-//        return ResponseEntity.ok().build();
-//    }
+        return ResponseEntity.ok().build();
+    }
 }
