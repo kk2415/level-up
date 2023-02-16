@@ -1,6 +1,5 @@
 package com.levelup.recruit.crawler.scraper;
 
-import com.levelup.recruit.crawler.connetion.JsoupConnectionMaker;
 import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.domain.KakaoJob;
 import com.levelup.recruit.domain.enumeration.Company;
@@ -31,13 +30,16 @@ public class KakaoScraper {
 
         List<Job> jobs = new ArrayList<>();
         for (; page <= lastPage; ++page) {
-            params = "?skilset=Android,iOS,Windows,Web_front,DB,Cloud,Server,Hadoop_eco_system,Algorithm_Ranking,System" +
-                    "&company=ALL" +
-                    "&page=" + page;
-            driver.get(Company.KAKAO.getUrl() + params);
-            List<WebElement> jobList = driver.findElements(By.cssSelector("div.wrap_recruit > ul.list_jobs > a"));
-            System.out.println("size: " + jobList.size());
+            params = "?skilset=Android,iOS,Windows,Web_front,DB,Cloud,Server,Hadoop_eco_system,Algorithm_Ranking,System&company=ALL&page=" + page;
 
+            driver.get(Company.KAKAO.getUrl() + params);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            List<WebElement> jobList = driver.findElements(By.cssSelector("ul.list_jobs a"));
             List<KakaoJob> scrapedJobs = jobList.stream().map(job -> {
                 String title = job.findElement(By.cssSelector("h4.tit_jobs")).getText();
                 final String url = job.getAttribute("href");
