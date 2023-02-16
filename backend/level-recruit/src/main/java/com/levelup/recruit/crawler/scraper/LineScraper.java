@@ -1,6 +1,6 @@
 package com.levelup.recruit.crawler.scraper;
 
-import com.levelup.recruit.crawler.connetion.JsoupConnectionMaker;
+import com.levelup.recruit.crawler.jsoupConnetion.JsoupConnectionMaker;
 import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.domain.LineJob;
 import com.levelup.recruit.domain.enumeration.Company;

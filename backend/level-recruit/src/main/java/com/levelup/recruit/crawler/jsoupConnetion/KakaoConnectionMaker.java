@@ -1,4 +1,4 @@
-package com.levelup.recruit.crawler.connetion;
+package com.levelup.recruit.crawler.jsoupConnetion;
 
 import com.levelup.recruit.domain.enumeration.Company;
 import org.jsoup.Connection;

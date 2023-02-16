@@ -1,20 +1,20 @@
-package com.levelup.recruit.crawler.connetion;
+package com.levelup.recruit.crawler.jsoupConnetion;
 
 import com.levelup.recruit.domain.enumeration.Company;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 
-@Component("CoupangConnectionMaker")
-public class CoupangConnectionMaker implements JsoupConnectionMaker {
+@Component("NaverConnectionMaker")
+public class NaverConnectionMaker implements JsoupConnectionMaker {
 
     @Override
     public Connection makeConnection() {
-        return Jsoup.connect(Company.COUPANG.getUrl());
+        return Jsoup.connect(Company.NAVER.getUrl());
     }
 
     @Override
     public Connection makeConnection(String param) {
-        return Jsoup.connect(Company.COUPANG.getUrl() + param);
+        return Jsoup.connect(Company.NAVER.getUrl() + param);
     }
 }

@@ -1,7 +1,7 @@
 package com.levelup.recruit.crawler.scraper;
 
 import com.levelup.common.exception.ErrorCode;
-import com.levelup.recruit.crawler.connetion.JsoupConnectionMaker;
+import com.levelup.recruit.crawler.jsoupConnetion.JsoupConnectionMaker;
 import com.levelup.recruit.exception.JsoupConnectionException;
 import com.levelup.recruit.exception.JsoupHtmlParsingException;
 import org.jsoup.Connection;
