@@ -54,7 +54,7 @@ public class JobDto {
         private String url;
         private OpenStatus openStatus;
         private String noticeEndDate;
-        private LocalDateTime created;
+        private LocalDateTime createdAt;
 
         public static Response from(Job job) {
             return new Response(
