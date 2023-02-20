@@ -42,9 +42,22 @@ public class JobApiController {
             @RequestParam(required = false) OpenStatus openStatus,
             @RequestParam(defaultValue = "CREATED_AT") OrderBy orderBy,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0") int page)
-    {
+            @RequestParam(defaultValue = "0") int page
+    ) {
         List<Job> jobs = jobService.filtering(JobFilterCondition.of(company, openStatus), orderBy, PageRequest.of(page, size));
+
+        return ResponseEntity.ok().body(jobs.stream()
+                .map(Response::from)
+                .collect(Collectors.toUnmodifiableList()));
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<Response>> getCreatedToday(
+            @RequestParam(required = false) Company company,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        List<Job> jobs = jobService.getCreatedTodayByCompany(company, page, size);
 
         return ResponseEntity.ok().body(jobs.stream()
                 .map(Response::from)
@@ -55,8 +68,8 @@ public class JobApiController {
     @PatchMapping("")
     public ResponseEntity<Void> update(
             @RequestParam Long jobId,
-            @RequestBody @Valid Request request)
-    {
+            @RequestBody @Valid Request request
+    ) {
         jobService.update(jobId, request.toDomain());
 
         return ResponseEntity.ok().build();

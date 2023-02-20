@@ -3,7 +3,6 @@ package com.levelup.recruit.domain.domain;
 import com.levelup.recruit.domain.entity.JobEntity;
 import com.levelup.recruit.domain.enumeration.ClosingType;
 import com.levelup.recruit.domain.enumeration.Company;
-import com.levelup.recruit.domain.enumeration.OpenStatus;
 
 public class KakaoJob extends Job {
 
@@ -14,35 +13,33 @@ public class KakaoJob extends Job {
             String title,
             Company company,
             String url,
-            OpenStatus openStatus,
-            String noticeEndDate)
-    {
-        super(null, title, company, url, openStatus, noticeEndDate);
+            String noticeEndDate
+    ) {
+        super(null, title, company, url, noticeEndDate);
     }
 
     private KakaoJob(
             String title,
             String url,
-            String noticeEndDate)
-    {
+            String noticeEndDate
+    ) {
         super(null,
                 title,
                 Company.KAKAO,
                 url,
-                OpenStatus.TODAY,
                 noticeEndDate);
     }
 
     public static KakaoJob of(
             String title,
             String url,
-            String noticeEndDate)
-    {
+            String noticeEndDate
+    ) {
         return new KakaoJob(title, url, noticeEndDate);
     }
 
     public JobEntity toEntity() {
-        return JobEntity.of(title, company, url, openStatus, noticeEndDate);
+        return JobEntity.of(title, company, url, noticeEndDate);
     }
 
     /**

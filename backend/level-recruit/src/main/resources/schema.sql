@@ -12,7 +12,6 @@ create table `job` (
     title text not null,
     url text not null,
     company varchar(50) not null,
-    open_status varchar(20) not null,
     notice_end_date varchar(50) not null,
     created_at datetime not null default '2022-01-01 00:00:00',
     updated_at datetime not null default '2022-01-01 00:00:00'

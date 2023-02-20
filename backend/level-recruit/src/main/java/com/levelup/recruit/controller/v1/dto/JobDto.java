@@ -28,18 +28,15 @@ public class JobDto {
         @NotNull
         private String url;
 
-        @NotNull @NotBlank
-        private OpenStatus openStatus;
-
         @NotNull
         private String noticeEndDate;
 
-        public static Request of(String title, Company company, String url, OpenStatus openStatus, String noticeEndDate) {
-            return new Request(title, company, url, openStatus, noticeEndDate);
+        public static Request of(String title, Company company, String url, String noticeEndDate) {
+            return new Request(title, company, url, noticeEndDate);
         }
 
         public Job toDomain() {
-            return Job.of(title, company, url, openStatus, noticeEndDate, LocalDateTime.now());
+            return Job.of(title, company, url, noticeEndDate, LocalDateTime.now());
         }
     }
 
@@ -52,7 +49,6 @@ public class JobDto {
         private String title;
         private Company company;
         private String url;
-        private OpenStatus openStatus;
         private String noticeEndDate;
         private LocalDateTime createdAt;
 
@@ -62,7 +58,6 @@ public class JobDto {
                     job.getTitle(),
                     job.getCompany(),
                     job.getUrl(),
-                    job.getOpenStatus(),
                     job.getNoticeEndDate(),
                     job.getCreatedAt());
         }

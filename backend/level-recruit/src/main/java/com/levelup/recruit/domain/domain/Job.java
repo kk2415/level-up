@@ -20,16 +20,14 @@ public class Job {
     protected String title;
     protected Company company;
     protected String url;
-    protected OpenStatus openStatus;
     protected String noticeEndDate;
     protected LocalDateTime createdAt;
 
-    public Job(Long id, String title, Company company, String url, OpenStatus openStatus, String noticeEndDate) {
+    public Job(Long id, String title, Company company, String url, String noticeEndDate) {
         this.id = id;
         this.title = title;
         this.company = company;
         this.url = url;
-        this.openStatus = openStatus;
         this.noticeEndDate = noticeEndDate;
         this.createdAt = LocalDateTime.now();
     }
@@ -38,11 +36,10 @@ public class Job {
             String title,
             Company company,
             String url,
-            OpenStatus openStatus,
             String noticeEndDate,
             LocalDateTime created)
     {
-        return new Job(null, title, company, url, openStatus, noticeEndDate, created);
+        return new Job(null, title, company, url, noticeEndDate, created);
     }
 
     public static Job from(JobEntity jobEntity) {
@@ -51,13 +48,12 @@ public class Job {
                 jobEntity.getTitle(),
                 jobEntity.getCompany(),
                 jobEntity.getUrl(),
-                jobEntity.getOpenStatus(),
                 jobEntity.getNoticeEndDate(),
                 jobEntity.getCreatedAt());
     }
 
     public JobEntity toEntity() {
-        return JobEntity.of(title, company, url, openStatus, noticeEndDate);
+        return JobEntity.of(title, company, url, noticeEndDate);
     }
 
     @Override

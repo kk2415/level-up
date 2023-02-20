@@ -8,11 +8,14 @@ import com.levelup.recruit.domain.domain.Job;
 import com.levelup.recruit.domain.enumeration.Company;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +56,23 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
+    public List<Job> getCreatedTodayByCompany(Company company, int page, int size) {
+        LocalDateTime startOfDay = LocalDateTime.now().with(LocalTime.MIN);
+        LocalDateTime endOfDay = LocalDateTime.now().with(LocalTime.MAX);
+        Pageable pageable = PageRequest.of(page, size);
+
+        if (company == null) {
+            return jobRepository.findByCreatedAt(startOfDay, endOfDay, pageable).stream()
+                    .map(Job::from)
+                    .collect(Collectors.toUnmodifiableList());
+        }
+
+        return jobRepository.findByCompanyAndCreatedAt(company, startOfDay, endOfDay, pageable).stream()
+                .map(Job::from)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Transactional(readOnly = true)
     public List<Job> getNotMatched(List<Job> jobs, Company company) {
         List<Job> findJobs = jobRepository.findByCompany(company).stream()
                 .map(Job::from)
@@ -68,7 +88,7 @@ public class JobService {
         JobEntity findJob = jobRepository.findById(findJobId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 ID의 채용 공고를 찾을 수 없습니다."));
 
-        findJob.update(updateJob.getTitle(), updateJob.getUrl(), updateJob.getCompany(), updateJob.getOpenStatus(), updateJob.getNoticeEndDate());
+        findJob.update(updateJob.getTitle(), updateJob.getUrl(), updateJob.getCompany(), updateJob.getNoticeEndDate());
     }
 
     @Transactional
