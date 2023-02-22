@@ -31,7 +31,6 @@ public class JobRepositoryCustomImpl implements JobRepositoryCustom {
                 .select(job)
                 .from(job)
                 .where(filterCompany(filterCondition.getCompany()))
-                .where(filterOpenStatus(filterCondition.getOpenStatus()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(job.createdAt.desc())
@@ -42,9 +41,5 @@ public class JobRepositoryCustomImpl implements JobRepositoryCustom {
 
     private BooleanExpression filterCompany(Company company) {
         return company == null ? null : QJobEntity.jobEntity.company.eq(company);
-    }
-
-    private BooleanExpression filterOpenStatus(OpenStatus openStatus) {
-        return openStatus == null ? null : QJobEntity.jobEntity.openStatus.eq(openStatus);
     }
 }

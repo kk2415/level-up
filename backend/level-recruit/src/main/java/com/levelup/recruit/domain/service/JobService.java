@@ -34,7 +34,7 @@ public class JobService {
     }
 
     @Transactional
-    public void saveIfAbsent(List<Job> jobs, Company company) {
+    public List<Job> saveIfAbsent(List<Job> jobs, Company company) {
         List<Job> findJobs = jobRepository.findByCompany(company).stream()
                 .map(Job::from)
                 .collect(Collectors.toUnmodifiableList());
@@ -45,6 +45,10 @@ public class JobService {
                 .collect(Collectors.toUnmodifiableList());
 
         jobRepository.saveAll(saveJobs);
+
+        return saveJobs.stream()
+                .map(Job::from)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional(readOnly = true)
