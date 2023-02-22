@@ -1,5 +1,10 @@
 dependencies {
     implementation project(':level-common')
+
+    // Firebase Admin SDK
+    implementation 'com.google.firebase:firebase-admin:8.0.0'
+    // Google Cloud Messaging
+    implementation 'com.google.gcm:gcm-server:1.0.2'
 }
 
 bootJar {
