@@ -40,11 +40,11 @@ class JobRepositoryTest {
     @Test
     public void given_jobs_when_filterKaKaoCompany_then_returnOnlyKakaoJobs() {
         //given
-        List<JobEntity> saveJobs = List.of(JobEntity.of("백엔드 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("프론트엔드 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("데브옵스 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("머신러닝 채용 공고", Company.BAMIN, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("안드로이드 채용 공고", Company.COUPANG, "url", OpenStatus.TODAY, "마감까지"));
+        List<JobEntity> saveJobs = List.of(JobEntity.of("백엔드 채용 공고", Company.KAKAO, "url", "마감까지"),
+                JobEntity.of("프론트엔드 채용 공고", Company.KAKAO, "url", "마감까지"),
+                JobEntity.of("데브옵스 채용 공고", Company.KAKAO, "url", "마감까지"),
+                JobEntity.of("머신러닝 채용 공고", Company.BAMIN, "url", "마감까지"),
+                JobEntity.of("안드로이드 채용 공고", Company.COUPANG, "url", "마감까지"));
         jobRepository.saveAll(saveJobs);
 
         JobFilterCondition filterCondition = JobFilterCondition.of(Company.KAKAO, null);
@@ -63,11 +63,11 @@ class JobRepositoryTest {
     @Test
     public void given_jobs_when_filterNothing_then_returnAll() {
         //given
-        List<JobEntity> saveJobs = List.of(JobEntity.of("백엔드 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("프론트엔드 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("데브옵스 채용 공고", Company.KAKAO, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("머신러닝 채용 공고", Company.BAMIN, "url", OpenStatus.TODAY, "마감까지"),
-                JobEntity.of("안드로이드 채용 공고", Company.COUPANG, "url", OpenStatus.TODAY, "마감까지"));
+        List<JobEntity> saveJobs = List.of(JobEntity.of("백엔드 채용 공고", Company.KAKAO, "url", "마감까지"),
+                JobEntity.of("프론트엔드 채용 공고", Company.KAKAO, "url", "마감까지"),
+                JobEntity.of("데브옵스 채용 공고", Company.KAKAO, "url", "마감까지"),
+                JobEntity.of("머신러닝 채용 공고", Company.BAMIN, "url", "마감까지"),
+                JobEntity.of("안드로이드 채용 공고", Company.COUPANG, "url", "마감까지"));
         jobRepository.saveAll(saveJobs);
 
         JobFilterCondition filterCondition = JobFilterCondition.of(null, null);

@@ -70,5 +70,5 @@ file:
 
 webdriver:
   chrome:
-    driver: C:/Task/tools/chromedriver_win32/chromedriver.exe
+    driver: C:/tools/chromedriver_win32/chromedriver.exe
 

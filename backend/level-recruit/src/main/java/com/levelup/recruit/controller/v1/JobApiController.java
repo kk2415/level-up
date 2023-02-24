@@ -1,5 +1,11 @@
 package com.levelup.recruit.controller.v1;
 
+import com.levelup.notification.domain.constant.NotificationTemplateType;
+import com.levelup.notification.domain.constant.NotificationType;
+import com.levelup.notification.domain.domain.Notification;
+import com.levelup.notification.domain.domain.NotificationTemplate;
+import com.levelup.notification.domain.entity.NotificationTemplateEntity;
+import com.levelup.notification.domain.service.NotificationService;
 import com.levelup.recruit.controller.v1.dto.JobDto.Request;
 import com.levelup.recruit.controller.v1.dto.JobDto.Response;
 import com.levelup.recruit.domain.domain.Job;
@@ -26,6 +32,20 @@ import java.util.stream.Collectors;
 public class JobApiController {
 
     private final JobService jobService;
+    private final NotificationService notificationService;
+
+    @GetMapping("/test")
+    public void test() {
+        NotificationTemplateEntity notificationTemplateEntity = NotificationTemplateEntity.of(1L, "test push alram title", "test push alram body");
+        NotificationTemplate notificationTemplate = NotificationTemplate.from(notificationTemplateEntity);
+
+        notificationService.push(Notification.of(
+                1L,
+                1L,
+                NotificationType.ANDROID,
+                NotificationTemplateType.NEW_JOB,
+                notificationTemplate));
+    }
 
     @Operation(summary = "채용 공고 생성")
     @PostMapping("")
