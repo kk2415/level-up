@@ -4,7 +4,6 @@ import com.levelup.recruit.domain.domain.JobFilterCondition;
 import com.levelup.recruit.domain.entity.JobEntity;
 import com.levelup.recruit.domain.entity.QJobEntity;
 import com.levelup.recruit.domain.enumeration.Company;
-import com.levelup.recruit.domain.enumeration.OpenStatus;
 import com.levelup.recruit.domain.enumeration.OrderBy;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
