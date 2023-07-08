@@ -1,5 +1,3 @@
-# Level Up
-
 ## :information_desk_person: Overview
 Gradle 멀티 모듈을 활용한 게시판 프로젝트
 
