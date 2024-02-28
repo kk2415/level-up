@@ -22,10 +22,6 @@
 ### Frontend
 + HTML, CSS, JavaScript, React  
 
-### Infra
-+ AWS EC2, S3, RDS, ALB  
-<br/><br/>
-
 ---
 
 # Application Architecture
