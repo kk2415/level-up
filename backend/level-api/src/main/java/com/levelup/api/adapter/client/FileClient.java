@@ -14,5 +14,6 @@ public interface FileClient {
     @GetMapping("")
     ResponseEntity<OkResponse<UploadFile>> get(
             @RequestParam("ownerId") Long ownerId,
-            @RequestParam("fileType") FileType fileType);
+            @RequestParam("fileType") FileType fileType
+    );
 }

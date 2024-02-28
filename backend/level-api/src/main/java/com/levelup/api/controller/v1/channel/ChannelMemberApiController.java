@@ -27,20 +27,19 @@ public class ChannelMemberApiController {
     public ResponseEntity<ChannelMemberResponse> create(
             @RequestParam("channel") Long channelId,
             @RequestParam("member") Long memberId,
-            @RequestBody CreateMemberRequest request)
-    {
+            @RequestBody CreateMemberRequest request
+    ) {
         ChannelMemberDto dto = channelMemberService.create(channelId, request.toDto(memberId));
 
         return ResponseEntity.ok().body(ChannelMemberResponse.from(dto));
     }
 
-
     @GetMapping({"", "/"})
     public ResponseEntity<Page<ChannelMemberResponse>> getChannelMembers(
             @RequestParam Long channelId,
             @RequestParam Boolean isWaitingMember,
-            Pageable pageable)
-    {
+            Pageable pageable
+    ) {
         Page<ChannelMemberResponse> responses
                 = channelMemberService.getChannelMembers(channelId, isWaitingMember, pageable)
                 .map(ChannelMemberResponse::from);
@@ -60,8 +59,8 @@ public class ChannelMemberApiController {
     @DeleteMapping({"/{channelMemberId}", "/{channelMemberId}/"})
     public ResponseEntity<Void> delete(
             @PathVariable Long channelMemberId,
-            @RequestParam Long channelId)
-    {
+            @RequestParam Long channelId
+    ) {
         channelMemberService.delete(channelMemberId, channelId);
 
         return ResponseEntity.ok().build();

@@ -27,8 +27,8 @@ public class CommentApiController {
     @PostMapping({"", "/"})
     public ResponseEntity<CommentResponse> create(
             @Valid @RequestBody CommentRequest request,
-            @RequestParam("member") Long memberId)
-    {
+            @RequestParam("member") Long memberId
+    ) {
         CommentDto dto = commentService.save(request.toDto(), memberId);
 
         return ResponseEntity.ok().body(CommentResponse.from(dto));
@@ -37,13 +37,12 @@ public class CommentApiController {
     @PostMapping({"/reply", "/reply/"})
     public ResponseEntity<CommentResponse> createReply(
             @Valid @RequestBody ReplyCommentRequest request,
-            @RequestParam("member") Long memberId)
-    {
+            @RequestParam("member") Long memberId
+    ) {
         ReplyCommentDto dto = commentService.saveReply(request.toDto(), memberId);
 
         return ResponseEntity.ok().body(CommentResponse.from(dto));
     }
-
 
     @GetMapping({"/{articleId}", "/{articleId}/"})
     public ResponseEntity<List<CommentResponse>> getComments(@PathVariable Long articleId) {
@@ -67,7 +66,8 @@ public class CommentApiController {
     @DeleteMapping({"/{commentId}", "/{commentId}/"})
     public ResponseEntity<Void> delete(
             @PathVariable Long commentId,
-            @RequestParam("articleType") ArticleType articleType) {
+            @RequestParam("articleType") ArticleType articleType
+    ) {
         commentService.delete(commentId, articleType);
 
         return ResponseEntity.ok().build();

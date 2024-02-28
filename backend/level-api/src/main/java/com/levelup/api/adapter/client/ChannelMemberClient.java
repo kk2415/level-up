@@ -13,5 +13,6 @@ public interface ChannelMemberClient {
             @RequestParam("channel") Long channelId,
             @RequestParam("member") Long memberId,
             @RequestParam("isManager") Boolean isManager,
-            @RequestParam("isWaitingMember") Boolean isWaitingMember);
+            @RequestParam("isWaitingMember") Boolean isWaitingMember
+    );
 }

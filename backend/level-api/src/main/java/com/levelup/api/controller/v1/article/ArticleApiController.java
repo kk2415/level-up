@@ -28,20 +28,19 @@ public class ArticleApiController {
     @PostMapping({"", "/"})
     public ResponseEntity<ArticleResponse> create(
             @Valid @RequestBody ArticleRequest request,
-            @RequestParam("member") Long memberId)
-    {
+            @RequestParam("member") Long memberId
+    ) {
         ArticleDto dto = articleService.save(request.toDto(), memberId);
 
         return ResponseEntity.ok().body(ArticleResponse.from(dto));
     }
 
-
     @GetMapping({"/{articleId}", "/{articleId}/"})
     public ResponseEntity<ArticleResponse> get(
             @PathVariable Long articleId,
             @RequestParam ArticleType articleType,
-            @RequestParam(required = false, defaultValue = "false") boolean view)
-    {
+            @RequestParam(required = false, defaultValue = "false") boolean view
+    ) {
         ArticleDto dto = articleService.get(articleId, articleType, view);
 
         return ResponseEntity.ok().body(ArticleResponse.from(dto));
@@ -52,8 +51,8 @@ public class ArticleApiController {
             @RequestParam ArticleType articleType,
             Pageable pageable,
             @RequestParam(required = false) String field,
-            @RequestParam(required = false) String query)
-    {
+            @RequestParam(required = false) String query
+    ) {
         Page<ArticlePagingResponse> response
                 = articleService.getArticles(articleType, SearchCondition.of(field, query), pageable)
                     .map(ArticlePagingResponse::from);
@@ -64,8 +63,8 @@ public class ArticleApiController {
     @GetMapping({"/{articleId}/next-article", "/{articleId}/next-article/"})
     public ResponseEntity<ArticleResponse> getNext(
             @PathVariable Long articleId,
-            @RequestParam ArticleType articleType)
-    {
+            @RequestParam ArticleType articleType
+    ) {
         ArticleDto dto = articleService.getNext(articleId, articleType);
 
         return ResponseEntity.ok().body(ArticleResponse.from(dto));
@@ -74,8 +73,8 @@ public class ArticleApiController {
     @GetMapping({"/{articleId}/prev-article", "/{articleId}/prev-article/"})
     public ResponseEntity<ArticleResponse> getPrev(
             @PathVariable Long articleId,
-            @RequestParam ArticleType articleType)
-    {
+            @RequestParam ArticleType articleType
+    ) {
         ArticleDto dto = articleService.getPrev(articleId, articleType);
 
         return ResponseEntity.ok().body(ArticleResponse.from(dto));
@@ -86,8 +85,8 @@ public class ArticleApiController {
     public ResponseEntity<ArticleUpdateResponse> update(
             @PathVariable Long articleId,
             @RequestParam("member") Long memberId,
-            @Valid @RequestBody ArticleRequest request)
-    {
+            @Valid @RequestBody ArticleRequest request
+    ) {
         ArticleDto dto = articleService.update(request.toDto(), articleId, memberId);
 
         return ResponseEntity.ok().body(ArticleUpdateResponse.from(dto));
@@ -97,7 +96,8 @@ public class ArticleApiController {
     @DeleteMapping({"/{articleId}", "/{articleId}/"})
     public ResponseEntity<Void> delete(
             @PathVariable Long articleId,
-            @RequestParam("articleType") ArticleType articleType) {
+            @RequestParam("articleType") ArticleType articleType
+    ) {
         articleService.delete(articleId, articleType);
 
         return ResponseEntity.ok().build();

@@ -28,20 +28,19 @@ public class ChannelArticleApiController {
     public ResponseEntity<ChannelArticleResponse> create(
             @Valid @RequestBody ChannelArticleRequest request,
             @RequestParam("channel") Long channelId,
-            @RequestParam("member") Long memberId)
-    {
+            @RequestParam("member") Long memberId
+    ) {
         ChannelArticleDto dto = channelArticleService.save(request.toDto(), memberId, channelId);
 
         return ResponseEntity.ok().body(ChannelArticleResponse.from(dto));
     }
 
-
     @GetMapping({"/{articleId}", "/{articleId}/"})
     public ResponseEntity<ChannelArticleResponse> get(
             @PathVariable Long articleId,
             @RequestParam("channel") Long channelId,
-            @RequestParam(required = false, defaultValue = "false") boolean view)
-    {
+            @RequestParam(required = false, defaultValue = "false") boolean view
+    ) {
         ChannelArticleDto dto = channelArticleService.get(articleId, channelId, view);
 
         return ResponseEntity.ok().body(ChannelArticleResponse.from(dto));
@@ -52,8 +51,8 @@ public class ChannelArticleApiController {
             @RequestParam("channel") Long channelId,
             Pageable pageable,
             @RequestParam(required = false) String field,
-            @RequestParam(required = false) String query)
-    {
+            @RequestParam(required = false) String query
+    ) {
         Page<ChannelArticleResponse> response
                 = channelArticleService.getChannelArticles(channelId, SearchCondition.of(field, query), pageable)
                             .map(ChannelArticleResponse::from);
@@ -64,8 +63,8 @@ public class ChannelArticleApiController {
     @GetMapping({"/{articleId}/next-article", "/{articleId}/next-article/"})
     public ResponseEntity<ChannelArticleResponse> getNext(
             @PathVariable Long articleId,
-            @RequestParam("channel") Long channelId)
-    {
+            @RequestParam("channel") Long channelId
+    ) {
         ChannelArticleDto dto = channelArticleService.getNext(articleId, channelId);
 
         return ResponseEntity.ok().body(ChannelArticleResponse.from(dto));
@@ -74,32 +73,30 @@ public class ChannelArticleApiController {
     @GetMapping({"/{articleId}/prev-article", "/{articleId}/prev-article/"})
     public ResponseEntity<ChannelArticleResponse> getPrev(
             @PathVariable Long articleId,
-            @RequestParam("channel") Long channelId)
-    {
+            @RequestParam("channel") Long channelId
+    ) {
         ChannelArticleDto dto = channelArticleService.getPrev(articleId, channelId);
 
         return ResponseEntity.ok().body(ChannelArticleResponse.from(dto));
     }
-
 
     @PatchMapping({"/{articleId}", "/{articleId}/"})
     public ResponseEntity<ChannelArticleResponse> update(
             @PathVariable Long articleId,
             @RequestParam("member") Long memberId,
             @RequestParam("channel") Long channelId,
-            @Valid @RequestBody ChannelArticleRequest request)
-    {
+            @Valid @RequestBody ChannelArticleRequest request
+    ) {
         ChannelArticleDto dto = channelArticleService.update(request.toDto(), articleId, memberId, channelId);
 
         return ResponseEntity.ok().body(ChannelArticleResponse.from(dto));
     }
 
-
     @DeleteMapping({"/{articleId}", "/{articleId}/"})
     public ResponseEntity<Void> delete(
             @PathVariable Long articleId,
-            @RequestParam("channel") Long channelId)
-    {
+            @RequestParam("channel") Long channelId
+    ) {
         channelArticleService.delete(articleId, channelId);
 
         return ResponseEntity.ok().build();

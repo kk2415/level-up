@@ -28,8 +28,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final TokenProvider tokenProvider;
 
         @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException
-        {
+    public Authentication attemptAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response
+        ) throws AuthenticationException {
         log.info("login filter start = url : {}", request.getRequestURL());
 
         try {
@@ -56,8 +58,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain chain,
-            Authentication authResult) throws IOException
-    {
+            Authentication authResult
+    ) throws IOException {
         log.info("login filter successfulAuthentication() start = url : {}", request.getRequestURL());
 
         MemberPrincipal principal = (MemberPrincipal) authResult.getPrincipal();

@@ -26,8 +26,8 @@ public class ChannelCommentApiController {
             @Valid @RequestBody ChannelCommentRequest request,
             @RequestParam("member") Long memberId,
             @RequestParam("article") Long articleId,
-            @RequestParam("channel") Long channelId)
-    {
+            @RequestParam("channel") Long channelId
+    ) {
         ChannelCommentDto dto = commentService.save(request.toDto(), memberId, articleId, channelId);
 
         return ResponseEntity.ok().body(ChannelCommentResponse.from(dto));
@@ -37,13 +37,12 @@ public class ChannelCommentApiController {
     public ResponseEntity<ChannelCommentResponse> createReply(
             @Valid @RequestBody ChannelCommentRequest request,
             @RequestParam("member") Long memberId,
-            @RequestParam("parent") Long parentId)
-    {
+            @RequestParam("parent") Long parentId
+    ) {
         ChannelCommentDto dto = commentService.saveReply(request.toDto(), memberId, parentId);
 
         return ResponseEntity.ok().body(ChannelCommentResponse.from(dto));
     }
-
 
     @GetMapping({"", "/"})
     public ResponseEntity<List<ChannelCommentResponse>> getComments(@RequestParam("article") Long articleId) {
@@ -62,7 +61,6 @@ public class ChannelCommentApiController {
 
         return ResponseEntity.ok().body(responses);
     }
-
 
     @DeleteMapping({"/{commentId}", "/{commentId}/"})
     public ResponseEntity<Void> delete(@PathVariable Long commentId) {

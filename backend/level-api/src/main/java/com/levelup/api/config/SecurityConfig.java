@@ -76,7 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(GET, "/api/*/comments/**").permitAll()
                 .antMatchers("/api/*/comments/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
-                .antMatchers("/api/*/votes/**").authenticated();
+                .antMatchers("/api/*/votes/**").authenticated()
+                .anyRequest().permitAll();
         http
                 .addFilterAfter(getSecurityLoginFilter(), CorsFilter.class)
                 .addFilterAfter(jwtAuthenticationFilter, getSecurityLoginFilter().getClass());

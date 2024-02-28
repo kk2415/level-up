@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Tag(name = "회원 API")
 @Slf4j
@@ -35,7 +34,7 @@ public class MemberApiController {
     public ResponseEntity<Void> update(
             @Valid @RequestPart(value = "request") UpdateMemberRequest request,
             @PathVariable Long memberId
-    ) throws IOException {
+    ) {
         memberService.update(request.toDto(), memberId);
 
         return ResponseEntity.ok().build();
@@ -44,8 +43,8 @@ public class MemberApiController {
     @PatchMapping({"/{email}/password", "/{email}/password/"})
     public ResponseEntity<Void> updatePassword(
             @Valid @RequestBody UpdatePasswordRequest request,
-            @PathVariable String email)
-    {
+            @PathVariable String email
+    ) {
         memberService.updatePassword(request.toDto(), email);
 
         return ResponseEntity.ok().build();

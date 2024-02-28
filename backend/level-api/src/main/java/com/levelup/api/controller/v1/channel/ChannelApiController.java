@@ -33,18 +33,17 @@ public class ChannelApiController {
     @PostMapping({"", "/"})
     public ResponseEntity<ChannelResponse> create(
             @RequestBody @Valid CreateChannelRequest request,
-            @RequestParam("member") Long memberId) throws IOException
-    {
+            @RequestParam("member") Long memberId
+    ) throws IOException {
         ChannelDto dto = channelService.save(request.toDto(), memberId);
 
         return ResponseEntity.ok().body(ChannelResponse.from(dto));
     }
 
-
     @GetMapping({"/{channelId}", "/{channelId}/"})
     public ResponseEntity<ChannelResponse> get(
-            @PathVariable Long channelId)
-    {
+            @PathVariable Long channelId
+    ) {
         ChannelDto dto = channelService.get(channelId);
 
         return ResponseEntity.ok().body(ChannelResponse.from(dto));
@@ -55,43 +54,40 @@ public class ChannelApiController {
             @RequestParam ChannelCategory category,
             @RequestParam ChannelSort sort,
             @RequestParam int page,
-            @RequestParam int size)
-    {
+            @RequestParam int size
+    ) {
         Page<ChannelResponse> response = channelService.getChannels(category, sort, PageRequest.of(page, size))
                 .map(ChannelResponse::from);
 
         return ResponseEntity.ok().body(response);
     }
 
-
     @Operation(description = "채널 전체 정보(가입 회원, 게시글 등) 조회")
     @GetMapping({"/{channelId}/manager", "/{channelId}/manager/"})
     public ResponseEntity<ChannelStatInfoResponse> getStatInfo(
             @PathVariable("channelId") Long channelId,
-            @RequestParam("member") Long memberId)
-    {
+            @RequestParam("member") Long memberId
+    ) {
         ChannelStatInfoDto dto = channelService.getStatInfo(channelId, memberId);
 
         return ResponseEntity.ok().body(ChannelStatInfoResponse.from(dto));
     }
 
-
     @PatchMapping({"/{channelId}", "/{channelId}/"})
     public ResponseEntity<Void> update(
             @PathVariable Long channelId,
-            @RequestBody @Valid ChannelRequest request) throws IOException
-    {
+            @RequestBody @Valid ChannelRequest request
+    ) throws IOException {
         channelService.update(request.toDto(), channelId);
 
         return ResponseEntity.ok().build();
     }
 
-
     @DeleteMapping({"/{channelId}", "/{channelId}/"})
     public ResponseEntity<Void> delete(
             @PathVariable Long channelId,
-            @RequestParam("category") ChannelCategory category)
-    {
+            @RequestParam("category") ChannelCategory category
+    ) {
         channelService.delete(channelId, category);
 
         return ResponseEntity.ok().build();

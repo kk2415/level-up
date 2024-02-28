@@ -21,8 +21,8 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     public void onAuthenticationFailure(
             HttpServletRequest request,
             HttpServletResponse response,
-            AuthenticationException exception) throws IOException, ServletException
-    {
+            AuthenticationException exception
+    ) throws IOException, ServletException {
         log.info("LoginFailureHandler start = url : {}", request.getRequestURL());
 
         ErrorCode errorCode = ErrorCode.MEMBER_NOT_FOUND;

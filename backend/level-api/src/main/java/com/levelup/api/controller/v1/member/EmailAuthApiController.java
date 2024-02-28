@@ -22,8 +22,8 @@ public class EmailAuthApiController {
     @PostMapping({"", "/"})
     public ResponseEntity<Void> create(
             @RequestBody EmailAuthRequest request,
-            @RequestParam("email") String email)
-    {
+            @RequestParam("email") String email
+    ) {
         emailAuthService.save(request.toDto(), email);
 
         return ResponseEntity.ok().build();
@@ -35,8 +35,8 @@ public class EmailAuthApiController {
     @PatchMapping({"", "/"})
     public ResponseEntity<Void> authenticateEmail(
             @RequestBody EmailAuthRequest request,
-            @RequestParam("email") String email)
-    {
+            @RequestParam("email") String email
+    ) {
         emailAuthService.authenticateEmail(request.toDto(), email);
 
         return ResponseEntity.ok().build();
