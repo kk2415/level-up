@@ -1,25 +1,18 @@
-## :information_desk_person: Overview
-Gradle 멀티 모듈을 활용한 게시판 프로젝트
+# Overview
+레벨업(level up) 프로젝트는 스터디 및 프로젝트 개설, 모객을 주목적으로 제작된 프로젝트입니다.
+자신이 원하는 주제로 채널을 개설할 수 있으며 모객 활동을 할 수 있습니다.
+사용자들은 등록된 채널 중에서 자신이 마음에 드는 채널에 가입 신청을 할 수 있습니다.
+채널 매니저가 채널 가입을 승인하면 채널에서 활동이 가능합니다. 각 채널은 별도의 게시판 기능이
+제공되어 채널원끼리 게시글 및 댓글로 소통이 가능합니다.
 
-### 성능 개선
-+ JMeter를 활용한 성능테스트
-쿼리 튜닝, 캐싱, 스케일아웃 & 로드밸런싱으로 성능 개선
-검색 쿼리 개선
-+ 기존 15초가 걸리던 쿼리 속도를 fulltext 인덱스 활용하여 70ms로 개선
+---
 
-### 주요 기능
-+ :circus_tent: **스터디/프로젝트 모집**  
-  + 간편하게 스터디와 프로젝트 모임을 개설하고 원하는 모임을 신청할 수 있어요
-+ :clipboard: **QnA 게시판**  
+# Getting Started
++ 프로젝트 시작
 
-#### 그 외 잡다한 기능
-+ :+1: 좋아요 기능
-+ :mag_right: 검색 기능
+---
 
-
-<br/>
-
-## :hammer: Development Environment
+# Development Environment
 ### Backend
 + Java(OpenJDK 11)  
 + Spring Boot, Spring Data JPA, Spring Security (2.6.8)
@@ -33,7 +26,8 @@ Gradle 멀티 모듈을 활용한 게시판 프로젝트
 + AWS EC2, S3, RDS, ALB  
 <br/><br/>
 
+---
 
-## Application Architecture
+# Application Architecture
 
 ![aws 구조 (3)](https://user-images.githubusercontent.com/79124915/194025162-6d67c804-b8d5-4235-8de6-7fa30bbd4801.png)
