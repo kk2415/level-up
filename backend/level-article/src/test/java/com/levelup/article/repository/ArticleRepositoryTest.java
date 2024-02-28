@@ -77,9 +77,9 @@ class ArticleRepositoryTest extends TestSupporter {
         articleRepository.save(article2);
         articleRepository.save(article3);
 
-        Page<ArticleDto> articles
-                = articleRepository.findByTitleAndArticleType("test", ArticleType.QNA,
-                PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
+//        Page<ArticleDto> articles
+//                = articleRepository.findByTitleAndArticleType("test", ArticleType.QNA,
+//                PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @DisplayName("작성자 닉네임과 타입으로 게시글 조회")

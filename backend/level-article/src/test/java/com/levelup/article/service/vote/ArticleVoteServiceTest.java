@@ -7,7 +7,6 @@ import com.levelup.article.domain.entity.Article;
 import com.levelup.article.domain.entity.ArticleType;
 import com.levelup.article.domain.service.vote.ArticleVoteService;
 import com.levelup.article.domain.entity.ArticleVote;
-import com.levelup.article.domain.repository.ArticleRepository;
 import com.levelup.article.domain.repository.ArticleVoteRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

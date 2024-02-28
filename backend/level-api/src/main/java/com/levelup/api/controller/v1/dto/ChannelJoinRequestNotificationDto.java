@@ -1,8 +1,7 @@
 package com.levelup.api.controller.v1.dto;
 
-import com.levelup.notification.client.domain.constant.NotificationTemplateType;
-import com.levelup.notification.client.domain.constant.NotificationType;
-import com.levelup.notification.client.domain.domain.Notification;
+import com.levelup.api.enumeration.NotificationTemplateType;
+import com.levelup.api.enumeration.NotificationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,15 +21,5 @@ public class ChannelJoinRequestNotificationDto {
         private Long channelName;
         private NotificationType notificationType;
         private NotificationTemplateType templateType;
-
-        public Notification toDomain() {
-            return Notification.of(
-                    this.receiverId,
-                    this.activatorId,
-                    this.notificationType,
-                    this.templateType,
-                    null
-            );
-        }
     }
 }

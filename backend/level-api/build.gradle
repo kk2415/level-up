@@ -2,7 +2,6 @@ dependencies {
     implementation project(':level-channel')
     implementation project(':level-article')
     implementation project(':level-member')
-    implementation project(':level-notification')
     implementation project(':level-common')
 
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -18,5 +17,3 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
 }
-
-

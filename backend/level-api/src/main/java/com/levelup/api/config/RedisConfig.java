@@ -31,9 +31,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisConnectionFactory redisCacheConnectionFactory(@Value("${spring.redis.host}") String redisHost,
-                                                              @Value("${spring.redis.port}") int redisPort,
-                                                              @Value("${spring.redis.password}") String redisPassword) {
+    public RedisConnectionFactory redisCacheConnectionFactory(
+            @Value("${spring.redis.host}") String redisHost,
+            @Value("${spring.redis.port}") int redisPort,
+            @Value("${spring.redis.password}") String redisPassword
+    ) {
+
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(redisHost);
         redisStandaloneConfiguration.setPort(redisPort);

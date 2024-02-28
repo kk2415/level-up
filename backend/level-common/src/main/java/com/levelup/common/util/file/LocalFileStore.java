@@ -20,7 +20,7 @@ public class LocalFileStore implements FileStore {
 
     public final static String DEFAULT_IMAGE_NAME = "/images/member/AFF947XXQ-5554WSDQ12.png";
 
-    @Value("${file.local_dir}")
+    @Value("${file.storage.dir}")
     private String fileDir;
 
     @Override

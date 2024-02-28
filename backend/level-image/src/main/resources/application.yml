@@ -1,29 +1,25 @@
 server:
-  port: 8080
+  port: 8090
 
 cloud:
   aws:
-    credentials:
-      access-key: ENC(tjOm3RFJBf/o8xVrARBnEeIuFr0Xlwk13NsNKfC845Y=)
-      secret-key: ENC(lcTYXZymgxQ1O7jjCj/eAEFrmIELJ9BL78biwGJTyMJLamhrWO/DxRmRoOjrqthW84Voi7rzpgQ=)
-    s3:
-      bucket: mylevelupbuckets3
     region:
       static: ap-northeast-2
     stack:
       auto: false
 
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3309/recruit?serverTimezone=Asia/Seoul
-    username: root
-    password: ENC(gd/uXIsTCtlw8S5qdcUt4ML/Yi6uW1r/)
   sql:
     init:
-      mode: never
+      mode: NEVER
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/level_up?serverTimezone=Asia/Seoul
+    username: root
+    password: root
+
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: none
     properties:
@@ -31,7 +27,6 @@ spring:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 100
-        dialect:
     open-in-view: false
 
   mvc:
@@ -40,7 +35,7 @@ spring:
 
   mail:
     username: koria789@gmail.com
-    password: ENC(EhKyuZGqPjEGv/aFgLCwxnik+I8z+cTkjHNtWZanjok=)
+    password: dlxpnbkbcbaorjuh
     host: smtp.gmail.com
     port: 587
     properties:
@@ -65,10 +60,5 @@ management:
         include: refresh, health, beans, busrefresh
 
 file:
-  local_dir: C:/Task/study/levelup
-  s3_dir: https://mylevelupbuckets3.s3.ap-northeast-2.amazonaws.com
-
-webdriver:
-  chrome:
-    driver: C:/tools/chromedriver_win32/chromedriver.exe
-
+  storage:
+    dir: D:/personal/project/level-up/source/backend/level-api/src/main/resources/storage
