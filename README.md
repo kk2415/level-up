@@ -8,7 +8,8 @@
 ---
 
 # Getting Started
-+ 프로젝트 시작
+### Clone Project
+### Create Docker Container
 
 ---
 
