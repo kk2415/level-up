@@ -38,3 +38,6 @@ out/
 
 ### queryDSL ###
 **/src/main/generated/**
+
+level-api/src/main/resources/application.yml
+level-image/src/main/resources/application.yml
