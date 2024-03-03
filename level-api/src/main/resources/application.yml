@@ -80,7 +80,7 @@ jasypt:
 
 file:
   storage:
-    dir: D:/personal/project/level-up/source/backend/level-api/src/main/resources/storage
+    dir: C:/Task/project/level-up/storage
 
 #actuator 설정
 management:

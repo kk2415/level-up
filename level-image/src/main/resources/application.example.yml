@@ -16,11 +16,10 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/level_up?serverTimezone=Asia/Seoul
-    username: root
-    password: root
+    username:
+    password:
 
   jpa:
-    database-platform: com.levelup.common.config.MySQL8DialectCustom
     hibernate:
       ddl-auto: none
     properties:
@@ -35,8 +34,8 @@ spring:
       matching-strategy: ant_path_matcher #actuator 설정실패 때문에 삽입
 
   mail:
-    username: koria789@gmail.com
-    password: dlxpnbkbcbaorjuh
+    username:
+    password:
     host: smtp.gmail.com
     port: 587
     properties:
@@ -62,4 +61,4 @@ management:
 
 file:
   storage:
-    dir: C:/Task/project/level-up/storage
+    dir:
