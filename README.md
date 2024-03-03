@@ -8,20 +8,63 @@
 ---
 
 # Getting Started
-### Clone Project
-### Create Docker Container
++ Clone Project
+  ```shell
+    git clone https://github.com/kk2415/level-up.git
+  ```
++ Configuration Files settings
+    + enter required information in `level-api/src/main/resource/application.yml` and `level-image/src/main/resource/application.yml` file
+      ```yaml
+        spring:
+          datasource:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://localhost:3306/{database}?serverTimezone=Asia/Seoul
+            username: {username}
+            password: {password}
+      ```
+      ```yaml
+        spring:
+          redis:
+            host: 
+            port:
+            password:
+      ```
+      ```yaml
+        spring:
+          mail:
+            username: 
+            password: 
+      ```      
+      ```yaml
+        file:
+          storage:
+            dir: 
+      ```      
+      
+    + execute DDL query\
+      execute Table CREATE query in resource/schema.sql file
++ Infra Setting
+  + Start mysql container and redis container
+    ```shell
+      docker-compose up -d
+    ```
++ Build And Start
+  ```shell
+    ./gradlew :level-api:clean build
+    ./gradlew :level-image:clean build
+  ```
+  ```shell
+    java -jar .\level-api\build\libs\level-api-v1.0.jar --jasypt.encryptor.password={encryption_key}
+    java -jar .\level-image\build\libs\level-image-v1.0.jar --jasypt.encryptor.password={encryption_key}
+  ```
 
 ---
 
 # Development Environment
-### Backend
 + Java(OpenJDK 11)  
 + Spring Boot, Spring Data JPA, Spring Security (2.6.8)
 + Spring Cloud (3.0.3)
 + MySQL(8.0.29)  
-
-### Frontend
-+ HTML, CSS, JavaScript, React  
 
 ---
 
