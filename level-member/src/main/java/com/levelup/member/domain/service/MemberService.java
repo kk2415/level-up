@@ -16,8 +16,6 @@ import com.levelup.member.domain.domain.Member;
 import com.levelup.member.domain.service.dto.UpdatePasswordDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +43,7 @@ public class MemberService {
                 .collect(Collectors.toUnmodifiableList());
 
         memberEntity.updatePassword(passwordEncoder.encode(memberEntity.getPassword()));
-        memberEntity.addRole(Role.of(RoleName.ANONYMOUS, memberEntity));
+        memberEntity.addRole(Role.of(RoleName.MEMBER, memberEntity));
         memberEntity.addMemberSkills(memberSkills);
         memberRepository.save(memberEntity);
 
@@ -64,7 +62,6 @@ public class MemberService {
 
 
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "MEMBER", key = "#memberId")
     public Member get(Long memberId) {
         MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -73,7 +70,6 @@ public class MemberService {
     }
 
 
-    @CacheEvict(cacheNames = "MEMBER", key = "#memberId")
     public void update(UpdateMemberDto dto, Long memberId) {
         MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -94,7 +90,6 @@ public class MemberService {
     }
 
 
-    @CacheEvict(cacheNames = "MEMBER", key = "#memberId")
     public void delete(Long memberId) {
         final MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));

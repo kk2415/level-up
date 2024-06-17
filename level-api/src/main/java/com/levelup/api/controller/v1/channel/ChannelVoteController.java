@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/channel/votes")
-public class ChannelVoteApiController {
+public class ChannelVoteController {
 
     private final ChannelVoteService channelVoteServiceImpl;
 

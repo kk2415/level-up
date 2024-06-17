@@ -1,8 +1,6 @@
 package com.levelup.api.controller.v1.channel;
 
-import com.levelup.api.adapter.client.MemberClient;
 import com.levelup.api.controller.v1.dto.request.channel.CreateMemberRequest;
-import com.levelup.api.controller.v1.dto.response.member.MemberResponse;
 import com.levelup.channel.domain.service.dto.ChannelMemberDto;
 import com.levelup.channel.domain.service.ChannelMemberService;
 import com.levelup.api.controller.v1.dto.response.channel.ChannelMemberResponse;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/channel/members")
-public class ChannelMemberApiController {
+public class ChannelMemberController {
 
     private final ChannelMemberService channelMemberService;
 

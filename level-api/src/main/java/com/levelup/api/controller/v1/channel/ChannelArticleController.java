@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/channel-articles")
-public class ChannelArticleApiController {
+public class ChannelArticleController {
 
     private final ChannelArticleService channelArticleService;
 

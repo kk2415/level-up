@@ -2,13 +2,16 @@ package com.levelup.api.controller.v1.dto.request.channel;
 
 import com.levelup.channel.domain.service.dto.ChannelArticleDto;
 import com.levelup.channel.domain.constant.ChannelArticleCategory;
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Builder
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChannelArticleRequest {
 
     @NotNull
@@ -20,16 +23,16 @@ public class ChannelArticleRequest {
     @NotNull
     private ChannelArticleCategory category;
 
-    protected ChannelArticleRequest() {}
-
-    private ChannelArticleRequest(String title, String content, ChannelArticleCategory category) {
-        this.title = title;
-        this.content = content;
-        this.category = category;
-    }
-
-    public static ChannelArticleRequest of(String title, String content, ChannelArticleCategory category) {
-        return new ChannelArticleRequest(title, content, category);
+    public static ChannelArticleRequest of(
+            String title,
+            String content,
+            ChannelArticleCategory category
+    ) {
+        return new ChannelArticleRequest(
+                title,
+                content,
+                category
+        );
     }
 
     public ChannelArticleDto toDto() {

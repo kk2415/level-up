@@ -26,14 +26,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/channels")
 @RestController
-public class ChannelApiController {
+public class ChannelController {
 
     private final ChannelService channelService;
 
     @PostMapping({"", "/"})
     public ResponseEntity<ChannelResponse> create(
             @RequestBody @Valid CreateChannelRequest request,
-            @RequestParam("member") Long memberId
+                @RequestParam("member") Long memberId
     ) throws IOException {
         ChannelDto dto = channelService.save(request.toDto(), memberId);
 

@@ -1,9 +1,7 @@
 package com.levelup.channel.domain.service;
 
 import com.levelup.channel.domain.entity.Channel;
-import com.levelup.channel.domain.entity.ChannelArticle;
 import com.levelup.channel.domain.entity.ChannelMember;
-import com.levelup.channel.domain.repository.article.ChannelArticleRepository;
 import com.levelup.channel.domain.repository.channel.ChannelMemberRepository;
 import com.levelup.channel.domain.repository.channel.ChannelRepository;
 import com.levelup.channel.exception.NoPlaceChannelException;
@@ -29,7 +27,6 @@ public class ChannelMemberService {
 
     private final ChannelRepository channelRepository;
     private final ChannelMemberRepository channelMemberRepository;
-    private final ChannelArticleRepository channelArticleRepository;
 
     public ChannelMemberDto create(Long channelId, ChannelMemberDto dto)
     {

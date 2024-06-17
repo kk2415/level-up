@@ -38,8 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        log.info("=======Start Jwt Authentication Filter=======");
-
         parseBearerHeader(request).ifPresentOrElse((token) -> {
             AuthenticationErrorCode validationResult = tokenProvider.validateToken(token);
             SecurityContext securityContext = SecurityContextHolder.getContext();

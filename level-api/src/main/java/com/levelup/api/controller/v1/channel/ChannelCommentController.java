@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/channel/comments")
-public class ChannelCommentApiController {
+public class ChannelCommentController {
 
     private final ChannelCommentService commentService;
 

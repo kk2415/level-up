@@ -27,7 +27,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final WriterRepository writerRepository;
 
-    @CacheEvict(cacheNames = "article", key = "{#dto.articleType + ':0'}")
+//    @CacheEvict(cacheNames = "article", key = "{#dto.articleType + ':0'}")
     public ArticleDto save(ArticleDto dto, Long memberId) {
         final Writer writer = writerRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
@@ -39,7 +39,7 @@ public class ArticleService {
     }
 
 
-    @CacheEvict(cacheNames = "article", key = "{#articleType + ':0'}")
+//    @CacheEvict(cacheNames = "article", key = "{#articleType + ':0'}")
     public ArticleDto get(Long articleId, ArticleType articleType, boolean view) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
@@ -49,10 +49,10 @@ public class ArticleService {
         return ArticleDto.from(article);
     }
 
-    @Cacheable(
-            cacheNames = "article",
-            key = "{#articleType + ':' + #pageable.pageNumber}",
-            condition = "#pageable.pageNumber == 0 AND #field == ''")
+//    @Cacheable(
+//            cacheNames = "article",
+//            key = "{#articleType + ':' + #pageable.pageNumber}",
+//            condition = "#pageable.pageNumber == 0 AND #field == ''")
     public Page<ArticleDto> getArticles(
             ArticleType articleType,
             SearchCondition search,
@@ -88,7 +88,7 @@ public class ArticleService {
     }
 
 
-    @CacheEvict(cacheNames = "article", key = "{#dto.articleType + ':0'}")
+//    @CacheEvict(cacheNames = "article", key = "{#dto.articleType + ':0'}")
     public ArticleDto update(ArticleDto dto, Long articleId, Long memberId) {
         final Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ARTICLE_NOT_FOUND));
@@ -102,7 +102,7 @@ public class ArticleService {
     }
 
 
-    @CacheEvict(cacheNames = "article", key = "{#articleType + ':0'}")
+//    @CacheEvict(cacheNames = "article", key = "{#articleType + ':0'}")
     public void delete(Long articleId, ArticleType articleType) {
         articleRepository.findById(articleId).ifPresent(articleRepository::delete);
     }

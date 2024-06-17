@@ -69,6 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/*/channel/members/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
 
                 .antMatchers("/api/*/channel/votes/**").authenticated()
+
+                .antMatchers("/api/*/channel/activity-scores/**").permitAll()
                 /*====================================================================================================*/
                 .antMatchers(GET, "/api/*/articles/**").permitAll()
                 .antMatchers("/api/*/articles/**").hasAnyRole("MEMBER", "CHANNEL_MANAGER", "ADMIN")
