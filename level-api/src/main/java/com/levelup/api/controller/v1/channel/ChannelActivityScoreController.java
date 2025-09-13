@@ -23,7 +23,7 @@ public class ChannelActivityScoreController {
 
     @GetMapping("/top10")
     public ResponseEntity<List<ChannelActivityScoreResponse>> top10() {
-        List<ChannelActivityScore> weeklyActivityScoresTop10 = channelActivityScore.findWeeklyActivityScoresTop10();
+        List<ChannelActivityScore> weeklyActivityScoresTop10 = channelActivityScore.findWeeklyActivityScoresTopN(10);
 
         return ResponseEntity.ok().body(weeklyActivityScoresTop10.stream()
                 .map(ChannelActivityScoreResponse::from)
@@ -32,9 +32,11 @@ public class ChannelActivityScoreController {
     }
 
     @GetMapping
-    public ResponseEntity<ChannelActivityScoreResponse> get(@RequestParam Long channelId) {
-        ChannelActivityScore weeklyActivityScore = channelActivityScore.findWeeklyActivityScore(channelId);
+    public ResponseEntity<List<ChannelActivityScoreResponse>> get() {
+        List<ChannelActivityScore> weeklyActivityScores = channelActivityScore.findWeeklyActivityScores();
 
-        return ResponseEntity.ok().body(ChannelActivityScoreResponse.from(weeklyActivityScore));
+        return ResponseEntity.ok().body(weeklyActivityScores.stream()
+                .map(ChannelActivityScoreResponse::from)
+                .collect(Collectors.toList()));
     }
 }

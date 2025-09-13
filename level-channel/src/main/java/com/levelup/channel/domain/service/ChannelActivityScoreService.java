@@ -27,9 +27,12 @@ public class ChannelActivityScoreService {
     private final ChannelRepository channelRepository;
 
     @Transactional
-    public List<ChannelActivityScore> findWeeklyActivityScoresTop10() {
+    public List<ChannelActivityScore> findWeeklyActivityScoresTopN(int n) {
         List<ChannelActivityScore> weeklyActivityScores = findWeeklyActivityScores();
         weeklyActivityScores.sort(Comparator.comparing(ChannelActivityScore::getaScore).reversed());
+
+        if (weeklyActivityScores.size() > n)
+            return weeklyActivityScores.subList(0, (n - 1));
 
         return weeklyActivityScores;
     }
@@ -41,48 +44,24 @@ public class ChannelActivityScoreService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public ChannelActivityScore findWeeklyActivityScore(Long channelId) {
+    private ChannelActivityScore findWeeklyActivityScore(Long channelId) {
         List<LocalDateTime> weeklyDataSet = findWeeklyDataSet(channelId);
-
         List<Long> dailyFrequencies = findDailyFrequency(weeklyDataSet);
         for (int i = 7 - dailyFrequencies.size(); i > 0; i-- ) {
             dailyFrequencies.add(0L);
         }
 
-        Stats stats = findActivityStats(dailyFrequencies);
+        final Stats stats = findStats(dailyFrequencies);
+        double threshold = stats.getMean() + (2 * stats.getStandardDeviation());
+
+        List<Long> adjustFrequencies = adjustFrequencies(dailyFrequencies, threshold);
+        Stats adjustStats = findStats(adjustFrequencies);
+
         return ChannelActivityScore.of(
                 channelId,
                 stats,
-                findActivityScore(stats)
+                adjustStats.getMean()
         );
-    }
-
-    private double findActivityScore(Stats stats) {
-        double mean = stats.getMean();
-        double standardDeviation = stats.getStandardDeviation();
-        double aScore;
-
-        if (standardDeviation == 0) {
-            aScore = mean;
-        } else {
-            aScore = (mean / standardDeviation) + mean;
-        }
-
-        return aScore;
-    }
-
-    private Stats findActivityStats(List<Long> dailyFrequencies) {
-        SummaryStatistics stats = new SummaryStatistics();
-        for (Long frequency : dailyFrequencies) {
-            stats.addValue(frequency);
-        }
-
-        double mean = stats.getMean();
-        double standardDeviation = stats.getStandardDeviation();
-        double aScore;
-
-        return Stats.from(mean, standardDeviation);
     }
 
     private List<Long> findDailyFrequency(List<LocalDateTime> dataSet) {
@@ -91,6 +70,29 @@ public class ChannelActivityScoreService {
         return new ArrayList<>(dataSet.stream()
                 .collect(Collectors.groupingBy(dateTime -> ChronoUnit.DAYS.between(min, dateTime), Collectors.counting()))
                 .values());
+    }
+
+    private Stats findStats(List<Long> dailyFrequencies) {
+        SummaryStatistics stats = new SummaryStatistics();
+        for (Long frequency : dailyFrequencies) {
+            stats.addValue(frequency);
+        }
+
+        double mean = stats.getMean();
+        double standardDeviation = stats.getStandardDeviation();
+
+        return Stats.from(mean, standardDeviation);
+    }
+
+    /**
+     * 평균 + (표준편차 X 2)를 threshold(한게점)으로 지정
+     * threshold보다 큰 데이터들은 지나치게 높으므로 이상치로 간주한다.
+     * 이상치들을 threshold으로 맞춘다.
+     * */
+    public List<Long> adjustFrequencies(List<Long> dailyFrequencies, double threshold) {
+        return dailyFrequencies.stream()
+                .map(num -> num > threshold ? (long) threshold : num)
+                .collect(Collectors.toList());
     }
 
     //TODO:: DB 요청 횟수 최소화. (현재 조회 쿼리가 많이 발생함)
